@@ -57,9 +57,13 @@
                 let text = await response.text();
                 let json = JSON.parse(text.substr(47).slice(0, -2));
                 let n = parseFloat(json.table.rows[2].c[4].v).toFixed(2);
+                let m = parseFloat(json.table.rows[3].c[4].v).toFixed(2);
+                let s = parseFloat(json.table.rows[4].c[11].v).toFixed(8);
                 document.getElementById("btcPrice").value = n;
+                document.getElementById("usdtPrice").value = m;
+                document.getElementById("profitPerTH").value = s;
             } catch (error) {
-                console.error("Ошибка загрузки курса BTC:", error);
+                console.error("Ошибка загрузки курса BTC, USDT или доходности TH:", error);
             }
         }
 
