@@ -5,69 +5,59 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Калькулятор доходности ASIC</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            margin: 20px;
-        }
-        .container {
-            max-width: 400px;
-            margin: auto;
-            padding: 20px;
-            border: 1px solid #ccc;
-            border-radius: 10px;
-            box-shadow: 2px 2px 12px rgba(0, 0, 0, 0.1);
-        }
-        input {
-            width: 100%;
-            padding: 8px;
-            margin: 5px 0;
-        }
-        button {
-            padding: 10px 20px;
-            background: #28a745;
-            color: white;
-            border: none;
-            cursor: pointer;
-        }
-        button:hover {
-            background: #218838;
-        }
+        body { font-family: Arial, sans-serif; text-align: center; padding: 20px; }
+        input { margin: 5px; padding: 8px; }
+        button { padding: 10px 20px; cursor: pointer; }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h2>Калькулятор доходности ASIC</h2>
-        <label>Хешрейт (TH/s):</label>
-        <input type="number" id="hashrate" placeholder="Введите хешрейт">
-        
-        <label>Энергопотребление (Вт):</label>
-        <input type="number" id="power" placeholder="Введите потребление">
-        
-        <label>Стоимость электроэнергии ($/кВт·ч):</label>
-        <input type="number" id="electricity" placeholder="Введите стоимость">
-        
-        <button onclick="calculateProfit()">Рассчитать</button>
-        
-        <h3>Доходность: <span id="profit">0</span> $/сутки</h3>
-    </div>
+    <h1>Калькулятор доходности ASIC (SHA-256)</h1>
+    <label>Хэшрейт (TH/s): <input type="number" id="hashrate" value="100" step="0.1"></label><br>
+    <label>Энергопотребление (Вт): <input type="number" id="power" value="3000"></label><br>
+    <label>Стоимость электричества (руб/кВт⋅ч): <input type="number" id="electricityCost" value="5"></label><br>
+    <label>Стоимость оборудования (руб): <input type="number" id="asicCost" value="500000"></label><br>
+    <label>Курс BTC (руб): <input type="number" id="btcPrice" value="5000000"></label><br>
+    <label>Доходность 1 TH/s в BTC/день: <input type="number" id="profitPerTH" value="0.00002" step="0.000001"></label><br>
+    <button onclick="calculateProfit()">Рассчитать</button>
+    
+    <h2>Результаты</h2>
+    <p>Доход без учёта электричества: <span id="income"></span> руб/день, <span id="incomeMonth"></span> руб/месяц, <span id="incomeYear"></span> руб/год</p>
+    <p>Прибыль с учётом электричества: <span id="profit"></span> руб/день, <span id="profitMonth"></span> руб/месяц, <span id="profitYear"></span> руб/год</p>
+    <p>Процент годовых: <span id="roi"></span>%</p>
+    <p>Окупаемость: <span id="payback"></span> дней</p>
     
     <script>
         function calculateProfit() {
-            let hashrate = document.getElementById('hashrate').value;
-            let power = document.getElementById('power').value;
-            let electricity = document.getElementById('electricity').value;
+            let hashrate = parseFloat(document.getElementById("hashrate").value);
+            let power = parseFloat(document.getElementById("power").value);
+            let electricityCost = parseFloat(document.getElementById("electricityCost").value);
+            let asicCost = parseFloat(document.getElementById("asicCost").value);
+            let btcPrice = parseFloat(document.getElementById("btcPrice").value);
+            let profitPerTH = parseFloat(document.getElementById("profitPerTH").value);
             
-            if (!hashrate || !power || !electricity) {
-                alert("Заполните все поля!");
-                return;
-            }
+            let dailyIncome = hashrate * profitPerTH * btcPrice;
+            let monthlyIncome = dailyIncome * 30;
+            let yearlyIncome = dailyIncome * 365;
             
-            let revenue = hashrate * 0.0003; // Условный доход с TH/s (примерная формула)
-            let cost = (power / 1000) * electricity * 24;
-            let profit = revenue - cost;
+            let dailyElectricityCost = (power / 1000) * electricityCost * 24;
+            let monthlyElectricityCost = dailyElectricityCost * 30;
+            let yearlyElectricityCost = dailyElectricityCost * 365;
             
-            document.getElementById('profit').innerText = profit.toFixed(2);
+            let dailyProfit = dailyIncome - dailyElectricityCost;
+            let monthlyProfit = monthlyIncome - monthlyElectricityCost;
+            let yearlyProfit = yearlyIncome - yearlyElectricityCost;
+            
+            let roi = (yearlyProfit / asicCost) * 100;
+            let payback = asicCost / dailyProfit;
+            
+            document.getElementById("income").innerText = dailyIncome.toFixed(2);
+            document.getElementById("incomeMonth").innerText = monthlyIncome.toFixed(2);
+            document.getElementById("incomeYear").innerText = yearlyIncome.toFixed(2);
+            document.getElementById("profit").innerText = dailyProfit.toFixed(2);
+            document.getElementById("profitMonth").innerText = monthlyProfit.toFixed(2);
+            document.getElementById("profitYear").innerText = yearlyProfit.toFixed(2);
+            document.getElementById("roi").innerText = roi.toFixed(2);
+            document.getElementById("payback").innerText = payback.toFixed(0);
         }
     </script>
 </body>
