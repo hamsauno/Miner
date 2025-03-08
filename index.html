@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Калькулятор доходности ASIC</title>
+    <title>Калькулятор</title>
     <style>
         body { font-family: Arial, sans-serif; padding: 20px; text-align: left; }
         input, label, button { display: block; margin: 5px 0; }
@@ -17,12 +17,13 @@
     <label>Стоимость электричества (руб/кВт⋅ч): <input type="number" id="electricityCost" value="5"></label>
     <label>Стоимость оборудования (руб): <input type="number" id="asicCost" value="500000"></label>
     <label>Курс BTC (руб): <input type="number" id="btcPrice" value="5000000" readonly></label>
-    <label>Доходность 1 TH/s в BTC/день: <input type="number" id="profitPerTH" value="0.00002" step="0.000001"></label>
+    <label>Курс USDT (руб): <input type="number" id="usdtPrice" value="90" readonly></label>
+    <label>Доходность 1 TH/s в BTC/день: <input type="number" id="profitPerTH" value="0.00002" step="0.000001" readonly></label>
     <button onclick="calculateProfit()">Рассчитать</button>
     
     <h2>Результаты</h2>
-    <p>Доход без учёта электричества: <span id="income"></span> руб/день, <span id="incomeMonth"></span> руб/месяц, <span id="incomeYear"></span> руб/год</p>
-    <p>Прибыль с учётом электричества: <span id="profit"></span> руб/день, <span id="profitMonth"></span> руб/месяц, <span id="profitYear"></span> руб/год</p>
+    <p>Доход без учёта электричества: <span id="income"></span> USDT/день, <span id="incomeMonth"></span> USDT/месяц, <span id="incomeYear"></span> USDT/год</p>
+    <p>Прибыль с учётом электричества: <span id="profit"></span> USDT/день, <span id="profitMonth"></span> USDT/месяц, <span id="profitYear"></span> USDT/год</p>
     <p>Процент годовых: <span id="roi"></span>%</p>
     <p>Окупаемость: <span id="payback"></span> дней</p>
     
@@ -37,19 +38,41 @@
             }
         }
         
+        async function fetchUSDTPrice() {
+            try {
+                let response = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=tether&vs_currencies=rub');
+                let data = await response.json();
+                document.getElementById("usdtPrice").value = data.tether.rub;
+            } catch (error) {
+                console.error("Ошибка загрузки курса USDT:", error);
+            }
+        }
+        
+        async function fetchProfitPerTH() {
+            try {
+                let response = await fetch('https://api.braiins.com/v1/pool/stats');
+                let data = await response.json();
+                let profitPerTH = data.payout_btc_per_th_day;
+                document.getElementById("profitPerTH").value = profitPerTH;
+            } catch (error) {
+                console.error("Ошибка загрузки доходности 1 TH/s:", error);
+            }
+        }
+        
         function calculateProfit() {
             let hashrate = parseFloat(document.getElementById("hashrate").value);
             let power = parseFloat(document.getElementById("power").value);
             let electricityCost = parseFloat(document.getElementById("electricityCost").value);
             let asicCost = parseFloat(document.getElementById("asicCost").value);
             let btcPrice = parseFloat(document.getElementById("btcPrice").value);
+            let usdtPrice = parseFloat(document.getElementById("usdtPrice").value);
             let profitPerTH = parseFloat(document.getElementById("profitPerTH").value);
             
-            let dailyIncome = hashrate * profitPerTH * btcPrice;
+            let dailyIncome = (hashrate * profitPerTH * btcPrice) / usdtPrice;
             let monthlyIncome = dailyIncome * 30;
             let yearlyIncome = dailyIncome * 365;
             
-            let dailyElectricityCost = (power / 1000) * electricityCost * 24;
+            let dailyElectricityCost = ((power / 1000) * electricityCost * 24) / usdtPrice;
             let monthlyElectricityCost = dailyElectricityCost * 30;
             let yearlyElectricityCost = dailyElectricityCost * 365;
             
@@ -57,8 +80,8 @@
             let monthlyProfit = monthlyIncome - monthlyElectricityCost;
             let yearlyProfit = yearlyIncome - yearlyElectricityCost;
             
-            let roi = (yearlyProfit / asicCost) * 100;
-            let payback = asicCost / dailyProfit;
+            let roi = (yearlyProfit / (asicCost / usdtPrice)) * 100;
+            let payback = (asicCost / usdtPrice) / dailyProfit;
             
             document.getElementById("income").innerText = dailyIncome.toFixed(2);
             document.getElementById("incomeMonth").innerText = monthlyIncome.toFixed(2);
@@ -71,6 +94,8 @@
         }
         
         fetchBTCPrice();
+        fetchUSDTPrice();
+        fetchProfitPerTH();
     </script>
 </body>
 </html>
