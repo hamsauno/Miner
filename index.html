@@ -16,7 +16,7 @@
     <label>Энергопотребление (Вт): <input type="number" id="power" value="3000"></label>
     <label>Стоимость электричества (руб/кВт⋅ч): <input type="number" id="electricityCost" value="5"></label>
     <label>Стоимость оборудования (руб): <input type="number" id="asicCost" value="500000"></label>
-    <label>Курс BTC (руб): <input type="number" id="btcPrice" value="5000000"></label>
+    <label>Курс BTC (руб): <input type="number" id="btcPrice" value="5000000" readonly></label>
     <label>Доходность 1 TH/s в BTC/день: <input type="number" id="profitPerTH" value="0.00002" step="0.000001"></label>
     <button onclick="calculateProfit()">Рассчитать</button>
     
@@ -27,6 +27,16 @@
     <p>Окупаемость: <span id="payback"></span> дней</p>
     
     <script>
+        async function fetchBTCPrice() {
+            try {
+                let response = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=rub');
+                let data = await response.json();
+                document.getElementById("btcPrice").value = data.bitcoin.rub;
+            } catch (error) {
+                console.error("Ошибка загрузки курса BTC:", error);
+            }
+        }
+        
         function calculateProfit() {
             let hashrate = parseFloat(document.getElementById("hashrate").value);
             let power = parseFloat(document.getElementById("power").value);
@@ -59,6 +69,8 @@
             document.getElementById("roi").innerText = roi.toFixed(2);
             document.getElementById("payback").innerText = payback.toFixed(0);
         }
+        
+        fetchBTCPrice();
     </script>
 </body>
 </html>
