@@ -52,9 +52,11 @@
 
         async function fetchBTCPrice() {
             try {
-                let response = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usdt');
-                let data = await response.json();
-                let n = data.bitcoin.usdt;
+                let sheetUrl = "https://docs.google.com/spreadsheets/d/1azXywQkg4VAteT6kgthtgm73Ty5aC_CkY58cmuQALAo/gviz/tq?tqx=out:json&gid=910829425";
+                let response = await fetch(sheetUrl);
+                let text = await response.text();
+                let json = JSON.parse(text.substr(47).slice(0, -2));
+                let n = parseFloat(json.table.rows[2].c[4].v).toFixed(2);
                 document.getElementById("btcPrice").value = n;
             } catch (error) {
                 console.error("Ошибка загрузки курса BTC:", error);
