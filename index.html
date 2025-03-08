@@ -6,16 +6,30 @@
     <title>Калькулятор доходности ASIC (SHA)</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        body { font-family: Arial, sans-serif; padding: 20px; text-align: left; }
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            text-align: left;
+            background-color: #ffffff;
+            color: #000000;
+            transition: background-color 0.3s, color 0.3s;
+        }
         input, label, button, select { display: block; margin: 5px 0; }
         button { padding: 10px 20px; cursor: pointer; }
+        
+        .dark-mode {
+            background-color: #121212;
+            color: #ffffff;
+        }
     </style>
 </head>
 <body>
     <h1>Калькулятор</h1>
+    <label>Темная тема: <input type="checkbox" id="darkModeToggle"></label>
     <label>Модель ASIC:
         <select id="asicModel" onchange="updateAsicSpecs()">
-            <option value="S21">Antminer S21 XP</option>
+            <option value="S21XP">Antminer S21 XP</option>
+            <option value="S21pl235">Antminer S21+</option>
             <option value="T21">Antminer T21</option>
             <option value="S19k">Antminer S19k Pro</option>
         </select>
@@ -45,7 +59,8 @@
     
     <script>
         const asicData = {
-            S21: { a: 270, b: 3645 },
+            S21XP: { a: 270, b: 3645 },
+            S21pl235: { a:235, b:3878 },
             T21: { a: 190, b: 3610 },
             S19k: { a: 120, b: 2760 }
         };
@@ -73,6 +88,12 @@
             document.getElementById("power").value = asicData[selectedModel].b;
         }
 
+        function toggleDarkMode() {
+            document.body.classList.toggle("dark-mode", document.getElementById("darkModeToggle").checked);
+        }
+
+        document.getElementById("darkModeToggle").addEventListener("change", toggleDarkMode);
+        
         updateAsicSpecs();
         fetchBTCPrice();
 
@@ -90,25 +111,16 @@
             let yearlyIncome = dailyIncome * 365;
             
             let dailyElectricityCost = ((b / 1000) * h * 24) / m;
-            let monthlyElectricityCost = dailyElectricityCost * 30;
-            let yearlyElectricityCost = dailyElectricityCost * 365;
-            
             let dailyProfit = dailyIncome - dailyElectricityCost;
-            let monthlyProfit = monthlyIncome - monthlyElectricityCost;
-            let yearlyProfit = yearlyIncome - yearlyElectricityCost;
-            
-            let roi = (yearlyProfit / (c / m)) * 100;
+            let roi = (dailyProfit * 365 / (c / m)) * 100;
             let payback = (c / m) / dailyProfit;
             
             document.getElementById("income").innerText = dailyIncome.toFixed(2);
-            document.getElementById("incomeMonth").innerText = monthlyIncome.toFixed(2);
-            document.getElementById("incomeYear").innerText = yearlyIncome.toFixed(2);
             document.getElementById("profit").innerText = dailyProfit.toFixed(2);
-            document.getElementById("profitMonth").innerText = monthlyProfit.toFixed(2);
-            document.getElementById("profitYear").innerText = yearlyProfit.toFixed(2);
             document.getElementById("roi").innerText = roi.toFixed(2);
             document.getElementById("payback").innerText = payback.toFixed(0);
         }
     </script>
 </body>
 </html>
+
