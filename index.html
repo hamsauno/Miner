@@ -17,15 +17,9 @@
         input, label, button, select { display: block; margin: 5px 0; }
         button { padding: 10px 20px; cursor: pointer; }
         
-        .dark-mode {
-            background-color: #121212;
-            color: #ffffff;
-        }
     </style>
 </head>
 <body>
-    <h1>Калькулятор</h1>
-    <label>Темная тема: <input type="checkbox" id="darkModeToggle"></label>
     <label>Модель ASIC:
         <select id="asicModel" onchange="updateAsicSpecs()">
             <option value="S21XP">Antminer S21 XP 270Th</option>
@@ -92,11 +86,6 @@
             document.getElementById("power").value = asicData[selectedModel].b;
         }
 
-        function toggleDarkMode() {
-            document.body.classList.toggle("dark-mode", document.getElementById("darkModeToggle").checked);
-        }
-
-        document.getElementById("darkModeToggle").addEventListener("change", toggleDarkMode);
         
         updateAsicSpecs();
         fetchBTCPrice();
