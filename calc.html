@@ -6,6 +6,17 @@
     <title>Главная</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
+        body.dark-theme {
+            background-color: #121212;
+            color: white;
+        }
+
+        body.light-theme {
+            background-color: white;
+            color: black;
+        }
+    </style>
+    <style>
         body {
             font-family: Arial, sans-serif;
             padding: 20px;
@@ -34,5 +45,39 @@
    <button onclick="location.href='seting.html'">Настройки</button>
     <button onclick="alert('Раздел в разработке')">Информация</button>
     <button onclick="alert('Раздел в разработке')">О разработчике</button>
+
+        <button onclick="window.history.back();">Назад</button>
+    
+    <!-- Тумблер для переключения темы -->
+    <label class="theme-toggle">
+        <input type="checkbox" id="toggle-theme">
+        <span class="slider"></span>
+    </label>
+
+    <script>
+        // Проверяем сохранённое состояние темы при загрузке страницы
+        window.addEventListener('DOMContentLoaded', () => {
+            const theme = localStorage.getItem('theme') || 'light-theme'; // по умолчанию светлая тема
+            document.body.classList.add(theme);
+
+            // Устанавливаем состояние тумблера в зависимости от сохранённой темы
+            if (theme === 'dark-theme') {
+                document.getElementById('toggle-theme').checked = true;
+            }
+        });
+
+        // Переключение темы при изменении состояния тумблера
+        const toggleCheckbox = document.getElementById('toggle-theme');
+        toggleCheckbox.addEventListener('change', () => {
+            const newTheme = toggleCheckbox.checked ? 'dark-theme' : 'light-theme';
+
+            // Переключаем класс на body
+            document.body.classList.remove('light-theme', 'dark-theme');
+            document.body.classList.add(newTheme);
+
+            // Сохраняем выбранную тему в localStorage
+            localStorage.setItem('theme', newTheme);
+        });
+    </script>
 </body>
 </html>
