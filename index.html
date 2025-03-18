@@ -111,19 +111,26 @@
             let s = parseFloat(document.getElementById("profitPerTH").value);
             
             let dailyIncome = a * s * n;
-            let incomeMonth = dailyIncome * 30;
-            let incomeYear = dailyIncome * 365;
+            let monthlyIncome = dailyIncome * 30.5;
+            let yearlyIncome = dailyIncome * 365;
             
             let dailyElectricityCost = ((b / 1000) * h * 24) / m;
             let dailyProfit = dailyIncome - dailyElectricityCost;
+            let monthlyProfit = dailyProfit * 30.5;
+            let yearlyProfit = dailyProfit * 365;
             let roi = (dailyProfit * 365 / (c / m)) * 100;
             let payback = (c / m) / dailyProfit;
             
             document.getElementById("income").innerText = dailyIncome.toFixed(2);
-            document.getElementById("profit").innerText = dailyProfit.toFixed(2);
+            document.getElementById("profit").innerText = dailyProfit.toFixed(2); 
+            document.getElementById("incomeMonth").innerText = monthlyIncome.toFixed(2);
+            document.getElementById("incomeYear").innerText = yearlyIncome.toFixed(2); 
+            document.getElementById("profitMonth").innerText = monthlyProfit.toFixed(2);
+            document.getElementById("profitYear").innerText = yearlyProfit.toFixed(2); 
             document.getElementById("roi").innerText = roi.toFixed(2);
             document.getElementById("payback").innerText = payback.toFixed(0);
         }
     </script>
 </body>
 </html>
+
