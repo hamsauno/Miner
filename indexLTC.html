@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Калькулятор доходности ASIC (SHA)</title>
+  <button onclick="window.history.back();">Назад</button>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         body {
@@ -17,32 +17,27 @@
         input, label, button, select { display: block; margin: 5px 0; }
         button { padding: 10px 20px; cursor: pointer; }
         
-        .dark-mode {
-            background-color: #121212;
-            color: #ffffff;
-        }
     </style>
 </head>
 <body>
-    <h1>Калькулятор</h1>
-    <label>Темная тема: <input type="checkbox" id="darkModeToggle"></label>
     <label>Модель ASIC:
         <select id="asicModel" onchange="updateAsicSpecs()">
-            <option value="S21XP">Antminer S21 XP 270Th</option>
-            <option value="S21pl235">Antminer S21+ 235Th</option>
-            <option value="S21pl225">Antminer S21+ 225Th</option>
-            <option value="S21pl216">Antminer S21+ 216Th</option>
-            <option value="T21190">Antminer T21 190Th</option>
-            <option value="S19k120">Antminer S19k Pro 120Th</option>
+            <option value="L917">Antminer L9 17G</option>
+            <option value="L916">Antminer L9 16G</option>
+            <option value="L915">Antminer L9 15G</option>
+            <option value="DG14">Elphapex DG1+ 14G</option>
+            <option value="DG13">Elphapex DG1+ 13G</option>
+            <option value="DGhome">Elphapex DG home 2,1G</option>
         </select>
     </label>
-    <label>Хэшрейт (TH/s): <input type="number" id="hashrate" readonly></label>
+    <label>Хэшрейт (GH/s): <input type="number" id="hashrate" readonly></label>
     <label>Энергопотребление (Вт): <input type="number" id="power" readonly></label>
     <label>Стоимость электричества (руб/кВт⋅ч): <input type="number" id="electricityCost" value="5"></label>
     <label>Стоимость оборудования (руб): <input type="number" id="asicCost" value="500000"></label>
-    <label>Курс BTC (USDT): <input type="number" id="btcPrice" readonly></label>
+    <label>Курс LTC (USDT): <input type="number" id="ltcPrice" readonly></label>
+    <label>Курс DOGE (USDT): <input type="number" id="dogePrice" readonly></label>
+    <label>Курс BELL (USDT): <input type="number" id="bellPrice" readonly></label>
     <label>Курс USDT (руб): <input type="number" id="usdtPrice" value="90" readonly></label>
-    <label>Доходность 1 TH/s в BTC/день: <input type="number" id="profitPerTH" value="0,00000057" step="0.00000001" readonly></label>
     <button onclick="calculateProfit()">Рассчитать</button>
     
     <h2>Результаты</h2>
@@ -61,12 +56,12 @@
     
     <script>
         const asicData = {
-            S21XP: { a: 270, b: 3645 },
-            S21pl235: { a:235, b:3878 },
-            S21pl225: { a:225, b:3713 },
-            S21pl216: { a:216, b:3564 },
-            T21190: { a: 190, b: 3610 },
-            S19k120: { a: 120, b: 2760 }
+            L917: { a:17, b:3360 },
+            L916: { a:16, b:3360 },
+            L915: { a:15, b:3360 },
+            DG14: { a:14, b:3950 },
+            DG13: { a: 13, b: 3950 },
+            DGhome: { a: 2.1, b: 630 }
         };
 
         async function fetchBTCPrice() {
@@ -75,12 +70,20 @@
                 let response = await fetch(sheetUrl);
                 let text = await response.text();
                 let json = JSON.parse(text.substr(47).slice(0, -2));
-                let n = parseFloat(json.table.rows[2].c[4].v).toFixed(2);
+                let l = parseFloat(json.table.rows[2].c[4].v).toFixed(2);
+                let d = parseFloat(json.table.rows[2].c[4].v).toFixed(2);
+                let bel = parseFloat(json.table.rows[2].c[4].v).toFixed(2);
                 let m = parseFloat(json.table.rows[3].c[4].v).toFixed(2);
-                let s = parseFloat(json.table.rows[4].c[11].v).toFixed(9);
-                document.getElementById("btcPrice").value = n;
+                let lts = parseFloat(json.table.rows[4].c[11].v).toFixed(9);
+                let dog = parseFloat(json.table.rows[2].c[4].v).toFixed(2);
+                let bell = parseFloat(json.table.rows[2].c[4].v).toFixed(2);
+                document.getElementById("ltcPrice").value = l;
+                document.getElementById("dogePrice").value = d;
+                document.getElementById("bellPrice").value = bel;
                 document.getElementById("usdtPrice").value = m;
-                document.getElementById("profitPerTH").value = s;
+                document.getElementById("profitPerLTC").value = lts;
+                document.getElementById("profitPerDOGE").value = dog;
+                document.getElementById("profitPerBELL").value = bell;
             } catch (error) {
                 console.error("Ошибка загрузки курса BTC, USDT или доходности TH:", error);
             }
@@ -92,11 +95,6 @@
             document.getElementById("power").value = asicData[selectedModel].b;
         }
 
-        function toggleDarkMode() {
-            document.body.classList.toggle("dark-mode", document.getElementById("darkModeToggle").checked);
-        }
-
-        document.getElementById("darkModeToggle").addEventListener("change", toggleDarkMode);
         
         updateAsicSpecs();
         fetchBTCPrice();
@@ -106,11 +104,15 @@
             let b = parseFloat(document.getElementById("power").value);
             let h = parseFloat(document.getElementById("electricityCost").value);
             let c = parseFloat(document.getElementById("asicCost").value);
-            let n = parseFloat(document.getElementById("btcPrice").value);
+            let l = parseFloat(document.getElementById("ltcPrice").value);
+            let d = parseFloat(document.getElementById("dogePrice").value);
+            let bel = parseFloat(document.getElementById("bellPrice").value);
             let m = parseFloat(document.getElementById("usdtPrice").value);
-            let s = parseFloat(document.getElementById("profitPerTH").value);
+            let lts = parseFloat(document.getElementById("profitPerLTC").value);
+            let dog = parseFloat(document.getElementById("profitPerDOGE").value);
+            let bell = parseFloat(document.getElementById("profitPerBELL").value);
             
-            let dailyIncome = a * s * n;
+            let dailyIncome = (a*lts*l)+(a*dog*d)+(a*bel*bell);
             let monthlyIncome = dailyIncome * 30.5;
             let yearlyIncome = dailyIncome * 365;
             
