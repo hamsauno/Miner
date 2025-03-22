@@ -15,7 +15,7 @@ jobs:
       - name: Get data from Google Sheets
         id: fetch_data
         run: |
-          DATA=$(curl -s "https://script.google.com/macros/s/your_script_id/exec")
+          DATA=$(curl -s "https://script.google.com/macros/s/AKfycbzZvQMpbmeQJMbU9lezLeSecNBXy4-ofHnrpWozXhmjfCGDZXm0z62Q3m-1vRnvzkSD/exec")
           echo "$DATA" > kursBTC.txt
           echo "Data fetched: $DATA"
       
