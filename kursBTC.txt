@@ -1,10 +1,1 @@
-<HTML>
-<HEAD>
-<TITLE>Moved Temporarily</TITLE>
-</HEAD>
-<BODY BGCOLOR="#FFFFFF" TEXT="#000000">
-<!-- GSE Default Error -->
-<H1>Moved Temporarily</H1>
-The document has moved <A HREF="https://script.googleusercontent.com/macros/echo?user_content_key=AehSKLiu6YMtQKKXggsXHaRd-3qOhTsahy2lpKoTyoK5IGx8iTotf1XQ50d9oLhetbf5SGx6oV_4tKxR2_K0pwh1dxpDEnAClGmdldYn_iH35sZG1fQ6Hq0LROzlJDbIlFj-1Ti13q2WjQTe5RcSKn9bFev_4Fz5C2icKJv1vu7x3y0YYVB9-sQtXvtZcp0rAZOM6TzR7LUs6XyeT5OhpKVsCsej4bpwAajtods6B4tRnTpW4W53SApk6ZLvajtYTLNrJ-dV8GtZUsfbggViMy2U12Kt-jHvtA&amp;lib=MQtGzJNGnibUXnVLkhdE-7APAnCuUMyA7">here</A>.
-</BODY>
-</HTML>
+84262.6
