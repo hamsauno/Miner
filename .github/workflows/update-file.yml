@@ -27,7 +27,7 @@ jobs:
           git config --global user.name "hamsauno"
           git config --global user.email "hamsauno74@gmail.com"
           git add kursBTC.txt
-          git commit -m "Update kursBTC.txt"
+          git diff --cached --quiet || git commit -m "Update kursBTC.txt"
           
           # Пуш с использованием персонального токена
           git push https://x-access-token:${{ secrets.GH_TOKEN }}@github.com/hamsauno/Miner.git HEAD:main
