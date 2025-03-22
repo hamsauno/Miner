@@ -7,20 +7,178 @@
     <style>
         body {
             font-family: Arial, sans-serif;
+            font-size: 14px;
             padding: 20px;
             text-align: left;
             background-color: #ffffff;
             color: #000000;
             transition: background-color 0.3s, color 0.3s;
         }
-        input, label, button, select { display: block; margin: 5px 0; font-size: 14px}
-        button { padding: 10px 20px; cursor: pointer; font-size: 14px}
-        
+        input, label, button, select { 
+            display: block; 
+            margin: 5px 0; 
+            font-size: 14px;
+        }
+        button { 
+            padding: 10px 20px; 
+            cursor: pointer; 
+            font-size: 14px;
+        }
     </style>
 </head>
 <body>
+
+    <script>
+    // Функция для получения данных с удалённого текстового файла
+async function fetchData() {
+    const url = "https://hamsauno.github.io/Miner/kursBTC.txt"; 
+
+    try {
+        const response = await fetch(url);
+        console.log("Ответ от сервера:", response);
+
+        if (!response.ok) {
+            throw new Error('Не удалось загрузить данные. Статус: ' + response.status);
+        }
+
+        const data = await response.text();
+        console.log("Полученные данные:", data);
+
+        if (!data || data.trim().length === 0) {
+            throw new Error('Загруженные данные пусты.');
+        }
+
+        // Разделяем данные на строки и убираем лишние пробелы
+        let lines = data.trim().split("\n").map(line => line.trim());
+        console.log("Обработанные строки:", lines);
+
+        // Проверяем, что данных достаточно
+        if (lines.length < 9) {
+            throw new Error(`Ошибка: недостаточно строк в файле (ожидалось 9, получено ${lines.length})`);
+        }
+
+        // Функция парсинга чисел с заменой запятой на точку
+        const parseValue = (str) => parseFloat(str.replace(",", "."));
+
+        const ltcPrice = parseValue(lines[3]);
+        const dogePrice = parseValue(lines[4]);
+        const bellPrice = parseValue(lines[5]);
+        const usdtPrice = parseValue(lines[1]);
+        const profitPerLTC = parseValue(lines[6]);
+        const profitPerDOGE = parseValue(lines[7]);
+	const profitPerBELL = parseValue(lines[8]);
+       
+
+        console.log("ltcPrice:", ltcPrice);
+        console.log("dogePrice:", dogePrice);
+        console.log("bellPrice:", bellPrice);
+        console.log("usdtPrice:", usdtPrice);
+        console.log("profitPerLTC:", profitPerLTC);
+        console.log("profitPerDOGE:", profitPerDOGE);
+        console.log("profitPerBELL:", profitPerBELL);
+
+        // Проверяем корректность данных
+        if ([ltcPrice, dogePrice, bellPrice, usdtPrice, profitPerLTC, profitPerDOGE, profitPerBELL].some(isNaN)) {
+            throw new Error("Некоторые значения в файле не являются числами.");
+        }
+
+        // Заполняем скрытые поля
+        document.getElementById("ltcPrice").value = ltcPrice.toFixed(2);
+        document.getElementById("dogePrice").value = dogePrice.toFixed(4);
+        document.getElementById("bellPrice").value = bellPrice.toFixed(4);
+        document.getElementById("usdtPrice").value = usdtPrice.toFixed(8);
+        document.getElementById("profitPerLTC").value = profitPerLTC.toFixed(8);
+        document.getElementById("profitPerDOGE").value = profitPerDOGE.toFixed(8);
+        document.getElementById("profitPerBELL").value = profitPerBELL.toFixed(8);
+
+    } catch (error) {
+        console.error("Ошибка загрузки файла:", error);
+        alert("Ошибка загрузки данных. Проверьте доступность файла.");
+    }
+}
+
+// Запускаем загрузку данных при открытии страницы
+window.onload = async function() {
+    await fetchData();
+    updateAsicSpecs();
+};
+
+    // Функция для обновления характеристик выбранной модели ASIC
+    function updateAsicSpecs() {
+        const asicData = {
+            L917: { a:17, b:3360 },
+            L916: { a:16, b:3360 },
+            L915: { a:15, b:3360 },
+            DG14: { a:14, b:3950 },
+            DG13: { a: 13, b:3950 },
+            DGhome: { a: 2.1, b:630 }
+        };
+
+        let selectedModel = document.getElementById("asicModel").value;
+        document.getElementById("hashrate").value = asicData[selectedModel].a;
+        document.getElementById("power").value = asicData[selectedModel].b;
+    }
+
+    // Функция для расчёта доходности и прибыли
+    function calculateProfit() {
+        const ltcPrice = parseFloat(document.getElementById("ltcPrice").value);
+        const dogePrice = parseFloat(document.getElementById("dogePrice").value);
+        const bellPrice = parseFloat(document.getElementById("bellPrice").value);
+        const usdtPrice = parseFloat(document.getElementById("usdtPrice").value);
+        const profitPerLTC = parseFloat(document.getElementById("profitPerLTC").value);
+        const profitPerDOGE = parseFloat(document.getElementById("profitPerDOGE").value);
+        const profitPerBELL = parseFloat(document.getElementById("profitPerBELL").value);
+
+        // Логируем полученные значения
+        console.log("ltcPrice:", ltcPrice);
+        console.log("dogePrice:", dogePrice);
+        console.log("bellPrice:", bellPrice);
+        console.log("usdtPrice:", usdtPrice);
+        console.log("profitPerLTC:", profitPerLTC);
+        console.log("profitPerDOGE:", profitPerDOGE);
+        console.log("profitPerBELL:", profitPerBELL);
+
+        if (isNaN(ltcPrice) || isNaN(dogePrice) || isNaN(bellPrice) || isNaN(usdtPrice) || isNaN(profitPerLTC) || isNaN(profitPerDOGE) || isNaN(profitPerBELL)) {
+            alert("Данные для расчета отсутствуют или некорректны.");
+            return;
+        }
+
+        let a = parseFloat(document.getElementById("hashrate").value);
+        let b = parseFloat(document.getElementById("power").value);
+        let h = parseFloat(document.getElementById("electricityCost").value);
+        let c = parseFloat(document.getElementById("asicCost").value);
+
+        let dailyIncome = (a * profitPerLTC * ltcPrice) + (a * profitPerDOGE * dogePrice) + (a * profitPerBELL * bellPrice);
+        let monthlyIncome = dailyIncome * 30.5;
+        let yearlyIncome = dailyIncome * 365;
+
+        let dailyElectricityCost = ((b / 1000) * h * 24) / usdtPrice;
+        let dailyProfit = dailyIncome - dailyElectricityCost;
+        let monthlyProfit = dailyProfit * 30.5;
+        let yearlyProfit = dailyProfit * 365;
+        let roi = (dailyProfit * 365 / (c / usdtPrice)) * 100;
+        let payback = ((c / usdtPrice) / dailyProfit) / 30.5;
+
+        document.getElementById("income").innerText = dailyIncome.toFixed(2);
+        document.getElementById("profit").innerText = dailyProfit.toFixed(2);
+        document.getElementById("incomeMonth").innerText = monthlyIncome.toFixed(2);
+        document.getElementById("incomeYear").innerText = yearlyIncome.toFixed(2);
+        document.getElementById("profitMonth").innerText = monthlyProfit.toFixed(2);
+        document.getElementById("profitYear").innerText = yearlyProfit.toFixed(2);
+        document.getElementById("roi").innerText = roi.toFixed(2);
+        document.getElementById("payback").innerText = payback.toFixed(0);
+    }
+
+    // Загружаем данные и обновляем элементы
+    window.onload = async function() {
+        await fetchData(); // Загружаем данные из файла kursBTC.txt
+        updateAsicSpecs(); // Обновляем характеристики ASIC
+    }
+    </script>
+
     <button onclick="window.history.back();">Назад</button>
-    <label>Модель ASIC:
+
+    <label>Модель Асика:
         <select id="asicModel" onchange="updateAsicSpecs()">
             <option value="L917">Antminer L9 17G</option>
             <option value="L916">Antminer L9 16G</option>
@@ -30,110 +188,32 @@
             <option value="DGhome">Elphapex DG home 2,1G</option>
         </select>
     </label>
-    <label>Хэшрейт (GH/s): <input type="number" id="hashrate" readonly></label>
+    <label>Стоимость розетки (руб): <input type="number" id="electricityCost" value="5"></label>
+    <label>Стоимость Асика (руб): <input type="number" id="asicCost" value="500000"></label>
+    <label>Хэшрейт (TH/s): <input type="number" id="hashrate" readonly></label>
     <label>Энергопотребление (Вт): <input type="number" id="power" readonly></label>
-    <label>Стоимость электричества (руб/кВт⋅ч): <input type="number" id="electricityCost" value="5"></label>
-    <label>Стоимость оборудования (руб): <input type="number" id="asicCost" value="500000"></label>
-    <label>Курс LTC (USDT): <input type="number" id="ltcPrice" readonly></label>
-    <label>Курс DOGE (USDT): <input type="number" id="dogePrice" readonly></label>
-    <label>Курс BELL (USDT): <input type="number" id="bellPrice" readonly></label>
-    <label>Курс USDT (руб): <input type="number" id="usdtPrice" readonly></label>
+    <label><input type="hidden" id="ltcPrice" readonly></label>
+    <label><input type="hidden" id="dogePrice" readonly></label>
+    <label><input type="hidden" id="bellPrice" readonly></label>
+    <label><input type="hidden" id="usdtPrice" readonly></label>
+    <label><input type="hidden" id="profitPerLTC" readonly></label>
+    <label><input type="hidden" id="profitPerDOGE" readonly></label>
+    <label><input type="hidden" id="profitPerBELL" readonly></label>
     <button onclick="calculateProfit()">Рассчитать</button>
     
     <h2>Результаты</h2>
-    <p>Доход без учёта электричества:</p>
-    <p>День: <span id="income"></span> USDT</p>
-    <p>Месяц: <span id="incomeMonth"></span> USDT</p>
-    <p>Год: <span id="incomeYear"></span> USDT</p>
+    <p>Доход :</p>
+    <p>День: <span id="income">0</span> $</p>
+    <p>Месяц: <span id="incomeMonth">0</span> $</p>
+    <p>Год: <span id="incomeYear">0</span> $</p>
     
-    <p>Прибыль с учётом электричества:</p>
-    <p>День: <span id="profit"></span> USDT</p>
-    <p>Месяц: <span id="profitMonth"></span> USDT</p>
-    <p>Год: <span id="profitYear"></span> USDT</p>
+    <p>Прибыль :</p>
+    <p>День: <span id="profit">0</span> $</p>
+    <p>Месяц: <span id="profitMonth">0</span> $</p>
+    <p>Год: <span id="profitYear">0</span> $</p>
     
-    <p>Процент годовых: <span id="roi"></span>%</p>
-    <p>Окупаемость: <span id="payback"></span> дней</p>
-    
-    <script>
-        const asicData = {
-            L917: { a:17, b:3360 },
-            L916: { a:16, b:3360 },
-            L915: { a:15, b:3360 },
-            DG14: { a:14, b:3950 },
-            DG13: { a: 13, b: 3950 },
-            DGhome: { a: 2.1, b: 630 }
-        };
+    <p>Процент годовых: <span id="roi">0</span>%</p>
+    <p>Окупаемость: <span id="payback">0</span> месяцев</p>
 
-        async function fetchBTCPrice() {
-            try {
-                let sheetUrl = "https://docs.google.com/spreadsheets/d/1azXywQkg4VAteT6kgthtgm73Ty5aC_CkY58cmuQALAo/gviz/tq?tqx=out:json&gid=910829425";
-                let response = await fetch(sheetUrl);
-                let text = await response.text();
-                let json = JSON.parse(text.substr(47).slice(0, -2));
-                
-                let l = parseFloat(json.table.rows[7].c[4].v);
-                let d = parseFloat(json.table.rows[8].c[4].v);
-                let bel = parseFloat(json.table.rows[4].c[4].v);
-                let m = parseFloat(json.table.rows[6].c[4].v);
-                let lts = parseFloat(json.table.rows[11].c[4].v);
-                let dog = parseFloat(json.table.rows[12].c[4].v);
-                let bell = parseFloat(json.table.rows[13].c[4].v);
-                
-                document.getElementById("ltcPrice").value = l.toFixed(2);
-                document.getElementById("dogePrice").value = d.toFixed(2);
-                document.getElementById("bellPrice").value = bel.toFixed(2);
-                document.getElementById("usdtPrice").value = m.toFixed(2);
-                document.getElementById("profitPerLTC").value = lts.toFixed(8);
-                document.getElementById("profitPerDOGE").value = dog.toFixed(8);
-                document.getElementById("profitPerBELL").value = bell.toFixed(8);
-            } catch (error) {
-                console.error("Ошибка загрузки курса BTC, USDT или доходности TH:", error);
-            }
-        }
-
-        function updateAsicSpecs() {
-            let selectedModel = document.getElementById("asicModel").value;
-            document.getElementById("hashrate").value = asicData[selectedModel].a;
-            document.getElementById("power").value = asicData[selectedModel].b;
-        }
-
-        
-        updateAsicSpecs();
-        fetchBTCPrice();
-
-        function calculateProfit() {
-            let a = parseFloat(document.getElementById("hashrate").value);
-            let b = parseFloat(document.getElementById("power").value);
-            let h = parseFloat(document.getElementById("electricityCost").value);
-            let c = parseFloat(document.getElementById("asicCost").value);
-            let l = parseFloat(document.getElementById("ltcPrice").value);
-            let d = parseFloat(document.getElementById("dogePrice").value);
-            let bel = parseFloat(document.getElementById("bellPrice").value);
-            let m = parseFloat(document.getElementById("usdtPrice").value);
-            let lts = parseFloat(document.getElementById("profitPerLTC").value);
-            let dog = parseFloat(document.getElementById("profitPerDOGE").value);
-            let bell = parseFloat(document.getElementById("profitPerBELL").value);
-            
-            let dailyIncome = (a*lts*l)+(a*dog*d)+(a*bel*bell);
-            let monthlyIncome = dailyIncome * 30.5;
-            let yearlyIncome = dailyIncome * 365;
-            
-            let dailyElectricityCost = ((b / 1000) * h * 24) / m;
-            let dailyProfit = dailyIncome - dailyElectricityCost;
-            let monthlyProfit = dailyProfit * 30.5;
-            let yearlyProfit = dailyProfit * 365;
-            let roi = (dailyProfit * 365 / (c / m)) * 100;
-            let payback = (c / m) / dailyProfit;
-            
-            document.getElementById("income").innerText = dailyIncome.toFixed(2);
-            document.getElementById("profit").innerText = dailyProfit.toFixed(2); 
-            document.getElementById("incomeMonth").innerText = monthlyIncome.toFixed(2);
-            document.getElementById("incomeYear").innerText = yearlyIncome.toFixed(2); 
-            document.getElementById("profitMonth").innerText = monthlyProfit.toFixed(2);
-            document.getElementById("profitYear").innerText = yearlyProfit.toFixed(2); 
-            document.getElementById("roi").innerText = roi.toFixed(2);
-            document.getElementById("payback").innerText = payback.toFixed(0);
-        }
-    </script>
 </body>
 </html>
