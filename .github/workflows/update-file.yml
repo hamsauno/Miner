@@ -24,8 +24,8 @@ jobs:
       # Шаг 3: Коммит изменений в репозиторий
       - name: Commit changes
         run: |
-          git config --global user.name "your-username"
-          git config --global user.email "your-email@example.com"
+          git config --global user.name "hamsauno"
+          git config --global user.email "hamsauno74@gmail.com"
           git add kursBTC.txt
           git commit -m "Update kursBTC.txt"
           git push
