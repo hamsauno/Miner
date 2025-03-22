@@ -70,20 +70,22 @@
                 let response = await fetch(sheetUrl);
                 let text = await response.text();
                 let json = JSON.parse(text.substr(47).slice(0, -2));
-                let l = parseFloat(json.table.rows[7].c[4].v).toFixed(2);
-                let d = parseFloat(json.table.rows[8].c[4].v).toFixed(2);
-                let bel = parseFloat(json.table.rows[4].c[4].v).toFixed(2);
-                let m = parseFloat(json.table.rows[6].c[4].v).toFixed(2);
-                let lts = parseFloat(json.table.rows[11].c[4].v).toFixed(9);
-                let dog = parseFloat(json.table.rows[12].c[4].v).toFixed(2);
-                let bell = parseFloat(json.table.rows[13].c[4].v).toFixed(2);
-                document.getElementById("ltcPrice").value = l;
-                document.getElementById("dogePrice").value = d;
-                document.getElementById("bellPrice").value = bel;
-                document.getElementById("usdtPrice").value = m;
-                document.getElementById("profitPerLTC").value = lts;
-                document.getElementById("profitPerDOGE").value = dog;
-                document.getElementById("profitPerBELL").value = bell;
+                
+                let l = parseFloat(json.table.rows[7].c[4].v);
+                let d = parseFloat(json.table.rows[8].c[4].v);
+                let bel = parseFloat(json.table.rows[4].c[4].v);
+                let m = parseFloat(json.table.rows[6].c[4].v);
+                let lts = parseFloat(json.table.rows[11].c[4].v);
+                let dog = parseFloat(json.table.rows[12].c[4].v);
+                let bell = parseFloat(json.table.rows[13].c[4].v);
+                
+                document.getElementById("ltcPrice").value = l.toFixed(2);
+                document.getElementById("dogePrice").value = d.toFixed(2);
+                document.getElementById("bellPrice").value = bel.toFixed(2);
+                document.getElementById("usdtPrice").value = m.toFixed(2);
+                document.getElementById("profitPerLTC").value = lts.toFixed(8);
+                document.getElementById("profitPerDOGE").value = dog.toFixed(8);
+                document.getElementById("profitPerBELL").value = bell.toFixed(8);
             } catch (error) {
                 console.error("Ошибка загрузки курса BTC, USDT или доходности TH:", error);
             }
