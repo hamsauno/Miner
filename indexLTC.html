@@ -71,7 +71,7 @@
                 let text = await response.text();
                 let json = JSON.parse(text.substr(47).slice(0, -2));
                 let l = parseFloat(json.table.rows[2].c[4].v).toFixed(2);
-                let d = parseFloat(json.table.rows[2].c[4].v).toFixed(2);
+                let d = parseFloat(json.table.rows[8].c[4].v).toFixed(2);
                 let bel = parseFloat(json.table.rows[2].c[4].v).toFixed(2);
                 let m = parseFloat(json.table.rows[3].c[4].v).toFixed(2);
                 let lts = parseFloat(json.table.rows[4].c[11].v).toFixed(9);
