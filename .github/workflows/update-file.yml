@@ -11,6 +11,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+        with:
+          persist-credentials: false  # Отключаем стандартную аутентификацию
 
       - name: Get data from Google Sheets
         id: fetch_data
@@ -20,10 +22,11 @@ jobs:
           echo "Data fetched: $DATA"
 
       - name: Commit and push changes
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}  # Используем токен из секретов
         run: |
           git config --global user.name "hamsauno"
           git config --global user.email "hamsauno74@gmail.com"
           git add kursBTC.txt
-          git commit -m "Update kursBTC.txt"
-          git push https://x-access-token:${{ secrets.GH_TOKEN }}@github.com/hamsauno/Miner.git HEAD:gh-pages
-
+          git commit -m "Update kursBTC.txt" || echo "No changes to commit"
+          git push https://x-access-token:${GH_TOKEN}@github.com/hamsauno/Miner.git HEAD:gh-pages
