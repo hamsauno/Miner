@@ -1,0 +1,39 @@
+name: Update kursBTC.txt from Google Sheets
+
+on:
+  schedule:
+    - cron: '0 * * * *'  # Запускать каждый час (вы можете изменить на нужное расписание)
+  workflow_dispatch:  # Это позволяет запускать workflow вручную через GitHub UI
+
+jobs:
+  update-file:
+    runs-on: ubuntu-latest
+    steps:
+      # Шаг 1: Получение кода из репозитория
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      # Шаг 2: Получение данных из Google Apps Script
+      - name: Get data from Google Sheets
+        id: fetch_data
+        run: |
+          DATA=$(curl -s "https://script.google.com/macros/s/AKfycbzZvQMpbmeQJMbU9lezLeSecNBXy4-ofHnrpWozXhmjfCGDZXm0z62Q3m-1vRnvzkSD/exec")
+          echo "$DATA" > kursBTC.txt
+          echo "Data fetched: $DATA"
+      
+      # Шаг 3: Коммит изменений в репозиторий
+      - name: Commit changes
+        run: |
+          git config --global user.name "your-username"
+          git config --global user.email "your-email@example.com"
+          git add kursBTC.txt
+          git commit -m "Update kursBTC.txt"
+          git push
+
+      # Шаг 4: Развертывание на GitHub Pages
+      - name: Deploy to GitHub Pages
+        run: |
+          git checkout gh-pages
+          git add kursBTC.txt
+          git commit -m "Deploy updated kursBTC.txt"
+          git push origin gh-pages
