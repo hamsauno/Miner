@@ -18,7 +18,7 @@ jobs:
         id: fetch_data
         run: |
           # Получаем данные с вашего Google Apps Script URL
-          DATA=$(curl -s "https://script.google.com/macros/s/AKfycbzZvQMpbmeQJMbU9lezLeSecNBXy4-ofHnrpWozXhmjfCGDZXm0z62Q3m-1vRnvzkSD/exec")
+          DATA=$(curl -s -L "https://script.google.com/macros/s/AKfycbzZvQMpbmeQJMbU9lezLeSecNBXy4-ofHnrpWozXhmjfCGDZXm0z62Q3m-1vRnvzkSD/exec")
           echo "$DATA" > kursBTC.txt  # Записываем данные в файл kursBTC.txt
 
       # 3️⃣ Коммитим и пушим изменения, если они есть
