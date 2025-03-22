@@ -26,3 +26,4 @@ jobs:
           git add kursBTC.txt
           git commit -m "Update kursBTC.txt"
           git push https://x-access-token:${{ secrets.GH_TOKEN }}@github.com/hamsauno/Miner.git HEAD:gh-pages
+
