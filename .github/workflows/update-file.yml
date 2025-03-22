@@ -22,20 +22,24 @@ jobs:
           echo "$DATA" >> kursBTC.txt  # Записываем данные
           echo "Data fetched: $DATA"
       
-      # 3️⃣ Коммит изменений в репозиторий
+      # 3️⃣ Проверяем изменения и коммитим, если они есть
       - name: Commit and push changes
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git pull origin main --rebase
-          git add kursBTC.txt
           
-          # Проверяем, есть ли изменения
+          # Проверяем, нет ли конфликтующих изменений перед pull
+          git add kursBTC.txt
           if git diff --cached --quiet; then
             echo "No changes detected, skipping commit"
             exit 0
           fi
           
+          # Сохраняем незакоммиченные изменения, чтобы не было ошибки pull
+          git stash
+          git pull origin main --rebase
+          git stash pop || echo "No changes to pop from stash"
+
           git commit -m "Auto-update kursBTC.txt"
           git push https://x-access-token:${{ secrets.GH_TOKEN }}@github.com/hamsauno/Miner.git HEAD:main
 
