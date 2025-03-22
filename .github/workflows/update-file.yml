@@ -2,7 +2,7 @@ name: Update kursBTC.txt from Google Sheets
 
 on:
   schedule:
-    - cron: '0 * * * *'  # Запускать каждый час (вы можете изменить на нужное расписание)
+    - cron: '0 * * * *'  # Запускать каждый час
   workflow_dispatch:  # Это позволяет запускать workflow вручную через GitHub UI
 
 jobs:
@@ -28,8 +28,6 @@ jobs:
           git config --global user.email "hamsauno74@gmail.com"
           git add kursBTC.txt
           git commit -m "Update kursBTC.txt"
-          
-          # Пуш с использованием персонального токена
           git push https://x-access-token:${{ secrets.GH_TOKEN }}@github.com/hamsauno/Miner.git HEAD:main
 
       # Шаг 4: Развертывание на GitHub Pages
@@ -38,6 +36,4 @@ jobs:
           git checkout gh-pages
           git add kursBTC.txt
           git commit -m "Deploy updated kursBTC.txt"
-          
-          # Пуш с использованием персонального токена
           git push https://x-access-token:${{ secrets.GH_TOKEN }}@github.com/hamsauno/Miner.git HEAD:gh-pages
