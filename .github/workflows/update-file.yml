@@ -35,9 +35,9 @@ jobs:
       # Шаг 4: Развертывание на GitHub Pages
       - name: Deploy to GitHub Pages
         run: |
-          git checkout gh-pages
+          git checkout main
           git add kursBTC.txt
           git commit -m "Deploy updated kursBTC.txt"
           
           # Пуш с использованием персонального токена
-          git push https://x-access-token:${{ secrets.GH_TOKEN }}@github.com/hamsauno/Miner.git HEAD:gh-pages
+          git push https://x-access-token:${{ secrets.GH_TOKEN }}@github.com/hamsauno/Miner.git HEAD:main
