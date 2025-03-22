@@ -12,7 +12,7 @@ jobs:
       # Шаг 1: Получение кода из репозитория
       - name: Checkout code
         uses: actions/checkout@v3
-      
+    
       # Шаг 2: Получение данных из Google Apps Script
       - name: Get data from Google Sheets
         id: fetch_data
