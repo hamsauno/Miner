@@ -22,14 +22,14 @@ jobs:
           echo "Data fetched: $DATA"
       
       # Шаг 3: Коммит изменений в репозиторий
-      - name: Commit changes
+      - name: Commit and push changes
         run: |
           git config --global user.name "hamsauno"
           git config --global user.email "hamsauno74@gmail.com"
+          git pull origin main --rebase  # Подтягиваем изменения с GitHub
           git add kursBTC.txt
-          git status
-          git diff --cached --quiet || git commit -m "Update kursBTC.txt"
-          
+          git commit -m "Auto-update kursBTC.txt" || exit 0  # Пропуск коммита, если нет изменений
+          git push origin main
           # Пуш с использованием персонального токена
           git push https://x-access-token:${{ secrets.GH_TOKEN }}@github.com/hamsauno/Miner.git HEAD:main
 
