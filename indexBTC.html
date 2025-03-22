@@ -111,7 +111,7 @@
         let monthlyProfit = dailyProfit * 30.5;
         let yearlyProfit = dailyProfit * 365;
         let roi = (dailyProfit * 365 / (c / usdtPrice)) * 100;
-        let payback = (c / usdtPrice) / dailyProfit;
+        let payback = ((c / usdtPrice) / dailyProfit) / 30.5;
 
         document.getElementById("income").innerText = dailyIncome.toFixed(2);
         document.getElementById("profit").innerText = dailyProfit.toFixed(2);
@@ -132,7 +132,7 @@
 
     <button onclick="window.history.back();">Назад</button>
 
-    <label>Модель ASIC:
+    <label>Модель Асика:
         <select id="asicModel" onchange="updateAsicSpecs()">
             <option value="S21XP">Antminer S21 XP 270Th</option>
             <option value="S21pl235">Antminer S21+ 235Th</option>
@@ -142,13 +142,13 @@
             <option value="S19k120">Antminer S19k Pro 120Th</option>
         </select>
     </label>
-    <label>Стоимость электричества (руб/кВт⋅ч): <input type="number" id="electricityCost" value="5"></label>
-    <label>Стоимость оборудования (руб): <input type="number" id="asicCost" value="500000"></label>
+    <label>Стоимость розетки (руб): <input type="number" id="electricityCost" value="5"></label>
+    <label>Стоимость Асика (руб): <input type="number" id="asicCost" value="500000"></label>
     <label>Хэшрейт (TH/s): <input type="number" id="hashrate" readonly></label>
     <label>Энергопотребление (Вт): <input type="number" id="power" readonly></label>
-    <label>Курс BTC (USDT): <input type="number" id="btcPrice" readonly></label>
-    <label>Курс USDT (руб): <input type="number" id="usdtPrice" readonly></label>
-    <label>Доходность 1 TH/s в BTC/день: <input type="number" id="profitPerTH" readonly></label>
+    <label><input type="hidden" id="btcPrice"></label>
+    <label><input type="hidden" id="usdtPrice"></label>
+    <label><input type="hidden" id="profitPerTH"></label>
     <button onclick="calculateProfit()">Рассчитать</button>
     
     <h2>Результаты</h2>
@@ -163,7 +163,7 @@
     <p>Год: <span id="profitYear">0</span> USDT</p>
     
     <p>Процент годовых: <span id="roi">0</span>%</p>
-    <p>Окупаемость: <span id="payback">0</span> дней</p>
+    <p>Окупаемость: <span id="payback">0</span> месяцев</p>
 
 </body>
 </html>
