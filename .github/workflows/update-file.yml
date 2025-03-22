@@ -17,7 +17,7 @@ jobs:
       - name: Get data from Google Sheets
         id: fetch_data
         run: |
-          DATA=$(curl -s "https://script.google.com/macros/s/AKfycbzZvQMpbmeQJMbU9lezLeSecNBXy4-ofHnrpWozXhmjfCGDZXm0z62Q3m-1vRnvzkSD/exec")
+          DATA=$(curl -s "https://script.googleusercontent.com/macros/echo?user_content_key=AehSKLhtv72v-Cat2KWlGqeomi2gzjWouIeZA7V_z7BXMLTB1l8ZyCm9jhRkCGZoAKj9TU_qhtfT1m8y9U-AseGTnjSxUi0QypC_fPu68eEhw8CHw2r-cR5rEZfneUFZa--WuhVbQc7VxwRtr4Cg0PKQ0j2z2yWl0LBQb5pKM_M9VFjffJk-AiB3ED4NETqqOJFjZY841K6WBfg4JUQiR6gj4-Gbq9YmXtmMIL6b6U86SAgGKQcGRE15iQI9r7P38lEZ_PFC-cl9kCBDZOi12u3BPgvDjOCpTQ&lib=MQtGzJNGnibUXnVLkhdE-7APAnCuUMyA7")
           echo "Last updated: $(date)" > kursBTC.txt  # Записываем дату
           echo "$DATA" >> kursBTC.txt  # Записываем данные
           echo "Data fetched: $DATA"
