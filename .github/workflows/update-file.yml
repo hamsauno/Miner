@@ -18,7 +18,7 @@ jobs:
         id: fetch_data
         run: |
           # Получаем данные с вашего Google Apps Script URL
-          DATA=$(curl -s "https://script.googleusercontent.com/macros/echo?user_content_key=AehSKLhtv72v-Cat2KWlGqeomi2gzjWouIeZA7V_z7BXMLTB1l8ZyCm9jhRkCGZoAKj9TU_qhtfT1m8y9U-AseGTnjSxUi0QypC_fPu68eEhw8CHw2r-cR5rEZfneUFZa--WuhVbQc7VxwRtr4Cg0PKQ0j2z2yWl0LBQb5pKM_M9VFjffJk-AiB3ED4NETqqOJFjZY841K6WBfg4JUQiR6gj4-Gbq9YmXtmMIL6b6U86SAgGKQcGRE15iQI9r7P38lEZ_PFC-cl9kCBDZOi12u3BPgvDjOCpTQ&lib=MQtGzJNGnibUXnVLkhdE-7APAnCuUMyA7")
+          DATA=$(curl -s "https://script.googleusercontent.com/macros/echo?user_content_key=AehSKLgLdax6ZNE_eHqIstmYtJnoAk1WrxZtAUmTcT4CgtGp284ocMelLeRCyhgufkroj-2k8vRRDg2R6uiqF2ou2dSp38shwC9Elx89hnKbqQH5yng4SnANNUlNyVnH2pExvOJB3FMSj_b1Mpq_KhXd78y-7QIEQqGRU73iOrzEDyF_OKNVHDiwDkpR1Yrjx1mvANaOLq9wx1HaZgXhgcRShGQ6fEb2CsCIiMtvEflCY20dBSuhgnkXkGenfGp8EROzLgED19pcsNNlR8N8G0n91deN4LGJFg&lib=MQtGzJNGnibUXnVLkhdE-7APAnCuUMyA7")
           echo "$DATA" > kursBTC.txt  # Записываем данные в файл kursBTC.txt
 
       # 3️⃣ Коммитим и пушим изменения, если они есть
