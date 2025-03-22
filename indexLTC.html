@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <button onclick="window.history.back();">Назад</button>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         body {
@@ -14,12 +13,13 @@
             color: #000000;
             transition: background-color 0.3s, color 0.3s;
         }
-        input, label, button, select { display: block; margin: 5px 0; }
-        button { padding: 10px 20px; cursor: pointer; }
+        input, label, button, select { display: block; margin: 5px 0; font-size: 14px}
+        button { padding: 10px 20px; cursor: pointer; font-size: 14px}
         
     </style>
 </head>
 <body>
+    <button onclick="window.history.back();">Назад</button>
     <label>Модель ASIC:
         <select id="asicModel" onchange="updateAsicSpecs()">
             <option value="L917">Antminer L9 17G</option>
