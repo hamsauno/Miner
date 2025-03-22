@@ -4,9 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-        <style>
+    <style>
         body {
             font-family: 'Roboto', sans-serif;
+            font-size: 12px; /* Меньший шрифт */
             padding: 20px;
             background: linear-gradient(135deg, #1a1a1a, #0d0d0d);
             color: #ffffff;
@@ -16,7 +17,7 @@
 
         h2 {
             color: #ff9800;
-            font-size: 28px;
+            font-size: 20px;
             font-weight: 700;
             margin-bottom: 20px;
         }
@@ -24,15 +25,14 @@
         label {
             display: block;
             margin: 10px 0 5px;
-            font-size: 16px;
+            font-size: 14px; /* Меньше размер шрифта */
         }
 
         input, select, button {
-            display: block;
-            width: 100%;
-            padding: 12px;
-            font-size: 16px;
-            margin-bottom: 20px;
+            width: auto;
+            padding: 10px;
+            font-size: 14px; /* Меньше размер шрифта */
+            margin-bottom: 10px;
             background-color: #333;
             color: #fff;
             border: 2px solid #444;
@@ -49,10 +49,11 @@
             cursor: pointer;
             background-color: #ff9800;
             color: white;
-            font-size: 18px;
+            font-size: 14px;
             font-weight: 700;
             border: none;
             transition: background-color 0.3s, transform 0.2s ease;
+            padding: 8px 16px; /* Уменьшено по размеру */
         }
 
         button:hover {
@@ -66,16 +67,16 @@
         }
 
         p {
-            font-size: 18px;
+            font-size: 14px; /* Меньше размер шрифта */
             margin: 10px 0;
         }
 
         .back-button {
             background-color: #444;
             color: #fff;
-            padding: 12px;
+            padding: 6px 12px; /* Меньше размер кнопки */
             border: none;
-            font-size: 16px;
+            font-size: 12px;
             cursor: pointer;
             border-radius: 8px;
             margin-bottom: 20px;
@@ -93,9 +94,14 @@
         }
 
         .result-value {
-            font-size: 20px;
+            font-size: 16px;
             font-weight: 700;
             color: #ff9800;
+        }
+
+        .form-container {
+            max-width: 400px; /* Ограничение ширины */
+            margin: 0 auto;
         }
     </style>
 </head>
