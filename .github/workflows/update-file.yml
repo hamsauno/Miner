@@ -28,7 +28,9 @@ jobs:
           git config --global user.email "hamsauno74@gmail.com"
           git add kursBTC.txt
           git commit -m "Update kursBTC.txt"
-          git push
+          
+          # Пуш с использованием персонального токена
+          git push https://x-access-token:${{ secrets.GH_TOKEN }}@github.com/hamsauno/Miner.git HEAD:main
 
       # Шаг 4: Развертывание на GitHub Pages
       - name: Deploy to GitHub Pages
@@ -36,4 +38,6 @@ jobs:
           git checkout gh-pages
           git add kursBTC.txt
           git commit -m "Deploy updated kursBTC.txt"
-          git push origin gh-pages
+          
+          # Пуш с использованием персонального токена
+          git push https://x-access-token:${{ secrets.GH_TOKEN }}@github.com/hamsauno/Miner.git HEAD:gh-pages
