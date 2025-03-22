@@ -26,12 +26,12 @@ jobs:
         run: |
           git config --global user.name "hamsauno"
           git config --global user.email "hamsauno74@gmail.com"
-          git pull origin main --rebase  # Подтягиваем изменения с GitHub
+          git stash  # Сохраняем локальные изменения во временный буфер
+          git pull origin main --rebase
+          git stash pop  # Возвращаем изменения обратно
           git add kursBTC.txt
-          git commit -m "Auto-update kursBTC.txt" || exit 0  # Пропуск коммита, если нет изменений
+          git commit -m "Auto-update kursBTC.txt" || exit 0
           git push origin main
-          # Пуш с использованием персонального токена
-          git push https://x-access-token:${{ secrets.GH_TOKEN }}@github.com/hamsauno/Miner.git HEAD:main
 
       # Шаг 4: Развертывание на GitHub Pages
       - name: Deploy to GitHub Pages
