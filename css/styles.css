@@ -1,17 +1,105 @@
-/* styles.css */
+/* Основные стили для body */
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
+    font-family: 'Roboto', sans-serif;
+    background-color: #f4f7fc;
     color: #333;
     margin: 0;
     padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    text-align: center;
 }
 
-h1 {
-    color: #007bff;
+/* Стиль для кнопок */
+button {
+    background-color: #007bff;
+    color: white;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    margin: 10px;
+    transition: background-color 0.3s ease;
 }
 
-.container {
-    width: 80%;
-    margin: 0 auto;
+button:hover {
+    background-color: #0056b3;
+}
+
+/* Стиль для заголовков */
+h2 {
+    color: #2c3e50;
+    font-size: 28px;
+    margin-top: 20px;
+}
+
+/* Стиль для лейблов и полей ввода */
+label {
+    font-size: 16px;
+    margin-bottom: 8px;
+    display: block;
+    color: #555;
+}
+
+input[type="number"], select {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    background-color: #fff;
+    transition: border-color 0.3s ease;
+}
+
+input[type="number"]:focus, select:focus {
+    border-color: #007bff;
+}
+
+/* Стиль для блоков с результатами */
+p {
+    font-size: 18px;
+    color: #333;
+    margin: 8px 0;
+}
+
+#income, #profit, #incomeMonth, #incomeYear, #profitMonth, #profitYear, #roi, #payback {
+    font-weight: bold;
+    color: #27ae60;
+}
+
+/* Стиль для формы */
+.form-container {
+    width: 100%;
+    max-width: 500px;
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    margin-top: 30px;
+}
+
+/* Увеличиваем отступы между блоками */
+label, input, button {
+    margin-bottom: 15px;
+}
+
+/* Респонсивность */
+@media (max-width: 600px) {
+    body {
+        padding: 20px;
+    }
+
+    .form-container {
+        width: 100%;
+        padding: 15px;
+    }
+
+    h2 {
+        font-size: 24px;
+    }
 }
