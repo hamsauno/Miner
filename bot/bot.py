@@ -45,10 +45,6 @@ async def start(message: types.Message):
         f"Тыкай и погнали! 🔥\nСейчас в сети {len(users)} пользователей.", 
         reply_markup=keyboard
     )
-    await message.answer(
-        f"Тыкай и погнали! 🔥\nСейчас в сети {len(users)} пользователей.", 
-        reply_markup=keyboard
-    )
 
     # Отправляем админу уведомление о новом пользователе
     await bot.send_message(ADMIN_ID, f"👤 Новый пользователь: {message.from_user.first_name} ({user_id})")
