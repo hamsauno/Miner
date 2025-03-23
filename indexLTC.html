@@ -4,101 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <style>
-        body {
-            font-family: 'Roboto', sans-serif;
-            font-size: 12px; /* Меньший шрифт */
-            padding: 20px;
-            background: linear-gradient(135deg, #1a1a1a, #0d0d0d);
-            color: #ffffff;
-            text-align: left;
-            transition: background-color 0.3s, color 0.3s;
-        }
 
-        h2 {
-            color: #ff9800;
-            font-size: 20px;
-            font-weight: 700;
-            margin-bottom: 20px;
-        }
-
-        label {
-            display: block;
-            margin: 10px 0 5px;
-            font-size: 14px;
-        }
-
-        input, select, button {
-            width: auto;
-            padding: 10px;
-            font-size: 14px;
-            margin-bottom: 10px;
-            background-color: #333;
-            color: #fff;
-            border: 2px solid #444;
-            border-radius: 8px;
-            transition: background-color 0.3s, transform 0.2s ease;
-        }
-
-        input:focus, select:focus, button:focus {
-            border-color: #ff9800;
-            outline: none;
-        }
-
-        button {
-            cursor: pointer;
-            background-color: #ff9800;
-            color: white;
-            font-size: 14px;
-            font-weight: 700;
-            border: none;
-            transition: background-color 0.3s, transform 0.2s ease;
-            padding: 8px 16px;
-        }
-
-        button:hover {
-            background-color: #e68900;
-            transform: translateY(-3px);
-        }
-
-        button:active {
-            background-color: #c77b00;
-            transform: translateY(1px);
-        }
-
-        .back-button {
-            background-color: #444;
-            color: #fff;
-            padding: 6px 12px;
-            border: none;
-            font-size: 12px;
-            cursor: pointer;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            transition: background-color 0.3s, transform 0.2s ease;
-        }
-
-        .back-button:hover {
-            background-color: #555;
-            transform: translateY(-3px);
-        }
-
-        .back-button:active {
-            background-color: #666;
-            transform: translateY(1px);
-        }
-
-        .result-value {
-            font-size: 16px;
-            font-weight: 700;
-            color: #ff9800;
-        }
-
-        .form-container {
-            max-width: 400px;
-            margin: 0 auto;
-        }
-    </style>
 </head>
 <body>
 
@@ -250,9 +156,9 @@ window.onload = async function() {
     }
     </script>
 
-    <button class="back-button" onclick="window.history.back();">Назад</button>
+    <button onclick="window.history.back();">Назад</button>
 
-        <label for="asicModel">Модель Асика:</label>
+    <label>Модель Асика:
         <select id="asicModel" onchange="updateAsicSpecs()">
             <option value="L917">Antminer L9 17G</option>
             <option value="L916">Antminer L9 16G</option>
@@ -262,18 +168,10 @@ window.onload = async function() {
             <option value="DGhome">Elphapex DG home 2,1G</option>
         </select>
     </label>
-        <label for="electricityCost">Стоимость розетки (руб):</label>
-        <input type="number" id="electricityCost" value="5">
-
-        <label for="asicCost">Стоимость Асика (руб):</label>
-        <input type="number" id="asicCost" value="500000">
-
-        <label for="hashrate">Хэшрейт (TH/s):</label>
-        <input type="number" id="hashrate" readonly>
-
-        <label for="power">Энергопотребление (Вт):</label>
-        <input type="number" id="power" readonly>
-
+    <label>Стоимость розетки (руб): <input type="number" id="electricityCost" value="5"></label>
+    <label>Стоимость Асика (руб): <input type="number" id="asicCost" value="500000"></label>
+    <label>Хэшрейт (TH/s): <input type="number" id="hashrate" readonly></label>
+    <label>Энергопотребление (Вт): <input type="number" id="power" readonly></label>
     <label><input type="hidden" id="ltcPrice" readonly></label>
     <label><input type="hidden" id="dogePrice" readonly></label>
     <label><input type="hidden" id="bellPrice" readonly></label>
@@ -281,21 +179,21 @@ window.onload = async function() {
     <label><input type="hidden" id="profitPerLTC" readonly></label>
     <label><input type="hidden" id="profitPerDOGE" readonly></label>
     <label><input type="hidden" id="profitPerBELL" readonly></label>
-
-  <button onclick="calculateProfit()">Рассчитать</button>
+    <button onclick="calculateProfit()">Рассчитать</button>
     
     <h2>Результаты</h2>
-      <p>Доход:</p>
-      <p>День: <span id="income" class="result-value">0</span> $</p>
-      <p>Месяц: <span id="incomeMonth" class="result-value">0</span> $</p>
-      <p>Год: <span id="incomeYear" class="result-value">0</span> $</p>
+    <p>Доход :</p>
+    <p>День: <span id="income">0</span> $</p>
+    <p>Месяц: <span id="incomeMonth">0</span> $</p>
+    <p>Год: <span id="incomeYear">0</span> $</p>
+    
+    <p>Прибыль :</p>
+    <p>День: <span id="profit">0</span> $</p>
+    <p>Месяц: <span id="profitMonth">0</span> $</p>
+    <p>Год: <span id="profitYear">0</span> $</p>
+    
+    <p>Процент годовых: <span id="roi">0</span>%</p>
+    <p>Окупаемость: <span id="payback">0</span> месяцев</p>
 
-      <p>Прибыль:</p>
-      <p>День: <span id="profit" class="result-value">0</span> $</p>
-      <p>Месяц: <span id="profitMonth" class="result-value">0</span> $</p>
-      <p>Год: <span id="profitYear" class="result-value">0</span> $</p>
-
-      <p>Процент годовых: <span id="roi" class="result-value">0</span>%</p>
-      <p>Окупаемость: <span id="payback" class="result-value">0</span> месяцев</p>
 </body>
 </html>
