@@ -1,10 +1,7 @@
         // Инициализация Telegram Web App
         window.Telegram.WebApp.init();
 
-        // Запрос на использование полноэкранного режима
-        window.Telegram.WebApp.expand();
-
-        // После инициализации можно управлять состоянием приложения
+        // Подождите, пока WebView изменит размер, и затем разверните приложение
         window.Telegram.WebApp.onEvent('viewportChanged', function() {
-            // Действия при изменении размера экрана, если нужно
+            window.Telegram.WebApp.expand();  // Разворачиваем приложение на весь экран
         });
