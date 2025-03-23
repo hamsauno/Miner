@@ -1,11 +1,16 @@
 import asyncio
 import json
+import os
+from dotenv import load_dotenv  # Импортируем dotenv
 from aiogram import Bot, Dispatcher, types
 from aiogram.filters import Command
 from aiogram.types import WebAppInfo, InlineKeyboardMarkup, InlineKeyboardButton
 
-TOKEN = "7973202415:AAE2otWXvbDNm1fiAhfpZrvJ0KIsa1AdSZM"  # Замени на свой токен
-ADMIN_ID = "1197645759"  # Замени на свой Telegram ID
+# Загружаем переменные окружения
+load_dotenv()
+
+TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")  # Получаем токен из .env
+ADMIN_ID = os.getenv("ADMIN_ID")  # Получаем ID админа из .env
 USERS_FILE = "users.json"  # Файл для хранения пользователей
 
 bot = Bot(token=TOKEN)
