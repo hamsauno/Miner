@@ -33,7 +33,7 @@ button:hover {
 /* Фиксированная таблица внизу */
 .result-table {
     position: fixed;
-    bottom: 0;
+    bottom: 40px;
     left: 0;
     width: 100%;
     background-color: #1e1e1e;
