@@ -91,4 +91,9 @@
         document.getElementById("roi").innerText = roi.toFixed(2);
         document.getElementById("payback").innerText = payback.toFixed(0);
     }
+    // Загружаем данные и обновляем элементы
+    window.onload = async function() {
+        await fetchData(); // Загружаем данные из файла kursBTC.txt
+        updateAsicSpecs(); // Обновляем характеристики ASIC
+    }
 </script>
