@@ -1,3 +1,4 @@
+
     // Функция для обновления характеристик выбранной модели ASIC
     function updateAsicSpecs() {
         const asicData = {
