@@ -46,7 +46,7 @@
             background-color: #1e1e1e; /* Тёмный фон кнопки */
             color: white;
             font-size: 18px;
-            border: 2px solid orange; /* Оранжевая обводка */
+            border: 2px solid gold; /* Золотая обводка */
             cursor: pointer;
             transition: background-color 0.3s;
         }
