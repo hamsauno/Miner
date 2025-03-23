@@ -1,24 +1,33 @@
         body {
             margin: 0;
             padding: 0;
-            height: 100%;
+            height: 100vh;  /* Устанавливаем высоту на весь экран */
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between; /* Размещаем элементы по верху и низу */
+        }
+
+        .content {
+            flex: 1;
             display: flex;
             justify-content: center;
             align-items: center;
-            background-color: #f1f1f1;
         }
 
-        .container {
-            width: 100%;
-            height: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background-color: #fff;
-            padding: 20px;
+        .button-container {
+            position: fixed;
+            bottom: 20px;  /* Отступ от нижней части экрана */
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 999;  /* Поверх других элементов */
         }
 
-        h1 {
-            font-size: 24px;
-            color: #333;
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            margin: 10px;
+            border-radius: 5px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
         }
