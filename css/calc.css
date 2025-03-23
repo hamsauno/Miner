@@ -57,7 +57,7 @@
         }
 
         .button-container button:active {
-            background-color: #444;
+           background-colo: #ffd700; /* Ярче золото при наведении */
         }
 
         /* Контент по центру */
