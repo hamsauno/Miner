@@ -13,43 +13,70 @@
 </head>
 <body>
 
-   
+ <div class="header">
+        <label>Модель Асика:
+            <select id="asicModel" onchange="updateAsicSpecs()">
+                <option value="S21XP">Antminer S21 XP 270Th</option>
+                <option value="S21pl235">Antminer S21+ 235Th</option>
+                <option value="S21pl225">Antminer S21+ 225Th</option>
+                <option value="S21pl216">Antminer S21+ 216Th</option>
+                <option value="T21190">Antminer T21 190Th</option>
+                <option value="S19k120">Antminer S19k Pro 120Th</option>
+            </select>
+        </label>
 
-    <div class="header">
-    <label>Модель Асика:
-        <select id="asicModel" onchange="updateAsicSpecs()">
-            <option value="S21XP">Antminer S21 XP 270Th</option>
-            <option value="S21pl235">Antminer S21+ 235Th</option>
-            <option value="S21pl225">Antminer S21+ 225Th</option>
-            <option value="S21pl216">Antminer S21+ 216Th</option>
-            <option value="T21190">Antminer T21 190Th</option>
-            <option value="S19k120">Antminer S19k Pro 120Th</option>
-        </select>
-    </label>
+        <label>Стоимость розетки (руб): 
+            <input type="number" id="electricityCost" value="5">
+        </label>
+
+        <label>Стоимость Асика (руб): 
+            <input type="number" id="asicCost" value="500000">
+        </label>
+
+        <label>Хэшрейт (TH/s): 
+            <span id="hashrate">0</span>
+        </label>
+
+        <label>Энергопотребление (Вт): 
+            <span id="power">0</span>
+        </label>
+
+        <button onclick="calculateProfit()">Рассчитать</button>
     </div>
-        
-    <label>Стоимость розетки (руб): <input type="number" id="electricityCost" value="5"></label>
-    <label>Стоимость Асика (руб): <input type="number" id="asicCost" value="500000"></label>
-    <label>Хэшрейт (TH/s): <input type="number" id="hashrate" readonly></label>
-    <label>Энергопотребление (Вт): <input type="number" id="power" readonly></label>
-    <label><input type="hidden" id="btcPrice"></label>
-    <label><input type="hidden" id="usdtPrice"></label>
-    <label><input type="hidden" id="profitPerTH"></label>
-    <button onclick="calculateProfit()">Рассчитать</button>
-    
+
     <h2>Результаты</h2>
-    <p>Доход :</p>
-    <p>День: <span id="income">0</span> $</p>
-    <p>Месяц: <span id="incomeMonth">0</span> $</p>
-    <p>Год: <span id="incomeYear">0</span> $</p>
-    
-    <p>Прибыль :</p>
-    <p>День: <span id="profit">0</span> $</p>
-    <p>Месяц: <span id="profitMonth">0</span> $</p>
-    <p>Год: <span id="profitYear">0</span> $</p>
-    
-    <p>Процент годовых: <span id="roi">0</span>%</p>
-    <p>Окупаемость: <span id="payback">0</span> месяцев</p>
+    <table class="result-table">
+        <thead>
+            <tr>
+                <th></th>
+                <th>День</th>
+                <th>Месяц</th>
+                <th>Год</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Доход</td>
+                <td><span id="income">0</span> $</td>
+                <td><span id="incomeMonth">0</span> $</td>
+                <td><span id="incomeYear">0</span> $</td>
+            </tr>
+            <tr>
+                <td>Прибыль</td>
+                <td><span id="profit">0</span> $</td>
+                <td><span id="profitMonth">0</span> $</td>
+                <td><span id="profitYear">0</span> $</td>
+            </tr>
+            <tr>
+                <td>Процент годовых</td>
+                <td colspan="3"><span id="roi">0</span> %</td>
+            </tr>
+            <tr>
+                <td>Окупаемость</td>
+                <td colspan="3"><span id="payback">0</span> месяцев</td>
+            </tr>
+        </tbody>
+    </table>
 
 </body>
 </html>
