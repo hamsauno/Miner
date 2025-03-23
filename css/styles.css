@@ -8,7 +8,6 @@
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            align-items: center;
             height: 100vh; /* Полноэкранный режим */
             overflow: hidden; /* Отключаем прокрутку */
             background-color: #121212; /* Тёмный фон */
