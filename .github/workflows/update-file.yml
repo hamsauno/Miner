@@ -2,31 +2,53 @@ name: Update kursBTC.txt from Google Sheets
 
 on:
   schedule:
-    - cron: '0 * * * *'  # Запуск каждый час
+    - cron: '*/30 * * * *'  # Запуск каждые 30 минут
   workflow_dispatch:
 
 jobs:
   update-file:
     runs-on: ubuntu-latest
     steps:
+      # 1️⃣ Клонируем репозиторий
       - name: Checkout code
         uses: actions/checkout@v3
-        with:
-          persist-credentials: false  # Отключаем стандартную аутентификацию
 
+      # 2️⃣ Получаем данные из Google Sheets
       - name: Get data from Google Sheets
         id: fetch_data
         run: |
-          DATA=$(curl -s "https://script.google.com/macros/s/AKfycbzZvQMpbmeQJMbU9lezLeSecNBXy4-ofHnrpWozXhmjfCGDZXm0z62Q3m-1vRnvzkSD/exec")
-          echo "$DATA" > kursBTC.txt
-          echo "Data fetched: $DATA"
+          # Получаем данные с вашего Google Apps Script URL
+          DATA=$(curl -s -L "https://script.google.com/macros/s/AKfycbzZvQMpbmeQJMbU9lezLeSecNBXy4-ofHnrpWozXhmjfCGDZXm0z62Q3m-1vRnvzkSD/exec")
+          echo "$DATA" > kursBTC.txt  # Записываем данные в файл kursBTC.txt
 
+      # 3️⃣ Коммитим и пушим изменения, если они есть
       - name: Commit and push changes
-        env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}  # Используем токен из секретов
         run: |
-          git config --global user.name "hamsauno"
-          git config --global user.email "hamsauno74@gmail.com"
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          
+          # Проверяем, есть ли изменения
           git add kursBTC.txt
-          git commit -m "Update kursBTC.txt" || echo "No changes to commit"
-          git push https://x-access-token:${GH_TOKEN}@github.com/hamsauno/Miner.git HEAD:gh-pages
+          if git diff --cached --quiet; then
+            echo "No changes detected, skipping commit"
+            exit 0
+          fi
+
+          git commit -m "Auto-update kursBTC.txt"
+          git pull --rebase origin main || echo "No need to rebase"
+          git push https://x-access-token:${{ secrets.GH_TOKEN }}@github.com/hamsauno/Miner.git HEAD:main || echo "Push failed"
+
+      # 4️⃣ Деплой на GitHub Pages
+      - name: Deploy to GitHub Pages
+        run: |
+          git checkout main
+          git add kursBTC.txt
+          
+          # Проверяем, есть ли изменения перед коммитом
+          if git diff --cached --quiet; then
+            echo "No changes detected, skipping deployment"
+            exit 0
+          fi
+          
+          git commit -m "Deploy updated kursBTC.txt"
+          git push https://x-access-token:${{ secrets.GH_TOKEN }}@github.com/hamsauno/Miner.git HEAD:main
