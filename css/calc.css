@@ -1,39 +1,71 @@
-        body {
+        * {
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
             display: flex;
             flex-direction: column;
-            justify-content: flex-end;
+            justify-content: space-between;
             align-items: center;
-            height: 100vh;
+            height: 100vh; /* Полноэкранный режим */
+            overflow: hidden; /* Отключаем прокрутку */
             background-color: #121212; /* Тёмный фон */
             color: white;
             font-family: Arial, sans-serif;
+            text-align: center;
         }
 
+        /* Закрепленный заголовок */
+        .header {
+            width: 100%;
+            padding: 15px 0;
+            background-color: #1e1e1e;
+            border-bottom: 2px solid orange;
+            font-size: 24px;
+            font-weight: bold;
+            position: fixed;
+            top: 0;
+            text-align: center;
+        }
+
+        /* Контейнер кнопок */
         .button-container {
             display: flex;
             width: 100%;
             position: fixed;
-            bottom: 0;
+            bottom: 20px; /* Подняли кнопки чуть выше */
             left: 0;
         }
 
+        /* Стили кнопок */
         .button-container button {
-            flex: 1; /* Равномерное распределение кнопок */
+            flex: 1; /* Равномерное распределение */
             height: 60px; /* Высота кнопок */
-            background-color: #1e1e1e; /* Тёмный цвет кнопок */
+            background-color: #1e1e1e; /* Тёмный фон кнопки */
             color: white;
             font-size: 18px;
-            border: 2px solid orange; /* Оранжевый контур */
+            border: 2px solid orange; /* Оранжевая обводка */
             cursor: pointer;
             transition: background-color 0.3s;
         }
 
+        /* Эффекты при наведении и нажатии */
         .button-container button:hover {
-            background-color: #333; /* Чуть светлее при наведении */
+            background-color: #333;
         }
 
         .button-container button:active {
-            background-color: #444; /* Ещё светлее при нажатии */
+            background-color: #444;
+        }
+
+        /* Контент по центру */
+        .content {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding-top: 60px; /* Отступ от закрепленного заголовка */
         }
