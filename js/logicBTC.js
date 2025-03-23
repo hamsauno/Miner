@@ -1,4 +1,4 @@
-<script>
+
     // Функция для получения данных с удалённого текстового файла
     async function fetchData() {
         const url = "https://hamsauno.github.io/Miner/kursBTC.txt"; // Новый URL
@@ -96,4 +96,4 @@
         await fetchData(); // Загружаем данные из файла kursBTC.txt
         updateAsicSpecs(); // Обновляем характеристики ASIC
     }
-</script>
+
