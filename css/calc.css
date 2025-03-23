@@ -1,15 +1,18 @@
-body {
-  margin: 0;
-  padding: 0;
-  font-family: Arial, sans-serif;
-  height: 100%;
-  width: 100%;
-}
-
-html, body {
-  height: 100%;
-  width: 100%;
-}
+        @media (max-width: 600px) {
+          /* стили для мобильных устройств */
+        }
+        body {
+          margin: 0;
+          padding: 0;
+          font-family: Arial, sans-serif;
+          height: 100%;
+          width: 100%;
+        }
+        
+        html, body {
+          height: 100%;
+          width: 100%;
+        }
 
 
         h1 {
