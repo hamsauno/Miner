@@ -1,3 +1,3 @@
     Telegram.WebApp.expand();
 
-    window.Telegram.WebApp.disableVerticalSwipes();
+    Telegram.WebApp.disableVerticalSwipes();
