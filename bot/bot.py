@@ -24,7 +24,6 @@ def save_users(users):
     with open(USERS_FILE, "w") as file:
         json.dump(users, file)
 
-# Обработчик команды /start
 @dp.message(Command("start"))
 async def start(message: types.Message):
     users = load_users()
@@ -35,12 +34,17 @@ async def start(message: types.Message):
         users.append(user_id)
         save_users(users)
 
-keyboard = InlineKeyboardMarkup(
-    inline_keyboard=[[
-        InlineKeyboardButton(text="ОТКРЫТЬ", web_app=WebAppInfo(url="https://hamsauno.github.io/Miner/calc.html"))
-    ]]
-)
+    keyboard = InlineKeyboardMarkup(
+        inline_keyboard=[[
+            InlineKeyboardButton(text="ОТКРЫТЬ", web_app=WebAppInfo(url="https://hamsauno.github.io/Miner/calc.html"))
+        ]]
+    )
 
+    # Этот блок должен иметь правильный отступ
+    await message.answer(
+        f"Тыкай и погнали! 🔥\nСейчас в сети {len(users)} пользователей.", 
+        reply_markup=keyboard
+    )
     await message.answer(
         f"Тыкай и погнали! 🔥\nСейчас в сети {len(users)} пользователей.", 
         reply_markup=keyboard
