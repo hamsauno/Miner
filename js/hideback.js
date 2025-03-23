@@ -1,8 +1,9 @@
-    Telegram.WebApp.ready(); // Инициализация WebApp после загрузки
+    // Пытаемся скрыть кнопку "Назад" только на мобильных устройствах
+    if (Telegram.WebApp.isMobile) {
+        Telegram.WebApp.BackButton.hide(); // Скрыть кнопку
+    }
 
+    // Если кнопка всё равно отображается, пробуем скрыть её с задержкой
     setTimeout(function() {
-        // Скрытие кнопки «Назад» через 1 секунду
-        if (Telegram.WebApp.isMobile) {
-            Telegram.WebApp.BackButton.hide();
-        }
+        Telegram.WebApp.BackButton.hide();
     }, 1000); // Задержка в 1 секунду
