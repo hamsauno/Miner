@@ -10,6 +10,11 @@ h1 {
   text-align: center;
   margin-top: 20px;
 }
+.container {
+  height: 100vh; /* Высота контейнера равна высоте экрана */
+  display: flex;
+  flex-direction: column;
+}
 
 .button-container {
   position: fixed; /* Фиксируем кнопки на экране */
