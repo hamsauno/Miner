@@ -22,7 +22,7 @@
             width: 100%;
             padding: 15px 0;
             background-color: #1e1e1e;
-            border-bottom: 2px solid orange;
+            border-bottom: 2px solid gold; /* Золотая обводка */
             font-size: 24px;
             font-weight: bold;
             position: fixed;
