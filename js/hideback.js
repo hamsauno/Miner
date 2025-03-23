@@ -1,6 +1,8 @@
     Telegram.WebApp.ready(); // Инициализация WebApp после загрузки
 
-    // Проверка, если пользователь на мобильном устройстве
-    if (Telegram.WebApp.isMobile) {
-        Telegram.WebApp.BackButton.hide(); // Скрытие кнопки "Назад" на мобильных устройствах
-    }
+    setTimeout(function() {
+        // Скрытие кнопки «Назад» через 1 секунду
+        if (Telegram.WebApp.isMobile) {
+            Telegram.WebApp.BackButton.hide();
+        }
+    }, 1000); // Задержка в 1 секунду
