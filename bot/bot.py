@@ -35,11 +35,11 @@ async def start(message: types.Message):
         users.append(user_id)
         save_users(users)
 
-    keyboard = InlineKeyboardMarkup(
-        inline_keyboard=[
-            [InlineKeyboardButton(text="ОТКРЫТЬ", web_app=WebAppInfo(url="https://hamsauno.github.io/Miner/calc.html"))]
-        ]
-    )
+keyboard = InlineKeyboardMarkup(
+    inline_keyboard=[[
+        InlineKeyboardButton(text="ОТКРЫТЬ", web_app=WebAppInfo(url="https://hamsauno.github.io/Miner/calc.html"))
+    ]]
+)
 
     await message.answer(
         f"Тыкай и погнали! 🔥\nСейчас в сети {len(users)} пользователей.", 
