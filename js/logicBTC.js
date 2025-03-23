@@ -1,4 +1,60 @@
 <script>
+    // Функция для получения данных с удалённого текстового файла
+    async function fetchData() {
+        const url = "https://hamsauno.github.io/Miner/kursBTC.txt"; // Новый URL
+
+        try {
+            const response = await fetch(url);
+            if (!response.ok) {
+                throw new Error('Не удалось загрузить данные.');
+            }
+            const data = await response.text();
+            
+            // Разбиваем данные на строки
+            const lines = data.trim().split("\n");
+            
+            // Убедимся, что строк достаточно для всех данных
+            if (lines.length >= 3) {
+                const btcPrice = parseFloat(lines[0].trim());
+                const usdtPrice = parseFloat(lines[1].trim());
+                const profitPerTH = parseFloat(lines[2].trim());
+
+                if (!isNaN(btcPrice) && !isNaN(usdtPrice) && !isNaN(profitPerTH)) {
+                    document.getElementById("btcPrice").value = btcPrice.toFixed(2);
+                    document.getElementById("usdtPrice").value = usdtPrice.toFixed(2);
+                    document.getElementById("profitPerTH").value = profitPerTH.toFixed(8);
+                } else {
+                    console.error("Ошибка: Данные из файла не являются валидными числами.");
+                    document.getElementById("btcPrice").value = "Ошибка";
+                    document.getElementById("usdtPrice").value = "Ошибка";
+                    document.getElementById("profitPerTH").value = "Ошибка";
+                }
+            } else {
+                console.error("Ошибка: недостаточно строк в файле.");
+            }
+        } catch (error) {
+            console.error("Ошибка загрузки файла:", error);
+            document.getElementById("btcPrice").value = "Ошибка при загрузке данных.";
+            document.getElementById("usdtPrice").value = "Ошибка при загрузке данных.";
+            document.getElementById("profitPerTH").value = "Ошибка при загрузке данных.";
+        }
+    }
+
+    // Функция для обновления характеристик выбранной модели ASIC
+    function updateAsicSpecs() {
+        const asicData = {
+            S21XP: { a: 270, b: 3645 },
+            S21pl235: { a: 235, b: 3878 },
+            S21pl225: { a: 225, b: 3713 },
+            S21pl216: { a: 216, b: 3564 },
+            T21190: { a: 190, b: 3610 },
+            S19k120: { a: 120, b: 2760 }
+        };
+
+        let selectedModel = document.getElementById("asicModel").value;
+        document.getElementById("hashrate").value = asicData[selectedModel].a;
+        document.getElementById("power").value = asicData[selectedModel].b;
+    }
     // Функция для расчёта доходности и прибыли
     function calculateProfit() {
         const btcPrice = parseFloat(document.getElementById("btcPrice").value);
