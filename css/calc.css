@@ -35,7 +35,7 @@
             display: flex;
             width: 100%;
             position: fixed;
-            bottom: 20px; /* Подняли кнопки чуть выше */
+            bottom: 40px; /* Подняли кнопки чуть выше */
             left: 0;
         }
 
