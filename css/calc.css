@@ -2,36 +2,38 @@
             margin: 0;
             padding: 0;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
+            justify-content: flex-end;
             align-items: center;
             height: 100vh;
-            background-color: #f0f0f0;
+            background-color: #121212; /* Тёмный фон */
+            color: white;
+            font-family: Arial, sans-serif;
         }
 
         .button-container {
             display: flex;
-            gap: 20px;
+            width: 100%;
+            position: fixed;
+            bottom: 0;
+            left: 0;
         }
 
-        .circle-button {
-            width: 80px;  /* Ширина кнопки */
-            height: 80px;  /* Высота кнопки */
-            background-color: #4CAF50;  /* Цвет фона */
-            border: none;
-            border-radius: 50%;  /* Делаем кнопку круглой */
+        .button-container button {
+            flex: 1; /* Равномерное распределение кнопок */
+            height: 60px; /* Высота кнопок */
+            background-color: #1e1e1e; /* Тёмный цвет кнопок */
             color: white;
-            font-size: 16px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            font-size: 18px;
+            border: 2px solid orange; /* Оранжевый контур */
             cursor: pointer;
-            transition: background-color 0.3s ease;
+            transition: background-color 0.3s;
         }
 
-        .circle-button:hover {
-            background-color: #45a049;  /* Изменение цвета при наведении */
+        .button-container button:hover {
+            background-color: #333; /* Чуть светлее при наведении */
         }
 
-        .circle-button:active {
-            background-color: #388e3c;  /* Цвет при нажатии */
+        .button-container button:active {
+            background-color: #444; /* Ещё светлее при нажатии */
         }
