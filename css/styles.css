@@ -1,73 +1,18 @@
-/* Основные стили для body */
-body {
-    font-family: Arial, sans-serif; /* Шрифт */
-    background-color: #f4f4f4; /* Цвет фона */
-    margin: 0;
-    padding: 0;
-    color: #333; /* Цвет текста */
-}
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-/* Стили для контейнера страницы */
-.container {
-    width: 80%;
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 20px;
-}
-
-/* Стили для заголовков */
-h1, h2, h3 {
-    color: #333;
-    font-weight: normal;
-}
-
-/* Основные стили для ссылок */
-a {
-    text-decoration: none;
-    color: #0066cc;
-}
-
-a:hover {
-    text-decoration: underline;
-}
-
-/* Стили для навигационной панели */
-nav {
-    background-color: #333;
-    padding: 10px;
-}
-
-nav a {
-    color: white;
-    margin-right: 15px;
-    font-size: 16px;
-}
-
-nav a:hover {
-    color: #ffcc00;
-}
-
-/* Стили для кнопок */
-button {
-    background-color: #0066cc;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    cursor: pointer;
-    font-size: 16px;
-}
-
-button:hover {
-    background-color: #005bb5;
-}
-
-/* Стили для футера */
-footer {
-    background-color: #333;
-    color: white;
-    text-align: center;
-    padding: 20px 0;
-    position: fixed;
-    width: 100%;
-    bottom: 0;
-}
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            height: 100vh; /* Полноэкранный режим */
+            overflow: hidden; /* Отключаем прокрутку */
+            background-color: #121212; /* Тёмный фон */
+            color: white;
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
