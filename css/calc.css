@@ -1,17 +1,37 @@
-    html, body {
-      height: 100%;
-      margin: 0;
-      padding: 0;
-    }
+body {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  height: 100vh; /* Чтобы тело занимало всю высоту экрана */
+}
 
-    .container {
-      height: 100vh; /* высота контейнера = высоте экрана */
-      overflow: hidden;
-      background-color: lightblue;
-    }
+h1 {
+  text-align: center;
+  margin-top: 20px;
+}
 
-    .content {
-      text-align: center;
-      font-size: 2rem;
-      padding: 20px;
-    }
+.button-container {
+  position: fixed; /* Фиксируем кнопки на экране */
+  bottom: 20px; /* Отступ от низа экрана */
+  left: 50%;
+  transform: translateX(-50%); /* Центрируем контейнер по горизонтали */
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 0 20px; /* Добавим немного отступов для внешнего вида */
+}
+
+.button-container button {
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.button-container button:hover {
+  background-color: #0056b3;
+}
