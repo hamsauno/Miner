@@ -3,5 +3,5 @@
 
     // Обработчик нажатия кнопки "Назад"
     Telegram.WebApp.BackButton.onClick(function () {
-        window.history.back(); // Возвращаемся назад в истории браузера
+        Telegram.WebApp.close(); // Закрытие приложения Telegram WebApp на мобильных устройствах
     });
