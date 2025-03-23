@@ -1,33 +1,37 @@
         body {
             margin: 0;
             padding: 0;
-            height: 100vh;  /* Устанавливаем высоту на весь экран */
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between; /* Размещаем элементы по верху и низу */
-        }
-
-        .content {
-            flex: 1;
             display: flex;
             justify-content: center;
             align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
         }
 
         .button-container {
-            position: fixed;
-            bottom: 20px;  /* Отступ от нижней части экрана */
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 999;  /* Поверх других элементов */
+            display: flex;
+            gap: 20px;
         }
 
-        button {
-            padding: 10px 20px;
-            font-size: 16px;
-            margin: 10px;
-            border-radius: 5px;
-            background-color: #4CAF50;
-            color: white;
+        .circle-button {
+            width: 80px;  /* Ширина кнопки */
+            height: 80px;  /* Высота кнопки */
+            background-color: #4CAF50;  /* Цвет фона */
             border: none;
+            border-radius: 50%;  /* Делаем кнопку круглой */
+            color: white;
+            font-size: 16px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .circle-button:hover {
+            background-color: #45a049;  /* Изменение цвета при наведении */
+        }
+
+        .circle-button:active {
+            background-color: #388e3c;  /* Цвет при нажатии */
         }
