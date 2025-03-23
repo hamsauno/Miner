@@ -9,7 +9,11 @@
     <script src="js/background.js" defer></script> <!-- фон страницы -->
     <link rel="stylesheet" href="css/calc.css"> <!-- стиль  -->
 
-    <script>Telegram.WebApp.BackButton.hide();</script><!--  скрыть кнопку «Назад»  -->
+    <script>
+            if (Telegram.WebApp.isMobile) {
+        Telegram.WebApp.BackButton.hide(); // Скрыть кнопку "Назад" на мобильном
+    }
+    </script>
 
 </head>
 <body>
