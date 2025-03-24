@@ -7,6 +7,8 @@ body {
     align-items: center;
     height: 100vh;
     margin: 0;
+    padding: 10px;
+    box-sizing: border-box;
 }
 
 .calculator {
@@ -16,6 +18,8 @@ body {
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
     backdrop-filter: blur(10px);
     transition: transform 0.3s ease-in-out;
+    width: 100%;
+    max-width: 400px;
 }
 
 .calculator:hover {
@@ -28,6 +32,8 @@ input, button {
     border: none;
     border-radius: 5px;
     margin: 5px;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 button {
@@ -50,3 +56,15 @@ button:hover {
     animation: fadeIn 0.5s ease-out;
 }
 
+/* Адаптивность для мобильных устройств */
+@media (max-width: 480px) {
+    .calculator {
+        padding: 15px;
+        border-radius: 10px;
+    }
+
+    input, button {
+        font-size: 16px;
+        padding: 8px;
+    }
+}
