@@ -8,14 +8,13 @@
         event.preventDefault();
     });
 
-    document.getElementById("electricityCost").addEventListener("input", function() {
-    // Применение значения и сворачивание клавиатуры
-    this.blur();
-    calculateProfit();
-    });
-    
-    document.getElementById("asicCost").addEventListener("input", function() {
-        // Применение значения и сворачивание клавиатуры
-        this.blur();
-        calculateProfit();
-    });
+        function calculateProfit() {
+            // Ваш код для расчёта
+            console.log("Расчёт обновлён");
+        }
+
+        function applyValue(inputId) {
+            var input = document.getElementById(inputId);
+            input.blur();  // Скрывает клавиатуру
+            calculateProfit();  // Вызывает функцию для пересчёта
+        }
