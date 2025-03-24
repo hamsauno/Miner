@@ -1,6 +1,19 @@
+@keyframes gradientAnimation {
+    0% {
+        background: linear-gradient(45deg, #ff6ec7, #ff7b00);
+    }
+    50% {
+        background: linear-gradient(45deg, #00c6ff, #0072ff);
+    }
+    100% {
+        background: linear-gradient(45deg, #ff6ec7, #ff7b00);
+    }
+}
+
  body {
              font-family: Arial, sans-serif;
              margin: 0;
+             animation: gradientAnimation 5s ease infinite;
              padding: 0;
              display: flex;
              flex-direction: column;
