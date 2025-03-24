@@ -17,10 +17,13 @@
             margin-bottom: 10px;
         }
         .header input, .header select {
-            flex-grow: 1;
-            margin-left: 10px;
-            height: 30px;
-            font-size: 16px;
+            width: 100%; /* Устанавливаем ширину на 100% от родительского контейнера */
+            max-width: 250px; /* Ограничиваем максимальную ширину */
+            margin-left: 10px; /* Отступ между текстом и полем ввода */
+            height: 30px; /* Высота поля */
+            font-size: 16px; /* Размер шрифта */
+            padding: 5px; /* Внутренний отступ для удобства */
+            box-sizing: border-box; /* Учитывает отступы и рамки в ширину */
         }
         .header select {
             width: 100%;
