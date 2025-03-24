@@ -7,14 +7,3 @@
     document.addEventListener("gesturestart", function(event) {
         event.preventDefault();
     });
-
-        function calculateProfit() {
-            // Ваш код для расчёта
-            console.log("Расчёт обновлён");
-        }
-
-        function applyValue(inputId) {
-            var input = document.getElementById(inputId);
-            input.blur();  // Скрывает клавиатуру
-            calculateProfit();  // Вызывает функцию для пересчёта
-        }
