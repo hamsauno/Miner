@@ -30,7 +30,7 @@
             border-collapse: collapse;
             margin-top: auto;
             position: fixed;
-            bottom: 0;
+            bottom: 20px;
             background-color: white;
             border-top: 2px solid #ddd;
             left: 0;
