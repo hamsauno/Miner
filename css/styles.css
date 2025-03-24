@@ -6,6 +6,7 @@
              display: flex;
              flex-direction: column;
              min-height: 100vh;
+             font-size: 12px; /* Уменьшаем размер шрифта на всей странице */
          }
          .header {
              padding: 15px;
@@ -19,14 +20,11 @@
          }
          .header input, .header select {
              flex-grow: 1;
-             margin-left: 10px;
-             height: 30px;
-             font-size: 16px;
              width: 100%; /* Устанавливаем ширину на 100% от родительского контейнера */
              max-width: 250px; /* Ограничиваем максимальную ширину */
              margin-left: 10px; /* Отступ между текстом и полем ввода */
              height: 30px; /* Высота поля */
-             font-size: 16px; /* Размер шрифта */
+             font-size: 12px; /* Размер шрифта */
              padding: 5px; /* Внутренний отступ для удобства */
              box-sizing: border-box; /* Учитывает отступы и рамки в ширину */
          }
@@ -48,6 +46,7 @@
              padding: 10px;
              text-align: center;
              border: 1px solid #ddd;
+             font-size: 12px; /* Уменьшаем размер шрифта в таблице */
          }
          .result-table th {
              background-color: #f4f4f4;
