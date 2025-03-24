@@ -3,20 +3,31 @@ document.addEventListener("DOMContentLoaded", function() {
     const leftButton = document.querySelector(".left-button");
     const rightButton = document.querySelector(".right-button");
 
-    // При клике на главную кнопку боковые плавно появляются
+    let buttonsVisible = false; // Флаг для отслеживания состояния кнопок
+
+    // При клике на главную кнопку боковые кнопки плавно появляются/исчезают
     mainButton.addEventListener("click", function() {
-        leftButton.style.transform = "translateX(-200%)";
-        rightButton.style.transform = "translateX(200%)";
+        if (!buttonsVisible) {
+            leftButton.style.transform = "translateX(-200%)";
+            rightButton.style.transform = "translateX(200%)";
+        } else {
+            leftButton.style.transform = "translateX(-150%)";
+            rightButton.style.transform = "translateX(150%)";
+        }
+        buttonsVisible = !buttonsVisible; // Инвертируем флаг
     });
 
-    // Если снова кликнуть, кнопки спрячутся
+    // Перенаправление по страницам при нажатии на боковые кнопки
     leftButton.addEventListener("click", function() {
-        leftButton.style.transform = "translateX(-150%)";
-        rightButton.style.transform = "translateX(150%)";
+        window.location.href = "indexBTC.html"; // Замените ссылку
     });
 
     rightButton.addEventListener("click", function() {
-        leftButton.style.transform = "translateX(-150%)";
-        rightButton.style.transform = "translateX(150%)";
+        window.location.href = "indexLTC.html"; // Замените ссылку
+    });
+
+    // Главная кнопка тоже может перенаправлять (по желанию)
+    mainButton.addEventListener("dblclick", function() {
+        window.location.href = "calc.html"; // Замените ссылку
     });
 });
