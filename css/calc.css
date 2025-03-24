@@ -1,52 +1,73 @@
-        /* Закрепленный заголовок */
-        .header {
-            width: 100%;
-            padding: 15px 0;
-            background-color: #1e1e1e;
-            border-bottom: 2px solid gold; /* Золотая обводка */
-            font-size: 24px;
-            font-weight: bold;
-            position: fixed;
-            top: 0;
-            text-align: center;
-        }
+/* Общие стили */
+body {
+  background-color: #121212;
+  color: #FFFFFF;
+  font-family: 'Roboto', sans-serif;
+}
 
-        /* Контейнер кнопок */
-        .button-container {
-            display: flex;
-            width: 100%;
-            position: fixed;
-            bottom: 40px; /* Подняли кнопки чуть выше */
-            left: 0;
-        }
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  padding: 20px;
+}
 
-        /* Стили кнопок */
-        .button-container button {
-            flex: 1; /* Равномерное распределение */
-            height: 60px; /* Высота кнопок */
-            background-color: #1e1e1e; /* Тёмный фон кнопки */
-            color: white;
-            font-size: 18px;
-            border: 2px solid gold; /* Золотая обводка */
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
+.main-content {
+  margin-bottom: 50px;
+  text-align: center;
+}
 
-        /* Эффекты при наведении и нажатии */
-        .button-container button:hover {
-            background-color: #333;
-        }
+/* Кнопки */
+.button-group {
+  position: relative;
+  width: 80%;
+  max-width: 400px;
+  display: flex;
+  justify-content: center;
+}
 
-        .button-container button:active {
-           background-colo: #ffd700; /* Ярче золото при наведении */
-        }
+.primary-button {
+  background-color: #FF5722;
+  color: white;
+  border-radius: 30px;
+  padding: 15px 40px;
+  font-size: 18px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25);
+  transition: transform 0.3s ease-in-out;
+}
 
-        /* Контент по центру */
-        .content {
-            flex: 1;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            padding-top: 60px; /* Отступ от закрепленного заголовка */
-        }
+.secondary-button {
+  background-color: transparent;
+  color: #FF5722;
+  border: 2px solid #FF5722;
+  border-radius: 30px;
+  padding: 10px 20px;
+  font-size: 16px;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  opacity: 0;
+  transition: all 0.3s ease-in-out;
+}
+
+.left {
+  left: -110px;
+}
+
+.right {
+  right: -110px;
+}
+
+/* Анимация появления вспомогательных кнопок */
+.primary-button:hover + .left,
+.primary-button:hover + .right {
+  opacity: 1;
+  transform: translateX(0) translateY(-50%);
+}
+
+/* Дополнительная анимация */
+.primary-button:hover {
+  transform: scale(1.05);
+}
