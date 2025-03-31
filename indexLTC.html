@@ -15,16 +15,18 @@
 <body>
 
  <div class="header">
+      <label>Производитель:
+            <select id="manufacturerSelect" onchange="updateModelList()">
+                <option value="antminer">Bitmain Antminer</option>
+                <option value="whatsminer">Elphapex</option>
+            </select>
+        </label>
+        
         <label>Модель Асика:
             <select id="asicModel" onchange="updateAsicSpecs()">
-            <option value="L917">Antminer L9 17G</option>
-            <option value="L916">Antminer L9 16G</option>
-            <option value="L915">Antminer L9 15G</option>
-            <option value="DG14">Elphapex DG1+ 14G</option>
-            <option value="DG13">Elphapex DG1+ 13G</option>
-            <option value="DGhome">Elphapex DG home 2,1G</option>
-        </select>
-    </label>
+                <!-- Модели будут добавляться динамически -->
+            </select>
+        </label>
      
     <label>Стоимость розетки (руб): 
         <input type="number" id="electricityCost" value="5" inputmode="numeric">
