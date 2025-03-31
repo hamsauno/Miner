@@ -1,6 +1,6 @@
 // Функция для получения данных с удалённого текстового файла
 async function fetchData() {
-    const url = "https://hamsauno.github.io/Miner/kursBTC.txt"; 
+    const url = "kursBTC.txt"; 
 
     try {
         const response = await fetch(url);
