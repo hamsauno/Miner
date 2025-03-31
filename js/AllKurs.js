@@ -13,19 +13,19 @@
             const lines = data.trim().split("\n");
             
             // Убедимся, что строк достаточно для всех данных
-            if (lines.length >= 9) {
-                const usdtPrice = parseFloat(lines[1].trim());
-                const btcPrice = parseFloat(lines[0].trim());
-                const ltcPrice = parseFloat(lines[5].trim());
-                const dogePrice = parseFloat(lines[6].trim());
-                const bellPrice = parseFloat(lines[7].trim());
+              if (lines.length >= 8) {
+                const btcPrice = parseFloat(lines[0].trim()); // BTC
+                const usdtPrice = parseFloat(lines[1].trim()); // USDT
+                const ltcPrice = parseFloat(lines[5].trim()); // LTC
+                const dogePrice = parseFloat(lines[6].trim()); // DOGE
+                const bellPrice = parseFloat(lines[7].trim()); // BELL
 
-                if (!isNaN(btcPrice) && !isNaN(usdtPrice) && !isNaN(profitPerTH)) {
-                    document.getElementById("usdtPrice").value = btcPrice.toFixed(2);
-                    document.getElementById("btcPrice").value = usdtPrice.toFixed(2);
-                    document.getElementById("ltcPrice").value = profitPerTH.toFixed(2);
-                    document.getElementById("dogePrice").value = profitPerTH.toFixed(4);
-                    document.getElementById("bellPrice").value = profitPerTH.toFixed(4);
+                if (!isNaN(btcPrice) && !isNaN(usdtPrice) && !isNaN(ltcPrice) && !isNaN(dogePrice) && !isNaN(pbellPrice)) {
+                    document.getElementById("usdtPrice").value = usdtPrice.toFixed(2);
+                    document.getElementById("btcPrice").value = btcPrice.toFixed(2);
+                    document.getElementById("ltcPrice").value = ltcPrice.toFixed(2);
+                    document.getElementById("dogePrice").value = dogePrice.toFixed(4);
+                    document.getElementById("bellPrice").value = bellPrice.toFixed(4);
                 } else {
                     console.error("Ошибка: Данные из файла не являются валидными числами.");
                     document.getElementById("usdtPrice").value = "Ошибка";
