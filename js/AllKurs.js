@@ -15,14 +15,14 @@ async function fetchData() {
         const lines = data.trim().split("\n").map(line => line.trim());
 
         // Проверяем, достаточно ли строк
-        if (lines.length >= 8) {
+        if (lines.length >= 9) {
             console.log("Разобранные строки:", lines);
 
             const btcPrice = parseFloat(lines[0]); // BTC
             const usdtPrice = parseFloat(lines[1]); // USDT
-            const ltcPrice = parseFloat(lines[5]); // LTC
-            const dogePrice = parseFloat(lines[6]); // DOGE
-            const bellPrice = parseFloat(lines[7]); // BELL
+            const ltcPrice = parseFloat(lines[3]); // LTC
+            const dogePrice = parseFloat(lines[4]); // DOGE
+            const bellPrice = parseFloat(lines[5]); // BELL
 
             console.log("BTC:", btcPrice, "USDT:", usdtPrice, "LTC:", ltcPrice, "DOGE:", dogePrice, "BELL:", bellPrice);
 
