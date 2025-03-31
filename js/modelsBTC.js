@@ -39,7 +39,7 @@ const asicModels = {
         { value: "M50S126", text: "M50S 26W 126 TH/s" },
         { value: "M50S124", text: "M50S 26W 124 TH/s" }
     ],
-    antminer: [
+    avalon: [
         { value: "A1566212", text: "Avalon A1566 212TH/s" },
         { value: "A1566209", text: "Avalon A1566 209TH/s" },
         { value: "mini3", text: "Avalon Mini-3 37.5TH/s" }
