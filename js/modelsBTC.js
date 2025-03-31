@@ -16,28 +16,33 @@ const asicModels = {
         { value: "S19k110", text: "S19k Pro 110Th" }
     ],
     whatsminer: [
-        { value: "M60S206", text: "M60S+ 17W  206 TH/s" },
-        { value: "M60S204", text: "M60S+ 17W  204 TH/s" },
-        { value: "M60S200", text: "M60S+ 17W  200 TH/s" },
-        { value: "M60S190", text: "M60S 18,5W  190 TH/s" },
-        { value: "M60S188", text: "M60S 18,5W  188 TH/s" },
-        { value: "M60S184", text: "M60S 18,5W  184 TH/s" },
-        { value: "M61208", text: "M61 19W  208 TH/s" },
-        { value: "M61206", text: "M61 19W  206 TH/s" },
-        { value: "M61204", text: "M61 19,9W  204 TH/s" },
-        { value: "M61202", text: "M61 19,9W  202 TH/s" },
-        { value: "M61200", text: "M61 19,9W  200 TH/s" },
-        { value: "M60178", text: "M60 19W  178 TH/s" },
-        { value: "M60176", text: "M60 19W  176 TH/s" },
-        { value: "M60172", text: "M60 19,9W  172 TH/s" },
-        { value: "M50S158", text: "M50S++ 22W  158 TH/s" },
-        { value: "M50S148", text: "M50S++ 22W  148 TH/s" },
-        { value: "M50S134", text: "M50S 26W  134 TH/s" },
-        { value: "M50S132", text: "M50S 26W  132 TH/s" },
-        { value: "M50S130", text: "M50S 26W  130 TH/s" },
-        { value: "M50S128", text: "M50S 26W  128 TH/s" },
-        { value: "M50S126", text: "M50S 26W  126 TH/s" },
-        { value: "M50S124", text: "M50S 26W  124 TH/s" }
+        { value: "M60S206", text: "M60S+ 17W 206 TH/s" },
+        { value: "M60S204", text: "M60S+ 17W 204 TH/s" },
+        { value: "M60S200", text: "M60S+ 17W 200 TH/s" },
+        { value: "M60S190", text: "M60S 18,5W 190 TH/s" },
+        { value: "M60S188", text: "M60S 18,5W 188 TH/s" },
+        { value: "M60S184", text: "M60S 18,5W 184 TH/s" },
+        { value: "M61208", text: "M61 19W 208 TH/s" },
+        { value: "M61206", text: "M61 19W 206 TH/s" },
+        { value: "M61204", text: "M61 19,9W 204 TH/s" },
+        { value: "M61202", text: "M61 19,9W 202 TH/s" },
+        { value: "M61200", text: "M61 19,9W 200 TH/s" },
+        { value: "M60178", text: "M60 19W 178 TH/s" },
+        { value: "M60176", text: "M60 19W 176 TH/s" },
+        { value: "M60172", text: "M60 19,9W 172 TH/s" },
+        { value: "M50S158", text: "M50S++ 22W 158 TH/s" },
+        { value: "M50S148", text: "M50S++ 22W 148 TH/s" },
+        { value: "M50S134", text: "M50S 26W 134 TH/s" },
+        { value: "M50S132", text: "M50S 26W 132 TH/s" },
+        { value: "M50S130", text: "M50S 26W 130 TH/s" },
+        { value: "M50S128", text: "M50S 26W 128 TH/s" },
+        { value: "M50S126", text: "M50S 26W 126 TH/s" },
+        { value: "M50S124", text: "M50S 26W 124 TH/s" }
+    ],
+    antminer: [
+        { value: "A1566212", text: "Avalon A1566 212TH/s" },
+        { value: "A1566209", text: "Avalon A1566 209TH/s" },
+        { value: "mini3", text: "Avalon Mini-3 37.5TH/s" }
     ]
 };
 
@@ -110,7 +115,9 @@ window.onload = function () {
             M50S126: { a: 126, b: 3276 },
             M50S124: { a: 124, b: 3224 },
             // Avalon
-            
+            A1566212: { a: 212, b: 3922 },
+            A1566209: { a: 209, b: 3867 },
+            mini3: { a: 37.5, b: 800 },
         };
 
         let selectedModel = document.getElementById("asicModel").value;
