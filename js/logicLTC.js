@@ -70,9 +70,7 @@ async function fetchData() {
 window.onload = async function() {
     await fetchData();
 };
-document.addEventListener("DOMContentLoaded", () => {
-    updateModelList(); // Выполнится после полной загрузки DOM
-});
+
 
 
     // Функция для расчёта доходности и прибыли
