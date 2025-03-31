@@ -39,9 +39,11 @@
             }
         } catch (error) {
             console.error("Ошибка загрузки файла:", error);
-            document.getElementById("btcPrice").value = "Ошибка при загрузке данных.";
             document.getElementById("usdtPrice").value = "Ошибка при загрузке данных.";
-            document.getElementById("profitPerTH").value = "Ошибка при загрузке данных.";
+            document.getElementById("btcPrice").value = "Ошибка при загрузке данных.";
+            document.getElementById("ltcPrice").value = "Ошибка при загрузке данных.";
+            document.getElementById("dogePrice").value = "Ошибка при загрузке данных.";
+            document.getElementById("bellPrice").value = "Ошибка при загрузке данных.";
         }
     }
     // Загружаем данные и обновляем элементы
