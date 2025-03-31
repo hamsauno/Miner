@@ -90,11 +90,15 @@ const asicData = {
     A1566209: { a: 209, b: 3867 },
     mini3: { a: 37.5, b: 800 }
 };
-
 // Функция обновления списка моделей
 function updateModelList() {
     const manufacturerSelect = document.getElementById("manufacturerSelect");
     const modelSelect = document.getElementById("asicModel");
+
+    if (!manufacturerSelect || !modelSelect) {
+        console.error("Ошибка: manufacturerSelect или modelSelect не найден");
+        return;
+    }
 
     const manufacturer = manufacturerSelect.value;
     modelSelect.innerHTML = ""; // Очищаем список
@@ -106,23 +110,40 @@ function updateModelList() {
             option.textContent = model.text;
             modelSelect.appendChild(option);
         });
-        modelSelect.selectedIndex = 0;
+        modelSelect.selectedIndex = 0; // Выбираем первый элемент
     }
 
-    updateAsicSpecs();
+    // Проверяем, есть ли хотя бы одна модель перед вызовом updateAsicSpecs
+    if (modelSelect.value) {
+        updateAsicSpecs();
+    }
 }
 
 // Функция обновления характеристик
 function updateAsicSpecs() {
-    const selectedModel = document.getElementById("asicModel").value;
+    const modelSelect = document.getElementById("asicModel");
+
+    if (!modelSelect || modelSelect.value === "") {
+        console.warn("updateAsicSpecs: модель не выбрана");
+        return;
+    }
+
+    const selectedModel = modelSelect.value;
 
     if (asicData[selectedModel]) {
         document.getElementById("hashrate").value = asicData[selectedModel].a;
         document.getElementById("power").value = asicData[selectedModel].b;
     } else {
-        console.error(`Ошибка: Модель ${selectedModel} не найдена в asicData`);
+        console.error(`Ошибка: Модель "${selectedModel}" не найдена в asicData`);
+        document.getElementById("hashrate").value = "";
+        document.getElementById("power").value = "";
     }
 }
 
-// Инициализация при загрузке
-window.onload = updateModelList;
+// Запуск при загрузке страницы
+window.onload = function () {
+    updateModelList();
+
+    document.getElementById("manufacturerSelect").addEventListener("change", updateModelList);
+    document.getElementById("asicModel").addEventListener("change", updateAsicSpecs);
+};
