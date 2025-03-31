@@ -42,7 +42,6 @@
     // Загружаем данные и обновляем элементы
     window.onload = async function() {
         await fetchData(); // Загружаем данные из файла kursBTC.txt
-        updateAsicSpecs(); // Обновляем характеристики ASIC
     }
     // Функция для расчёта доходности и прибыли
     function calculateProfit() {
