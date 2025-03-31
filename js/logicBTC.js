@@ -1,10 +1,21 @@
-
 // Функция для получения данных с удалённого текстового файла
-    async function fetchData() {
-       fetch("https://hamsauno.github.io/Miner/kursBTC.txt")
-  .then(res => res.text())
-  .then(console.log)
-  .catch(console.error);
+async function fetchData() {
+    const url = "https://hamsauno.github.io/Miner/kursBTC.txt"; 
+
+    try {
+        const response = await fetch(url);
+        console.log("Ответ от сервера:", response);
+
+        if (!response.ok) {
+            throw new Error('Не удалось загрузить данные. Статус: ' + response.status);
+        }
+
+        const data = await response.text();
+        console.log("Полученные данные:", data);
+
+        if (!data || data.trim().length === 0) {
+            throw new Error('Загруженные данные пусты.');
+        }
 
         try {
             const response = await fetch(url);
