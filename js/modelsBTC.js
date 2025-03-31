@@ -48,8 +48,11 @@ const asicModels = {
 
 // Функция для обновления списка моделей при выборе производителя
 function updateModelList() {
-    const manufacturer = document.getElementById("manufacturerSelect").value;
+    const manufacturerSelect = document.getElementById("manufacturerSelect");
     const modelSelect = document.getElementById("asicModel");
+    
+     // Получаем выбранного производителя
+    const manufacturer = manufacturerSelect.value;
 
     // Очищаем предыдущие модели
     modelSelect.innerHTML = "";
@@ -62,16 +65,25 @@ function updateModelList() {
         modelSelect.appendChild(option);
     });
 
+    // Выбираем первую модель из списка
+    modelSelect.selectedIndex = 0;
+
     // Обновляем данные о модели (если есть функция)
     if (typeof updateAsicSpecs === "function") {
         updateAsicSpecs();
     }
 }
 
-// Вызываем функцию при загрузке страницы для установки значений по умолчанию
-window.onload = function () {
-    updateModelList();
-};
+    // Запускаем при загрузке страницы
+    window.onload = function () {
+        const manufacturerSelect = document.getElementById("manufacturerSelect");
+    
+        // Устанавливаем первого производителя (Antminer)
+        manufacturerSelect.value = "antminer";
+    
+        // Обновляем список моделей и выбираем первую
+        updateModelList();
+    };
 
 
     // Функция для обновления характеристик выбранной модели ASIC
