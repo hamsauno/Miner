@@ -1,14 +1,30 @@
 // Данные моделей по производителям
 const asicModels = {
     antminer: [
-        { value: "S21XP", text: "Antminer S21 XP 270Th" },
-        { value: "S21pl235", text: "Antminer S21+ 235Th" },
-        { value: "S21pl225", text: "Antminer S21+ 225Th" },
-        { value: "S21pl216", text: "Antminer S21+ 216Th" },
-        { value: "T21190", text: "Antminer T21 190Th" },
-        { value: "S19k120", text: "Antminer S19k Pro 120Th" }
+        { value: "S21XP", text: "S21 XP 270Th" },
+        { value: "S21pl235", text: "S21+ 235Th" },
+        { value: "S21pl225", text: "S21+ 225Th" },
+        { value: "S21pl216", text: "S21+ 216Th" },
+        { value: "T21190", text: "T21 190Th" },
+        { value: "S19k120", text: "S19k Pro 120Th" }
     ],
     whatsminer: [
+        { value: "M60S206", text: "M60S+ 17W  206 TH/s" },
+        { value: "M60S204", text: "M60S+ 17W  204 TH/s" },
+        { value: "M60S200", text: "M60S+ 17W  200 TH/s" },
+        { value: "M60S190", text: "M60S 18,5W  190 TH/s" },
+        { value: "M60S188", text: "M60S 18,5W  188 TH/s" },
+        { value: "M60S184", text: "M60S 18,5W  184 TH/s" },
+        { value: "M61208", text: "M61 19W  208 TH/s" },
+        { value: "M61206", text: "M61 19W  206 TH/s" },
+        { value: "M61204", text: "M61 19,9W  204 TH/s" },
+        { value: "M61202", text: "M61 19,9W  202 TH/s" },
+        { value: "M61200", text: "M61 19,9W  200 TH/s" },
+        { value: "M60178", text: "M60 19W  178 TH/s" },
+        { value: "M60176", text: "M60 19W  176 TH/s" },
+        { value: "M60172", text: "M60 19,9W  172 TH/s" },
+        { value: "M50S158", text: "M50S++ 22W  158 TH/s" },
+        { value: "M50S148", text: "M50S++ 22W  148 TH/s" },
         { value: "M50S134", text: "M50S 26W  134 TH/s" },
         { value: "M50S132", text: "M50S 26W  132 TH/s" },
         { value: "M50S130", text: "M50S 26W  130 TH/s" },
@@ -49,19 +65,37 @@ window.onload = function () {
     // Функция для обновления характеристик выбранной модели ASIC
     function updateAsicSpecs() {
         const asicData = {
+            // Antminer
             S21XP: { a: 270, b: 3645 },
             S21pl235: { a: 235, b: 3878 },
             S21pl225: { a: 225, b: 3713 },
             S21pl216: { a: 216, b: 3564 },
             T21190: { a: 190, b: 3610 },
             S19k120: { a: 120, b: 2760 },
-            
+            // Whatsminer 
+            M60S206: { a: 206, b: 3502 },
+            M60S204: { a: 204, b: 3468 },
+            M60S200: { a: 200, b: 3400 },
+            M60S190: { a: 190, b: 3515 },
+            M60S188: { a: 188, b: 3478 },
+            M60S184: { a: 184, b: 3404 },
+            M61208: { a: 208, b: 3952 },
+            M61206: { a: 206, b: 3914 },
+            M61204: { a: 204, b: 4060 },
+            M61202: { a: 202, b: 4020 },
+            M61200: { a: 200, b: 3980 },
+            M60178: { a: 178, b: 3382 },
+            M60176: { a: 176, b: 3344 },
+            M60172: { a: 172, b: 3423 },
+            M50S158: { a: 158, b: 3476 },
+            M50S148: { a: 148, b: 3256 },
             M50S134: { a: 134, b: 3484 },
             M50S132: { a: 132, b: 3432 },
             M50S130: { a: 130, b: 3380 },
             M50S128: { a: 128, b: 3328 },
             M50S126: { a: 126, b: 3276 },
             M50S124: { a: 124, b: 3224 },
+            // Avalon
             
         };
 
