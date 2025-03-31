@@ -99,13 +99,15 @@ function updateModelList() {
     const manufacturer = manufacturerSelect.value;
     modelSelect.innerHTML = ""; // Очищаем список
 
-    if (asicModels[manufacturer]) {
+    if (asicModels[manufacturer] && asicModels[manufacturer].length > 0) {
         asicModels[manufacturer].forEach(model => {
             const option = document.createElement("option");
             option.value = model.value;
             option.textContent = model.text;
             modelSelect.appendChild(option);
         });
+
+        // Убедимся, что выбрана первая доступная модель
         modelSelect.selectedIndex = 0;
     }
 
@@ -114,15 +116,24 @@ function updateModelList() {
 
 // Функция обновления характеристик
 function updateAsicSpecs() {
-    const selectedModel = document.getElementById("asicModel").value;
+    const modelSelect = document.getElementById("asicModel");
+    const selectedModel = modelSelect.value;
 
-    if (asicData[selectedModel]) {
+    // Проверяем, существует ли модель в asicData
+    if (selectedModel && asicData[selectedModel]) {
         document.getElementById("hashrate").value = asicData[selectedModel].a;
         document.getElementById("power").value = asicData[selectedModel].b;
     } else {
-        console.error(`Ошибка: Модель ${selectedModel} не найдена в asicData`);
+        console.error(`Ошибка: Модель "${selectedModel}" не найдена в asicData`);
+        document.getElementById("hashrate").value = "";
+        document.getElementById("power").value = "";
     }
 }
 
 // Инициализация при загрузке
-window.onload = updateModelList;
+window.onload = function () {
+    updateModelList();
+
+    // Добавляем обработчик изменения модели
+    document.getElementById("asicModel").addEventListener("change", updateAsicSpecs);
+};
