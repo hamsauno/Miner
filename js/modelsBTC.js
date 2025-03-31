@@ -46,39 +46,34 @@ const asicModels = {
     ]
 };
 
-// Функция для обновления списка моделей при выборе производителя
-function updateModelList() {
-    const manufacturerSelect = document.getElementById("manufacturerSelect");
-    const modelSelect = document.getElementById("asicModel");
+    // Функция для обновления списка моделей
+    function updateModelList() {
+        const manufacturerSelect = document.getElementById("manufacturerSelect");
+        const modelSelect = document.getElementById("asicModel");
     
-     // Получаем выбранного производителя
-    const manufacturer = manufacturerSelect.value;
-
-    // Очищаем предыдущие модели
-    modelSelect.innerHTML = "";
-
-    // Добавляем новые модели, соответствующие выбранному производителю
-    asicModels[manufacturer].forEach(model => {
-        const option = document.createElement("option");
-        option.value = model.value;
-        option.textContent = model.text;
-        modelSelect.appendChild(option);
-    });
-
-    // Выбираем первую модель из списка
-    modelSelect.selectedIndex = 0;
-
-    // Обновляем данные о модели (если есть функция)
-    if (typeof updateAsicSpecs === "function") {
+        const manufacturer = manufacturerSelect.value;
+        modelSelect.innerHTML = ""; // Очищаем список
+    
+        // Добавляем новые модели
+        asicModels[manufacturer].forEach(model => {
+            const option = document.createElement("option");
+            option.value = model.value;
+            option.textContent = model.text;
+            modelSelect.appendChild(option);
+        });
+    
+        // Выбираем первую модель
+        modelSelect.selectedIndex = 0;
+    
+        // Обновляем характеристики
         updateAsicSpecs();
     }
-}
 
     // Запускаем при загрузке страницы
     window.onload = function () {
         const manufacturerSelect = document.getElementById("manufacturerSelect");
     
-        // Устанавливаем первого производителя (Antminer)
+        // Устанавливаем первого производителя
         manufacturerSelect.value = "antminer";
     
         // Обновляем список моделей и выбираем первую
