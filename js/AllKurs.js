@@ -15,7 +15,7 @@ async function fetchData() {
         const lines = data.trim().split("\n").map(line => line.trim());
 
         // Проверяем, достаточно ли строк
-        if (lines.length >= 9) {
+        if (lines.length >= 6) {
             console.log("Разобранные строки:", lines);
 
             const btcPrice = parseFloat(lines[0]); // BTC
