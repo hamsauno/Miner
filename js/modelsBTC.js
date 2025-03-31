@@ -2,11 +2,18 @@
 const asicModels = {
     antminer: [
         { value: "S21XP", text: "S21 XP 270Th" },
+        { value: "S21pro245", text: "S21 pro 245Th" },
+        { value: "S21pro234", text: "S21 pro 234Th" },
         { value: "S21pl235", text: "S21+ 235Th" },
         { value: "S21pl225", text: "S21+ 225Th" },
         { value: "S21pl216", text: "S21+ 216Th" },
         { value: "T21190", text: "T21 190Th" },
-        { value: "S19k120", text: "S19k Pro 120Th" }
+        { value: "S21200", text: "S21 200Th" },
+        { value: "S21195", text: "S21 195Th" },
+        { value: "S21188", text: "S21 188Th" },
+        { value: "S19k120", text: "S19k Pro 120Th" },
+        { value: "S19k115", text: "S19k Pro 115Th" },
+        { value: "S19k110", text: "S19k Pro 110Th" }
     ],
     whatsminer: [
         { value: "M60S206", text: "M60S+ 17W  206 TH/s" },
@@ -67,11 +74,18 @@ window.onload = function () {
         const asicData = {
             // Antminer
             S21XP: { a: 270, b: 3645 },
+            S21pro245: { a: 245, b: 3675 },
+            S21pro234: { a: 234, b: 3510 },
             S21pl235: { a: 235, b: 3878 },
             S21pl225: { a: 225, b: 3713 },
             S21pl216: { a: 216, b: 3564 },
             T21190: { a: 190, b: 3610 },
+            S21200: { a: 200, b: 3500 },
+            S21195: { a: 195, b: 3413 },
+            S21188: { a: 188, b: 3290 },
             S19k120: { a: 120, b: 2760 },
+            S19k115: { a: 115, b: 2645 },
+            S19k110: { a: 110, b: 2530 },
             // Whatsminer 
             M60S206: { a: 206, b: 3502 },
             M60S204: { a: 204, b: 3468 },
