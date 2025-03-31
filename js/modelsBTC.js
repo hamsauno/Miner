@@ -113,7 +113,6 @@ function updateModelList() {
         console.warn(`Внимание: Нет моделей для производителя "${manufacturer}"`);
     }
 
-    updateAsicSpecs();
 }
 
 // Функция обновления характеристик
