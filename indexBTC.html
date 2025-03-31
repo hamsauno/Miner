@@ -15,14 +15,16 @@
 <body>
 
  <div class="header">
+        <label>Производитель:
+            <select id="manufacturerSelect" onchange="updateModelList()">
+                <option value="antminer">Antminer</option>
+                <option value="whatsminer">Whatsminer</option>
+            </select>
+        </label>
+        
         <label>Модель Асика:
             <select id="asicModel" onchange="updateAsicSpecs()">
-                <option value="S21XP">Antminer S21 XP 270Th</option>
-                <option value="S21pl235">Antminer S21+ 235Th</option>
-                <option value="S21pl225">Antminer S21+ 225Th</option>
-                <option value="S21pl216">Antminer S21+ 216Th</option>
-                <option value="T21190">Antminer T21 190Th</option>
-                <option value="S19k120">Antminer S19k Pro 120Th</option>
+                <!-- Модели будут добавляться динамически -->
             </select>
         </label>
 
