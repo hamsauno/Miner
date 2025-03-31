@@ -9,26 +9,32 @@ async function fetchData() {
         }
         const data = await response.text();
 
+        console.log("Содержимое файла:", data); // Логируем содержимое файла
+
         // Разбиваем данные на строки
-        const lines = data.trim().split("\n");
+        const lines = data.trim().split("\n").map(line => line.trim());
 
         // Проверяем, достаточно ли строк
         if (lines.length >= 8) {
-            const btcPrice = parseFloat(lines[0].trim()); // BTC
-            const usdtPrice = parseFloat(lines[1].trim()); // USDT
-            const ltcPrice = parseFloat(lines[5].trim()); // LTC
-            const dogePrice = parseFloat(lines[6].trim()); // DOGE
-            const bellPrice = parseFloat(lines[7].trim()); // BELL
+            console.log("Разобранные строки:", lines);
+
+            const btcPrice = parseFloat(lines[0]); // BTC
+            const usdtPrice = parseFloat(lines[1]); // USDT
+            const ltcPrice = parseFloat(lines[5]); // LTC
+            const dogePrice = parseFloat(lines[6]); // DOGE
+            const bellPrice = parseFloat(lines[7]); // BELL
+
+            console.log("BTC:", btcPrice, "USDT:", usdtPrice, "LTC:", ltcPrice, "DOGE:", dogePrice, "BELL:", bellPrice);
 
             // Проверяем, что все значения - числа
-            if (!isNaN(btcPrice) && !isNaN(usdtPrice) && !isNaN(ltcPrice) && !isNaN(dogePrice) && !isNaN(bellPrice)) {
-                document.getElementById("usdtPrice").value = usdtPrice.toFixed(2);
-                document.getElementById("btcPrice").value = btcPrice.toFixed(2);
-                document.getElementById("ltcPrice").value = ltcPrice.toFixed(2);
-                document.getElementById("dogePrice").value = dogePrice.toFixed(4);
-                document.getElementById("bellPrice").value = bellPrice.toFixed(4);
+            if ([btcPrice, usdtPrice, ltcPrice, dogePrice, bellPrice].every(val => !isNaN(val))) {
+                setInputValue("usdtPrice", usdtPrice.toFixed(2));
+                setInputValue("btcPrice", btcPrice.toFixed(2));
+                setInputValue("ltcPrice", ltcPrice.toFixed(2));
+                setInputValue("dogePrice", dogePrice.toFixed(4));
+                setInputValue("bellPrice", bellPrice.toFixed(4));
             } else {
-                console.error("Ошибка: Данные из файла содержат неверные значения.");
+                console.error("Ошибка: Данные содержат неверные значения.");
                 setErrorPlaceholders();
             }
         } else {
@@ -41,19 +47,27 @@ async function fetchData() {
     }
 }
 
+// Устанавливает значение в поле ввода
+function setInputValue(id, value) {
+    const element = document.getElementById(id);
+    if (element) {
+        element.value = value;
+    } else {
+        console.error("Элемент не найден:", id);
+    }
+}
+
 // Функция для установки плейсхолдера "Ошибка" в поля
 function setErrorPlaceholders() {
-    document.getElementById("usdtPrice").value = "";
-    document.getElementById("btcPrice").value = "";
-    document.getElementById("ltcPrice").value = "";
-    document.getElementById("dogePrice").value = "";
-    document.getElementById("bellPrice").value = "";
-
-    document.getElementById("usdtPrice").placeholder = "Ошибка";
-    document.getElementById("btcPrice").placeholder = "Ошибка";
-    document.getElementById("ltcPrice").placeholder = "Ошибка";
-    document.getElementById("dogePrice").placeholder = "Ошибка";
-    document.getElementById("bellPrice").placeholder = "Ошибка";
+    ["usdtPrice", "btcPrice", "ltcPrice", "dogePrice", "bellPrice"].forEach(id => {
+        const element = document.getElementById(id);
+        if (element) {
+            element.value = "";
+            element.placeholder = "Ошибка";
+        } else {
+            console.error("Элемент не найден:", id);
+        }
+    });
 }
 
 // Загружаем данные при загрузке страницы
