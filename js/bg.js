@@ -1,0 +1,16 @@
+        // Функция для обработки события изменения ориентации устройства
+        function handleOrientation(event) {
+            // Получаем данные с устройства
+            const beta = event.beta;  // Наклон по оси X
+            const gamma = event.gamma;  // Наклон по оси Y
+
+            // Ограничиваем значения, чтобы избежать слишком больших изменений
+            const x = Math.min(Math.max(gamma, -45), 45); // Положение по оси X
+            const y = Math.min(Math.max(beta, -45), 45);  // Положение по оси Y
+
+            // Изменяем позицию фона в зависимости от наклона устройства
+            document.body.style.backgroundPosition = `${50 + x}% ${50 + y}%`;
+        }
+
+        // Добавляем обработчик события изменения ориентации устройства
+        window.addEventListener('deviceorientation', handleOrientation);
