@@ -43,6 +43,7 @@
     display: block;
     padding: 15px;
     padding-right: 20px; /* Отступ от правого края */
+    font-family: Arial, sans-serif; /* Устанавливаем шрифт Arial */
     color: white;
     text-decoration: none;
 }
