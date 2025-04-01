@@ -39,6 +39,18 @@
     background: #555;
 }
 
+.sidebar a {
+    display: block;
+    padding: 15px;
+    color: white;
+    text-decoration: none;
+    border-bottom: 1px solid #444;
+}
+
+.sidebar a:hover {
+    background: #555;
+}
+
 /* Кнопка для открытия меню */
 .menu-btn {
     font-size: 20px;
