@@ -28,8 +28,11 @@ function loadPage(page) {
     iframe.style.display = "block";
 }
 
-// Ждём загрузку DOM, чтобы быть уверенными, что все элементы существуют
-document.addEventListener("DOMContentLoaded", () => {
-    document.querySelector(".menu-btn").addEventListener("click", toggleMenu);
-    document.querySelector(".show-more-btn").addEventListener("click", toggleSubmenu);
+// Ждём загрузку DOM перед добавлением обработчиков событий
+document.addEventListener("DOMContentLoaded", function () {
+    const menuBtn = document.querySelector(".menu-btn");
+    const submenuBtn = document.querySelector(".show-more-btn");
+
+    if (menuBtn) menuBtn.addEventListener("click", toggleMenu);
+    if (submenuBtn) submenuBtn.addEventListener("click", toggleSubmenu);
 });
