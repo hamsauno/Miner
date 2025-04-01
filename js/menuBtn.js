@@ -1,4 +1,12 @@
+        function toggleMenu() {
+            const sidebar = document.getElementById("sidebar");
+            const overlay = document.getElementById("overlay");
 
-  document.getElementById("menuBtn").addEventListener("click", function() {
-      document.getElementById("sidebar").classList.toggle("active");
-  });
+            if (sidebar.style.left === "0px") {
+                sidebar.style.left = "-250px";
+                overlay.style.display = "none";
+            } else {
+                sidebar.style.left = "0px";
+                overlay.style.display = "block";
+            }
+        }
