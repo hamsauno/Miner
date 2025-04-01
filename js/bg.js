@@ -13,4 +13,8 @@
         }
 
         // Добавляем обработчик события изменения ориентации устройства
-        window.addEventListener('deviceorientation', handleOrientation, false);
+       if (window.DeviceOrientationEvent) {
+            window.addEventListener('deviceorientation', handleOrientation, false);
+        } else {
+            alert('Ваше устройство не поддерживает ориентацию.');
+        }
