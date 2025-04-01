@@ -1,4 +1,4 @@
-       // Функция для открытия/закрытия бокового меню
+        // Функция для открытия/закрытия бокового меню
         function toggleMenu() {
             const sidebar = document.getElementById("sidebar");
             const overlay = document.getElementById("overlay");
