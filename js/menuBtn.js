@@ -26,3 +26,9 @@ function toggleMenu() {
         overlay.style.display = "none";
     }
 }
+
+        // Функция для загрузки другой страницы в iframe
+        function loadPage(page) {
+            const iframe = document.getElementById("pageIframe");
+            iframe.src = page;  // Устанавливаем источник для iframe
+            iframe.style.display = "block";  // Показываем iframe
