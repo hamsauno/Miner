@@ -1,8 +1,8 @@
 // Функция для отображения подменю
 function toggleSubmenu() {
-    const links = document.querySelectorAll('.sidebar a');
+    const links = document.querySelectorAll('.sidebar a.hidden');
     links.forEach(link => {
-        link.classList.toggle('hidden');
+        link.classList.toggle('hidden'); // Переключаем скрытие
     });
 }
 
@@ -10,25 +10,27 @@ function toggleSubmenu() {
 function toggleMenu() {
     const sidebar = document.getElementById("sidebar");
     const overlay = document.getElementById("overlay");
-    
-    // Добавляем или удаляем классы для управления видимостью
-    sidebar.classList.toggle('active');
-    overlay.classList.toggle('active');
-    
-    // Проверяем, открыто ли меню
+
+    // Если меню активно, скрываем
     if (sidebar.classList.contains('active')) {
-        // Если меню открыто, показываем его
-        sidebar.style.left = "0";  // Можно контролировать положение через left или использовать классы
-        overlay.style.display = "block";
-    } else {
-        // Если меню закрыто, скрываем его
-        sidebar.style.left = "-250px";
+        sidebar.classList.remove('active');
         overlay.style.display = "none";
+    } else {
+        sidebar.classList.add('active');
+        overlay.style.display = "block";
     }
 }
 
-        // Функция для загрузки другой страницы в iframe
-        function loadPage(page) {
-            const iframe = document.getElementById("pageIframe");
-            iframe.src = page;  // Устанавливаем источник для iframe
-            iframe.style.display = "block";  // Показываем iframe
+// Функция для загрузки страницы в iframe
+function loadPage(page) {
+    const iframe = document.getElementById("pageIframe");
+    iframe.src = page;
+    iframe.style.display = "block";
+}
+
+// Ждём загрузку DOM, чтобы быть уверенными, что все элементы существуют
+document.addEventListener("DOMContentLoaded", () => {
+    // Навешиваем события на кнопку меню
+    document.querySelector(".menu-btn").addEventListener("click", toggleMenu);
+    document.querySelector(".show-more-btn").addEventListener("click", toggleSubmenu);
+});
