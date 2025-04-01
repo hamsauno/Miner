@@ -1,18 +1,56 @@
-  #sidebar {
-      position: fixed;
-      left: 0;
-      top: 0;
-      width: 250px;
-      height: 100%;
-      background: #2A2A2A;
-      color: white;
-      padding: 15px;
-      transform: translateX(-100%);
-      transition: transform 0.3s;
-  }
-  #sidebar.active {
-      transform: translateX(0);
-  }
-  .hidden {
-      display: none;
-  }
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+        
+        /* Стиль для бокового меню */
+        .sidebar {
+            position: fixed;
+            left: -250px;
+            top: 0;
+            width: 250px;
+            height: 100%;
+            background: #333;
+            color: white;
+            transition: left 0.3s;
+            padding-top: 60px;
+        }
+
+        /* Стиль для пунктов меню */
+        .sidebar a {
+            display: block;
+            padding: 15px;
+            color: white;
+            text-decoration: none;
+            border-bottom: 1px solid #444;
+        }
+
+        .sidebar a:hover {
+            background: #555;
+        }
+
+        /* Кнопка для открытия меню */
+        .menu-btn {
+            font-size: 20px;
+            cursor: pointer;
+            padding: 10px;
+            background: #333;
+            color: white;
+            border: none;
+            position: fixed;
+            top: 10px;
+            left: 10px;
+        }
+
+        /* Затемнение фона при открытом меню */
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+        }
