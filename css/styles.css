@@ -7,6 +7,7 @@ body {
     min-height: 100vh;
     font-size: 12px;
     background: rgba(0, 0, 0, 0.1); /* Черный фон с легким затемнением (0.1 — это прозрачность) */
+    color: white; /* Белый цвет шрифта для всего текста на странице */
 }
 
 .header {
@@ -14,6 +15,7 @@ body {
     display: flex;
     flex-direction: column;
     background: rgba(0, 0, 0, 0.1); /* Прозрачный черный фон с легким затемнением для шапки */
+    color: white; /* Белый цвет шрифта для текста в шапке */
 }
 
 .result-table {
