@@ -8,6 +8,14 @@
     left: 0;
 }
 
+.hidden {
+    display: none;
+}
+
+.submenu {
+    padding-left: 15px;
+}
+
 /* Стиль для бокового меню */
 .sidebar {
     position: fixed;
