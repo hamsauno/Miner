@@ -1,0 +1,8 @@
+        body {
+            margin: 0;
+            height: 100vh;
+            overflow: hidden;
+            background-image: url('https://hamsauno.github.io/Miner/img/background.jpg'); /* Указываем картинку фона */
+            background-size: cover;
+            transition: background-position 0.1s ease-out;
+        }
