@@ -18,13 +18,22 @@
     <!-- Боковое меню -->
     <div class="sidebar" id="sidebar">
         <button onclick="goHome()">Главная</button> <!-- Кнопка для возврата на главную -->
-        <button class="show-more-btn">Калькулятор</button>
-        <a href="#" onclick="loadPage('indexBTC.html')" class="hidden">Биткойн</a>
-        <a href="#" onclick="loadPage('indexLTC.html')" class="hidden">Скрипт</a>
-        <button class="show-more-btn">Прайс</button>
-        <a href="#" onclick="loadPage('#')" class="hidden">Наличие</a>
-        <a href="#" onclick="loadPage('#')" class="hidden">В пути</a>
-        <a href="#" onclick="loadPage('#')" class="hidden">Предзаказ</a>
+    
+        <!-- Калькулятор -->
+        <button class="toggle-btn" data-target="calc-menu">Калькулятор</button>
+        <div id="calc-menu" class="submenu hidden">
+            <a href="#" onclick="loadPage('indexBTC.html')">Биткойн</a>
+            <a href="#" onclick="loadPage('indexLTC.html')">Скрипт</a>
+        </div>
+    
+        <!-- Прайс -->
+        <button class="toggle-btn" data-target="price-menu">Прайс</button>
+        <div id="price-menu" class="submenu hidden">
+            <a href="#" onclick="loadPage('#')">Наличие</a>
+            <a href="#" onclick="loadPage('#')">В пути</a>
+            <a href="#" onclick="loadPage('#')">Предзаказ</a>
+        </div>
+    
         <button onclick="loadPage('AllKurs.html')">Курсы</button>
         <button onclick="loadPage('#')">Профиль</button>
     </div>
