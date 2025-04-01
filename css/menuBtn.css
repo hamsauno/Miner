@@ -90,5 +90,5 @@ iframe {
     top: 0;
     left: 0;
     z-index: 900; /* Под меню, но выше остального контента */
-    background: white; /* Убираем прозрачность */
+    background: transparent; /* Прозрачный фон */
 }
