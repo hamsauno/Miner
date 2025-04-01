@@ -6,14 +6,14 @@ body {
     flex-direction: column;
     min-height: 100vh;
     font-size: 12px;
-    background: transparent; /* Прозрачный фон для всего body */
+    background: rgba(0, 0, 0, 0.1); /* Черный фон с легким затемнением (0.1 — это прозрачность) */
 }
 
 .header {
     padding: 15px;
     display: flex;
     flex-direction: column;
-    background: transparent; /* Прозрачный фон для шапки */
+    background: rgba(0, 0, 0, 0.1); /* Прозрачный черный фон с легким затемнением для шапки */
 }
 
 .result-table {
@@ -22,7 +22,7 @@ body {
     margin-top: auto;
     position: fixed;
     bottom: 20px;
-    background-color: transparent; /* Прозрачный фон для таблицы */
+    background-color: rgba(0, 0, 0, 0.1); /* Прозрачный черный фон с легким затемнением для таблицы */
     border-top: 2px solid #ddd;
     left: 0;
     right: 0;
@@ -33,13 +33,13 @@ body {
     text-align: center;
     border: 1px solid #ddd;
     font-size: 12px;
-    background: transparent; /* Прозрачный фон для ячеек таблицы */
+    background: rgba(0, 0, 0, 0.05); /* Легкое затемнение для ячеек таблицы */
 }
 
 .result-table th {
-    background-color: transparent; /* Прозрачный фон для заголовков */
+    background-color: rgba(0, 0, 0, 0.1); /* Легкое затемнение для заголовков */
 }
 
 .result-table td {
-    background-color: transparent; /* Прозрачный фон для ячеек */
+    background-color: rgba(0, 0, 0, 0.05); /* Легкое затемнение для ячеек */
 }
