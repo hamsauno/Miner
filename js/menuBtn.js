@@ -50,3 +50,14 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 });
+
+function goHome() {
+    const iframe = document.getElementById("pageIframe");
+    const sidebar = document.getElementById("sidebar");
+    const overlay = document.getElementById("overlay");
+
+    iframe.src = ""; // Очищаем iframe
+    iframe.style.display = "none"; // Скрываем iframe
+    sidebar.classList.remove('active'); // Закрываем меню
+    overlay.style.display = "none"; // Убираем затемнение
+}
