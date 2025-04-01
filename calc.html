@@ -14,21 +14,21 @@
 </head>
 <body>
     <!-- Кнопка открытия меню -->
-    <button class="menu-btn" onclick="toggleMenu()">☰ Меню</button>
+    <button class="menu-btn">☰ Меню</button>
 
     <!-- Боковое меню -->
     <div class="sidebar" id="sidebar">
-        <button class="show-more-btn" onclick="toggleSubmenu()">Калькулятор</button>
-        <a href="indexBTC.html" class="hidden">Биткойн</a>
-        <a href="indexLTC.html" class="hidden">Скрипт</a>
+        <button class="show-more-btn">Калькулятор</button>
+        <a href="#" onclick="loadPage('indexBTC.html')" class="hidden">Биткойн</a>
+        <a href="#" onclick="loadPage('indexLTC.html')" class="hidden">Скрипт</a>
         <button onclick="location.href='AllKurs.html'">Курсы</button>
     </div>
 
     <!-- Затемнение фона -->
-    <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
+    <div class="overlay" id="overlay"></div>
 
-        <!-- Основной контент (в данном случае iframe) -->
-    <div class="content" id="content">
+    <!-- Основной контент (iframe для загрузки других страниц) -->
+    <div class="content">
         <iframe src="" id="pageIframe" style="display:none;"></iframe>
     </div>
 
