@@ -4,6 +4,15 @@
             padding: 0;
             overflow-x: hidden;
         }
+        /* Когда меню открыто, оно перемещается влево (0px) */
+        .sidebar.active {
+            left: 0;
+        }
+        
+        /* Показываем затемнение фона, когда меню открыто */
+        .overlay.active {
+            display: block;
+        }
         
         /* Стиль для бокового меню */
         .sidebar {
