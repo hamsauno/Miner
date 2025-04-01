@@ -1,66 +1,52 @@
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            overflow-x: hidden;
-        }
-        /* Когда меню открыто, оно перемещается влево (0px) */
-        .sidebar.active {
-            left: 0;
-        }
-        
-        /* Показываем затемнение фона, когда меню открыто */
-        .overlay.active {
-            display: block;
-        }
-        
-        /* Стиль для бокового меню */
-        .sidebar {
-            position: fixed;
-            left: -250px;
-            top: 0;
-            width: 250px;
-            height: 100%;
-            background: #333;
-            color: white;
-            transition: left 0.3s;
-            padding-top: 60px;
-        }
+/* Стиль для бокового меню */
+.sidebar {
+    position: fixed;
+    left: -250px;  /* Изначально скрыто */
+    top: 0;
+    width: 250px;
+    height: 100%;
+    background: #333;
+    color: white;
+    transition: left 0.3s;  /* Плавное движение */
+    padding-top: 60px;
+    z-index: 1001; /* Убедитесь, что боковое меню находится выше других элементов */
+}
 
-        /* Стиль для пунктов меню */
-        .sidebar a {
-            display: block;
-            padding: 15px;
-            color: white;
-            text-decoration: none;
-            border-bottom: 1px solid #444;
-        }
+/* Стиль для ссылок в меню */
+.sidebar a {
+    display: block;
+    padding: 15px;
+    color: white;
+    text-decoration: none;
+    border-bottom: 1px solid #444;
+}
 
-        .sidebar a:hover {
-            background: #555;
-        }
+.sidebar a:hover {
+    background: #555;
+}
 
-        /* Кнопка для открытия меню */
-        .menu-btn {
-            font-size: 20px;
-            cursor: pointer;
-            padding: 10px;
-            background: #333;
-            color: white;
-            border: none;
-            position: fixed;
-            top: 10px;
-            left: 10px;
-        }
+/* Кнопка для открытия меню */
+.menu-btn {
+    font-size: 20px;
+    cursor: pointer;
+    padding: 10px;
+    background: #333;
+    color: white;
+    border: none;
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    z-index: 1002; /* Кнопка меню должна быть выше меню, чтобы её можно было нажать */
+}
 
-        /* Затемнение фона при открытом меню */
-        .overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 999;  /* Убедитесь, что overlay находится выше других элементов */
-        }
+/* Затемнение фона при открытом меню */
+.overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1000; /* Убедитесь, что слой затемнения ниже меню, чтобы клики не блокировались */
+}
