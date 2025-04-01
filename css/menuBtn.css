@@ -56,7 +56,7 @@
     font-size: 20px;
     cursor: pointer;
     padding: 10px;
-    background: #333;
+    background: transparent; /* Прозрачный фон */
     color: #0C7727; /* Зеленый цвет с кодом #0C7727 */
     border: none;
     position: fixed;
