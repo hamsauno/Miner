@@ -37,8 +37,14 @@ function loadPage(page) {
 // Закрытие меню при клике на затемнённый фон
 document.addEventListener("DOMContentLoaded", function () {
     const overlay = document.getElementById("overlay");
+    const menuBtn = document.querySelector(".menu-btn");
+
     if (overlay) {
         overlay.addEventListener("click", toggleMenu);
+    }
+
+    if (menuBtn) {
+        menuBtn.addEventListener("click", toggleMenu);
     }
 
     // Добавляем обработчики для кнопок подменю
