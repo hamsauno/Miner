@@ -1,14 +1,34 @@
-// Функция загрузки страницы и скрытия меню
+// Функция для открытия/закрытия бокового меню
+function toggleMenu() {
+    const sidebar = document.getElementById("sidebar");
+    const overlay = document.getElementById("overlay");
+
+    sidebar.classList.toggle("active");
+    overlay.style.display = sidebar.classList.contains("active") ? "block" : "none";
+}
+
+// Функция для отображения подменю
+function toggleSubmenu() {
+    const links = document.querySelectorAll(".sidebar a");
+    links.forEach(link => link.classList.toggle("hidden"));
+}
+
+// Функция загрузки страницы в iframe и скрытия меню
 function loadPage(page) {
     const iframe = document.getElementById("pageIframe");
     const sidebar = document.getElementById("sidebar");
     const overlay = document.getElementById("overlay");
 
-    iframe.src = page;
-    iframe.style.display = "block"; // Показываем iframe
+    if (iframe) {
+        iframe.src = page;
+        iframe.style.display = "block"; // Показываем iframe
 
-    // Закрываем меню и затемнение
-    sidebar.classList.remove('active');
+        // Меняем URL в истории (без перезагрузки страницы)
+        history.replaceState({}, "", page);
+    }
+
+    // Закрываем меню и убираем затемнение
+    sidebar.classList.remove("active");
     overlay.style.display = "none";
 }
 
@@ -25,7 +45,8 @@ document.addEventListener("DOMContentLoaded", function () {
     links.forEach(link => {
         link.addEventListener("click", function (event) {
             event.preventDefault(); // Отменяем стандартный переход
-            loadPage(this.getAttribute("href")); // Загружаем страницу
+            const page = this.getAttribute("href");
+            if (page) loadPage(page); // Загружаем страницу
         });
     });
 });
