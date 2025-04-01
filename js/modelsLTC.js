@@ -82,10 +82,9 @@ function updateAsicSpecs() {
     }
 }
 
-// Запуск при загрузке страницы
-window.onload = function () {
-    updateModelList();
-
+window.onload = async function() {
+    await fetchData();
+    updateModelList(); // Инициализация списка моделей
     document.getElementById("manufacturerSelect").addEventListener("change", updateModelList);
     document.getElementById("asicModel").addEventListener("change", updateAsicSpecs);
 };
@@ -158,11 +157,6 @@ async function fetchData() {
         alert("Ошибка загрузки данных. Проверьте доступность файла.");
     }
 }
-
-// Запускаем загрузку данных при открытии страницы
-window.onload = async function() {
-    await fetchData();
-};
 
 
 
