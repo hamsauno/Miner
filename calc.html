@@ -6,19 +6,21 @@
     <title>Калькулятор</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script src="js/hideback.js" defer></script> <!-- скрывает кнопку НАЗАД -->
+     <script src="js/meniBtn.js" defer></script> <!-- кнопка меню -->
     <script src="js/fullscr.js" defer></script> <!-- открытие во весь экран и зафиксировать -->
     <link rel="stylesheet" href="css/nozoom_full.css"><!-- полный экран без зума -->
-    <link rel="stylesheet" href="css/calc.css"> <!-- стиль  -->
+    <link rel="stylesheet" href="css/menuBtn.css"> <!-- стиль  -->
 
 
 </head>
 <body>
-    <div class="header">Калькулятор</div>
-    
-     <div class="button-container">
-       <button onclick="location.href='indexBTC.html'">SHA-256</button>
-       <button onclick="location.href='indexLTC.html'">Skrypt</button>
-       <button onclick="location.href='AllKurs.html'">Курсы</button>
-    </div>
+<button id="menuBtn">☰ Меню</button>
+<div id="sidebar" class="hidden">
+    <ul>
+        <li><a href="calc.html">Главная</a></li>
+        <li><a href="#">Настройки</a></li>
+        <li><a href="#">Помощь</a></li>
+    </ul>
+</div>
 </body>
 </html>
