@@ -6,7 +6,7 @@ body {
     flex-direction: column;
     min-height: 100vh;
     font-size: 12px;
-    background: rgba(0, 0, 0, 0.3); /* Черный фон с легким затемнением (0.1 — это прозрачность) */
+    background: rgba(0, 0, 0, 0.5); /* Черный фон с легким затемнением (0.1 — это прозрачность) */
     color: white; /* Белый цвет шрифта для всего текста на странице */
 }
 
@@ -14,7 +14,7 @@ body {
     padding: 15px;
     display: flex;
     flex-direction: column;
-    background: rgba(0, 0, 0, 0.3); /* Прозрачный черный фон с легким затемнением для шапки */
+    background: rgba(0, 0, 0, 0.5); /* Прозрачный черный фон с легким затемнением для шапки */
     color: white; /* Белый цвет шрифта для текста в шапке */
 }
 
@@ -24,7 +24,7 @@ body {
     margin-top: auto;
     position: fixed;
     bottom: 20px;
-    background-color: rgba(0, 0, 0, 0.3); /* Прозрачный черный фон с легким затемнением для таблицы */
+    background-color: rgba(0, 0, 0, 0.5); /* Прозрачный черный фон с легким затемнением для таблицы */
     border-top: 2px solid #ddd;
     left: 0;
     right: 0;
@@ -35,13 +35,13 @@ body {
     text-align: center;
     border: 1px solid #ddd;
     font-size: 12px;
-    background: rgba(0, 0, 0, 0.3); /* Легкое затемнение для ячеек таблицы */
+    background: rgba(0, 0, 0, 0.5); /* Легкое затемнение для ячеек таблицы */
 }
 
 .result-table th {
-    background-color: rgba(0, 0, 0, 0.3); /* Легкое затемнение для заголовков */
+    background-color: rgba(0, 0, 0, 0.5); /* Легкое затемнение для заголовков */
 }
 
 .result-table td {
-    background-color: rgba(0, 0, 0, 0.3); /* Легкое затемнение для ячеек */
+    background-color: rgba(0, 0, 0, 0.5); /* Легкое затемнение для ячеек */
 }
