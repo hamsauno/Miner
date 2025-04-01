@@ -1,59 +1,45 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    font-size: 12px;
+    background: transparent; /* Прозрачный фон для всего body */
+}
 
- body {
-             font-family: Arial, sans-serif;
-             margin: 0;
-             padding: 0;
-             display: flex;
-             flex-direction: column;
-             min-height: 100vh;
-             font-size: 12px; /* Уменьшаем размер шрифта на всей странице */
-         }
-         .header {
-             padding: 15px;
-             display: flex;
-             flex-direction: column;
-         }
-         .header label {
-             display: flex;
-             justify-content: space-between;
-             margin-bottom: 10px;
-         }
-         .header input, .header select {
-             flex-grow: 1;
-             width: 100%; /* Устанавливаем ширину на 100% от родительского контейнера */
-             max-width: 250px; /* Ограничиваем максимальную ширину */
-             margin-left: 10px; /* Отступ между текстом и полем ввода */
-             height: 30px; /* Высота поля */
-             font-size: 12px; /* Размер шрифта */
-             padding: 5px; /* Внутренний отступ для удобства */
-             box-sizing: border-box; /* Учитывает отступы и рамки в ширину */
-         }
-         .header select {
-             width: 100%;
-         }
-         .result-table {
-             width: 100%;
-             border-collapse: collapse;
-             margin-top: auto;
-             position: fixed;
-             bottom: 20px;
-             background-color: white;
-             border-top: 2px solid #ddd;
-             left: 0;
-             right: 0;
-         }
-         .result-table th, .result-table td {
-             padding: 10px;
-             text-align: center;
-             border: 1px solid #ddd;
-             font-size: 12px; /* Уменьшаем размер шрифта в таблице */
-         }
-         .result-table th {
-             background-color: #f4f4f4;
-         }
-         .result-table td {
-             background-color: #fff;
-         }
-         .result-table td span {
-             font-weight: bold;
-         }
+.header {
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    background: transparent; /* Прозрачный фон для шапки */
+}
+
+.result-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: auto;
+    position: fixed;
+    bottom: 20px;
+    background-color: transparent; /* Прозрачный фон для таблицы */
+    border-top: 2px solid #ddd;
+    left: 0;
+    right: 0;
+}
+
+.result-table th, .result-table td {
+    padding: 10px;
+    text-align: center;
+    border: 1px solid #ddd;
+    font-size: 12px;
+    background: transparent; /* Прозрачный фон для ячеек таблицы */
+}
+
+.result-table th {
+    background-color: transparent; /* Прозрачный фон для заголовков */
+}
+
+.result-table td {
+    background-color: transparent; /* Прозрачный фон для ячеек */
+}
