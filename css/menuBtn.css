@@ -1,18 +1,38 @@
-/* Стиль для бокового меню */
+/* Стиль для скрытых элементов */
+.sidebar a.hidden {
+    display: none;
+}
+
+/* Стиль для активных элементов */
+.sidebar.active {
+    left: 0;
+}
+
+/* Прочие стили */
+.menu-btn {
+    font-size: 20px;
+    cursor: pointer;
+    padding: 10px;
+    background: #333;
+    color: white;
+    border: none;
+    position: fixed;
+    top: 10px;
+    left: 10px;
+}
+
 .sidebar {
     position: fixed;
-    left: -250px;  /* Изначально скрыто */
+    left: -250px;
     top: 0;
     width: 250px;
     height: 100%;
     background: #333;
     color: white;
-    transition: left 0.3s;  /* Плавное движение */
+    transition: left 0.3s;
     padding-top: 60px;
-    z-index: 1001; /* Убедитесь, что боковое меню находится выше других элементов */
 }
 
-/* Стиль для ссылок в меню */
 .sidebar a {
     display: block;
     padding: 15px;
@@ -25,20 +45,6 @@
     background: #555;
 }
 
-/* Кнопка для открытия меню */
-.menu-btn {
-    font-size: 20px;
-    cursor: pointer;
-    padding: 10px;
-    background: #333;
-    color: white;
-    border: none;
-    position: fixed;
-    top: 10px;
-    left: 10px;
-    z-index: 1002; /* Кнопка меню должна быть выше меню, чтобы её можно было нажать */
-}
-
 /* Затемнение фона при открытом меню */
 .overlay {
     display: none;
@@ -48,5 +54,8 @@
     width: 100%;
     height: 100%;
     background: rgba(0, 0, 0, 0.5);
-    z-index: 1000; /* Убедитесь, что слой затемнения ниже меню, чтобы клики не блокировались */
+}
+
+.overlay.active {
+    display: block;
 }
