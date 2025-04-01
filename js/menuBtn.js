@@ -30,7 +30,6 @@ function loadPage(page) {
 
 // Ждём загрузку DOM, чтобы быть уверенными, что все элементы существуют
 document.addEventListener("DOMContentLoaded", () => {
-    // Навешиваем события на кнопку меню
     document.querySelector(".menu-btn").addEventListener("click", toggleMenu);
     document.querySelector(".show-more-btn").addEventListener("click", toggleSubmenu);
 });
