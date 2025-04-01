@@ -1,14 +1,35 @@
-/* Стиль для скрытых элементов */
-.sidebar a.hidden {
-    display: none;
+/* Стиль для бокового меню */
+.sidebar {
+    position: fixed;
+    left: -250px;  /* Изначально скрыто */
+    top: 0;
+    width: 250px;
+    height: 100%;
+    background: #333;
+    color: white;
+    transition: left 0.3s;  /* Плавное движение */
+    padding-top: 60px;
+    z-index: 999; /* Убедитесь, что боковое меню находится выше остальных элементов */
 }
 
-/* Стиль для активных элементов */
-.sidebar.active {
-    left: 0;
+/* Стиль для пунктов меню */
+.sidebar button {
+    display: block;
+    padding: 15px;
+    color: white;
+    background: none;
+    border: none;
+    text-align: left;
+    width: 100%;
+    font-size: 16px;
+    cursor: pointer;
 }
 
-/* Прочие стили */
+.sidebar button:hover {
+    background: #555;
+}
+
+/* Кнопка для открытия меню */
 .menu-btn {
     font-size: 20px;
     cursor: pointer;
@@ -19,30 +40,7 @@
     position: fixed;
     top: 10px;
     left: 10px;
-}
-
-.sidebar {
-    position: fixed;
-    left: -250px;
-    top: 0;
-    width: 250px;
-    height: 100%;
-    background: #333;
-    color: white;
-    transition: left 0.3s;
-    padding-top: 60px;
-}
-
-.sidebar a {
-    display: block;
-    padding: 15px;
-    color: white;
-    text-decoration: none;
-    border-bottom: 1px solid #444;
-}
-
-.sidebar a:hover {
-    background: #555;
+    z-index: 1000; /* Сделаем кнопку поверх меню */
 }
 
 /* Затемнение фона при открытом меню */
@@ -54,8 +52,5 @@
     width: 100%;
     height: 100%;
     background: rgba(0, 0, 0, 0.5);
-}
-
-.overlay.active {
-    display: block;
+    z-index: 998; /* Убедитесь, что слой затемнения находится ниже меню, но выше других элементов */
 }
