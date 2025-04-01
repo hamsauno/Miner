@@ -32,6 +32,14 @@ function loadPage(page) {
     overlay.style.display = "none";
 }
 
+// Закрытие меню при клике на затемнённый фон
+document.addEventListener("DOMContentLoaded", function () {
+    const overlay = document.getElementById("overlay");
+    if (overlay) {
+        overlay.addEventListener("click", toggleMenu);
+    }
+});
+
 // Ждём загрузку DOM перед добавлением обработчиков
 document.addEventListener("DOMContentLoaded", function () {
     const menuBtn = document.querySelector(".menu-btn");
