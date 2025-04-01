@@ -57,7 +57,7 @@
     cursor: pointer;
     padding: 10px;
     background: #333;
-    color: white;
+    color: #0C7727; /* Зеленый цвет с кодом #0C7727 */
     border: none;
     position: fixed;
     top: 10px;
