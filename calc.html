@@ -13,16 +13,18 @@
 </head>
 <body>
     <!-- Кнопка открытия меню -->
-    <button class="menu-btn" onclick="toggleMenu()">☰</button>
+    <button class="menu-btn" onclick="toggleMenu()">☰ Меню</button>
 
     <!-- Боковое меню -->
     <div class="sidebar" id="sidebar">
-        <a href="indexBTC.html">Биткойн</a>
-        <a href="indexLTC.html">Скрипт</a>
+        <a href="indexBTC.html" class="hidden">Биткойн</a>
+        <a href="indexLTC.html" class="hidden">Скрипт</a>
+        <button class="show-more-btn" onclick="toggleSubmenu()">Калькулятор</button>
         <a href="AllKurs.html">Курсы</a>
     </div>
 
     <!-- Затемнение фона -->
     <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
+
 </body>
 </html>
