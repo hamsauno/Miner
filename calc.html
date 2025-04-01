@@ -14,13 +14,18 @@
 
 </head>
 <body>
-<button id="menuBtn">☰ Меню</button>
-<div id="sidebar" class="hidden">
-    <ul>
-        <li><a href="calc.html">Главная</a></li>
-        <li><a href="#">Настройки</a></li>
-        <li><a href="#">Помощь</a></li>
-    </ul>
-</div>
+    <!-- Кнопка открытия меню -->
+    <button class="menu-btn" onclick="toggleMenu()">☰ Меню</button>
+
+    <!-- Боковое меню -->
+    <div class="sidebar" id="sidebar">
+        <a href="#">Главная</a>
+        <a href="#">О нас</a>
+        <a href="#">Контакты</a>
+        <a href="#">Настройки</a>
+    </div>
+
+    <!-- Затемнение фона -->
+    <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
 </body>
 </html>
