@@ -7,10 +7,12 @@ function toggleMenu() {
     overlay.style.display = sidebar.classList.contains("active") ? "block" : "none";
 }
 
-// Функция для отображения подменю
-function toggleSubmenu() {
-    const links = document.querySelectorAll(".sidebar a");
-    links.forEach(link => link.classList.toggle("hidden"));
+// Функция для отображения подменю по кнопке
+function toggleSubmenu(targetId) {
+    const submenu = document.getElementById(targetId);
+    if (submenu) {
+        submenu.classList.toggle("hidden");
+    }
 }
 
 // Функция загрузки страницы в iframe и скрытия меню
@@ -38,18 +40,18 @@ document.addEventListener("DOMContentLoaded", function () {
     if (overlay) {
         overlay.addEventListener("click", toggleMenu);
     }
-});
 
-// Ждём загрузку DOM перед добавлением обработчиков
-document.addEventListener("DOMContentLoaded", function () {
-    const menuBtn = document.querySelector(".menu-btn");
-    const submenuBtn = document.querySelector(".show-more-btn");
+    // Добавляем обработчики для кнопок подменю
+    const submenuButtons = document.querySelectorAll(".toggle-btn");
+    submenuButtons.forEach(button => {
+        button.addEventListener("click", function () {
+            const targetId = this.getAttribute("data-target");
+            toggleSubmenu(targetId);
+        });
+    });
+
+    // Добавляем обработчики для ссылок в меню
     const links = document.querySelectorAll(".sidebar a");
-
-    if (menuBtn) menuBtn.addEventListener("click", toggleMenu);
-    if (submenuBtn) submenuBtn.addEventListener("click", toggleSubmenu);
-
-    // Добавляем обработчики ко всем ссылкам в меню
     links.forEach(link => {
         link.addEventListener("click", function (event) {
             event.preventDefault(); // Отменяем стандартный переход
@@ -59,6 +61,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
+// Функция для возврата на главную страницу (скрываем iframe)
 function goHome() {
     const iframe = document.getElementById("pageIframe");
     const sidebar = document.getElementById("sidebar");
@@ -66,6 +69,6 @@ function goHome() {
 
     iframe.src = ""; // Очищаем iframe
     iframe.style.display = "none"; // Скрываем iframe
-    sidebar.classList.remove('active'); // Закрываем меню
+    sidebar.classList.remove("active"); // Закрываем меню
     overlay.style.display = "none"; // Убираем затемнение
 }
