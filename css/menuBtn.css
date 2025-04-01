@@ -1,3 +1,13 @@
+/* Стиль для скрытых элементов */
+.sidebar a.hidden {
+    display: none;
+}
+
+/* Стиль для активных элементов */
+.sidebar.active {
+    left: 0;
+}
+
 /* Стиль для бокового меню */
 .sidebar {
     position: fixed;
