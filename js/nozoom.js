@@ -8,8 +8,4 @@
         event.preventDefault();
     });
 
-document.addEventListener("DOMContentLoaded", function () {
-    if (window.Telegram && Telegram.WebApp) {
-        Telegram.WebApp.expand(); // Разворачиваем мини-приложение
-    }
-});
+
