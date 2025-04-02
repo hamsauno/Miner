@@ -1,0 +1,476 @@
+{
+  "???????": [
+    {
+      "9600": 9000,
+      "Antminer L9": "Antminer L9",
+      "17 GH/s": "16,5 GH/s",
+      "Scrypt": "Scrypt",
+      "???????": "???????"
+    },
+    {
+      "9600": 8900,
+      "Antminer L9": "Antminer L9",
+      "17 GH/s": "16 GH/s",
+      "Scrypt": "Scrypt",
+      "???????": "???????"
+    },
+    {
+      "9600": 8500,
+      "Antminer L9": "Antminer L9",
+      "17 GH/s": "15 GH/s",
+      "Scrypt": "Scrypt",
+      "???????": "???????"
+    },
+    {
+      "9600": 3770,
+      "Antminer L9": "Antminer S21+",
+      "17 GH/s": "235 TH/s",
+      "Scrypt": "SHA-256",
+      "???????": "???????"
+    },
+    {
+      "9600": 3600,
+      "Antminer L9": "Antminer S21+",
+      "17 GH/s": "225 TH/s",
+      "Scrypt": "SHA-256",
+      "???????": "???????"
+    },
+    {
+      "9600": 3580,
+      "Antminer L9": "Antminer S21+",
+      "17 GH/s": "216 TH/s",
+      "Scrypt": "SHA-256",
+      "???????": "???????"
+    },
+    {
+      "9600": 2870,
+      "Antminer L9": "Antminer T21",
+      "17 GH/s": "190 TH/s",
+      "Scrypt": "SHA-256",
+      "???????": "???????"
+    },
+    {
+      "9600": 1230,
+      "Antminer L9": "Antminer S19k pro",
+      "17 GH/s": "120 TH/s",
+      "Scrypt": "SHA-256",
+      "???????": "???????"
+    },
+    {
+      "9600": 3770,
+      "Antminer L9": "Whatsminer M60S+ 17W",
+      "17 GH/s": "206 TH/s",
+      "Scrypt": "SHA-256",
+      "???????": "???????"
+    },
+    {
+      "9600": 3730,
+      "Antminer L9": "Whatsminer M60S+ 17W",
+      "17 GH/s": "204 TH/s",
+      "Scrypt": "SHA-256",
+      "???????": "???????"
+    },
+    {
+      "9600": 3650,
+      "Antminer L9": "Whatsminer M60S+ 17W",
+      "17 GH/s": "200 TH/s",
+      "Scrypt": "SHA-256",
+      "???????": "???????"
+    },
+    {
+      "9600": 2890,
+      "Antminer L9": "Whatsminer M60S 18,5W",
+      "17 GH/s": "188 TH/s",
+      "Scrypt": "SHA-256",
+      "???????": "???????"
+    },
+    {
+      "9600": 2810,
+      "Antminer L9": "Whatsminer M60S 18,5W",
+      "17 GH/s": "184 TH/s",
+      "Scrypt": "SHA-256",
+      "???????": "???????"
+    },
+    {
+      "9600": 2760,
+      "Antminer L9": "Whatsminer M61 19,9W",
+      "17 GH/s": "204 TH/s",
+      "Scrypt": "SHA-256",
+      "???????": "???????"
+    },
+    {
+      "9600": 2710,
+      "Antminer L9": "Whatsminer M61 19,9W",
+      "17 GH/s": "202 TH/s",
+      "Scrypt": "SHA-256",
+      "???????": "???????"
+    },
+    {
+      "9600": 2630,
+      "Antminer L9": "Whatsminer M61 19,9W",
+      "17 GH/s": "200 TH/s",
+      "Scrypt": "SHA-256",
+      "???????": "???????"
+    },
+    {
+      "9600": 2600,
+      "Antminer L9": "Whatsminer M60 19W",
+      "17 GH/s": "178 TH/s",
+      "Scrypt": "SHA-256",
+      "???????": "???????"
+    },
+    {
+      "9600": 2580,
+      "Antminer L9": "Whatsminer M60 19W",
+      "17 GH/s": "176 TH/s",
+      "Scrypt": "SHA-256",
+      "???????": "???????"
+    },
+    {
+      "9600": 2440,
+      "Antminer L9": "Whatsminer M60 19,9W",
+      "17 GH/s": "176 TH/s",
+      "Scrypt": "SHA-256",
+      "???????": "???????"
+    },
+    {
+      "9600": 2350,
+      "Antminer L9": "Whatsminer M60 19,9W",
+      "17 GH/s": "172 TH/s",
+      "Scrypt": "SHA-256",
+      "???????": "???????"
+    },
+    {
+      "9600": 1760,
+      "Antminer L9": "Whatsminer M50S++ 22W",
+      "17 GH/s": "158 TH/s",
+      "Scrypt": "SHA-256",
+      "???????": "???????"
+    },
+    {
+      "9600": 1720,
+      "Antminer L9": "Whatsminer M50S++ 22W",
+      "17 GH/s": "154 TH/s",
+      "Scrypt": "SHA-256",
+      "???????": "???????"
+    },
+    {
+      "9600": 1140,
+      "Antminer L9": "Whatsminer M50S 26W",
+      "17 GH/s": "134 TH/s",
+      "Scrypt": "SHA-256",
+      "???????": "???????"
+    },
+    {
+      "9600": 1110,
+      "Antminer L9": "Whatsminer M50S 26W",
+      "17 GH/s": "132 TH/s",
+      "Scrypt": "SHA-256",
+      "???????": "???????"
+    },
+    {
+      "9600": 1100,
+      "Antminer L9": "Whatsminer M50S 26W",
+      "17 GH/s": "130 TH/s",
+      "Scrypt": "SHA-256",
+      "???????": "???????"
+    },
+    {
+      "9600": 1100,
+      "Antminer L9": "Whatsminer M50S 26W",
+      "17 GH/s": "128 TH/s",
+      "Scrypt": "SHA-256",
+      "???????": "???????"
+    },
+    {
+      "9600": 6550,
+      "Antminer L9": "Elphapex DG1+",
+      "17 GH/s": "14,4 GH/s",
+      "Scrypt": "Scrypt",
+      "???????": "???????"
+    },
+    {
+      "9600": 6400,
+      "Antminer L9": "Elphapex DG1+",
+      "17 GH/s": "14 GH/s",
+      "Scrypt": "Scrypt",
+      "???????": "???????"
+    },
+    {
+      "9600": 6300,
+      "Antminer L9": "Elphapex DG1+",
+      "17 GH/s": "13,5 GH/s",
+      "Scrypt": "Scrypt",
+      "???????": "???????"
+    },
+    {
+      "9600": 6200,
+      "Antminer L9": "Elphapex DG1+",
+      "17 GH/s": "13 GH/s",
+      "Scrypt": "Scrypt",
+      "???????": "???????"
+    },
+    {
+      "9600": 3050,
+      "Antminer L9": "Avalon A1566",
+      "17 GH/s": "212 TH/s",
+      "Scrypt": "SHA-256",
+      "???????": "???????"
+    },
+    {
+      "9600": 3000,
+      "Antminer L9": "Avalon A1566",
+      "17 GH/s": "209 TH/s",
+      "Scrypt": "SHA-256",
+      "???????": "???????"
+    }
+  ],
+  "? ????": [],
+  "?????????": [
+    {
+      "9350": 8670,
+      "11180": 10350,
+      "Antminer L9": "Antminer L9",
+      "17 GH/s": "16,5 GH/s",
+      "Scrypt": "Scrypt"
+    },
+    {
+      "9350": 8560,
+      "11180": 10220,
+      "Antminer L9": "Antminer L9",
+      "17 GH/s": "16 GH/s",
+      "Scrypt": "Scrypt"
+    },
+    {
+      "9350": 8090,
+      "11180": 9650,
+      "Antminer L9": "Antminer L9",
+      "17 GH/s": "15 GH/s",
+      "Scrypt": "Scrypt"
+    },
+    {
+      "9350": 6580,
+      "11180": 7780,
+      "Antminer L9": "Antminer S21 XP",
+      "17 GH/s": "270 TH/s",
+      "Scrypt": "SHA-256"
+    },
+    {
+      "9350": 4970,
+      "11180": 5840,
+      "Antminer L9": "Antminer S21 pro",
+      "17 GH/s": "245 TH/s",
+      "Scrypt": "SHA-256"
+    },
+    {
+      "9350": 4710,
+      "11180": 5530,
+      "Antminer L9": "Antminer S21 pro",
+      "17 GH/s": "234 TH/s",
+      "Scrypt": "SHA-256"
+    },
+    {
+      "9350": 3920,
+      "11180": 4530,
+      "Antminer L9": "Antminer S21+",
+      "17 GH/s": "235 TH/s",
+      "Scrypt": "SHA-256"
+    },
+    {
+      "9350": 3720,
+      "11180": 4290,
+      "Antminer L9": "Antminer S21+",
+      "17 GH/s": "225 TH/s",
+      "Scrypt": "SHA-256"
+    },
+    {
+      "9350": 3680,
+      "11180": 4240,
+      "Antminer L9": "Antminer S21+",
+      "17 GH/s": "216 TH/s",
+      "Scrypt": "SHA-256"
+    },
+    {
+      "9350": 2910,
+      "11180": 3360,
+      "Antminer L9": "Antminer T21",
+      "17 GH/s": "190 TH/s",
+      "Scrypt": "SHA-256"
+    },
+    {
+      "9350": 1260,
+      "11180": 1370,
+      "Antminer L9": "Antminer S19k pro",
+      "17 GH/s": "120 TH/s",
+      "Scrypt": "SHA-256"
+    },
+    {
+      "9350": 3860,
+      "11180": 4610,
+      "Antminer L9": "Whatsminer M60S+ 17W",
+      "17 GH/s": "206 TH/s",
+      "Scrypt": "SHA-256"
+    },
+    {
+      "9350": 3800,
+      "11180": 4540,
+      "Antminer L9": "Whatsminer M60S+ 17W",
+      "17 GH/s": "204 TH/s",
+      "Scrypt": "SHA-256"
+    },
+    {
+      "9350": 3730,
+      "11180": 4450,
+      "Antminer L9": "Whatsminer M60S+ 17W",
+      "17 GH/s": "200 TH/s",
+      "Scrypt": "SHA-256"
+    },
+    {
+      "9350": 2950,
+      "11180": 3590,
+      "Antminer L9": "Whatsminer M60S 18,5W",
+      "17 GH/s": "190 TH/s",
+      "Scrypt": "SHA-256"
+    },
+    {
+      "9350": 2860,
+      "11180": 3480,
+      "Antminer L9": "Whatsminer M60S 18,5W",
+      "17 GH/s": "184 TH/s",
+      "Scrypt": "SHA-256"
+    },
+    {
+      "9350": 3060,
+      "11180": 3720,
+      "Antminer L9": "Whatsminer M61 19W",
+      "17 GH/s": "208 TH/s",
+      "Scrypt": "SHA-256"
+    },
+    {
+      "9350": 3030,
+      "11180": 3690,
+      "Antminer L9": "Whatsminer M61 19W",
+      "17 GH/s": "206 TH/s",
+      "Scrypt": "SHA-256"
+    },
+    {
+      "9350": 2950,
+      "11180": 3580,
+      "Antminer L9": "Whatsminer M61 19,9W",
+      "17 GH/s": "206 TH/s",
+      "Scrypt": "SHA-256"
+    },
+    {
+      "9350": 2920,
+      "11180": 3550,
+      "Antminer L9": "Whatsminer M61 19,9W",
+      "17 GH/s": "204 TH/s",
+      "Scrypt": "SHA-256"
+    },
+    {
+      "9350": 2890,
+      "11180": 3520,
+      "Antminer L9": "Whatsminer M61 19,9W",
+      "17 GH/s": "202 TH/s",
+      "Scrypt": "SHA-256"
+    },
+    {
+      "9350": 2660,
+      "11180": 3240,
+      "Antminer L9": "Whatsminer M60 19W",
+      "17 GH/s": "178 TH/s",
+      "Scrypt": "SHA-256"
+    },
+    {
+      "9350": 2640,
+      "11180": 3200,
+      "Antminer L9": "Whatsminer M60 19W",
+      "17 GH/s": "176 TH/s",
+      "Scrypt": "SHA-256"
+    },
+    {
+      "9350": 2560,
+      "11180": 3110,
+      "Antminer L9": "Whatsminer M60 19,9W",
+      "17 GH/s": "176 TH/s",
+      "Scrypt": "SHA-256"
+    },
+    {
+      "9350": 1720,
+      "11180": 2090,
+      "Antminer L9": "Whatsminer M50S++ 22W",
+      "17 GH/s": "158 TH/s",
+      "Scrypt": "SHA-256"
+    },
+    {
+      "9350": 1150,
+      "11180": 1400,
+      "Antminer L9": "Whatsminer M50S 26W",
+      "17 GH/s": "132 TH/s",
+      "Scrypt": "SHA-256"
+    },
+    {
+      "9350": 1120,
+      "11180": 1360,
+      "Antminer L9": "Whatsminer M50S 26W",
+      "17 GH/s": "130 TH/s",
+      "Scrypt": "SHA-256"
+    },
+    {
+      "9350": 1110,
+      "11180": 1340,
+      "Antminer L9": "Whatsminer M50S 26W",
+      "17 GH/s": "128 TH/s",
+      "Scrypt": "SHA-256"
+    },
+    {
+      "9350": 1090,
+      "11180": 1330,
+      "Antminer L9": "Whatsminer M50S 26W",
+      "17 GH/s": "126 TH/s",
+      "Scrypt": "SHA-256"
+    },
+    {
+      "9350": 1060,
+      "11180": 1290,
+      "Antminer L9": "Whatsminer M50S 26W",
+      "17 GH/s": "124 TH/s",
+      "Scrypt": "SHA-256"
+    },
+    {
+      "9350": 9230,
+      "11180": 10970,
+      "Antminer L9": "Elphapex DG Hydro",
+      "17 GH/s": "20 GH/s",
+      "Scrypt": "Scrypt"
+    },
+    {
+      "9350": 6590,
+      "11180": 7830,
+      "Antminer L9": "Elphapex DG1+",
+      "17 GH/s": "14 GH/s",
+      "Scrypt": "Scrypt"
+    },
+    {
+      "9350": 3660,
+      "11180": 4270,
+      "Antminer L9": "?? 30 ?? Avalon A15XP (04/2025)",
+      "17 GH/s": "207 TH/s",
+      "Scrypt": "SHA-256"
+    },
+    {
+      "9350": 3060,
+      "11180": 3530,
+      "Antminer L9": "?? 30 ?? Avalon A15 (04/2025)",
+      "17 GH/s": "194 TH/s",
+      "Scrypt": "SHA-256"
+    },
+    {
+      "9350": 1440,
+      "11180": 1570,
+      "Antminer L9": "?? 30 ?? Avalon A1466",
+      "17 GH/s": "139 TH/s",
+      "Scrypt": "SHA-256"
+    }
+  ]
+}
