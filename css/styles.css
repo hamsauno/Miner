@@ -28,8 +28,8 @@ body {
     border-spacing: 0; /* Убираем промежутки между ячейками */
     position: fixed;
     bottom: 20px;
-    left: 0;
-    right: 0;
+    left: 15px; /* Добавляем отступ с левой стороны */
+    right: 15px; /* Добавляем отступ с правой стороны */
     background-color: rgba(0, 0, 0, 0.5); /* Прозрачный черный фон с легким затемнением для таблицы */
     border-top: 2px solid #ddd;
     border: 3px solid #0C7727; /* Обводка зелёного цвета #0C7727 */
@@ -38,6 +38,8 @@ body {
     background-image: url('img/obj.jpg'); /* Фон таблицы в виде картинки */
     background-size: cover; /* Сделаем картинку фоном, заполняющим всю таблицу */
     background-position: center; /* Центрируем картинку */
+    background-repeat: no-repeat; /* Предотвращаем повторение картинки */
+    overflow: hidden; /* Скрываем лишнее, чтобы скругление углов работало */
 }
 
 .result-table th, .result-table td {
