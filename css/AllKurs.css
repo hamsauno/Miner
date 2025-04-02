@@ -2,9 +2,13 @@
     display: flex;
     flex-direction: column;
     gap: 20px; /* Отступ между прямоугольниками */
-    padding: 50px 25px 25px; /* Верхний отступ 45px, боковые по 25px */
+    padding: 0 25px; /* Боковые отступы по 25px */
     width: 100%;
     box-sizing: border-box;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); /* Центрирование по середине */
 }
 
 .header label {
@@ -19,7 +23,7 @@
     font-weight: 500;
     font-family: Arial, sans-serif;
     color: #fff; /* Белый текст */
-    border-radius: 10px; /* Скругленные углы */
+    border-radius: 12px; /* Скругленные углы */
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
 }
 
