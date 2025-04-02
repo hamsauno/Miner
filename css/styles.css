@@ -45,7 +45,7 @@ body {
     font-family: Arial, sans-serif;
     color: #fff; /* Белый текст */
     background: transparent; /* Прозрачный фон ячеек */
-    border: 2px solid #fff; /* Более жирные белые границы ячеек */
+    border: 2px solid #333; /* Границы ячеек чуть темнее, чем белый */
 }
 
 .result-table th {
