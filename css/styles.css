@@ -23,7 +23,7 @@ body {
     width: calc(100% - 30px); /* Учитываем отступы справа и слева */
     margin: 0 auto; /* Центрируем таблицу */
     position: fixed;
-    bottom: 20px;
+    bottom: 30px; /* Увеличенный отступ снизу */
     left: 15px;
     right: 15px;
     background-color: #333; /* Темный фон прямоугольника */
