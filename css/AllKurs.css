@@ -3,7 +3,7 @@
     flex-direction: column;
     align-items: center;
     gap: 20px; /* Отступ между прямоугольниками */
-    padding: 45px 15px 20px; /* Верхний отступ 45px, боковые по 15px */
+    padding: 50px 15px 20px; /* Верхний отступ 45px, боковые по 15px */
     width: 100%;
     box-sizing: border-box;
 }
@@ -14,7 +14,7 @@
     align-items: center;
     width: calc(100% - 30px); /* Учитываем отступы по бокам */
     background: #333; /* Темный фон */
-    padding: 20px; /* Увеличил высоту */
+    padding: 30px; /* Увеличил высоту */
     font-size: 18px;
     font-weight: 500;
     font-family: Arial, sans-serif;
