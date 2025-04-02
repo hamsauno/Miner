@@ -22,10 +22,10 @@
             return;
         }
 
-        let a = parseFloat(document.getElementById("hashrate").value);
-        let b = parseFloat(document.getElementById("power").value);
-        let h = parseFloat(document.getElementById("electricityCost").value);
-        let c = parseFloat(document.getElementById("asicCost").value);
+        let a = parseFloat(document.getElementById("hashrate").textContent); // Получаем значение хешрейта
+        let b = parseFloat(document.getElementById("power").textContent); // Получаем значение потребления
+        let h = parseFloat(document.getElementById("electricityCost").value); // Электричество
+        let c = parseFloat(document.getElementById("asicCost").value); // Стоимость оборудования
 
         let dailyIncome = (a * profitPerLTC * ltcPrice) + (a * profitPerDOGE * dogePrice) + (a * profitPerBELL * bellPrice);
         let monthlyIncome = dailyIncome * 30.5;
