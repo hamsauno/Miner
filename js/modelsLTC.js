@@ -91,7 +91,18 @@ window.onload = async function() {
  };
 
 
- //Функция для получения данных с удалённого текстового файла
+// Функция парсинга чисел с заменой запятой на точку
+const parseValue = (str) => {
+    const value = str.replace(",", ".");
+    const parsedValue = parseFloat(value);
+    
+    if (isNaN(parsedValue)) {
+        console.warn(`Не удалось преобразовать строку в число: "${str}"`);
+    }
+
+    return parsedValue;
+};
+
 async function fetchData() {
     const url = "https://hamsauno.github.io/Miner/kursBTC.txt"; 
 
@@ -119,17 +130,14 @@ async function fetchData() {
             throw new Error(`Ошибка: недостаточно строк в файле (ожидалось 9, получено ${lines.length})`);
         }
 
-        // Функция парсинга чисел с заменой запятой на точку
-        const parseValue = (str) => parseFloat(str.replace(",", "."));
-
+        // Чтение данных из файла и обработка чисел
         const ltcPrice = parseValue(lines[3]);
         const dogePrice = parseValue(lines[4]);
         const bellPrice = parseValue(lines[5]);
         const usdtPrice = parseValue(lines[1]);
         const profitPerLTC = parseValue(lines[6]);
         const profitPerDOGE = parseValue(lines[7]);
-	const profitPerBELL = parseValue(lines[8]);
-       
+        const profitPerBELL = parseValue(lines[8]);
 
         console.log("ltcPrice:", ltcPrice);
         console.log("dogePrice:", dogePrice);
@@ -158,5 +166,4 @@ async function fetchData() {
         alert("Ошибка загрузки данных. Проверьте доступность файла.");
     }
 }
-
 
