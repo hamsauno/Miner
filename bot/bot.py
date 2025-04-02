@@ -36,7 +36,7 @@ async def start(message: types.Message):
 
     keyboard = InlineKeyboardMarkup(
         inline_keyboard=[[
-            InlineKeyboardButton(text="ОТКРЫТЬ", web_app=WebAppInfo(url="https://hamsauno.github.io/Miner/"))
+            InlineKeyboardButton(text="ОТКРЫТЬ", web_app=WebAppInfo(url="https://hamsauno.github.io/Miner/index.html"))
         ]]
     )
 
