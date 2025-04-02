@@ -77,7 +77,7 @@ function updateAsicSpecs() {
         document.getElementById("hashrate").textContent = asicData[selectedModel].a;
         document.getElementById("power").textContent = asicData[selectedModel].b;
     } else {
-        console.error(`Ошибка: Модель "${selectedModel}" не найдена в asicData`);
+        console.error(Ошибка: Модель "${selectedModel}" не найдена в asicData);
         document.getElementById("hashrate").textContent = "";
         document.getElementById("power").textContent = "";
     }
@@ -91,18 +91,7 @@ window.onload = async function() {
  };
 
 
-// Функция парсинга чисел с заменой запятой на точку
-const parseValue = (str) => {
-    const value = str.replace(",", ".");
-    const parsedValue = parseFloat(value);
-    
-    if (isNaN(parsedValue)) {
-        console.warn(`Не удалось преобразовать строку в число: "${str}"`);
-    }
-
-    return parsedValue;
-};
-
+ //Функция для получения данных с удалённого текстового файла
 async function fetchData() {
     const url = "https://hamsauno.github.io/Miner/kursBTC.txt"; 
 
@@ -127,17 +116,20 @@ async function fetchData() {
 
         // Проверяем, что данных достаточно
         if (lines.length < 9) {
-            throw new Error(`Ошибка: недостаточно строк в файле (ожидалось 9, получено ${lines.length})`);
+            throw new Error(Ошибка: недостаточно строк в файле (ожидалось 9, получено ${lines.length}));
         }
 
-        // Чтение данных из файла и обработка чисел
+        // Функция парсинга чисел с заменой запятой на точку
+        const parseValue = (str) => parseFloat(str.replace(",", "."));
+
         const ltcPrice = parseValue(lines[3]);
         const dogePrice = parseValue(lines[4]);
         const bellPrice = parseValue(lines[5]);
         const usdtPrice = parseValue(lines[1]);
         const profitPerLTC = parseValue(lines[6]);
         const profitPerDOGE = parseValue(lines[7]);
-        const profitPerBELL = parseValue(lines[8]);
+	const profitPerBELL = parseValue(lines[8]);
+       
 
         console.log("ltcPrice:", ltcPrice);
         console.log("dogePrice:", dogePrice);
@@ -166,4 +158,3 @@ async function fetchData() {
         alert("Ошибка загрузки данных. Проверьте доступность файла.");
     }
 }
-
