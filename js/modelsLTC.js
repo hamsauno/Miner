@@ -83,6 +83,13 @@ function updateAsicSpecs() {
     }
 }
 
+window.onload = async function() {
+     await fetchData();
+     updateModelList(); // Инициализация списка моделей
+     document.getElementById("manufacturerSelect").addEventListener("change", updateModelList);
+     document.getElementById("asicModel").addEventListener("change", updateAsicSpecs);
+ };
+
 
  //Функция для получения данных с удалённого текстового файла
 async function fetchData() {
