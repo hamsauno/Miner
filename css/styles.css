@@ -32,7 +32,6 @@ body {
     right: 15px; /* Добавляем отступ с правой стороны */
     background-color: rgba(0, 0, 0, 0.5); /* Прозрачный черный фон с легким затемнением для таблицы */
     border-top: 2px solid #ddd;
-    border: 3px solid #0C7727; /* Обводка зелёного цвета #0C7727 */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); /* Легкая тень для таблицы */
     border-radius: 30px; /* Скругленные углы */
     background-image: url('https://hamsauno.github.io/Miner/img/obj.jpg'); /* Фон таблицы в виде картинки */
