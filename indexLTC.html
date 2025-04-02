@@ -26,6 +26,9 @@
                 <!-- Модели будут добавляться динамически -->
             </select>
         </label>
+
+    <label>Хэшрейт : <span id="hashrate" ></span> GH/s</label>
+    <label>Потребление :<span id="power" ></span> Вт</label>
      
     <label>Стоимость розетки (руб): 
         <input type="number" id="electricityCost" value="5" inputmode="numeric">
@@ -33,12 +36,7 @@
     <label>Стоимость Асика (руб): 
         <input type="number" id="asicCost" value="500000" inputmode="numeric">
     </label>
-    <label>Хэшрейт (GH/s): 
-        <input type="number" id="hashrate" readonly>
-    </label>
-    <label>Потребление (Вт): 
-        <input type="number" id="power" readonly>
-    </label>
+
     <label><input type="hidden" id="ltcPrice" readonly></label>
     <label><input type="hidden" id="dogePrice" readonly></label>
     <label><input type="hidden" id="bellPrice" readonly></label>
