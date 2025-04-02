@@ -40,7 +40,7 @@ body {
     font-family: Arial, sans-serif;
     color: #fff; /* Белый текст */
     background: transparent; /* Прозрачный фон ячеек */
-    border: none; /* Убираем границы */
+    border: 1px solid #000; /* Черные границы ячеек */
 }
 
 .result-table th {
