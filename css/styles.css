@@ -16,7 +16,7 @@ body {
     flex-direction: column;
     background: rgba(0, 0, 0, 0.5); /* Прозрачный черный фон с легким затемнением для шапки */
     color: white; /* Белый цвет шрифта для текста в шапке */
-    margin-top: 40px; /* Отступ сверху */
+    margin-top: 45px; /* Отступ сверху */
 }
 
 .result-table {
