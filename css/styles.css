@@ -24,7 +24,8 @@ body {
     margin: 20px auto; /* Добавляем отступы сверху и снизу */
     padding-left: 15px;
     padding-right: 15px;
-    border-collapse: collapse;
+    border-collapse: separate; /* Используем separate вместо collapse для работы с border-radius */
+    border-spacing: 0; /* Убираем промежутки между ячейками */
     position: fixed;
     bottom: 20px;
     left: 0;
@@ -36,6 +37,7 @@ body {
     border-radius: 15px; /* Скругленные углы */
     background-image: url('img/obj.jpg'); /* Фон таблицы в виде картинки */
     background-size: cover; /* Сделаем картинку фоном, заполняющим всю таблицу */
+    background-position: center; /* Центрируем картинку */
 }
 
 .result-table th, .result-table td {
