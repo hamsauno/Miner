@@ -28,6 +28,7 @@ async function fetchData() {
 
             // Проверяем, что все значения - числа
             if ([btcPrice, usdtPrice, ltcPrice, dogePrice, bellPrice].every(val => !isNaN(val))) {
+                // Обновляем текст в <span> вместо установки в поле ввода
                 setTextValue("usdtPrice", usdtPrice.toFixed(2));
                 setTextValue("btcPrice", btcPrice.toFixed(2));
                 setTextValue("ltcPrice", ltcPrice.toFixed(2));
@@ -47,23 +48,22 @@ async function fetchData() {
     }
 }
 
-// Устанавливает значение в поле ввода
-function setInputValue(id, value) {
+// Устанавливает текст в элемент
+function setTextValue(id, value) {
     const element = document.getElementById(id);
     if (element) {
-        element.value = value;
+        element.textContent = value;
     } else {
         console.error("Элемент не найден:", id);
     }
 }
 
-// Функция для установки плейсхолдера "Ошибка" в поля
+// Функция для установки плейсхолдера "Ошибка" в элементы
 function setErrorPlaceholders() {
     ["usdtPrice", "btcPrice", "ltcPrice", "dogePrice", "bellPrice"].forEach(id => {
         const element = document.getElementById(id);
         if (element) {
-            element.value = "";
-            element.placeholder = "Ошибка";
+            element.textContent = "Ошибка";
         } else {
             console.error("Элемент не найден:", id);
         }
