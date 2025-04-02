@@ -10,10 +10,18 @@
             return;
         }
 
-        let a = parseFloat(document.getElementById("hashrate").value);
-        let b = parseFloat(document.getElementById("power").value);
-        let h = parseFloat(document.getElementById("electricityCost").value);
-        let c = parseFloat(document.getElementById("asicCost").value);
+        let a = parseFloat(document.getElementById("hashrate").textContent); // Получаем значение хешрейта
+        let b = parseFloat(document.getElementById("power").textContent); // Получаем значение потребления
+        let h = parseFloat(document.getElementById("electricityCost").value); // Электричество
+        let c = parseFloat(document.getElementById("asicCost").value); // Стоимость оборудования
+
+        console.log("Hashrate:", a);
+        console.log("Power:", b);
+    
+        if (isNaN(a) || isNaN(b)) {
+            alert("Хешрейт или потребление некорректны.");
+            return;
+        }
 
         let dailyIncome = a * profitPerTH * btcPrice;
         let monthlyIncome = dailyIncome * 30.5;
