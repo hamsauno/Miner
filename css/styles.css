@@ -20,15 +20,22 @@ body {
 }
 
 .result-table {
-    width: 100%;
+    width: calc(100% - 30px); /* Уменьшаем ширину на отступы по 15px с каждой стороны */
+    margin: 20px auto; /* Добавляем отступы сверху и снизу */
+    padding-left: 15px;
+    padding-right: 15px;
     border-collapse: collapse;
-    margin-top: auto;
     position: fixed;
     bottom: 20px;
-    background-color: rgba(0, 0, 0, 0.5); /* Прозрачный черный фон с легким затемнением для таблицы */
-    border-top: 2px solid #ddd;
     left: 0;
     right: 0;
+    background-color: rgba(0, 0, 0, 0.5); /* Прозрачный черный фон с легким затемнением для таблицы */
+    border-top: 2px solid #ddd;
+    border: 3px solid #0C7727; /* Обводка зелёного цвета #0C7727 */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); /* Легкая тень для таблицы */
+    border-radius: 15px; /* Скругленные углы */
+    background-image: url('img/obj.jpg'); /* Фон таблицы в виде картинки */
+    background-size: cover; /* Сделаем картинку фоном, заполняющим всю таблицу */
 }
 
 .result-table th, .result-table td {
@@ -37,6 +44,7 @@ body {
     border: 1px solid #ddd;
     font-size: 12px;
     background: rgba(0, 0, 0, 0.5); /* Легкое затемнение для ячеек таблицы */
+    border-radius: 8px; /* Скругление углов для ячеек */
 }
 
 .result-table th {
