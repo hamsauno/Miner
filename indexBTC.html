@@ -13,35 +13,49 @@
     <script src="js/logicBTC.js" defer></script><!-- логика-->
 </head>
 <body>
- <div class="header">
-        <label>Производитель:
-            <select id="manufacturerSelect" onchange="updateModelList()">
-                <option value="antminer">Bitmain Antminer</option>
-                <option value="whatsminer">MicroBT Whatsminer</option>
-                <option value="avalon">Canaan Avalon</option>
-            </select>
-        </label>
-        
-        <label>Модель Асика:
-            <select id="asicModel" onchange="updateAsicSpecs()">
-                <!-- Модели будут добавляться динамически -->
-            </select>
-        </label>
-
-        <label>Хэшрейт : <span id="hashrate" ></span> TH/s</label>
-        <label>Потребление :<span id="power" ></span> Вт</label>
-
-        <label>Стоимость розетки (руб): 
-            <input type="number" id="electricityCost" value="5" inputmode="numeric">
-        </label>
-        <label>Стоимость Асика (руб): 
-            <input type="number" id="asicCost" value="500000" inputmode="numeric">
-        </label>
-        <label><input type="hidden" id="btcPrice"></label>
-        <label><input type="hidden" id="usdtPrice"></label>
-        <label><input type="hidden" id="profitPerTH"></label>
-        <button onclick="calculateProfit()">Рассчитать</button>
-    </div>
+                 <div class="header">
+                    <div class="row">
+                        <label for="manufacturerSelect">Производитель:</label>
+                        <select id="manufacturerSelect" onchange="updateModelList()">
+                            <option value="antminer">Bitmain Antminer</option>
+                            <option value="whatsminer">MicroBT Whatsminer</option>
+                            <option value="avalon">Canaan Avalon</option>
+                        </select>
+                    </div>
+                    
+                    <div class="row">
+                        <label for="asicModel">Модель Асика:</label>
+                        <select id="asicModel" onchange="updateAsicSpecs()">
+                            <!-- Модели будут добавляться динамически -->
+                        </select>
+                    </div>
+                
+                    <div class="row">
+                        <label for="hashrate">Хэшрейт : </label>
+                        <span id="hashrate"></span> TH/s
+                    </div>
+                
+                    <div class="row">
+                        <label for="power">Потребление : </label>
+                        <span id="power"></span> Вт
+                    </div>
+                
+                    <div class="row">
+                        <label for="electricityCost">Стоимость розетки (руб):</label>
+                        <input type="number" id="electricityCost" value="5" inputmode="numeric">
+                    </div>
+                
+                    <div class="row">
+                        <label for="asicCost">Стоимость Асика (руб):</label>
+                        <input type="number" id="asicCost" value="500000" inputmode="numeric">
+                    </div>
+                
+                    <label><input type="hidden" id="btcPrice"></label>
+                    <label><input type="hidden" id="usdtPrice"></label>
+                    <label><input type="hidden" id="profitPerTH"></label>
+                
+                    <button onclick="calculateProfit()">Рассчитать</button>
+                </div>
 
     <table class="result-table">
         <thead>
