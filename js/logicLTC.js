@@ -27,6 +27,14 @@
         let h = parseFloat(document.getElementById("electricityCost").value); // Электричество
         let c = parseFloat(document.getElementById("asicCost").value); // Стоимость оборудования
 
+        console.log("Hashrate:", a);
+        console.log("Power:", b);
+    
+        if (isNaN(a) || isNaN(b)) {
+            alert("Хешрейт или потребление некорректны.");
+            return;
+        }
+
         let dailyIncome = (a * profitPerLTC * ltcPrice) + (a * profitPerDOGE * dogePrice) + (a * profitPerBELL * bellPrice);
         let monthlyIncome = dailyIncome * 30.5;
         let yearlyIncome = dailyIncome * 365;
