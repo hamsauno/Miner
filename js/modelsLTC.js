@@ -73,21 +73,15 @@ function updateAsicSpecs() {
     const selectedModel = modelSelect.value;
 
     if (asicData[selectedModel]) {
-        document.getElementById("hashrate").value = asicData[selectedModel].a;
-        document.getElementById("power").value = asicData[selectedModel].b;
+        // Присваиваем хешрейт и потребление в текстовые элементы <span>
+        document.getElementById("hashrate").textContent = asicData[selectedModel].a;
+        document.getElementById("power").textContent = asicData[selectedModel].b;
     } else {
         console.error(`Ошибка: Модель "${selectedModel}" не найдена в asicData`);
-        document.getElementById("hashrate").value = "";
-        document.getElementById("power").value = "";
+        document.getElementById("hashrate").textContent = "";
+        document.getElementById("power").textContent = "";
     }
 }
-
-window.onload = async function() {
-    await fetchData();
-    updateModelList(); // Инициализация списка моделей
-    document.getElementById("manufacturerSelect").addEventListener("change", updateModelList);
-    document.getElementById("asicModel").addEventListener("change", updateAsicSpecs);
-};
 
 
  //Функция для получения данных с удалённого текстового файла
