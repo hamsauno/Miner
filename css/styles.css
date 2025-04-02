@@ -2,8 +2,8 @@
 .header {
     background-color: #333; /* Цвет фона прямоугольника */
     border-radius: 10px; /* Скругленные углы */
-    padding: 20px;
-    margin: 20px auto;
+    padding: 10px;
+    margin: 0 auto;
     width: calc(100% - 30px); /* Отступы по 15px с каждой стороны */
     box-shadow: 
         0px 4px 6px rgba(0, 0, 0, 0.3),  /* Основная тень снизу */
@@ -41,8 +41,10 @@
 
 .header select,
 .header input {
-    width: calc(100% - 20px);
-    margin-bottom: 15px;
+    width: 90%; /* Уменьшаем ширину до 90% */
+    padding: 5px; /* Уменьшаем внутренний отступ для уменьшения высоты */
+    font-size: 10px; /* Уменьшаем размер шрифта */
+    margin-bottom: 15px; /* Отступ снизу */
 }
 
 .header button {
@@ -60,6 +62,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    font-size: 12px;
 }
 
 .header .row label {
