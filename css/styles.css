@@ -11,12 +11,75 @@ body {
 }
 
 .header {
-    padding: 15px;
+    background-color: #333; /* Цвет фона прямоугольника */
+    border-radius: 10px; /* Скругленные углы */
+    padding: 20px;
+    margin: 20px auto;
+    width: calc(100% - 30px); /* Отступы по 15px с каждой стороны */
+    box-shadow: 
+        0px 4px 6px rgba(0, 0, 0, 0.3),  /* Основная тень снизу */
+        0px 2px 4px rgba(0, 0, 0, 0.2) inset; /* Внутренняя тень для объема */
+    border: 1px solid rgba(255, 255, 255, 0.1); /* Легкий контур */
+    font-family: Arial, sans-serif; /* Шрифт Arial */
+    color: white; /* Цвет шрифта белый */
+}
+
+.header label {
+    display: block;
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+.header label span {
+    display: block;
+    font-size: 16px;
+    font-weight: bold;
+    margin-top: 5px;
+}
+
+.header select,
+.header input,
+.header button {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #444; /* Темный фон для полей */
+    color: white;
+    font-size: 14px;
+}
+
+.header select,
+.header input {
+    width: calc(100% - 20px);
+    margin-bottom: 15px;
+}
+
+.header button {
+    background-color: #A76729; /* Золотистая кнопка */
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.header button:hover {
+    background-color: #8a5822; /* Темнее при наведении */
+}
+
+.header .row {
     display: flex;
-    flex-direction: column;
-    background: rgba(0, 0, 0, 0.5); /* Прозрачный черный фон с легким затемнением для шапки */
-    color: white; /* Белый цвет шрифта для текста в шапке */
-    margin-top: 45px; /* Отступ сверху */
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header .row label {
+    width: 48%;
+}
+
+.header .row input,
+.header .row select {
+    width: 48%;
 }
 
 .result-table {
