@@ -28,11 +28,11 @@ async function fetchData() {
 
             // Проверяем, что все значения - числа
             if ([btcPrice, usdtPrice, ltcPrice, dogePrice, bellPrice].every(val => !isNaN(val))) {
-                setInputValue("usdtPrice", usdtPrice.toFixed(2));
-                setInputValue("btcPrice", btcPrice.toFixed(2));
-                setInputValue("ltcPrice", ltcPrice.toFixed(2));
-                setInputValue("dogePrice", dogePrice.toFixed(4));
-                setInputValue("bellPrice", bellPrice.toFixed(4));
+                setTextValue("usdtPrice", usdtPrice.toFixed(2));
+                setTextValue("btcPrice", btcPrice.toFixed(2));
+                setTextValue("ltcPrice", ltcPrice.toFixed(2));
+                setTextValue("dogePrice", dogePrice.toFixed(4));
+                setTextValue("bellPrice", bellPrice.toFixed(4));
             } else {
                 console.error("Ошибка: Данные содержат неверные значения.");
                 setErrorPlaceholders();
