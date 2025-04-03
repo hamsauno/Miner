@@ -11,9 +11,10 @@
 }
 
 .header label {
-    display: flex; /* Размещаем элементы в строку */
+    display: flex;
     flex-direction: column; /* Размещаем текст label и значение span вертикально */
     align-items: flex-start; /* Выравниваем содержимое по левому краю */
+    width: 100%; /* Чтобы label растягивался на всю ширину */
 }
 
 .header label span {
@@ -21,43 +22,10 @@
     font-weight: bold;
     margin-top: 3px; /* Отступ сверху */
     text-align: left; /* Выравниваем текст внутри span по левому краю */
-    width: 100%; /* Заставляем span занимать всю ширину родительского контейнера */
+    width: auto; /* Даем возможность подстраиваться по содержимому */
 }
 
-.header select,
-.header input,
-.header button {
-    width: 100%;
-    padding: 10px;
-    margin-top: 5px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    background-color: #444; /* Темный фон для полей */
-    color: white;
-}
-
-.header select,
-.header input {
-    width: 90%; /* Уменьшаем ширину до 90% */
-    padding: 5px; /* Уменьшаем внутренний отступ для уменьшения высоты */
-    margin-bottom: 5px; /* Уменьшаем отступ снизу */
-}
-
-.header button {
-    width: 100%;
-    padding: 8px; /* Уменьшаем padding */
-    margin-top: 5px; /* Уменьшаем отступ сверху */
-    background-color: #A76729; /* Золотистая кнопка */
-    color: white;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-.header button:hover {
-    background-color: #8a5822; /* Темнее при наведении */
-}
-
-/* Контейнер для ввода, кнопок, и выбора */
+/* Для блока row - чтобы значение было по левому краю */
 .header .row {
     display: flex;
     justify-content: space-between;
@@ -66,10 +34,48 @@
     gap: 5px; /* Отступы между элементами */
 }
 
-.header .row label,
-.header .row input,
-.header .row select {
-    width: 48%; /* Уменьшаем ширину, чтобы они не занимали всю строку */
+.header .row label {
+    width: auto; /* Даем меткам гибкую ширину */
+}
+
+.header .row span {
+    text-align: left; /* Убедимся, что текст внутри span по левому краю */
+    flex-grow: 1; /* Растягиваем span, чтобы он занимал оставшееся пространство */
+}
+
+/* Оформление инпутов, кнопок и select */
+.header select,
+.header input,
+.header button {
+    width: 100%;
+    padding: 8px; /* Немного уменьшаем высоту */
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #444; /* Темный фон для полей */
+    color: white;
+    font-size: 12px;
+}
+
+.header select,
+.header input {
+    width: 90%;
+    padding: 5px;
+    margin-bottom: 5px;
+}
+
+.header button {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    background-color: #A76729;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.header button:hover {
+    background-color: #8a5822;
 }
 
 /* Полностью скрываем label, если внутри него input[type="hidden"] */
