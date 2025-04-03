@@ -21,7 +21,9 @@
                     const price = item["Цена"] || "Неизвестная цена";
         
                     // Добавляем элементы в контейнер
-                    div.innerHTML =` ${model} ${hashRate} ${price}`;
+                    div.innerHTML = `
+                            <p>${model} | ${hashRate} | ${price}</p>
+                     `;
         
                     container.appendChild(div);
                 });
