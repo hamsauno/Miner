@@ -1,35 +1,51 @@
-name: Деплой 
+name: Деплой
 
 on:
   push:
     branches:
-      - main  # Запускается при push в ветку main (или другую, если нужно)
+      - main  # или ваша ветка
 
 jobs:
   deploy:
-    runs-on: ubuntu-latest  # Выбираем Ubuntu как среду выполнения
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      pages: write
+      id-token: write  # Включаем нужное разрешение
 
     steps:
       # Шаг 1: Клонировать репозиторий
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      # Шаг 2: Создать папку build, если она не существует
+      # Шаг 2: Установить Node.js (если нужно для вашего проекта)
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '14'  # укажите нужную версию Node.js
+
+      # Шаг 3: Установить зависимости (если нужно для вашего проекта)
+      - name: Install dependencies
+        run: |
+          npm install  # используйте вашу команду, если это необходимо
+
+      # Шаг 4: Создать папку build, если она не существует
       - name: Create build folder
         run: |
-          mkdir -p build  # создаём папку build, если её нет
+          mkdir -p build  # создаём папку build, если она не существует
 
-      # Шаг 3: Копировать все файлы в папку build (кроме самой папки build)
+      # Шаг 5: Скопировать все файлы, кроме папки build
       - name: Copy files to build folder
         run: |
           shopt -s extglob  # включаем поддержку шаблонов для исключений
           cp -r !(build) ./build  # копируем все файлы, кроме папки build, в папку build
 
-      # Шаг 4: Деплой на GitHub Pages
+      # Шаг 6: Деплой на GitHub Pages
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:
-          branch: gh-pages  # Ветка, на которой будет опубликован сайт
-          folder: ./build  # Папка с файлам, которые нужно опубликовать
+          branch: gh-pages  # ветка, на которой будет опубликован сайт
+          folder: ./build  # папка с файлами, которые нужно опубликовать
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Токен для аутентификации
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}  # Токен для аутентификации
