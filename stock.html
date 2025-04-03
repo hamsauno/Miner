@@ -54,32 +54,24 @@
   </div>
 
   <script>
-    // Функция для получения данных из JSON на GitHub
-    fetch('https://raw.githubusercontent.com/hamsauno/Miner/refs/heads/main/json/data.json')
-      .then(response => response.json())
-      .then(data => {
-        // Извлекаем данные из раздела "Наличие"
-        const availability = data["Наличие"];
-        
-        // Находим контейнер, куда будем вставлять элементы
-        const container = document.querySelector('#miningContainer');
-        
-        // Проходим по каждому элементу в массиве "Наличие"
-        availability.forEach(item => {
-          const itemDiv = document.createElement('div');
-          itemDiv.classList.add('item');
-          
-          // Добавляем информацию в контейнер
-          itemDiv.innerHTML = `
-            <h3>${item["Antminer L9"]}</h3>
-            <p><strong>Хешрейт:</strong> ${item["17 GH/s"]}</p>
-            <p class="price"><strong>Цена:</strong> $${item["9600"]}</p>
-          `;
-          
-          // Вставляем блок в контейнер
-          container.appendChild(itemDiv);
-        });
-      })
-      .catch(error => console.error('Ошибка при получении данных:', error));
+fetch('https://raw.githubusercontent.com/hamsauno/Miner/main/json/data.json')
+  .then(response => response.json())
+  .then(data => {
+    console.log(data); // Выводим данные в консоль для проверки
+    const availability = data["Наличие"];
+    const container = document.querySelector('#miningContainer');
+
+    availability.forEach(item => {
+      const itemDiv = document.createElement('div');
+      itemDiv.classList.add('item');
+      itemDiv.innerHTML = `
+        <h3>${item["Antminer L9"]}</h3>
+        <p><strong>Хешрейт:</strong> ${item["17 GH/s"]}</p>
+        <p class="price"><strong>Цена:</strong> $${item["9600"]}</p>
+      `;
+      container.appendChild(itemDiv);
+    });
+  })
+  .catch(error => console.error('Ошибка при получении данных:', error));
   </script>
 </body>
