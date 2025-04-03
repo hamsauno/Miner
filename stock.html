@@ -6,36 +6,52 @@
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <title>Майнинг оборудование</title>
   <style>
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 20px;
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      padding: 20px;
     }
-    th, td {
+
+    .container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    .item {
+      background-color: white;
       border: 1px solid #ddd;
-      padding: 8px;
-      text-align: left;
+      padding: 15px;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      width: 300px;
+      text-align: center;
     }
-    th {
-      background-color: #f2f2f2;
+
+    .item h3 {
+      margin: 0;
+      font-size: 1.2em;
+    }
+
+    .item p {
+      margin: 10px 0;
+      font-size: 1em;
+      color: #555;
+    }
+
+    .item .price {
+      font-weight: bold;
+      font-size: 1.1em;
+      color: #333;
     }
   </style>
 </head>
 <body>
   <h1>Список майнинг оборудования</h1>
 
-  <table id="miningTable">
-    <thead>
-      <tr>
-        <th>Модель</th>
-        <th>Хешрейт</th>
-        <th>Цена в $</th>
-      </tr>
-    </thead>
-    <tbody>
-      <!-- Здесь будут отображаться данные -->
-    </tbody>
-  </table>
+  <div class="container" id="miningContainer">
+    <!-- Данные будут вставлены сюда -->
+  </div>
 
   <script>
     // Функция для получения данных из JSON на GitHub
@@ -45,25 +61,25 @@
         // Извлекаем данные из раздела "Наличие"
         const availability = data["Наличие"];
         
-        // Находим таблицу и её тело
-        const tableBody = document.querySelector('#miningTable tbody');
+        // Находим контейнер, куда будем вставлять элементы
+        const container = document.querySelector('#miningContainer');
         
         // Проходим по каждому элементу в массиве "Наличие"
         availability.forEach(item => {
-          const row = document.createElement('tr');
+          const itemDiv = document.createElement('div');
+          itemDiv.classList.add('item');
           
-          // Добавляем данные в таблицу
-          row.innerHTML = `
-            <td>${item["Antminer L9"]}</td>
-            <td>${item["17 GH/s"]}</td>
-            <td>${item["9600"]}</td>
+          // Добавляем информацию в контейнер
+          itemDiv.innerHTML = `
+            <h3>${item["Antminer L9"]}</h3>
+            <p><strong>Хешрейт:</strong> ${item["17 GH/s"]}</p>
+            <p class="price"><strong>Цена:</strong> $${item["9600"]}</p>
           `;
           
-          // Вставляем строку в таблицу
-          tableBody.appendChild(row);
+          // Вставляем блок в контейнер
+          container.appendChild(itemDiv);
         });
       })
       .catch(error => console.error('Ошибка при получении данных:', error));
   </script>
 </body>
-</html>
