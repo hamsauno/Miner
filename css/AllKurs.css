@@ -1,36 +1,19 @@
 .header {
-    display: flex;
-    flex-direction: column;
-    gap: 5px; /* Отступ между контейнерами */
-    padding: 0 25px; /* Боковые отступы по 25px */
-    width: 100%;
-    box-sizing: border-box; /* Учитываем отступы в ширине */
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%); /* Центрирование по середине */
+            background-color: #333333; /* Темный фон для каждого блока */
+            padding: 20px;
+            margin: 10px 0;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
 }
 
 .header label {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%; /* Используем всю ширину контейнера */
-    background-color: #333333; /* Темный фон для каждого блока */
-    padding: 20px;
-    margin: 10px 0;
-    font-size: 18px;
-    font-weight: 500;
-    font-family: Arial, sans-serif;
-    color: white; /* Белый текст */
-    border-radius: 5px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3); /* Тень для блока */
+         
+            padding: 20px;
+            margin: 10px 0;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
 }
 
-.header label p {
-    margin: 5px 0;
-}
 
 .header label strong {
     color: #f39c12; /* Золотой цвет для выделенных элементов */
