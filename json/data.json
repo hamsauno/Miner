@@ -1,0 +1,504 @@
+{
+  "Наличие": [
+    {
+      "9300": "8700",
+      "Antminer L9": "Antminer L9",
+      "17 GH/s": "16,5 GH/s",
+      "Scrypt": "Scrypt",
+      "Наличие": "Наличие"
+    },
+    {
+      "9300": "8600",
+      "Antminer L9": "Antminer L9",
+      "17 GH/s": "16 GH/s",
+      "Scrypt": "Scrypt",
+      "Наличие": "Наличие"
+    },
+    {
+      "9300": "8200",
+      "Antminer L9": "Antminer L9",
+      "17 GH/s": "15 GH/s",
+      "Scrypt": "Scrypt",
+      "Наличие": "Наличие"
+    },
+    {
+      "9300": "6500",
+      "Antminer L9": "Antminer S21 XP",
+      "17 GH/s": "270 TH/s",
+      "Scrypt": "SHA-256",
+      "Наличие": "Наличие"
+    },
+    {
+      "9300": "4750",
+      "Antminer L9": "Antminer S21 pro",
+      "17 GH/s": "245 TH/s",
+      "Scrypt": "SHA-256",
+      "Наличие": "Наличие"
+    },
+    {
+      "9300": "4550",
+      "Antminer L9": "Antminer S21 pro",
+      "17 GH/s": "234 TH/s",
+      "Scrypt": "SHA-256",
+      "Наличие": "Наличие"
+    },
+    {
+      "9300": "3750",
+      "Antminer L9": "Antminer S21+",
+      "17 GH/s": "235 TH/s",
+      "Scrypt": "SHA-256",
+      "Наличие": "Наличие"
+    },
+    {
+      "9300": "3590",
+      "Antminer L9": "Antminer S21+",
+      "17 GH/s": "225 TH/s",
+      "Scrypt": "SHA-256",
+      "Наличие": "Наличие"
+    },
+    {
+      "9300": "3570",
+      "Antminer L9": "Antminer S21+",
+      "17 GH/s": "216 TH/s",
+      "Scrypt": "SHA-256",
+      "Наличие": "Наличие"
+    },
+    {
+      "9300": "2900",
+      "Antminer L9": "Antminer T21",
+      "17 GH/s": "190 TH/s",
+      "Scrypt": "SHA-256",
+      "Наличие": "Наличие"
+    },
+    {
+      "9300": "1230",
+      "Antminer L9": "Antminer S19k pro",
+      "17 GH/s": "120 TH/s",
+      "Scrypt": "SHA-256",
+      "Наличие": "Наличие"
+    },
+    {
+      "9300": "3720",
+      "Antminer L9": "Whatsminer M60S+ 17W",
+      "17 GH/s": "206 TH/s",
+      "Scrypt": "SHA-256",
+      "Наличие": "Наличие"
+    },
+    {
+      "9300": "3680",
+      "Antminer L9": "Whatsminer M60S+ 17W",
+      "17 GH/s": "204 TH/s",
+      "Scrypt": "SHA-256",
+      "Наличие": "Наличие"
+    },
+    {
+      "9300": "3600",
+      "Antminer L9": "Whatsminer M60S+ 17W",
+      "17 GH/s": "200 TH/s",
+      "Scrypt": "SHA-256",
+      "Наличие": "Наличие"
+    },
+    {
+      "9300": "2890",
+      "Antminer L9": "Whatsminer M60S 18,5W",
+      "17 GH/s": "190 TH/s",
+      "Scrypt": "SHA-256",
+      "Наличие": "Наличие"
+    },
+    {
+      "9300": "2840",
+      "Antminer L9": "Whatsminer M60S 18,5W",
+      "17 GH/s": "188 TH/s",
+      "Scrypt": "SHA-256",
+      "Наличие": "Наличие"
+    },
+    {
+      "9300": "2760",
+      "Antminer L9": "Whatsminer M60S 18,5W",
+      "17 GH/s": "184 TH/s",
+      "Scrypt": "SHA-256",
+      "Наличие": "Наличие"
+    },
+    {
+      "9300": "2730",
+      "Antminer L9": "Whatsminer M61 19,9W",
+      "17 GH/s": "204 TH/s",
+      "Scrypt": "SHA-256",
+      "Наличие": "Наличие"
+    },
+    {
+      "9300": "2670",
+      "Antminer L9": "Whatsminer M61 19,9W",
+      "17 GH/s": "202 TH/s",
+      "Scrypt": "SHA-256",
+      "Наличие": "Наличие"
+    },
+    {
+      "9300": "2600",
+      "Antminer L9": "Whatsminer M61 19,9W",
+      "17 GH/s": "200 TH/s",
+      "Scrypt": "SHA-256",
+      "Наличие": "Наличие"
+    },
+    {
+      "9300": "2600",
+      "Antminer L9": "Whatsminer M60 19W",
+      "17 GH/s": "178 TH/s",
+      "Scrypt": "SHA-256",
+      "Наличие": "Наличие"
+    },
+    {
+      "9300": "2580",
+      "Antminer L9": "Whatsminer M60 19W",
+      "17 GH/s": "176 TH/s",
+      "Scrypt": "SHA-256",
+      "Наличие": "Наличие"
+    },
+    {
+      "9300": "2440",
+      "Antminer L9": "Whatsminer M60 19,9W",
+      "17 GH/s": "176 TH/s",
+      "Scrypt": "SHA-256",
+      "Наличие": "Наличие"
+    },
+    {
+      "9300": "2350",
+      "Antminer L9": "Whatsminer M60 19,9W",
+      "17 GH/s": "172 TH/s",
+      "Scrypt": "SHA-256",
+      "Наличие": "Наличие"
+    },
+    {
+      "9300": "1730",
+      "Antminer L9": "Whatsminer M50S++ 22W",
+      "17 GH/s": "158 TH/s",
+      "Scrypt": "SHA-256",
+      "Наличие": "Наличие"
+    },
+    {
+      "9300": "1720",
+      "Antminer L9": "Whatsminer M50S++ 22W",
+      "17 GH/s": "154 TH/s",
+      "Scrypt": "SHA-256",
+      "Наличие": "Наличие"
+    },
+    {
+      "9300": "1115",
+      "Antminer L9": "Whatsminer M50S 26W",
+      "17 GH/s": "134 TH/s",
+      "Scrypt": "SHA-256",
+      "Наличие": "Наличие"
+    },
+    {
+      "9300": "1100",
+      "Antminer L9": "Whatsminer M50S 26W",
+      "17 GH/s": "132 TH/s",
+      "Scrypt": "SHA-256",
+      "Наличие": "Наличие"
+    },
+    {
+      "9300": "1085",
+      "Antminer L9": "Whatsminer M50S 26W",
+      "17 GH/s": "130 TH/s",
+      "Scrypt": "SHA-256",
+      "Наличие": "Наличие"
+    },
+    {
+      "9300": "1070",
+      "Antminer L9": "Whatsminer M50S 26W",
+      "17 GH/s": "128 TH/s",
+      "Scrypt": "SHA-256",
+      "Наличие": "Наличие"
+    },
+    {
+      "9300": "6550",
+      "Antminer L9": "Elphapex DG1+",
+      "17 GH/s": "14,4 GH/s",
+      "Scrypt": "Scrypt",
+      "Наличие": "Наличие"
+    },
+    {
+      "9300": "6400",
+      "Antminer L9": "Elphapex DG1+",
+      "17 GH/s": "14 GH/s",
+      "Scrypt": "Scrypt",
+      "Наличие": "Наличие"
+    },
+    {
+      "9300": "6300",
+      "Antminer L9": "Elphapex DG1+",
+      "17 GH/s": "13,5 GH/s",
+      "Scrypt": "Scrypt",
+      "Наличие": "Наличие"
+    },
+    {
+      "9300": "6200",
+      "Antminer L9": "Elphapex DG1+",
+      "17 GH/s": "13 GH/s",
+      "Scrypt": "Scrypt",
+      "Наличие": "Наличие"
+    },
+    {
+      "9300": "3050",
+      "Antminer L9": "Avalon A1566",
+      "17 GH/s": "212 TH/s",
+      "Scrypt": "SHA-256",
+      "Наличие": "Наличие"
+    },
+    {
+      "9300": "3000",
+      "Antminer L9": "Avalon A1566",
+      "17 GH/s": "209 TH/s",
+      "Scrypt": "SHA-256",
+      "Наличие": "Наличие"
+    }
+  ],
+  "В пути": [],
+  "Предзаказ": [
+    {
+      "9250": "8670",
+      "11050": "10350",
+      "Antminer L9": "Antminer L9",
+      "17 GH/s": "16,5 GH/s",
+      "Scrypt": "Scrypt"
+    },
+    {
+      "9250": "8560",
+      "11050": "10220",
+      "Antminer L9": "Antminer L9",
+      "17 GH/s": "16 GH/s",
+      "Scrypt": "Scrypt"
+    },
+    {
+      "9250": "8090",
+      "11050": "9650",
+      "Antminer L9": "Antminer L9",
+      "17 GH/s": "15 GH/s",
+      "Scrypt": "Scrypt"
+    },
+    {
+      "9250": "6580",
+      "11050": "7780",
+      "Antminer L9": "Antminer S21 XP",
+      "17 GH/s": "270 TH/s",
+      "Scrypt": "SHA-256"
+    },
+    {
+      "9250": "4970",
+      "11050": "5840",
+      "Antminer L9": "Antminer S21 pro",
+      "17 GH/s": "245 TH/s",
+      "Scrypt": "SHA-256"
+    },
+    {
+      "9250": "4710",
+      "11050": "5530",
+      "Antminer L9": "Antminer S21 pro",
+      "17 GH/s": "234 TH/s",
+      "Scrypt": "SHA-256"
+    },
+    {
+      "9250": "3890",
+      "11050": "4500",
+      "Antminer L9": "Antminer S21+",
+      "17 GH/s": "235 TH/s",
+      "Scrypt": "SHA-256"
+    },
+    {
+      "9250": "3720",
+      "11050": "4290",
+      "Antminer L9": "Antminer S21+",
+      "17 GH/s": "225 TH/s",
+      "Scrypt": "SHA-256"
+    },
+    {
+      "9250": "3680",
+      "11050": "4240",
+      "Antminer L9": "Antminer S21+",
+      "17 GH/s": "216 TH/s",
+      "Scrypt": "SHA-256"
+    },
+    {
+      "9250": "2910",
+      "11050": "3360",
+      "Antminer L9": "Antminer T21",
+      "17 GH/s": "190 TH/s",
+      "Scrypt": "SHA-256"
+    },
+    {
+      "9250": "1260",
+      "11050": "1370",
+      "Antminer L9": "Antminer S19k pro",
+      "17 GH/s": "120 TH/s",
+      "Scrypt": "SHA-256"
+    },
+    {
+      "9250": "3860",
+      "11050": "4610",
+      "Antminer L9": "Whatsminer M60S+ 17W",
+      "17 GH/s": "206 TH/s",
+      "Scrypt": "SHA-256"
+    },
+    {
+      "9250": "3800",
+      "11050": "4540",
+      "Antminer L9": "Whatsminer M60S+ 17W",
+      "17 GH/s": "204 TH/s",
+      "Scrypt": "SHA-256"
+    },
+    {
+      "9250": "3730",
+      "11050": "4450",
+      "Antminer L9": "Whatsminer M60S+ 17W",
+      "17 GH/s": "200 TH/s",
+      "Scrypt": "SHA-256"
+    },
+    {
+      "9250": "2950",
+      "11050": "3590",
+      "Antminer L9": "Whatsminer M60S 18,5W",
+      "17 GH/s": "190 TH/s",
+      "Scrypt": "SHA-256"
+    },
+    {
+      "9250": "2860",
+      "11050": "3480",
+      "Antminer L9": "Whatsminer M60S 18,5W",
+      "17 GH/s": "184 TH/s",
+      "Scrypt": "SHA-256"
+    },
+    {
+      "9250": "3060",
+      "11050": "3720",
+      "Antminer L9": "Whatsminer M61 19W",
+      "17 GH/s": "208 TH/s",
+      "Scrypt": "SHA-256"
+    },
+    {
+      "9250": "3030",
+      "11050": "3690",
+      "Antminer L9": "Whatsminer M61 19W",
+      "17 GH/s": "206 TH/s",
+      "Scrypt": "SHA-256"
+    },
+    {
+      "9250": "2950",
+      "11050": "3580",
+      "Antminer L9": "Whatsminer M61 19,9W",
+      "17 GH/s": "206 TH/s",
+      "Scrypt": "SHA-256"
+    },
+    {
+      "9250": "2920",
+      "11050": "3550",
+      "Antminer L9": "Whatsminer M61 19,9W",
+      "17 GH/s": "204 TH/s",
+      "Scrypt": "SHA-256"
+    },
+    {
+      "9250": "2890",
+      "11050": "3520",
+      "Antminer L9": "Whatsminer M61 19,9W",
+      "17 GH/s": "202 TH/s",
+      "Scrypt": "SHA-256"
+    },
+    {
+      "9250": "2660",
+      "11050": "3240",
+      "Antminer L9": "Whatsminer M60 19W",
+      "17 GH/s": "178 TH/s",
+      "Scrypt": "SHA-256"
+    },
+    {
+      "9250": "2640",
+      "11050": "3200",
+      "Antminer L9": "Whatsminer M60 19W",
+      "17 GH/s": "176 TH/s",
+      "Scrypt": "SHA-256"
+    },
+    {
+      "9250": "2560",
+      "11050": "3110",
+      "Antminer L9": "Whatsminer M60 19,9W",
+      "17 GH/s": "176 TH/s",
+      "Scrypt": "SHA-256"
+    },
+    {
+      "9250": "1720",
+      "11050": "2090",
+      "Antminer L9": "Whatsminer M50S++ 22W",
+      "17 GH/s": "158 TH/s",
+      "Scrypt": "SHA-256"
+    },
+    {
+      "9250": "1150",
+      "11050": "1400",
+      "Antminer L9": "Whatsminer M50S 26W",
+      "17 GH/s": "132 TH/s",
+      "Scrypt": "SHA-256"
+    },
+    {
+      "9250": "1120",
+      "11050": "1360",
+      "Antminer L9": "Whatsminer M50S 26W",
+      "17 GH/s": "130 TH/s",
+      "Scrypt": "SHA-256"
+    },
+    {
+      "9250": "1090",
+      "11050": "1330",
+      "Antminer L9": "Whatsminer M50S 26W",
+      "17 GH/s": "128 TH/s",
+      "Scrypt": "SHA-256"
+    },
+    {
+      "9250": "1080",
+      "11050": "1310",
+      "Antminer L9": "Whatsminer M50S 26W",
+      "17 GH/s": "126 TH/s",
+      "Scrypt": "SHA-256"
+    },
+    {
+      "9250": "1060",
+      "11050": "1290",
+      "Antminer L9": "Whatsminer M50S 26W",
+      "17 GH/s": "124 TH/s",
+      "Scrypt": "SHA-256"
+    },
+    {
+      "9250": "9230",
+      "11050": "10970",
+      "Antminer L9": "Elphapex DG Hydro",
+      "17 GH/s": "20 GH/s",
+      "Scrypt": "Scrypt"
+    },
+    {
+      "9250": "6590",
+      "11050": "7830",
+      "Antminer L9": "Elphapex DG1+",
+      "17 GH/s": "14 GH/s",
+      "Scrypt": "Scrypt"
+    },
+    {
+      "9250": "3660",
+      "11050": "4270",
+      "Antminer L9": "от 30 шт Avalon A15XP (04/2025)",
+      "17 GH/s": "207 TH/s",
+      "Scrypt": "SHA-256"
+    },
+    {
+      "9250": "3060",
+      "11050": "3530",
+      "Antminer L9": "от 30 шт Avalon A15 (04/2025)",
+      "17 GH/s": "194 TH/s",
+      "Scrypt": "SHA-256"
+    },
+    {
+      "9250": "1440",
+      "11050": "1570",
+      "Antminer L9": "от 30 шт Avalon A1466",
+      "17 GH/s": "139 TH/s",
+      "Scrypt": "SHA-256"
+    }
+  ]
+}

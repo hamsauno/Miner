@@ -1,10 +1,9 @@
-<HTML>
-<HEAD>
-<TITLE>Moved Temporarily</TITLE>
-</HEAD>
-<BODY BGCOLOR="#FFFFFF" TEXT="#000000">
-<!-- GSE Default Error -->
-<H1>Moved Temporarily</H1>
-The document has moved <A HREF="https://accounts.google.com/ServiceLogin?passive=1209600&amp;continue=https%3A%2F%2Fscript.google.com%2Fmacros%2Fs%2FAKfycbzZvQMpbmeQJMbU9lezLeSecNBXy4-ofHnrpWozXhmjfCGDZXm0z62Q3m-1vRnvzkSD%2Fexec&amp;followup=https%3A%2F%2Fscript.google.com%2Fmacros%2Fs%2FAKfycbzZvQMpbmeQJMbU9lezLeSecNBXy4-ofHnrpWozXhmjfCGDZXm0z62Q3m-1vRnvzkSD%2Fexec">here</A>.
-</BODY>
-</HTML>
+83489.70
+87.50
+0.00000055
+83.28
+0.1621
+0.6946
+0.00153692
+6.23943967
+0.01140145

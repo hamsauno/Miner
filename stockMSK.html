@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <title>Майнинг оборудование</title>
+    <style>
+        .item {
+            background-color: #f9f9f9;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <h1>Майнинг Оборудование</h1>
+
+    <div id="container"></div>
+
+    <script>
+        // Загрузка данных из JSON
+        fetch('https://hamsauno.github.io/json/data.json')
+            .then(response => response.json())
+            .then(data => {
+                // Проверяем данные
+                console.log(data);
+
+                const availability = data["Наличие"];  // Данные из секции "Наличие"
+                const container = document.getElementById("container");
+
+                // Очищаем контейнер перед добавлением данных
+                container.innerHTML = '';
+
+                availability.forEach(item => {
+                    const div = document.createElement("div");
+                    div.classList.add("item");
+
+                    // Проверяем данные, чтобы избежать undefined
+                    const model = item["Antminer L9"] || "Неизвестная модель";
+                    const hashRate = item["17 GH/s"] || "Неизвестный хешрейт";
+                    const price = item["9600"] || "Неизвестная цена";
+
+                    // Добавляем элементы в контейнер
+                    div.innerHTML = `
+                        <p><strong>Модель:</strong> ${model}</p>
+                        <p><strong>Хешрейт:</strong> ${hashRate}</p>
+                        <p><strong>Цена в $:</strong> ${price}</p>
+                    `;
+
+                    container.appendChild(div);
+                });
+            })
+            .catch(error => {
+                console.error("Ошибка при загрузке данных:", error);
+            });
+    </script>
+</body>
+</html>

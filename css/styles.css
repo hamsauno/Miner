@@ -1,0 +1,129 @@
+.header {
+    background-color: #333;
+    border-radius: 10px;
+    padding: 10px;
+    margin: 0 auto;
+    position: fixed;
+    top: 50px;
+    left: 15px;
+    right: 15px; /* Добавляем отступ справа */
+    box-shadow: 
+        0px 4px 6px rgba(0, 0, 0, 0.3),
+        0px 2px 4px rgba(0, 0, 0, 0.2) inset;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    font-family: Arial, sans-serif;
+    color: white;
+    transition: all 0.2s ease-in-out;
+}
+
+.header label {
+    display: block;
+    font-size: 12px;
+    margin-bottom: 5px; /* Уменьшаем отступ снизу */
+}
+
+.header label span {
+    display: block;
+    font-size: 12px;
+    font-weight: bold;
+    margin-top: 3px; /* Уменьшаем отступ сверху */
+}
+
+.header select,
+.header input,
+.header button {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #444; /* Темный фон для полей */
+    color: white;
+    font-size: 12px;
+}
+
+.header select,
+.header input {
+    width: 90%; /* Уменьшаем ширину до 90% */
+    padding: 5px; /* Уменьшаем внутренний отступ для уменьшения высоты */
+    font-size: 10px; /* Уменьшаем размер шрифта */
+    margin-bottom: 5px; /* Уменьшаем отступ снизу */
+    margin-top: 5px; /* Можно также уменьшить отступ сверху */
+}
+
+.header button {
+    width: 100%;
+    padding: 8px; /* Уменьшаем padding */
+    margin-top: 5px; /* Уменьшаем отступ сверху */
+    background-color: #A76729; /* Золотистая кнопка */
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.header button:hover {
+    background-color: #8a5822; /* Темнее при наведении */
+}
+
+.header .row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+}
+
+.header .row label {
+    width: 48%;
+}
+
+.header .row input,
+.header .row select {
+    width: 48%;
+}
+
+.result-table {
+    width: calc(100% - 30px); /* Учитываем отступы справа и слева */
+    margin: 0 auto; /* Центрируем таблицу */
+    position: fixed;
+    bottom: 30px; /* Увеличенный отступ снизу */
+    left: 15px;
+    right: 15px;
+    background-color: #333; /* Темный фон прямоугольника */
+    border-radius: 10px; /* Скругленные углы */
+    box-shadow: 
+        0px 4px 6px rgba(0, 0, 0, 0.3),  /* Основная тень снизу */
+        0px 2px 4px rgba(0, 0, 0, 0.2) inset; /* Внутренняя тень для объема */
+    border: 1px solid rgba(255, 255, 255, 0.1); /* Легкий контур */
+    transition: all 0.2s ease-in-out;
+    padding: 10px;
+    overflow: hidden; /* Убираем лишнее */
+    border-spacing: 0; /* Убираем расстояние между ячейками */
+}
+
+.result-table th, .result-table td {
+    padding: 10px;
+    text-align: center;
+    font-size: 12px;
+    font-family: Arial, sans-serif;
+    color: #fff; /* Белый текст */
+    background: transparent; /* Прозрачный фон ячеек */
+    border: 2px solid #333; /* Границы ячеек чуть темнее, чем белый */
+}
+
+.result-table th {
+    font-weight: bold;
+}
+
+.result-table td {
+    font-weight: 600; /* Чуть жирнее для значений */
+}
+
+.result-table td:first-child, .result-table th:first-child {
+    width: 15%; /* Первый столбец занимает 15% ширины таблицы */
+    text-align: left; /* Выравниваем текст по левому краю */
+}
+
+.result-table td span {
+    color: #A76729; /* Цвет значений */
+    font-weight: 700; /* Жирность значений */
+}

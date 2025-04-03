@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Калькулятор</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script src="js/fullscr.js" defer></script> <!-- открытие во весь экран и зафиксировать -->
+    <link rel="stylesheet" href="css/nozoom_full.css"><!-- полный экран без зума -->
+    <script src="js/menuBtn.js" defer></script> <!-- Подключение скрипта для меню -->
+    <link rel="stylesheet" href="css/menuBtn.css"> <!-- Подключение стилей для меню -->
+    <link rel="stylesheet" href="css/bg.css"> <!-- Подключение стилей фона -->
+</head>
+<body>
+    <!-- Кнопка открытия меню -->
+    <button class="menu-btn">☰ Меню</button>
+
+    <!-- Боковое меню -->
+    <div class="sidebar" id="sidebar">
+        <button onclick="goHome()">Главная</button> <!-- Кнопка для возврата на главную -->
+    
+        <!-- Калькулятор -->
+        <button class="toggle-btn" data-target="calc-menu">Калькулятор</button>
+        <div id="calc-menu" class="submenu hidden">
+            <a href="#" onclick="loadPage('indexBTC.html')">SHA-256</a>
+            <a href="#" onclick="loadPage('indexLTC.html')">SKRYPT</a>
+        </div>
+    
+        <!-- Прайс -->
+        <button class="toggle-btn" data-target="price-menu">Прайс</button>
+        <div id="price-menu" class="submenu hidden">
+            <a href="#" onclick="loadPage('stockMSK.html')">Наличие</a>
+            <a href="#" onclick="loadPage('#')">В пути</a>
+            <a href="#" onclick="loadPage('#')">Предзаказ</a>
+        </div>
+    
+        <button onclick="loadPage('AllKurs.html')">Курсы</button>
+        <button onclick="loadPage('#')">Профиль</button>
+    </div>
+
+    <!-- Затемнение фона -->
+    <div class="overlay" id="overlay"></div>
+
+    <!-- Основной контент (iframe для загрузки других страниц) -->
+    <div class="content">
+        <iframe src="" id="pageIframe" style="display:none;"></iframe>
+    </div>
+
+</body>
+</html>
