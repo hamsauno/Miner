@@ -28,7 +28,7 @@ fetch('https://hamsauno.github.io/Miner/json/data.json')
                 
                 // Добавляем элементы в контейнер
                 div.innerHTML = `
-                    <p>${model} | ${hashRate} | ${price}</p>
+                    <p>${model}  ${hashRate} - ${price} USDT</p>
                 `;
                 
                 container.appendChild(div);
