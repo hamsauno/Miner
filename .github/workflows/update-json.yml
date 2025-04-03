@@ -41,4 +41,4 @@ jobs:
           git commit -m "Обновлены данные"
           git push
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Токен для аутентификации
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN}}  # Токен для аутентификации
