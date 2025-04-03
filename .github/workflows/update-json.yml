@@ -1,0 +1,44 @@
+name: Обновление данных
+
+on:
+  push:
+    branches:
+      - main  # Workflow будет запускаться при пуше в ветку main (или другую ветку, если необходимо)
+    paths:
+      - '**/*'  # Это означает, что workflow будет запускаться на изменения любых файлов в репозитории
+
+jobs:
+  update:
+    runs-on: ubuntu-latest  # Операционная система, на которой будет запускаться workflow
+
+    steps:
+      # Шаг 1: Клонирование репозитория
+      - name: Checkout Repository
+        uses: actions/checkout@v2  # Это шаг, который клонирует ваш репозиторий
+
+      # Шаг 2: Установка Node.js (если нужно)
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'  # Указываем версию Node.js
+
+      # Шаг 3: Установка зависимостей (если это необходимо)
+      - name: Install Dependencies
+        run: |
+          npm install  # Если у вас есть package.json с зависимостями
+
+      # Шаг 4: Ваш скрипт для обновления файлов
+      - name: Обновление JSON файлов
+        run: |
+          node updateJson.js  # Это пример, ваш скрипт для обновления файлов
+
+      # Шаг 5: Коммит изменений обратно в репозиторий
+      - name: Commit and push changes
+        run: |
+          git config --global user.name "Your Name"
+          git config --global user.email "youremail@example.com"
+          git add .
+          git commit -m "Обновлены данные"
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Токен для аутентификации
