@@ -1,10 +1,7 @@
-
-
-
 .header {
     display: flex;
     flex-direction: column;
-    gap: 20px; /* Отступ между прямоугольниками */
+    gap: 20px; /* Отступ между блоками */
     padding: 0 25px; /* Боковые отступы по 25px */
     width: 100%;
     box-sizing: border-box;
@@ -26,13 +23,20 @@
     font-size: 18px;
     font-weight: 500;
     font-family: Arial, sans-serif;
-    color: #fff;
+    color: white; /* Белый текст */
     border-radius: 5px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3); /* Тень для блока */
     border: 1px solid rgba(255, 255, 255, 0.1); /* Легкий контур */
     transition: all 0.2s ease-in-out;
 }
 
+.header label p {
+    margin: 5px 0;
+}
+
+.header label strong {
+    color: #f39c12; /* Золотой цвет для выделенных элементов */
+}
 
 .header span {
     font-weight: 800;
