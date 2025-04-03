@@ -1,19 +1,17 @@
+/* Контейнер для каждой строки курса */
 .header {
-    background-color: #333333; /* Темный фон для каждого блока */
-    padding: 20px;
-    margin: 52px 0 10px 0; /* Отступ сверху на 52px (47px меню + 5px промежуток) */
-    border-radius: 5px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    margin-top: 52px; /* Отступ сверху (47px меню + 5px промежуток) */
 }
 
 .header label {
-    display: flex; /* Размещаем элементы в строку */
+    display: flex; /* Размещение элементов в строку */
     justify-content: space-between; /* Пространство между элементами */
     align-items: center; /* Выравнивание по центру */
     padding: 20px;
-    margin: 10px 0;
+    margin-bottom: 5px; /* Отступ между контейнерами в 5px */
     border-radius: 5px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    background-color: #333333; /* Темный фон для каждой строки */
 }
 
 .header label strong {
