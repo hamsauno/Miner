@@ -11,16 +11,17 @@
 }
 
 .header label {
-    display: flex; /* Размещение элементов в строку */
-    justify-content: space-between; /* Пространство между элементами */
-    align-items: center; /* Выравнивание по центру */
-    margin-bottom: 5px; /* Отступ снизу */
+    display: flex; /* Размещаем элементы в строку */
+    flex-direction: column; /* Размещаем текст label и значение span вертикально */
+    align-items: flex-start; /* Выравниваем содержимое по левому краю */
 }
 
 .header label span {
     display: block;
     font-weight: bold;
-    margin-top: 3px; /* Уменьшаем отступ сверху */
+    margin-top: 3px; /* Отступ сверху */
+    text-align: left; /* Выравниваем текст внутри span по левому краю */
+    width: 100%; /* Заставляем span занимать всю ширину родительского контейнера */
 }
 
 .header select,
