@@ -1,8 +1,5 @@
-        body {
-            margin: 0;
-            height: 100vh; /* Устанавливаем высоту страницы на 100% */
-            background-image: url('https://hamsauno.github.io/Miner/img/background.jpg'); /* Указываем путь к картинке */
-            background-size: cover; /* Картинка будет растягиваться, чтобы покрыть весь экран */
-            background-position: center; /* Центрируем картинку */
-            background-repeat: no-repeat; /* Картинка не будет повторяться */
-        }
+body {
+    background-color: #222222; /* Темный фон */
+    color: white; /* Белый цвет текста */
+    font-family: Arial, sans-serif;
+}
