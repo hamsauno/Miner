@@ -1,4 +1,4 @@
-name: Deploy to GitHub Pages
+name: Deploy to GitHub
 
 on:
   push:
@@ -25,16 +25,21 @@ jobs:
         run: |
           npm install  # используйте вашу команду, если это необходимо
 
-      # Шаг 4: Скопировать файлы в папку для GitHub Pages
-      - name: Build and Deploy
+      # Шаг 4: Создать папку build, если она не существует
+      - name: Create build folder
+        run: |
+          mkdir -p build  # создаём папку build, если она не существует
+
+      # Шаг 5: Скопировать файлы в папку build
+      - name: Copy files to build folder
         run: |
           cp -r * ./build  # копируем все файлы в папку build (или любую нужную папку)
 
-      # Шаг 5: Деплой на GitHub Pages
+      # Шаг 6: Деплой на GitHub Pages
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           branch: main  # ветка, на которой будет опубликован сайт
           folder: ./build  # папка с файлами, которые нужно опубликовать
         env:
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}  # Токен для аутентификациии
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}  # Токен для аутентификации
