@@ -54,24 +54,23 @@
   </div>
 
   <script>
-fetch('https://raw.githubusercontent.com/hamsauno/Miner/main/json/data.json')
-  .then(response => response.json())
-  .then(data => {
-    console.log(data); // Выводим данные в консоль для проверки
-    const availability = data["Наличие"];
-    const container = document.querySelector('#miningContainer');
-
-    availability.forEach(item => {
-      const itemDiv = document.createElement('div');
-      itemDiv.classList.add('item');
-      itemDiv.innerHTML = `
-        <h3>${item["Antminer L9"]}</h3>
-        <p><strong>Хешрейт:</strong> ${item["17 GH/s"]}</p>
-        <p class="price"><strong>Цена:</strong> $${item["9600"]}</p>
-      `;
-      container.appendChild(itemDiv);
-    });
-  })
-  .catch(error => console.error('Ошибка при получении данных:', error));
+    fetch('https://hamsauno.github.io/json/data.json')
+        .then(response => response.json())
+        .then(data => {
+            const availability = data['Наличие'];
+            const container = document.getElementById('container');  // Контейнер для вывода
+    
+            availability.forEach(item => {
+                const div = document.createElement('div');
+                div.classList.add('item');
+                div.innerHTML = `
+                    <p>Модель: ${item['Antminer L9']}</p>
+                    <p>Хешрейт: ${item['17 GH/s']}</p>
+                    <p>Цена в $: ${item['9600']}</p>
+                `;
+                container.appendChild(div);
+            });
+        })
+        .catch(error => console.error('Ошибка при загрузке данных:', error));
   </script>
 </body>
