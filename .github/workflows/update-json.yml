@@ -1,44 +1,27 @@
-name: Обновление данных
+name: Обновление файлов при изменениях
 
 on:
   push:
     branches:
-      - main  # Workflow будет запускаться при пуше в ветку main (или другую ветку, если необходимо)
+      - main  # Это означает, что workflow будет запускаться при изменениях в ветке main
     paths:
-      - '**/*'  # Это означает, что workflow будет запускаться на изменения любых файлов в репозитории
+      - '**/*'  # Этот паттерн отслеживает все файлы в репозитории
 
 jobs:
-  update:
-    runs-on: ubuntu-latest  # Операционная система, на которой будет запускаться workflow
-
+  update-files:
+    runs-on: ubuntu-latest
     steps:
-      # Шаг 1: Клонирование репозитория
-      - name: Checkout Repository
-        uses: actions/checkout@v2  # Это шаг, который клонирует ваш репозиторий
+      - name: Checkout репозиторий
+        uses: actions/checkout@v2
 
-      # Шаг 2: Установка Node.js (если нужно)
-      - name: Setup Node.js
+      - name: Установить Node.js (если нужно)
         uses: actions/setup-node@v2
         with:
-          node-version: '14'  # Указываем версию Node.js
+          node-version: '14'  # Вы можете использовать любую версию Node.js
 
-      # Шаг 3: Установка зависимостей (если это необходимо)
-      - name: Install Dependencies
+      - name: Выполнить команду для обновления всех файлов
         run: |
-          npm install  # Если у вас есть package.json с зависимостями
+          # Команды для выполнения ваших действий
+          echo "Все файлы обновлены!"
 
-      # Шаг 4: Ваш скрипт для обновления файлов
-      - name: Обновление JSON файлов
-        run: |
-          node updateJson.js  # Это пример, ваш скрипт для обновления файлов
 
-      # Шаг 5: Коммит изменений обратно в репозиторий
-      - name: Commit and push changes
-        run: |
-          git config --global user.name "Your Name"
-          git config --global user.email "youremail@example.com"
-          git add .
-          git commit -m "Обновлены данные"
-          git push
-        env:
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN}}  # Токен для аутентификации
