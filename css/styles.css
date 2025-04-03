@@ -7,13 +7,13 @@
     display: flex;
     flex-direction: column; /* Элементы будут располагаться вертикально */
     gap: 5px; /* Отступы между элементами */
+    font-size: 12px; /* Шрифт везде 12px */
 }
 
 .header label {
     display: flex; /* Размещение элементов в строку */
     justify-content: space-between; /* Пространство между элементами */
     align-items: center; /* Выравнивание по центру */
-    font-size: 12px;
     margin-bottom: 5px; /* Отступ снизу */
 }
 
@@ -33,14 +33,12 @@
     border-radius: 5px;
     background-color: #444; /* Темный фон для полей */
     color: white;
-    font-size: 12px;
 }
 
 .header select,
 .header input {
     width: 90%; /* Уменьшаем ширину до 90% */
     padding: 5px; /* Уменьшаем внутренний отступ для уменьшения высоты */
-    font-size: 10px; /* Уменьшаем размер шрифта */
     margin-bottom: 5px; /* Уменьшаем отступ снизу */
 }
 
