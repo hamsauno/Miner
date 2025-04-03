@@ -25,7 +25,7 @@
     width: auto; /* Даем возможность подстраиваться по содержимому */
 }
 
-/* Убедимся, что row не растягивает элементы */
+/* Контейнеры для строк */
 .header .row {
     display: flex;
     justify-content: flex-start; /* Выравниваем содержимое по левому краю */
@@ -34,46 +34,33 @@
     gap: 5px;
 }
 
-/* Делаем label фиксированной ширины */
+/* Фиксированная ширина для label */
 .header .row label {
-    width: 80px; /* Можно настроить под себя */
+    width: 100px; /* Можно подстроить под себя */
     text-align: left; /* Выравниваем текст label по левому краю */
     white-space: nowrap; /* Предотвращаем перенос */
 }
 
-/* Значение хэшрейта и потребления */
+/* Выравнивание значений (Хэшрейт, Потребление) */
 .header .row span {
     text-align: left; /* Выравниваем текст внутри span по левому краю */
-    flex-grow: 1; /* Растягиваем span, чтобы он занимал оставшееся пространство */
-    min-width: 50px; /* Минимальная ширина для корректного отображения */
+    min-width: 60px; /* Минимальная ширина для корректного отображения */
 }
 
-/* Убираем пробел между span и единицами измерения */
-.header .row span + span {
-    margin-left: 3px;
-}
-
-/* Оформление инпутов, кнопок и select */
+/* Поля ввода и выпадающие списки */
 .header select,
-.header input,
-.header button {
-    width: 100%;
-    padding: 8px; /* Немного уменьшаем высоту */
-    margin-top: 5px;
+.header input {
+    width: 95%; /* Унифицированная ширина */
+    padding: 5px; /* Уменьшаем высоту */
     border: 1px solid #ccc;
     border-radius: 5px;
     background-color: #444; /* Темный фон для полей */
     color: white;
     font-size: 12px;
-}
-
-.header select,
-.header input {
-    width: 90%;
-    padding: 5px;
     margin-bottom: 5px;
 }
 
+/* Кнопка */
 .header button {
     width: 100%;
     padding: 8px;
@@ -87,6 +74,7 @@
 .header button:hover {
     background-color: #8a5822;
 }
+
 
 /* Полностью скрываем label, если внутри него input[type="hidden"] */
 .header label:has(input[type="hidden"]) {
