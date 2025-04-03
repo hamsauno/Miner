@@ -2,4 +2,6 @@ body {
     background-color: #222222; /* Темный фон */
     color: white; /* Белый цвет текста */
     font-family: Arial, sans-serif;
+    height: 100vh; /* Полноэкранный режим */
+    overflow: hidden; /* Отключение прокрутки */
 }
