@@ -43,25 +43,18 @@
     flex-grow: 1; /* Растягиваем span, чтобы он занимал оставшееся пространство */
 }
 
-/* Оформление инпутов, кнопок и select */
+
 .header select,
-.header input,
-.header button {
-    width: 100%;
-    padding: 8px; /* Немного уменьшаем высоту */
+.header input {
+    width: 90%;
+    padding: 85x;
+    margin-bottom: 5px;
     margin-top: 5px;
     border: 1px solid #ccc;
     border-radius: 5px;
     background-color: #444; /* Темный фон для полей */
     color: white;
     font-size: 12px;
-}
-
-.header select,
-.header input {
-    width: 90%;
-    padding: 5px;
-    margin-bottom: 5px;
 }
 
 .header button {
