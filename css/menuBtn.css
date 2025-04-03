@@ -71,8 +71,8 @@
     color: #A76729; /* Золотого цвет */
     border: none;
     position: fixed;
-    top: 10px;
-    left: 10px;
+    top: 0;
+    left: 0;
     z-index: 1000; /* Поверх меню */
 }
 
