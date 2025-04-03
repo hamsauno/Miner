@@ -54,23 +54,40 @@
   </div>
 
   <script>
-    fetch('https://hamsauno.github.io/json/data.json')
-        .then(response => response.json())
-        .then(data => {
-            const availability = data['Наличие'];
-            const container = document.getElementById('container');  // Контейнер для вывода
-    
-            availability.forEach(item => {
-                const div = document.createElement('div');
-                div.classList.add('item');
-                div.innerHTML = `
-                    <p>Модель: ${item['Antminer L9']}</p>
-                    <p>Хешрейт: ${item['17 GH/s']}</p>
-                    <p>Цена в $: ${item['9600']}</p>
-                `;
-                container.appendChild(div);
-            });
-        })
-        .catch(error => console.error('Ошибка при загрузке данных:', error));
+fetch('https://hamsauno.github.io/json/data.json')
+    .then(response => response.json())
+    .then(data => {
+        // Проверяем структуру данных
+        console.log(data);
+
+        // Получаем данные из секции "Наличие"
+        const availability = data["Наличие"];  // Это массив
+
+        // Получаем контейнер, куда будем вставлять данные
+        const container = document.getElementById("container");
+
+        // Очищаем контейнер перед добавлением новых данных
+        container.innerHTML = '';
+
+        // Перебираем данные и создаем строки
+        availability.forEach(item => {
+            const div = document.createElement("div");
+            div.classList.add("item");
+
+            // Проверяем данные, чтобы избежать undefined
+            const model = item["Antminer L9"] || "Неизвестная модель";
+            const hashRate = item["17 GH/s"] || "Неизвестный хешрейт";
+            const price = item["9600"] || "Неизвестная цена";
+
+            div.innerHTML = `
+                <p>Модель: ${model}</p>
+                <p>Хешрейт: ${hashRate}</p>
+                <p>Цена в $: ${price}</p>
+            `;
+
+            container.appendChild(div);
+        });
+    })
+    .catch(error => console.error("Ошибка при загрузке данных:", error));
   </script>
 </body>
