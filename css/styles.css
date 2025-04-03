@@ -23,6 +23,11 @@
     margin-top: 3px; /* Уменьшаем отступ сверху */
 }
 
+/* Скрыть все input с type="hidden" */
+input[type="hidden"] {
+    display: none;
+}
+
 .header select,
 .header input,
 .header button {
@@ -120,3 +125,4 @@
     color: #A76729; /* Цвет значений */
     font-weight: 700; /* Жирность значений */
 }
+
