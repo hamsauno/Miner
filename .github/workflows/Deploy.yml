@@ -1,0 +1,41 @@
+name: Deploy to GitHub
+
+on:
+  push:
+    branches:
+      - main  # или ваша ветка, на которой происходят изменения
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest  # Выбираем среду для выполнения
+
+    steps:
+      # Шаг 1: Клонировать репозиторий
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      # Шаг 2: Установить Node.js (если нужно для вашего проекта)
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '14'  # укажите нужную версию Node.js
+
+      # Шаг 3: Установить зависимости (если нужно для вашего проекта)
+      - name: Install dependencies
+        run: |
+          npm install  # используйте вашу команду, если это необходимо
+
+      # Шаг 4: Скопировать файлы в папку для GitHub Pages
+      - name: Build and Deploy
+        run: |
+          mkdir -p $GITHUB_ENV
+          cp -r * $GITHUB_ENV  # копируем все файлы в директорию, которая будет опубликована на GitHub Pages
+          
+      # Шаг 5: Деплой на GitHub Pages
+      - name: Deploy to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          branch: gh-pages  # ветка, на которой будет опубликован сайт
+          folder: ./  # директория с файлами, которые нужно опубликовать
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}  # Токен для аутентификации
