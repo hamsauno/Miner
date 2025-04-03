@@ -25,36 +25,45 @@
     width: auto; /* Даем возможность подстраиваться по содержимому */
 }
 
-/* Для блока row - чтобы элементы в нем корректно выравнивались */
+/* Для блока row - чтобы значение было по левому краю */
 .header .row {
     display: flex;
     justify-content: space-between;
     align-items: center;
     width: 100%; /* Заполняет весь контейнер */
-    gap: 10px; /* Отступы между элементами */
+    gap: 5px; /* Отступы между элементами */
 }
 
-/* Фиксированная ширина для label */
 .header .row label {
-    width: 50%; /* Метка занимает 50% ширины */
-    text-align: left; /* Выравниваем текст метки по левому краю */
-    white-space: nowrap; /* Предотвращаем перенос */
+    width: auto; /* Даем меткам гибкую ширину */
 }
 
-/* Поля ввода и select */
-.header .row select,
-.header .row input {
-    width: 50%; /* Поля занимают 50% ширины */
-    padding: 8px; /* Унифицированный padding */
+.header .row span {
+    text-align: left; /* Убедимся, что текст внутри span по левому краю */
+    flex-grow: 1; /* Растягиваем span, чтобы он занимал оставшееся пространство */
+}
+
+/* Оформление инпутов, кнопок и select */
+.header select,
+.header input,
+.header button {
+    width: 100%;
+    padding: 8px; /* Немного уменьшаем высоту */
+    margin-top: 5px;
     border: 1px solid #ccc;
     border-radius: 5px;
     background-color: #444; /* Темный фон для полей */
     color: white;
     font-size: 12px;
-    text-align: right; /* Выравниваем текст в поле по правому краю */
 }
 
-/* Кнопка */
+.header select,
+.header input {
+    width: 90%;
+    padding: 5px;
+    margin-bottom: 5px;
+}
+
 .header button {
     width: 100%;
     padding: 8px;
