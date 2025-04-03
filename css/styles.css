@@ -73,14 +73,9 @@
     width: 48%; /* Уменьшаем ширину, чтобы они не занимали всю строку */
 }
 
-/* Скрыть все элементы с type="hidden" */
-input[type="hidden"] {
-    position: absolute; /* Убираем элемент из нормального потока документа */
-    width: 0; /* Убираем ширину */
-    height: 0; /* Убираем высоту */
-    padding: 0; /* Убираем внутренние отступы */
-    border: none; /* Убираем рамки */
-    opacity: 0; /* Делаем элементы прозрачными */
+/* Полностью скрываем label, если внутри него input[type="hidden"] */
+.header label:has(input[type="hidden"]) {
+    display: none;
 }
 
 .result-table-container {
