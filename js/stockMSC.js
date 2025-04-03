@@ -22,9 +22,7 @@
         
                     // Добавляем элементы в контейнер
                     div.innerHTML = `
-                        <p><strong>Модель:</strong> ${model}</p>
-                        <p><strong>Хешрейт:</strong> ${hashRate}</p>
-                        <p><strong>Цена в $:</strong> ${price}</p>
+                        <p>${model} ${hashRate} ${price}</p>
                     `;
         
                     container.appendChild(div);
