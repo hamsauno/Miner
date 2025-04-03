@@ -1,4 +1,4 @@
-name: Deploy to GitHub
+name: Deploy to GitHub Pages
 
 on:
   push:
@@ -28,14 +28,13 @@ jobs:
       # Шаг 4: Скопировать файлы в папку для GitHub Pages
       - name: Build and Deploy
         run: |
-          mkdir -p $GITHUB_ENV
-          cp -r * $GITHUB_ENV  # копируем все файлы в директорию, которая будет опубликована на GitHub Pages
-          
+          cp -r * ./build  # копируем все файлы в папку build (или любую нужную папку)
+
       # Шаг 5: Деплой на GitHub Pages
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           branch: main  # ветка, на которой будет опубликован сайт
-          folder: ./  # директория с файлами, которые нужно опубликовать
+          folder: ./build  # папка с файлами, которые нужно опубликовать
         env:
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}  # Токен для аутентификации
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}  # Токен для аутентификациии
