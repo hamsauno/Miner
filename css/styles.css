@@ -23,11 +23,6 @@
     margin-top: 3px; /* Уменьшаем отступ сверху */
 }
 
-/* Скрыть все input с type="hidden" */
-input[type="hidden"] {
-    display: none;
-}
-
 .header select,
 .header input,
 .header button {
@@ -76,6 +71,11 @@ input[type="hidden"] {
 .header .row input,
 .header .row select {
     width: 48%; /* Уменьшаем ширину, чтобы они не занимали всю строку */
+}
+
+/* Скрыть все input с type="hidden" */
+input[type="hidden"] {
+    display: none;
 }
 
 .result-table-container {
