@@ -10,9 +10,9 @@ jobs:
     runs-on: ubuntu-latest
 
     permissions:
-      contents: read
-      pages: write
-      id-token: write  # Включаем нужное разрешение
+      contents: write  # Разрешение на запись в репозиторий
+      pages: write     # Разрешение на деплой на GitHub Pages
+      id-token: write  # Для OpenID Connect
 
     steps:
       # Шаг 1: Клонировать репозиторий
@@ -47,5 +47,7 @@ jobs:
         with:
           branch: gh-pages  # ветка, на которой будет опубликован сайт
           folder: ./build  # папка с файлами, которые нужно опубликовать
+        env:
+          GITHUB_TOKEN: ${{ secrets.DEPLOY_TOKEN }}  # Использование персонального токена
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}  # Токен для аутентификации
