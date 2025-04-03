@@ -7,50 +7,55 @@
     display: flex;
     flex-direction: column; /* Элементы будут располагаться вертикально */
     gap: 5px; /* Отступы между элементами */
-    font-size: 12px; /* Шрифт везде 12px */
 }
 
 .header label {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    display: flex; /* Размещение элементов в строку */
+    justify-content: space-between; /* Пространство между элементами */
+    align-items: center; /* Выравнивание по центру */
     font-size: 12px;
-    margin-bottom: 5px;
-    width: 100%;
+    margin-bottom: 5px; /* Отступ снизу */
 }
 
 .header label span {
     display: block;
     font-weight: bold;
-    margin-top: 3px;
+    margin-top: 3px; /* Уменьшаем отступ сверху */
 }
 
-/* Стили для полей ввода и select */
 .header select,
-.header input {
-    width: 85%; /* Одинаковая ширина */
-    height: 28px; /* Уменьшенная высота */
-    padding: 4px; /* Уменьшенные отступы */
-    font-size: 12px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    background-color: #444;
-    color: white;
-}
-
-/* Стили для кнопки */
+.header input,
 .header button {
     width: 100%;
-    padding: 6px; /* Уменьшаем padding */
-    background-color: #A76729;
+    padding: 10px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #444; /* Темный фон для полей */
     color: white;
     font-size: 12px;
+}
+
+.header select,
+.header input {
+    width: 90%; /* Уменьшаем ширину до 90% */
+    padding: 5px; /* Уменьшаем внутренний отступ для уменьшения высоты */
+    font-size: 10px; /* Уменьшаем размер шрифта */
+    margin-bottom: 5px; /* Уменьшаем отступ снизу */
+}
+
+.header button {
+    width: 100%;
+    padding: 8px; /* Уменьшаем padding */
+    margin-top: 5px; /* Уменьшаем отступ сверху */
+    background-color: #A76729; /* Золотистая кнопка */
+    color: white;
     cursor: pointer;
     transition: background-color 0.3s ease;
 }
 
 .header button:hover {
-    background-color: #8a5822;
+    background-color: #8a5822; /* Темнее при наведении */
 }
 
 /* Контейнер для ввода, кнопок, и выбора */
@@ -58,23 +63,14 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    width: 100%;
-    gap: 5px;
+    width: 100%; /* Заполняет весь контейнер */
+    gap: 5px; /* Отступы между элементами */
 }
 
-/* Одинаковая ширина и высота для элементов ввода */
 .header .row label,
 .header .row input,
 .header .row select {
-    width: 48%;
-    font-size: 12px;
-}
-
-/* Выравнивание хешрейта и потребления по правому краю */
-.header .row span {
-    text-align: right;
-    width: 100%;
-    display: block;
+    width: 48%; /* Уменьшаем ширину, чтобы они не занимали всю строку */
 }
 
 /* Полностью скрываем label, если внутри него input[type="hidden"] */
