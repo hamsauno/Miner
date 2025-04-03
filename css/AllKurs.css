@@ -1,3 +1,9 @@
+body {
+    background-color: #222222; /* Темный фон */
+    color: white; /* Белый цвет текста */
+    font-family: Arial, sans-serif;
+}
+
 .header {
     display: flex;
     flex-direction: column;
