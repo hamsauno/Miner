@@ -49,5 +49,3 @@ jobs:
           folder: ./build  # папка с файлами, которые нужно опубликовать
         env:
           GITHUB_TOKEN: ${{ secrets.DEPLOY_TOKEN }}  # Использование персонального токена
-        env:
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}  # Токен для аутентификации
