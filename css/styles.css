@@ -1,27 +1,24 @@
 .header {
     margin-top: 52px; /* Отступ сверху (47px меню + 5px промежуток) */
+    background-color: #333333; /* Темный фон для контейнера */
+    padding: 20px; /* Отступы внутри контейнера */
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    display: flex;
+    flex-direction: column; /* Элементы будут располагаться вертикально */
+    gap: 5px; /* Отступы между элементами */
 }
 
 .header label {
     display: flex; /* Размещение элементов в строку */
     justify-content: space-between; /* Пространство между элементами */
     align-items: center; /* Выравнивание по центру */
-    padding: 20px;
-    margin-bottom: 5px; /* Отступ между контейнерами в 5px */
-    border-radius: 5px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-    background-color: #333333; /* Темный фон для каждой строки */
-}
-
-.header label {
-    display: block;
     font-size: 12px;
-    margin-bottom: 5px; /* Уменьшаем отступ снизу */
+    margin-bottom: 5px; /* Отступ снизу */
 }
 
 .header label span {
     display: block;
-    font-size: 12px;
     font-weight: bold;
     margin-top: 3px; /* Уменьшаем отступ сверху */
 }
@@ -45,7 +42,6 @@
     padding: 5px; /* Уменьшаем внутренний отступ для уменьшения высоты */
     font-size: 10px; /* Уменьшаем размер шрифта */
     margin-bottom: 5px; /* Уменьшаем отступ снизу */
-    margin-top: 5px; /* Можно также уменьшить отступ сверху */
 }
 
 .header button {
@@ -62,31 +58,39 @@
     background-color: #8a5822; /* Темнее при наведении */
 }
 
+/* Контейнер для ввода, кнопок, и выбора */
 .header .row {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-size: 12px;
+    width: 100%; /* Заполняет весь контейнер */
+    gap: 5px; /* Отступы между элементами */
 }
 
-.header .row label {
-    width: 48%;
-}
-
+.header .row label,
 .header .row input,
 .header .row select {
-    width: 48%;
+    width: 48%; /* Уменьшаем ширину, чтобы они не занимали всю строку */
 }
 
-.result-table {
+.result-table-container {
+    display: flex; /* Размещение элементов в строку */
+    flex-direction: column; /* Элементы в столбик, чтобы они были внутри одного контейнера */
+    align-items: flex-start; /* Выравнивание по левому краю */
+    padding: 20px;
+    background-color: #333333; /* Темный фон для контейнера */
+    margin-bottom: 5px; /* Отступ между контейнерами */
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+.result-table-row {
     display: flex; /* Размещение элементов в строку */
     justify-content: space-between; /* Пространство между элементами */
     align-items: center; /* Выравнивание по центру */
-    padding: 20px;
-    margin-bottom: 5px; /* Отступ между контейнерами в 5px */
-    border-radius: 5px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-    background-color: #333333; /* Темный фон для каждой строки */
+    width: 100%;
+    padding: 10px 0; /* Отступы между строками */
+    border-bottom: 1px solid #333; /* Разделитель между строками */
 }
 
 .result-table th, .result-table td {
@@ -108,8 +112,8 @@
 }
 
 .result-table td:first-child, .result-table th:first-child {
-    width: 15%; /* Первый столбец занимает 15% ширины таблицы */
-    text-align: left; /* Выравниваем текст по левому краю */
+    width: 15%; /* Первый столбец занимает 15% ширины */
+    text-align: left; /* Выравнивание по левому краю */
 }
 
 .result-table td span {
