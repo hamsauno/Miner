@@ -4,7 +4,6 @@ html, body {
     width: 100%;
     height: 100vh; /* Полноэкранный режим */
     overflow: hidden; /* Отключение прокрутки */
-    background-color: #f4f4f4; /* Фон страницы */
     display: flex;
     flex-direction: column;
 }
