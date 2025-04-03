@@ -1,51 +1,68 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <title>Прайс Наличие</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Майнинг оборудование</title>
+  <style>
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: left;
+    }
+    th {
+      background-color: #f2f2f2;
+    }
+  </style>
 </head>
 <body>
-    <h2>Прайс - Наличие</h2>
-    <table border="1">
-        <thead>
-            <tr>
-                <th>Наименование</th>
-                <th>Цена</th>
-                <th>Количество</th>
-            </tr>
-        </thead>
-        <tbody id="price-table">
-            <!-- Данные будут вставляться сюда -->
-        </tbody>
-    </table>
+  <h1>Список майнинг оборудования</h1>
 
-    <script>
-        async function loadPrice() {
-            const url = "https://raw.githubusercontent.com/hamsauno/Miner/refs/heads/main/json/data.json"; // Укажите правильный путь к файлу
-            try {
-                const response = await fetch(url);
-                const data = await response.json();
-                const priceData = data["Наличие"]; // Берем только лист "Наличие"
+  <table id="miningTable">
+    <thead>
+      <tr>
+        <th>Модель</th>
+        <th>Хешрейт</th>
+        <th>Цена в $</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Здесь будут отображаться данные -->
+    </tbody>
+  </table>
 
-                const tableBody = document.getElementById("price-table");
-                tableBody.innerHTML = ""; // Очищаем таблицу перед вставкой
-
-                priceData.forEach(item => {
-                    const row = `<tr>
-                        <td>${item["Наименование"]}</td>
-                        <td>${item["Цена"]}</td>
-                        <td>${item["Количество"]}</td>
-                    </tr>`;
-                    tableBody.innerHTML += row;
-                });
-            } catch (error) {
-                console.error("Ошибка загрузки JSON:", error);
-            }
-        }
-
-        loadPrice();
-    </script>
+  <script>
+    // Функция для получения данных из JSON на GitHub
+    fetch('https://raw.githubusercontent.com/ВАШ_ПОЛЬЗОВАТЕЛЬ/ВАШ_РЕПОЗИТОРИЙ/main/json/data.json')
+      .then(response => response.json())
+      .then(data => {
+        // Извлекаем данные из раздела "Наличие"
+        const availability = data["Наличие"];
+        
+        // Находим таблицу и её тело
+        const tableBody = document.querySelector('#miningTable tbody');
+        
+        // Проходим по каждому элементу в массиве "Наличие"
+        availability.forEach(item => {
+          const row = document.createElement('tr');
+          
+          // Добавляем данные в таблицу
+          row.innerHTML = `
+            <td>${item["Antminer L9"]}</td>
+            <td>${item["17 GH/s"]}</td>
+            <td>${item["9600"]}</td>
+          `;
+          
+          // Вставляем строку в таблицу
+          tableBody.appendChild(row);
+        });
+      })
+      .catch(error => console.error('Ошибка при получении данных:', error));
+  </script>
 </body>
 </html>
