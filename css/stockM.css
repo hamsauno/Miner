@@ -6,10 +6,11 @@
 
         .item {
             background-color: #333333; /* Темный фон для каждого блока */
-            padding: 20px;
-            margin: 10px 0;
+            padding: 10px; /* Уменьшаем внутренний отступ */
+            margin: 5px 0; /* Уменьшаем внешний отступ */
             border-radius: 5px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+            line-height: 1.2; /* Уменьшаем межстрочный интервал */
         }
 
         .item p {
