@@ -1,19 +1,18 @@
- // загрузка из kursBTC.txt
+let priceUSDT = 0; // Глобальная переменная
+
+// Загрузка курса BTC из kursBTC.txt
 fetch('https://hamsauno.github.io/Miner/kursBTC.txt')
     .then(response => response.text())
     .then(text => {
         const lines = text.split('\n'); // Разбиваем текст на строки
         if (lines.length > 1) {
-            const secondLine = lines[1].trim(); // Берем вторую строку
-            console.log("Вторая строка:", secondLine);
+            priceUSDT = parseFloat(lines[1].trim()); // Преобразуем в число
+            console.log("Курс USDT:", priceUSDT);
 
-            // Теперь можно использовать значение в логике
-            // Например, сохранить в переменную:
-            const priceUSDT = parseFloat(secondLine); // Преобразуем в число, если это курс
-            console.log("Курс BTC:", priceUSDT);
+            // После получения курса загружаем данные из JSON
+            loadData();
         } else {
-            console.error("В файле недостаточно строк.");
+            console.error("В файле kursBTC.txt недостаточно строк.");
         }
     })
-    .catch(error => console.error("Ошибка загрузки файла:", error));
-    
+    .catch(error => console.error("Ошибка загрузки курса BTC:", error));
