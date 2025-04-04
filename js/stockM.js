@@ -28,7 +28,7 @@ fetch('https://hamsauno.github.io/Miner/json/data.json')
                 const hashRate = item["Хешрейт"] || "Неизвестный хешрейт";
                 const price = item["Цена"] || "Неизвестная цена";
                 
-                const ruptice = price*87;
+                const ruptice = price*priceUSDT;
                 
                 // Добавляем элементы в контейнер
                 div.innerHTML = `
