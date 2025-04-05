@@ -30,7 +30,7 @@ function loadData() {
                     const rubPrice = priceValue * priceUSDT;
 
                     div.innerHTML = `
-                        <p>${model} ${hashRate} - ${rubPrice.toFixed(2)} ₽ | ${priceValue} $</p>
+                        <p>${model} ${hashRate} - ${rubPrice} ₽ | ${priceValue} $</p>
                     `;
 
                     container.appendChild(div);
