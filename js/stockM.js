@@ -1,11 +1,30 @@
-  
+let priceUSDT = 0;      // Глобальная переменная для курса
+let vatIncluded = false; // НДС включён или нет
+
+// Загружаем курс из kursBTC.txt
+fetch('https://hamsauno.github.io/Miner/kursBTC.txt')
+    .then(response => response.text())
+    .then(text => {
+        const lines = text.split('\n');
+        if (lines.length > 1) {
+            priceUSDT = parseFloat(lines[1].trim());
+            loadData(); // Загружаем данные после получения курса
+        }
+    })
+    .catch(err => console.error("Ошибка загрузки курса:", err));
+
+// Слушаем переключение НДС
+document.getElementById('vatToggle').addEventListener('change', function () {
+    vatIncluded = this.checked;
+    loadData(); // Перезагружаем данные с учетом НДС
+});
+
+
    // Функция загрузки данных из data.json
 function loadData() {
     fetch('https://hamsauno.github.io/Miner/json/data.json')
         .then(response => response.json())
         .then(data => {
-            console.log(data);
-
             if (data && data["Наличие"]) {
                 const availability = data["Наличие"];
                 const container = document.getElementById("container");
@@ -25,20 +44,22 @@ function loadData() {
                     const hashRate = item["Хешрейт"] || "Неизвестный хешрейт";
                     const price = item["Цена"] || "Неизвестная цена";
 
-                    // Проверяем, что price - число
                     const priceValue = parseFloat(price) || 0;
-                    const rubPrice = priceValue * priceUSDT;
+                    let rubPrice = priceValue * priceUSDT;
+
+                    if (vatIncluded) {
+                        rubPrice *= 1.2; // Добавляем 20% НДС
+                    }
+
                     const rubRounded = Math.ceil(rubPrice / 100) * 100;
                     const rubFormatted = rubRounded.toLocaleString('ru-RU').replace(/,/g, ' ');
 
                     div.innerHTML = `
-                        <p>${model} ${hashRate} - ${rubFormatted} ₽ | ${priceValue} $</p>
+                        <p>${model} ${hashRate} — ${rubFormatted} ₽ | ${priceValue} $</p>
                     `;
 
                     container.appendChild(div);
                 });
-            } else {
-                console.error("Данные для 'Наличие' не найдены в JSON");
             }
         })
         .catch(error => {
