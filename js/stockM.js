@@ -1,12 +1,3 @@
-let vatIncluded = false; // НДС включён или нет
-
-
-// Слушаем переключение НДС
-document.getElementById('vatToggle').addEventListener('change', function () {
-    vatIncluded = this.checked;
-    loadData(); // Перезагружаем данные с учетом НДС
-});
-
 
    // Функция загрузки данных из data.json
 function loadData() {
