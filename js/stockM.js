@@ -40,11 +40,17 @@ function loadData() {
                         const modal = document.getElementById("product-modal");
                         const modalBody = document.getElementById("modal-body");
 
+                        // Формируем ссылку для Telegram-бота
+                        const telegramLink = `https://t.me/WAYMORR_BOT?start=5765882132`;
+                        //const telegramLink = `Добрый день, хочу купить model:${encodeURIComponent(model)}&price:${encodeURIComponent(rubFormatted)}`;
+
+
                         modalBody.innerHTML = `
                             <h2>${model}</h2>
                             <p><strong>Хешрейт:</strong> ${hashRate}</p>
                             <p><strong>Цена:</strong> ${rubFormatted} ₽ (${priceValue} $)</p>
                             <p><strong>Цена с НДС:</strong> ${(NDCrubRounded).toLocaleString('ru-RU')} ₽ (${NDCusdtRounded} $)</p>
+                            <a href="${telegramLink}" class="buy-button" target="_blank">Хочу купить</a>
                         `; // Закрываем строку корректно
 
                         modal.style.display = "block";
