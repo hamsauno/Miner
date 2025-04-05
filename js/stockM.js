@@ -1,4 +1,3 @@
-let priceUSDT = 0;      // Глобальная переменная для курса
 let vatIncluded = false; // НДС включён или нет
 
 // Загружаем курс из kursBTC.txt
