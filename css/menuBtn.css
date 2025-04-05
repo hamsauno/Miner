@@ -27,7 +27,7 @@
     color: white;
     transition: left 0.3s ease-in-out;  /* Плавное движение */
     padding-top: 60px;
-    z-index: 999; /* Поверх контента */
+    z-index: 990; /* Поверх контента */
     box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3); /* Тень для отделения */
 }
 
