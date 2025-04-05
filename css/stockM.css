@@ -1,4 +1,6 @@
-        
+        body {
+            padding-top: 52px;
+        }
 
         .item {
             background-color: #333333; /* Темный фон для каждого блока */
