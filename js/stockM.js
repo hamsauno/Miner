@@ -28,9 +28,10 @@ function loadData() {
                     // Проверяем, что price - число
                     const priceValue = parseFloat(price) || 0;
                     const rubPrice = priceValue * priceUSDT;
+                    const rubRounded = Math.ceil(rubPrice / 100) * 100;
 
                     div.innerHTML = `
-                        <p>${model} ${hashRate} - ${rubPrice} ₽ | ${priceValue} $</p>
+                        <p>${model} ${hashRate} - ${rubRounded} ₽ | ${priceValue} $</p>
                     `;
 
                     container.appendChild(div);
