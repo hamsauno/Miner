@@ -29,6 +29,7 @@ function loadData() {
                     const priceValue = parseFloat(price) || 0;
                     const rubPrice = priceValue * priceUSDT;
                     const rubRounded = Math.ceil(rubPrice / 100) * 100;
+                    const rubFormatted = rubRounded.toLocaleString('ru-RU').replace(/,/g, ' ');
 
                     div.innerHTML = `
                         <p>${model} ${hashRate} - ${rubRounded} ₽ | ${priceValue} $</p>
