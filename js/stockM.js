@@ -45,8 +45,7 @@ function loadData() {
                             <p><strong>Хешрейт:</strong> ${hashRate}</p>
                             <p><strong>Цена:</strong> ${rubFormatted} ₽ (${priceValue} $)</p>
                             <p><strong>Цена с НДС:</strong> ${(NDCrubRounded).toLocaleString('ru-RU')} ₽ (${NDCusdtRounded} $)</p>
-`;
-                        `;
+                        `; // Закрываем строку корректно
 
                         modal.style.display = "block";
                     });
