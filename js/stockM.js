@@ -40,6 +40,7 @@ function loadData() {
                             <h2>${model}</h2>
                             <p><strong>Хешрейт:</strong> ${hashRate}</p>
                             <p><strong>Цена:</strong> ${rubFormatted} ₽ (${priceValue} $)</p>
+                            <p><strong>Цена с НДС:</strong> ${rubFormatted*1,2} ₽ (${priceValue*1,2} $)</p>
                         `;
 
                         modal.style.display = "block";
