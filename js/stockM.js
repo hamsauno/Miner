@@ -26,10 +26,6 @@ function loadData() {
                     const priceValue = parseFloat(price) || 0;
                     let rubPrice = priceValue * priceUSDT;
 
-                    if (vatIncluded) {
-                        rubPrice *= 1.2; // Добавляем 20% НДС
-                    }
-
                     const rubRounded = Math.ceil(rubPrice / 100) * 100;
                     const rubFormatted = rubRounded.toLocaleString('ru-RU').replace(/,/g, ' ');
 
