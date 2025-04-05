@@ -1,5 +1,3 @@
-
-   // Функция загрузки данных из data.json
 function loadData() {
     fetch('https://hamsauno.github.io/Miner/json/data.json')
         .then(response => response.json())
@@ -32,6 +30,20 @@ function loadData() {
                     div.innerHTML = `
                         <p>${model} ${hashRate} — ${rubFormatted} ₽ | ${priceValue} $</p>
                     `;
+
+                    // === 👇 Добавляем открытие модального окна при клике ===
+                    div.addEventListener("click", () => {
+                        const modal = document.getElementById("product-modal");
+                        const modalBody = document.getElementById("modal-body");
+
+                        modalBody.innerHTML = `
+                            <h2>${model}</h2>
+                            <p><strong>Хешрейт:</strong> ${hashRate}</p>
+                            <p><strong>Цена:</strong> ${rubFormatted} ₽ (${priceValue} $)</p>
+                        `;
+
+                        modal.style.display = "block";
+                    });
 
                     container.appendChild(div);
                 });
