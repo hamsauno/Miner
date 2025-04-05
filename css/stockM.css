@@ -75,9 +75,4 @@
   color: #fff;
 }
 
-#modal-body p:hover {
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: 8px;
-  transition: background 0.3s;
-  padding: 5px;
-}
+
