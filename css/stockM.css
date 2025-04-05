@@ -28,6 +28,7 @@
           width: 100%;
           height: 100%;
           overflow: auto;
+          background-color: #333333; /* Темный фон для каждого блока */
           background-color: rgba(0,0,0,0.7);
         }
         
