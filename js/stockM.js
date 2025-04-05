@@ -42,7 +42,7 @@ function loadData() {
                             <p><strong>Цена:</strong> ${rubFormatted} ₽ (${priceValue} $)</p>
                         `;
 
-                        modal.classList.add("show");
+                         modal.style.display = 'none';
                     });
 
                     container.appendChild(div);
