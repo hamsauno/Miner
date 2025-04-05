@@ -41,7 +41,7 @@ function loadData() {
                         const modalBody = document.getElementById("modal-body");
 
                         // Формируем ссылку для Telegram-бота
-                        const telegramLink = `https://t.me/WAYMORR_BOT?start=main_5765882132`;
+                        const telegramLink = `https://t.me/my_super_calc_bot?start=main_5765882132`;
                         //const telegramLink = `Добрый день, хочу купить model:${encodeURIComponent(model)}&price:${encodeURIComponent(rubFormatted)}`;
 
 
