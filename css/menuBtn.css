@@ -114,4 +114,5 @@ iframe {
 }
 .content {
   padding-top: 47px; /* такой же как высота .fixed-header */
+  z-index: 810;
 }
