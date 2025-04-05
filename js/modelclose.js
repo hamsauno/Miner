@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const closeBtn = document.querySelector('.close-button');
 
     closeBtn.addEventListener('click', () => {
-        modal.style.display = 'none';
+        modal.classList.remove('show');
     });
 
     window.addEventListener('click', (e) => {
