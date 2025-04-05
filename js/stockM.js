@@ -27,6 +27,10 @@ function loadData() {
                     const rubRounded = Math.ceil(rubPrice / 100) * 100;
                     const rubFormatted = rubRounded.toLocaleString('ru-RU').replace(/,/g, ' ');
 
+                    // НДС
+                    const NDCusdtRounded = Math.ceil((priceValue * 1.2)/10) * 10;
+                    const NDCrubRounded = Math.ceil((NDCusdtRounded * priceUSDT)/100) * 100;
+
                     div.innerHTML = `
                         <p>${model} ${hashRate} — ${rubFormatted} ₽ | ${priceValue} $</p>
                     `;
@@ -40,7 +44,8 @@ function loadData() {
                             <h2>${model}</h2>
                             <p><strong>Хешрейт:</strong> ${hashRate}</p>
                             <p><strong>Цена:</strong> ${rubFormatted} ₽ (${priceValue} $)</p>
-                            <p><strong>Цена с НДС:</strong> ${rubFormatted*1,2} ₽ (${priceValue*1,2} $)</p>
+                            <p><strong>Цена с НДС:</strong> ${(NDCrubRounded).toLocaleString('ru-RU')} ₽ (${NDCusdtRounded} $)</p>
+`;
                         `;
 
                         modal.style.display = "block";
