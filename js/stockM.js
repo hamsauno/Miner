@@ -32,7 +32,7 @@ function loadData() {
                     const rubFormatted = rubRounded.toLocaleString('ru-RU').replace(/,/g, ' ');
 
                     div.innerHTML = `
-                        <p>${model} ${hashRate} - ${rubRounded} ₽ | ${priceValue} $</p>
+                        <p>${model} ${hashRate} - ${rubFormatted} ₽ | ${priceValue} $</p>
                     `;
 
                     container.appendChild(div);
