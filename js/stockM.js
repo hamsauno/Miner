@@ -35,7 +35,7 @@ function loadData() {
                     const NDCrubRounded = Math.ceil((NDCusdtRounded * priceUSDT)/100) * 100;
 
                     div.innerHTML = `
-                        <p>${model} ${hashRate} — ${rubFormatted} ₽ | ${priceValue} $</p>
+                        <p>${model} ${hashRate} ${hashsec} — ${rubFormatted} ₽ | ${priceValue} $</p>
                     `;
 
                     // === 👇 Добавляем открытие модального окна при клике ===
