@@ -50,7 +50,7 @@ function loadData() {
 
                         modalBody.innerHTML = `
                             <h2>${Manufacturer}${model}</h2>
-                            <p><strong>Хешрейт:</strong> ${hashRate}${hashsec}</p>
+                            <p><strong>Хешрейт:</strong> ${hashRate} ${hashsec}</p>
                             <p><strong>Потребление:</strong> ${energycost}<strong>Вт</strong></p>
                             <p><strong>Цена:</strong> ${rubFormatted} ₽ (${priceValue} $)</p>
                             <p><strong>Цена с НДС:</strong> ${(NDCrubRounded).toLocaleString('ru-RU')} ₽ (${NDCusdtRounded} $)</p>
