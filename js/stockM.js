@@ -21,6 +21,7 @@ function loadData() {
                     const model = item["Модель"] || "Неизвестная модель";
                     const hashRate = item["Хешрейт"] || "Неизвестный хешрейт";
                     const energycost = item["Потребление"] || "Неизвестное Потребление";
+                    const hashsec = item["Ед. изм."] || "Неизвестная Ед. изм.";
                     const price = item["Цена"] || "Неизвестная цена";
 
                     const priceValue = parseFloat(price) || 0;
@@ -48,9 +49,8 @@ function loadData() {
 
 
                         modalBody.innerHTML = `
-                            <h2>${Manufacturer}</h2>
-                            <p>${model}</p>
-                            <p><strong>Хешрейт:</strong> ${hashRate}</p>
+                            <h2>${Manufacturer}${model}</h2>
+                            <p><strong>Хешрейт:</strong> ${hashRate}${hashsec}</p>
                             <p><strong>Потребление:</strong> ${energycost}<strong>Вт</strong></p>
                             <p><strong>Цена:</strong> ${rubFormatted} ₽ (${priceValue} $)</p>
                             <p><strong>Цена с НДС:</strong> ${(NDCrubRounded).toLocaleString('ru-RU')} ₽ (${NDCusdtRounded} $)</p>
