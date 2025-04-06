@@ -17,8 +17,10 @@ function loadData() {
                     const div = document.createElement("div");
                     div.classList.add("item");
 
+                    const Manufacturer = item["Производитель"] || "Неизвестный Производитель";
                     const model = item["Модель"] || "Неизвестная модель";
                     const hashRate = item["Хешрейт"] || "Неизвестный хешрейт";
+                    const energycost = item["Потребление"] || "Неизвестное Потребление";
                     const price = item["Цена"] || "Неизвестная цена";
 
                     const priceValue = parseFloat(price) || 0;
@@ -46,8 +48,10 @@ function loadData() {
 
 
                         modalBody.innerHTML = `
-                            <h2>${model}</h2>
+                            <h2>${Manufacturer}</h2>
+                            <p>${modal}</p>
                             <p><strong>Хешрейт:</strong> ${hashRate}</p>
+                            <p><strong>Потребление:</strong> ${energycost}<strong>Вт</strong></p>
                             <p><strong>Цена:</strong> ${rubFormatted} ₽ (${priceValue} $)</p>
                             <p><strong>Цена с НДС:</strong> ${(NDCrubRounded).toLocaleString('ru-RU')} ₽ (${NDCusdtRounded} $)</p>
                             <a href="${telegramLink}" class="buy-button" target="_blank">Хочу купить</a>
