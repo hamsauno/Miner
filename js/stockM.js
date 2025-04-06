@@ -17,7 +17,7 @@ function loadData() {
                     const div = document.createElement("div");
                     div.classList.add("item");
 
-                    const model = item["Модели"] || "Неизвестная модель";
+                    const model = item["Модель"] || "Неизвестная модель";
                     const hashRate = item["Хешрейт"] || "Неизвестный хешрейт";
                     const price = item["Цена"] || "Неизвестная цена";
 
