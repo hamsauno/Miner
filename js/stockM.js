@@ -49,7 +49,7 @@ function loadData() {
 
 
                         modalBody.innerHTML = `
-                            <h2>${Manufacturer}${model}</h2>
+                            <h2>${Manufacturer} ${model}</h2>
                             <p><strong>Хешрейт:</strong> ${hashRate} ${hashsec}</p>
                             <p><strong>Потребление:</strong> ${energycost} Вт</p>
                             <p><strong>Цена:</strong> ${rubFormatted} ₽ (${priceValue} $)</p>
