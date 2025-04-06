@@ -51,7 +51,7 @@ function loadData() {
                         modalBody.innerHTML = `
                             <h2>${Manufacturer}${model}</h2>
                             <p><strong>Хешрейт:</strong> ${hashRate} ${hashsec}</p>
-                            <p><strong>Потребление:</strong> ${energycost}<strong>Вт</strong></p>
+                            <p><strong>Потребление:</strong> ${energycost} Вт</p>
                             <p><strong>Цена:</strong> ${rubFormatted} ₽ (${priceValue} $)</p>
                             <p><strong>Цена с НДС:</strong> ${(NDCrubRounded).toLocaleString('ru-RU')} ₽ (${NDCusdtRounded} $)</p>
                             <a href="${telegramLink}" class="buy-button" target="_blank">Хочу купить</a>
