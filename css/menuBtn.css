@@ -68,14 +68,15 @@
     cursor: pointer;
     padding: 10px 20px;
     background: linear-gradient(90deg, #F6A314, #EC7E07); /* Градиент */
-    color: white;
+    -webkit-background-clip: text;  /* "Обрезаем" фон по тексту */
+    -webkit-text-fill-color: transparent; /* Делаем текст прозрачным, чтобы был виден фон */
     border: none;
     position: fixed;
     top: 0;
     left: 0;
     z-index: 1000;
-    border-radius: 6px;
-    transition: background 0.3s ease; /* Плавный переход при наведении */
+    background-clip: text; /* для Firefox */
+    text-fill-color: transparent; /* для Firefox */
 }
 
 /* Затемнение фона при открытом меню */
