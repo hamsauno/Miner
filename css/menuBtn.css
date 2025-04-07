@@ -64,16 +64,18 @@
 /* Кнопка для открытия меню */
 .menu-btn {
     font-size: 20px;
-    font-weight: 600; /* Сделает текст немного жирнее (от 100 до 900) */
+    font-weight: 600;
     cursor: pointer;
-    padding: 10px;
-    background: transparent; /* Прозрачный фон */
-    color: #A76729; /* Золотого цвет */
+    padding: 10px 20px;
+    background: linear-gradient(90deg, #F6A314, #EC7E07); /* Градиент */
+    color: white;
     border: none;
     position: fixed;
     top: 0;
     left: 0;
-    z-index: 1000; /* Поверх меню */
+    z-index: 1000;
+    border-radius: 6px;
+    transition: background 0.3s ease; /* Плавный переход при наведении */
 }
 
 /* Затемнение фона при открытом меню */
