@@ -101,7 +101,7 @@ let jsonData = [];
     // Загружаем JSON и курс при запуске
     async function init() {
       await fetchData();
-      const jsonUrl = "https://hamsauno.github.io/Miner/price.json";
+      const jsonUrl = "https://hamsauno.github.io/Miner/calc.json";
       const res = await fetch(jsonUrl);
       jsonData = await res.json();
 
