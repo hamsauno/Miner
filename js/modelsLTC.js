@@ -86,29 +86,30 @@
             });
         }
 
-        // Обновление списка моделей в зависимости от производителя
+                // Обновление списка моделей в зависимости от производителя
         function updateModelList() {
             const manufacturer = document.getElementById("manufacturerSelect").value;
             const modelSelect = document.getElementById("asicModel");
             modelSelect.innerHTML = "";
-
+        
             const models = jsonData.filter(item => item["Производитель"].toLowerCase() === manufacturer);
             models.forEach(item => {
+                const hashrate = parseFloat(item["Хешрейт"]); // Преобразуем хешрейт в число с плавающей запятой
                 const opt = document.createElement("option");
-                opt.value = `${item["Модель"]}|${item["Хешрейт"]}`;
-                opt.textContent = `${item["Модель"]} (${item["Хешрейт"]} TH)`;
+                opt.value = `${item["Модель"]}|${hashrate}`;
+                opt.textContent = `${item["Модель"]} (${hashrate.toFixed(2)} TH)`; // Форматируем хешрейт для отображения
                 modelSelect.appendChild(opt);
             });
-
+        
             if (modelSelect.value) updateAsicSpecs();
         }
-
+        
         // Обновление характеристик ASIC
         function updateAsicSpecs() {
             const [model, hashrate] = document.getElementById("asicModel").value.split("|");
-            const item = jsonData.find(i => i["Модель"] === model && i["Хешрейт"] === hashrate);
+            const item = jsonData.find(i => i["Модель"] === model && parseFloat(i["Хешрейт"]) === parseFloat(hashrate));
             if (item) {
-                document.getElementById("hashrate").textContent = item["Хешрейт"];
+                document.getElementById("hashrate").textContent = parseFloat(item["Хешрейт"]).toFixed(2); // Преобразуем в число и отображаем с двумя знаками после запятой
                 document.getElementById("power").textContent = Math.round(item["Потребление"]);
                 document.getElementById("asicCost").value = Math.ceil(item["Цена"] * parseFloat(document.getElementById("usdtPrice").value) / 100) * 100;
             }
