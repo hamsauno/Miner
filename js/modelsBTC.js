@@ -1,16 +1,19 @@
-
 let jsonData = [];
 
-window.onload = async function () {
+document.addEventListener("DOMContentLoaded", async function () {
     await fetchData();
     await fetchJsonData();
     populateManufacturers();
     updateModelList();
 
-    document.getElementById("manufacturerSelect").addEventListener("change", updateModelList);
-    document.getElementById("asicModel").addEventListener("change", updateAsicSpecs);
-    document.getElementById("calculateBtn").addEventListener("click", calculateProfit);
-};
+    const manufacturerSelect = document.getElementById("manufacturerSelect");
+    const asicModel = document.getElementById("asicModel");
+    const calcBtn = document.getElementById("calculateBtn");
+
+    if (manufacturerSelect) manufacturerSelect.addEventListener("change", updateModelList);
+    if (asicModel) asicModel.addEventListener("change", updateAsicSpecs);
+    if (calcBtn) calcBtn.addEventListener("click", calculateProfit);
+});
 
 async function fetchData() {
     const url = "https://hamsauno.github.io/Miner/kursBTC.txt";
@@ -121,18 +124,3 @@ function calculateProfit() {
     document.getElementById("roi").innerText = roi.toFixed(2);
     document.getElementById("payback").innerText = payback.toFixed(0);
 }
-
-document.addEventListener("DOMContentLoaded", async function () {
-    await fetchData();
-    await fetchJsonData();
-    populateManufacturers();
-    updateModelList();
-
-    const manufacturerSelect = document.getElementById("manufacturerSelect");
-    const asicModel = document.getElementById("asicModel");
-    const calcBtn = document.getElementById("calculateBtn");
-
-    if (manufacturerSelect) manufacturerSelect.addEventListener("change", updateModelList);
-    if (asicModel) asicModel.addEventListener("change", updateAsicSpecs);
-    if (calcBtn) calcBtn.addEventListener("click", calculateProfit);
-});
