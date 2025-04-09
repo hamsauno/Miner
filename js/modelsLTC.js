@@ -95,8 +95,8 @@
             const models = jsonData.filter(item => item["Производитель"].toLowerCase() === manufacturer);
             models.forEach(item => {
                 const opt = document.createElement("option");
-                opt.value = ${item["Модель"]}|${item["Хешрейт"]};
-                opt.textContent = ${item["Модель"]} (${item["Хешрейт"]} TH);
+                opt.value = `${item["Модель"]}|${item["Хешрейт"]}`;  // Шаблонная строка
+                opt.textContent = `${item["Модель"]} (${item["Хешрейт"]} TH)`;  // Шаблонная строка
                 modelSelect.appendChild(opt);
             });
 
