@@ -121,7 +121,7 @@ function updateAsicSpecs() {
         console.log("Характеристики модели:", item);
 
         document.getElementById("hashrate").textContent = item["Хешрейт"];
-        document.getElementById("power").textContent = item["Потребление"];
+        document.getElementById("power").textContent = Math.round(item["Потребление"]);
         document.getElementById("asicCost").value = Math.ceil(item["Цена"] * parseFloat(document.getElementById("usdtPrice").value) / 100) * 100;
     }
 }
