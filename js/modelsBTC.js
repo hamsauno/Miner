@@ -84,7 +84,7 @@ function updateAsicSpecs() {
     if (item) {
         document.getElementById("hashrate").textContent = item["Хешрейт"];
         document.getElementById("power").textContent = item["Потребление"];
-        document.getElementById("asicCostUSDT").value = item["Цена"];
+        document.getElementById("asicCost").value = (item["Цена"] * parseFloat(document.getElementById("usdtPrice").value)).toFixed(0);
     }
 }
 
@@ -97,8 +97,7 @@ function calculateProfit() {
     const a = parseFloat(document.getElementById("hashrate").textContent);
     const b = parseFloat(document.getElementById("power").textContent);
     const h = parseFloat(document.getElementById("electricityCost").value);
-    const c = parseFloat(document.getElementById("asicCostUSDT").value);
-    const asicCost = c * usdtPrice;
+    const c = parseFloat(document.getElementById("asicCost").value);
     if (isNaN(a) || isNaN(b) || isNaN(h) || isNaN(c)) return alert("Проверьте значения");
 
     const dailyIncome = a * profitPerTH * btcPrice;
