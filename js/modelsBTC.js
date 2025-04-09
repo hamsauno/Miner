@@ -84,7 +84,7 @@ function updateAsicSpecs() {
     if (item) {
         document.getElementById("hashrate").textContent = item["Хешрейт"];
         document.getElementById("power").textContent = item["Потребление"];
-        document.getElementById("asicCost").value = (item["Цена"] * parseFloat(document.getElementById("usdtPrice").value)).toFixed(0);
+        document.getElementById("asicCost").value = Math.ceil(item["Цена"] * parseFloat(document.getElementById("usdtPrice").value) / 100) * 100;
     }
 }
 
