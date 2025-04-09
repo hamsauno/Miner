@@ -98,7 +98,7 @@ function calculateProfit() {
     const b = parseFloat(document.getElementById("power").textContent);
     const h = parseFloat(document.getElementById("electricityCost").value);
     const c = parseFloat(document.getElementById("asicCostUSDT").value);
-    const asicCost = с * usdtPrice;
+    const asicCost = c * usdtPrice;
     if (isNaN(a) || isNaN(b) || isNaN(h) || isNaN(c)) return alert("Проверьте значения");
 
     const dailyIncome = a * profitPerTH * btcPrice;
