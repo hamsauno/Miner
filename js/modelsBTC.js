@@ -85,13 +85,6 @@ function updateAsicSpecs() {
         document.getElementById("hashrate").textContent = item["Хешрейт"];
         document.getElementById("power").textContent = item["Потребление"];
         document.getElementById("asicCost").value = item["Цена"];
-
-        // Вычисление стоимости в рублях
-        const usdtPrice = parseFloat(document.getElementById("usdtPrice").value);
-        if (!isNaN(usdtPrice)) {
-            const asicCostInRub = item["Цена"] * usdtPrice;
-            document.getElementById("asicCostInRub").value = asicCostInRub.toFixed(2);
-        }
     }
 }
 
@@ -127,4 +120,3 @@ function calculateProfit() {
     document.getElementById("roi").innerText = roi.toFixed(2);
     document.getElementById("payback").innerText = payback.toFixed(0);
 }
-
