@@ -65,7 +65,9 @@
                 const response = await fetch(url);
                 if (!response.ok) throw new Error("Ошибка загрузки JSON: " + response.status);
                 const data = await response.json();
-                jsonData = data["Расчёты"].filter(item => item["Алгоритм"] === "SHA-256" || item["Алгоритм"] === "Scrypt");
+                
+                // Фильтруем данные, чтобы оставить только алгоритм Scrypt
+                jsonData = data["Расчёты"].filter(item => item["Алгоритм"] === "Scrypt");
             } catch (err) {
                 console.error("Ошибка JSON:", err);
             }
