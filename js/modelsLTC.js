@@ -1,160 +1,155 @@
-// Данные моделей по производителям
- const asicModels = {
-     antminer: [
-         { value: "L917", text: "L9 17 GH/s" },
-         { value: "L916", text: "L9 16 GH/s" },
-         { value: "L915", text: "L9 15 GH/s" },
-         { value: "L79500", text: "L7 9500 MH/s" },
-         { value: "L79300", text: "L9 9300 MH/s" },
-         { value: "L79050", text: "L9 9050 MH/s" }
-     ],
-     elphapex: [
-         { value: "DG20hydro", text: "DG1 hydro 20 GH/s" },
-         { value: "DG14", text: "DG1+ 14 GH/s" },
-         { value: "DG13", text: "DG1+ 13 GH/s" },
-         { value: "DGhome", text: "DG home-1 2.1 GH/s" }
-     ]
- };
- 
- // Характеристики моделей
- const asicData = {
-     // antminer
-     L917: { a: 17, b: 3360 },
-     L916: { a: 16, b: 3360 },
-     L915: { a: 15, b: 3360 },
-     L79500: { a: 9.5, b: 3360 },
-     L79300: { a: 9.3, b: 3360 },
-     L79050: { a: 9.05, b: 3360 },
-     // elphapex
-     DG20hydro: { a: 20, b: 6200 },
-     DG14: { a: 14, b: 3950 },
-     DG13: { a: 13, b: 3950 },
-     DGhome: { a: 2.1, b: 630 }
- };
- 
- // Функция обновления списка моделей
- function updateModelList() {
-     const manufacturerSelect = document.getElementById("manufacturerSelect");
-     const modelSelect = document.getElementById("asicModel");
- 
-     if (!manufacturerSelect || !modelSelect) {
-         console.error("Ошибка: manufacturerSelect или modelSelect не найден");
-         return;
-     }
- 
-     const manufacturer = manufacturerSelect.value;
-     modelSelect.innerHTML = ""; // Очищаем список
- 
-     if (asicModels[manufacturer]) {
-         asicModels[manufacturer].forEach(model => {
-             const option = document.createElement("option");
-             option.value = model.value;
-             option.textContent = model.text;
-             modelSelect.appendChild(option);
-         });
-         modelSelect.selectedIndex = 0; // Выбираем первый элемент
-     }
- 
-     // Проверяем, есть ли хотя бы одна модель перед вызовом updateAsicSpecs
-     if (modelSelect.value) {
-         updateAsicSpecs();
-     }
- }
- 
- // Функция обновления характеристик
- function updateAsicSpecs() {
-     const modelSelect = document.getElementById("asicModel");
- 
-     if (!modelSelect || modelSelect.value === "") {
-         console.warn("updateAsicSpecs: модель не выбрана");
-         return;
-     }
- 
-     const selectedModel = modelSelect.value;
- 
-     if (asicData[selectedModel]) {
-         // Присваиваем хешрейт и потребление в текстовые элементы <span>
-         document.getElementById("hashrate").textContent = asicData[selectedModel].a;
-         document.getElementById("power").textContent = asicData[selectedModel].b;
-     } else {
-         console.error(`Ошибка: Модель "${selectedModel}" не найдена в asicData`);
-         document.getElementById("hashrate").textContent = "";
-         document.getElementById("power").textContent = "";
-     }
- }
- 
- window.onload = async function() {
-      await fetchData();
-      updateModelList(); // Инициализация списка моделей
-      document.getElementById("manufacturerSelect").addEventListener("change", updateModelList);
-      document.getElementById("asicModel").addEventListener("change", updateAsicSpecs);
-  };
- 
- 
-  //Функция для получения данных с удалённого текстового файла
- async function fetchData() {
-     const url = "https://hamsauno.github.io/Miner/kursBTC.txt"; 
- 
-     try {
-         const response = await fetch(url);
-         console.log("Ответ от сервера:", response);
- 
-         if (!response.ok) {
-             throw new Error('Не удалось загрузить данные. Статус: ' + response.status);
-         }
- 
-         const data = await response.text();
-         console.log("Полученные данные:", data);
- 
-         if (!data || data.trim().length === 0) {
-             throw new Error('Загруженные данные пусты.');
-         }
- 
-         // Разделяем данные на строки и убираем лишние пробелы
-         let lines = data.trim().split("\n").map(line => line.trim());
-         console.log("Обработанные строки:", lines);
- 
-         // Проверяем, что данных достаточно
-         if (lines.length < 9) {
-             throw new Error(`Ошибка: недостаточно строк в файле (ожидалось 9, получено ${lines.length})`);
-         }
- 
-         // Функция парсинга чисел с заменой запятой на точку
-         const parseValue = (str) => parseFloat(str.replace(",", "."));
- 
-         const ltcPrice = parseValue(lines[3]);
-         const dogePrice = parseValue(lines[4]);
-         const bellPrice = parseValue(lines[5]);
-         const usdtPrice = parseValue(lines[1]);
-         const profitPerLTC = parseValue(lines[6]);
-         const profitPerDOGE = parseValue(lines[7]);
- 	const profitPerBELL = parseValue(lines[8]);
- 
- 
-         console.log("ltcPrice:", ltcPrice);
-         console.log("dogePrice:", dogePrice);
-         console.log("bellPrice:", bellPrice);
-         console.log("usdtPrice:", usdtPrice);
-         console.log("profitPerLTC:", profitPerLTC);
-         console.log("profitPerDOGE:", profitPerDOGE);
-         console.log("profitPerBELL:", profitPerBELL);
- 
-         // Проверяем корректность данных
-         if ([ltcPrice, dogePrice, bellPrice, usdtPrice, profitPerLTC, profitPerDOGE, profitPerBELL].some(isNaN)) {
-             throw new Error("Некоторые значения в файле не являются числами.");
-         }
- 
-         // Заполняем скрытые поля
-         document.getElementById("ltcPrice").value = ltcPrice.toFixed(2);
-         document.getElementById("dogePrice").value = dogePrice.toFixed(4);
-         document.getElementById("bellPrice").value = bellPrice.toFixed(4);
-         document.getElementById("usdtPrice").value = usdtPrice.toFixed(8);
-         document.getElementById("profitPerLTC").value = profitPerLTC.toFixed(8);
-         document.getElementById("profitPerDOGE").value = profitPerDOGE.toFixed(8);
-         document.getElementById("profitPerBELL").value = profitPerBELL.toFixed(8);
- 
-     } catch (error) {
-         console.error("Ошибка загрузки файла:", error);
-         alert("Ошибка загрузки данных. Проверьте доступность файла.");
-     }
- }
+        let jsonData = [];
+
+        document.addEventListener("DOMContentLoaded", async function () {
+            console.log("Загрузка страницы...");
+            
+            await fetchData();
+            await fetchJsonData();
+            populateManufacturers();
+            updateModelList();
+
+            const manufacturerSelect = document.getElementById("manufacturerSelect");
+            const asicModel = document.getElementById("asicModel");
+            const calcBtn = document.getElementById("calculateBtn");
+
+            if (manufacturerSelect) {
+                manufacturerSelect.addEventListener("change", updateModelList);
+                console.log("Добавлен обработчик события для выбора производителя");
+            }
+            if (asicModel) {
+                asicModel.addEventListener("change", updateAsicSpecs);
+                console.log("Добавлен обработчик события для выбора модели ASIC");
+            }
+            if (calcBtn) {
+                calcBtn.addEventListener("click", calculateProfit);
+                console.log("Добавлен обработчик события для расчёта прибыли");
+            }
+        });
+
+        // Функция для получения данных с удалённого текстового файла
+        async function fetchData() {
+            const url = "https://hamsauno.github.io/Miner/kursBTC.txt";
+            try {
+                const response = await fetch(url);
+                if (!response.ok) throw new Error('Ошибка загрузки курса');
+                const data = await response.text();
+                const lines = data.trim().split("\n");
+                if (lines.length >= 9) {
+                    const ltcPrice = parseFloat(lines[3].trim());
+                    const dogePrice = parseFloat(lines[4].trim());
+                    const bellPrice = parseFloat(lines[5].trim());
+                    const usdtPrice = parseFloat(lines[1].trim());
+                    const profitPerLTC = parseFloat(lines[6].trim());
+                    const profitPerDOGE = parseFloat(lines[7].trim());
+                    const profitPerBELL = parseFloat(lines[8].trim());
+
+                    console.log("ltcPrice:", ltcPrice, "dogePrice:", dogePrice, "bellPrice:", bellPrice);
+
+                    document.getElementById("ltcPrice").value = ltcPrice.toFixed(2);
+                    document.getElementById("dogePrice").value = dogePrice.toFixed(4);
+                    document.getElementById("bellPrice").value = bellPrice.toFixed(4);
+                    document.getElementById("usdtPrice").value = usdtPrice.toFixed(8);
+                    document.getElementById("profitPerLTC").value = profitPerLTC.toFixed(8);
+                    document.getElementById("profitPerDOGE").value = profitPerDOGE.toFixed(8);
+                    document.getElementById("profitPerBELL").value = profitPerBELL.toFixed(8);
+                }
+            } catch (error) {
+                console.error("Ошибка загрузки данных:", error);
+            }
+        }
+
+        // Функция для загрузки JSON данных
+        async function fetchJsonData() {
+            const url = "https://hamsauno.github.io/Miner/json/calc.json";
+            try {
+                const response = await fetch(url);
+                if (!response.ok) throw new Error("Ошибка загрузки JSON: " + response.status);
+                const data = await response.json();
+                jsonData = data["Расчёты"].filter(item => item["Алгоритм"] === "SHA-256" || item["Алгоритм"] === "Scrypt");
+            } catch (err) {
+                console.error("Ошибка JSON:", err);
+            }
+        }
+
+        // Заполнение списка производителей
+        function populateManufacturers() {
+            const select = document.getElementById("manufacturerSelect");
+            const manufacturers = [...new Set(jsonData.map(item => item["Производитель"].toLowerCase()))];
+            select.innerHTML = "";
+            manufacturers.forEach(m => {
+                const opt = document.createElement("option");
+                opt.value = m;
+                opt.textContent = m.charAt(0).toUpperCase() + m.slice(1);
+                select.appendChild(opt);
+            });
+        }
+
+        // Обновление списка моделей в зависимости от производителя
+        function updateModelList() {
+            const manufacturer = document.getElementById("manufacturerSelect").value;
+            const modelSelect = document.getElementById("asicModel");
+            modelSelect.innerHTML = "";
+
+            const models = jsonData.filter(item => item["Производитель"].toLowerCase() === manufacturer);
+            models.forEach(item => {
+                const opt = document.createElement("option");
+                opt.value = `${item["Модель"]}|${item["Хешрейт"]}`;
+                opt.textContent = `${item["Модель"]} (${item["Хешрейт"]} TH)`;
+                modelSelect.appendChild(opt);
+            });
+
+            if (modelSelect.value) updateAsicSpecs();
+        }
+
+        // Обновление характеристик ASIC
+        function updateAsicSpecs() {
+            const [model, hashrate] = document.getElementById("asicModel").value.split("|");
+            const item = jsonData.find(i => i["Модель"] === model && i["Хешрейт"] === hashrate);
+            if (item) {
+                document.getElementById("hashrate").textContent = item["Хешрейт"];
+                document.getElementById("power").textContent = Math.round(item["Потребление"]);
+                document.getElementById("asicCost").value = Math.ceil(item["Цена"] * parseFloat(document.getElementById("usdtPrice").value) / 100) * 100;
+            }
+        }
+
+        // Функция для расчёта доходности и прибыли
+        function calculateProfit() {
+            const ltcPrice = parseFloat(document.getElementById("ltcPrice").value);
+            const dogePrice = parseFloat(document.getElementById("dogePrice").value);
+            const bellPrice = parseFloat(document.getElementById("bellPrice").value);
+            const usdtPrice = parseFloat(document.getElementById("usdtPrice").value);
+            const profitPerLTC = parseFloat(document.getElementById("profitPerLTC").value);
+            const profitPerDOGE = parseFloat(document.getElementById("profitPerDOGE").value);
+            const profitPerBELL = parseFloat(document.getElementById("profitPerBELL").value);
+
+            if (isNaN(ltcPrice) || isNaN(dogePrice) || isNaN(bellPrice) || isNaN(usdtPrice) ||
+                isNaN(profitPerLTC) || isNaN(profitPerDOGE) || isNaN(profitPerBELL)) {
+                alert("Данные для расчета отсутствуют или некорректны.");
+                return;
+            }
+
+            let a = parseFloat(document.getElementById("hashrate").textContent);
+            let b = parseFloat(document.getElementById("power").textContent);
+            let h = parseFloat(document.getElementById("electricityCost").value);
+            let c = parseFloat(document.getElementById("asicCost").value);
+
+            let dailyIncome = (a * profitPerLTC * ltcPrice) + (a * profitPerDOGE * dogePrice) + (a * profitPerBELL * bellPrice);
+            let monthlyIncome = dailyIncome * 30.5;
+            let yearlyIncome = dailyIncome * 365;
+
+            let dailyElectricityCost = ((b / 1000) * h * 24) / usdtPrice;
+            let dailyProfit = dailyIncome - dailyElectricityCost;
+            let monthlyProfit = dailyProfit * 30.5;
+            let yearlyProfit = dailyProfit * 365;
+            let roi = (dailyProfit * 365 / (c / usdtPrice)) * 100;
+            let payback = ((c / usdtPrice) / dailyProfit) / 30.5;
+
+            document.getElementById("income").innerText = dailyIncome.toFixed(2);
+            document.getElementById("profit").innerText = dailyProfit.toFixed(2);
+            document.getElementById("incomeMonth").innerText = monthlyIncome.toFixed(2);
+            document.getElementById("incomeYear").innerText = yearlyIncome.toFixed(2);
+            document.getElementById("profitMonth").innerText = monthlyProfit.toFixed(2);
+            document.getElementById("profitYear").innerText = yearlyProfit.toFixed(2);
+            document.getElementById("roi").innerText = roi.toFixed(2);
+            document.getElementById("payback").innerText = payback.toFixed(0);
+        }
