@@ -7,7 +7,7 @@ function loadPreorderData() {
                 const container = document.getElementById("container");
 
                 if (!container) {
-                    console.error("Контейнер с id 'preorder-container' не найден");
+                    console.error("Контейнер с id 'container' не найден");
                     return;
                 }
 
