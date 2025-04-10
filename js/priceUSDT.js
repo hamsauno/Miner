@@ -1,4 +1,5 @@
-let priceUSDT = 0; // Глобальная переменная
+// Значение по умолчанию
+let priceUSDT = 0;
 
 // Загрузка курса BTC из kursBTC.txt
 fetch('https://hamsauno.github.io/Miner/kursBTC.txt')
@@ -9,8 +10,16 @@ fetch('https://hamsauno.github.io/Miner/kursBTC.txt')
             priceUSDT = parseFloat(lines[1].trim()); // Преобразуем в число
             console.log("Курс USDT:", priceUSDT);
 
-            // После получения курса загружаем данные из JSON
-            loadData();
+            // Загружаем данные только если функция уже определена
+            if (typeof loadData === 'function') {
+                loadData();
+            }
+
+            // Если используешь и для предзаказа:
+            if (typeof loadPreorderData === 'function') {
+                loadPreorderData();
+            }
+
         } else {
             console.error("В файле kursBTC.txt недостаточно строк.");
         }
