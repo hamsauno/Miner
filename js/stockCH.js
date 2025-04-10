@@ -25,7 +25,7 @@ function loadPreorderData() {
 
                     const preorderPrice = parseFloat(item["Цена"]) || 0;
                     const priceRF = parseFloat(item["Цена ГТД РФ"]) || 0;
-                    const priceRFNDS = Math.ceil((priceRF * 1.2) / 10) * 10;
+                    const priceRFNDS = parseFloat(item["Цена ГТД РФ с НДС"]) || 0;
 
                     // Рассчёты
                     const rubPreorder = Math.ceil((preorderPrice * priceUSDT) / 100) * 100;
