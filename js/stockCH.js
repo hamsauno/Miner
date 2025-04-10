@@ -22,44 +22,42 @@ function loadPreorderData() {
                     const hashRate = item["Хешрейт"] || "Неизвестный хешрейт";
                     const energycost = item["Потребление"] || "Неизвестное Потребление";
                     const hashsec = item["Ед. изм."] || "Неизвестная Ед. изм.";
-                    const price = item["Цена"] || "Неизвестная цена";
-                    const priceRF = item["Цена ГТД РФ"] || "Неизвестная Цена ГТД РФ";
-                    const priceRFNDS = item["Цена с ГТД РФ и НДС"] || "Неизвестная Цена с ГТД РФ и НДС";
 
-                    const priceValue = parseFloat(preorderPrice) || 0;
-                    let rubPrice = price * priceUSDT;
+                    const preorderPrice = parseFloat(item["Цена (предзаказ)"]) || 0;
+                    const priceRF = parseFloat(item["Цена ГТД РФ"]) || 0;
+                    const priceRFNDS = Math.ceil((priceRF * 1.2) / 10) * 10;
 
-                    const rubRounded = Math.ceil(rubPrice / 100) * 100;
-                    const rubFormatted = rubRounded.toLocaleString('ru-RU').replace(/,/g, ' ');
+                    // Рассчёты
+                    const rubPreorder = Math.ceil((preorderPrice * priceUSDT) / 100) * 100;
+                    const rubPreorderNDS = Math.ceil((preorderPrice * 1.2 * priceUSDT) / 100) * 100;
 
-                    // НДС
-                    const NDCusdtRounded = Math.ceil((priceValue * 1.2)/10) * 10;
-                    const NDCrubRounded = Math.ceil((NDCusdtRounded * priceUSDT)/100) * 100;
+                    const rubRF = Math.ceil((priceRF * priceUSDT) / 100) * 100;
+                    const rubRFNDS = Math.ceil((priceRFNDS * priceUSDT) / 100) * 100;
 
                     div.innerHTML = `
-                        <p>${model} ${hashRate} ${hashsec} — ${rubFormatted} ₽ | ${Value} $</p>
+                        <p>${model} ${hashRate} ${hashsec} — ${rubPreorder.toLocaleString('ru-RU')} ₽ | ${preorderPrice} $</p>
                     `;
 
-                    // === 👇 Добавляем открытие модального окна при клике ===
+                    // === Модалка по клику ===
                     div.addEventListener("click", () => {
                         const modal = document.getElementById("product-modal");
                         const modalBody = document.getElementById("modal-body");
 
-                        // Формируем ссылку для Telegram-бота
                         const telegramLink = `https://t.me/LEGIT_Mining_APP_Bot?start=main_5765882132`;
-                        //const telegramLink = `Добрый день, хочу купить model:${encodeURIComponent(model)}&price:${encodeURIComponent(rubFormatted)}`;
 
                         modalBody.innerHTML = `
                             <h2>${Manufacturer} ${model}</h2>
                             <p><strong>Хешрейт:</strong> ${hashRate} ${hashsec}</p>
                             <p><strong>Потребление:</strong> ${energycost} Вт</p>
-                            
-                            <p><strong>Цена ГТД РБ:</strong> ${rubFormatted} ₽ (${price} $)</p>
-                            <p><strong>Цена ГТД РБ с НДС:</strong> ${(NDCrubRounded).toLocaleString('ru-RU')} ₽ (${NDCusdtRounded} $)</p>
-                            <p><strong>Цена ГТД РФ:</strong> ${rubFormatted} ₽ (${priceValue} $)</p>
-                            <p><strong>Цена ГТД РФ с НДС:</strong> ${rubFormatted} ₽ (${priceValue} $)</p>
+
+                            <p><strong>Цена ГТД РБ:</strong> ${rubPreorder.toLocaleString('ru-RU')} ₽ (${preorderPrice} $)</p>
+                            <p><strong>Цена ГТД РБ с НДС:</strong> ${rubPreorderNDS.toLocaleString('ru-RU')} ₽ (${Math.ceil(preorderPrice * 1.2)} $)</p>
+
+                            <p><strong>Цена ГТД РФ:</strong> ${rubRF.toLocaleString('ru-RU')} ₽ (${priceRF} $)</p>
+                            <p><strong>Цена ГТД РФ с НДС:</strong> ${rubRFNDS.toLocaleString('ru-RU')} ₽ (${priceRFNDS} $)</p>
+
                             <a href="${telegramLink}" class="buy-button" target="_blank">Хочу купить</a>
-                        `; // Закрываем строку корректно
+                        `;
 
                         modal.style.display = "block";
                     });
@@ -72,3 +70,4 @@ function loadPreorderData() {
             console.error("Ошибка при загрузке данных:", error);
         });
 }
+
