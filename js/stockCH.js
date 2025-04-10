@@ -23,10 +23,11 @@ function loadPreorderData() {
                     const energycost = item["Потребление"] || "Неизвестное Потребление";
                     const hashsec = item["Ед. изм."] || "Неизвестная Ед. изм.";
                     const price = item["Цена"] || "Неизвестная цена";
-                    const preorderPrice = item["Цена (предзаказ)"] || "Неизвестная цена предзаказа";
+                    const priceRF = item["Цена ГТД РФ"] || "Неизвестная Цена ГТД РФ";
+                    const priceRFNDS = item["Цена с ГТД РФ и НДС"] || "Неизвестная Цена с ГТД РФ и НДС";
 
                     const priceValue = parseFloat(preorderPrice) || 0;
-                    let rubPrice = priceValue * priceUSDT;
+                    let rubPrice = price * priceUSDT;
 
                     const rubRounded = Math.ceil(rubPrice / 100) * 100;
                     const rubFormatted = rubRounded.toLocaleString('ru-RU').replace(/,/g, ' ');
@@ -36,7 +37,7 @@ function loadPreorderData() {
                     const NDCrubRounded = Math.ceil((NDCusdtRounded * priceUSDT)/100) * 100;
 
                     div.innerHTML = `
-                        <p>${model} ${hashRate} ${hashsec} — ${rubFormatted} ₽ | ${priceValue} $</p>
+                        <p>${model} ${hashRate} ${hashsec} — ${rubFormatted} ₽ | ${Value} $</p>
                     `;
 
                     // === 👇 Добавляем открытие модального окна при клике ===
@@ -52,8 +53,11 @@ function loadPreorderData() {
                             <h2>${Manufacturer} ${model}</h2>
                             <p><strong>Хешрейт:</strong> ${hashRate} ${hashsec}</p>
                             <p><strong>Потребление:</strong> ${energycost} Вт</p>
-                            <p><strong>Цена предзаказа:</strong> ${rubFormatted} ₽ (${priceValue} $)</p>
-                            <p><strong>Цена с НДС:</strong> ${(NDCrubRounded).toLocaleString('ru-RU')} ₽ (${NDCusdtRounded} $)</p>
+                            
+                            <p><strong>Цена ГТД РБ:</strong> ${rubFormatted} ₽ (${price} $)</p>
+                            <p><strong>Цена ГТД РБ с НДС:</strong> ${(NDCrubRounded).toLocaleString('ru-RU')} ₽ (${NDCusdtRounded} $)</p>
+                            <p><strong>Цена ГТД РФ:</strong> ${rubFormatted} ₽ (${priceValue} $)</p>
+                            <p><strong>Цена ГТД РФ с НДС:</strong> ${rubFormatted} ₽ (${priceValue} $)</p>
                             <a href="${telegramLink}" class="buy-button" target="_blank">Хочу купить</a>
                         `; // Закрываем строку корректно
 
