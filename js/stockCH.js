@@ -4,7 +4,7 @@ function loadPreorderData() {
         .then(data => {
             if (data && data["Предзаказ"]) {
                 const preorder = data["Предзаказ"];
-                const container = document.getElementById("preorder-container");
+                const container = document.getElementById("container");
 
                 if (!container) {
                     console.error("Контейнер с id 'preorder-container' не найден");
