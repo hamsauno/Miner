@@ -23,7 +23,7 @@ function loadPreorderData() {
                     const energycost = item["Потребление"] || "Неизвестное Потребление";
                     const hashsec = item["Ед. изм."] || "Неизвестная Ед. изм.";
 
-                    const preorderPrice = parseFloat(item["Цена (предзаказ)"]) || 0;
+                    const preorderPrice = parseFloat(item["Цена"]) || 0;
                     const priceRF = parseFloat(item["Цена ГТД РФ"]) || 0;
                     const priceRFNDS = Math.ceil((priceRF * 1.2) / 10) * 10;
 
