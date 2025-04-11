@@ -17,7 +17,7 @@
 
                             <div class="row">
                               <label for="algorithmSelect">Алгоритм:</label>
-                              <select id="algorithmSelect" onchange="onAlgorithmChange()">
+                              <select id="algorithmSelect">
                                 <option value="sha256">SHA-256</option>
                                 <option value="scrypt">Scrypt</option>
                               </select>
@@ -25,7 +25,7 @@
     
                     <div class="row">
                         <label for="manufacturerSelect">Производитель:</label>
-                        <select id="manufacturerSelect" onchange="updateModelList()">
+                        <select id="manufacturerSelect">
                             <option value="antminer">Bitmain Antminer</option>
                             <option value="whatsminer">MicroBT Whatsminer</option>
                             <option value="avalon">Canaan Avalon</option>
@@ -34,7 +34,7 @@
                     
                     <div class="row">
                         <label for="asicModel">Модель Асика:</label>
-                        <select id="asicModel" onchange="updateAsicSpecs()">
+                        <select id="asicModel">
                             <!-- Модели будут добавляться динамически -->
                         </select>
                     </div>
