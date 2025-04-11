@@ -127,7 +127,11 @@ function calculateProfit() {
     } else if (currentAlgorithm === "Scrypt") {
         const profitPerLTC = parseFloat(document.getElementById("profitPerLTC").value);
         const ltcPrice = parseFloat(document.getElementById("ltcPrice").value);
-        dailyIncome = hashrate * profitPerLTC * ltcPrice;
+        const profitPerDOGE = parseFloat(document.getElementById("profitPerDOGE").value);
+        const dogePrice = parseFloat(document.getElementById("dogePrice").value);
+        const profitPerBELL = parseFloat(document.getElementById("profitPerBELL").value);
+        const bellPrice = parseFloat(document.getElementById("bellPrice").value);
+        dailyIncome = (hashrate * profitPerLTC * ltcPrice) + (hashrate * profitPerDOGE * dogePrice) + (hashrate * profitPerBELL * bellPrice);
     }
 
     const dailyElectricityCost = ((power / 1000) * electricityCost * 24) / usdtPrice;
