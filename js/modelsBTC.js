@@ -35,10 +35,19 @@ async function fetchData() {
         if (!response.ok) throw new Error('Ошибка загрузки курса');
         const data = await response.text();
         const lines = data.trim().split("\n");
-        if (lines.length >= 3) {
+        if (lines.length >= 9) {
             const btcPrice = parseFloat(lines[0].trim());
             const usdtPrice = parseFloat(lines[1].trim());
             const profitPerTH = parseFloat(lines[2].trim());
+            const ltcPrice = parseFloat(lines[3].trim());
+            const dogePrice = parseFloat(lines[4].trim());
+            const bellPrice = parseFloat(lines[5].trim());
+            const profitPerLTC = parseFloat(lines[6].trim());
+            const profitPerDOGE = parseFloat(lines[7].trim());
+            const profitPerBELL = parseFloat(lines[8].trim());
+
+            console.log("BTC:", btcPrice, "USDT:", usdtPrice);
+            console.log("LTC:", ltcPrice, "DOGE:", dogePrice, "BELL:", bellPrice);
 
             if (!isNaN(btcPrice) && !isNaN(usdtPrice) && !isNaN(profitPerTH)) {
                 console.log("Курс BTC:", btcPrice);
