@@ -2,23 +2,47 @@
   let jsonData = [];
   let currentAlgorithm = "SHA-256";
 
-  document.addEventListener("DOMContentLoaded", async function () {
+  document.addEventListener("DOMContentLoaded", async () => {
     console.log("Загрузка страницы...");
-    await fetchData();
 
     const algorithmSelect = document.getElementById("algorithmSelect");
-    algorithmSelect.addEventListener("change", onAlgorithmChange);
-
-    await onAlgorithmChange();
-
     const manufacturerSelect = document.getElementById("manufacturerSelect");
     const asicModel = document.getElementById("asicModel");
     const calcBtn = document.getElementById("calculateBtn");
 
+    if (!algorithmSelect || !manufacturerSelect || !asicModel || !calcBtn) {
+      console.error("❌ Один из элементов не найден");
+      return;
+    }
+
+    algorithmSelect.addEventListener("change", onAlgorithmChange);
     manufacturerSelect.addEventListener("change", updateModelList);
     asicModel.addEventListener("change", updateAsicSpecs);
     calcBtn.addEventListener("click", calculateProfit);
+
+    await fetchData();
+    await onAlgorithmChange();
   });
+
+  async function fetchData() {
+    try {
+      const response = await fetch("https://hamsauno.github.io/Miner/kursBTC.txt");
+      const data = (await response.text()).trim().split("\n");
+
+      if (data.length >= 9) {
+        [
+          "btcPrice", "usdtPrice", "profitPerTH",
+          "ltcPrice", "dogePrice", "bellPrice",
+          "profitPerLTC", "profitPerDOGE", "profitPerBELL"
+        ].forEach((id, i) => {
+          const input = document.getElementById(id);
+          if (input) input.value = parseFloat(data[i]).toFixed(i < 6 ? 2 : 8);
+        });
+      }
+    } catch (e) {
+      console.error("Ошибка загрузки курса:", e);
+    }
+  }
 
   async function onAlgorithmChange() {
     const algorithmSelect = document.getElementById("algorithmSelect");
@@ -27,36 +51,12 @@
     populateManufacturers();
   }
 
-  async function fetchData() {
-    const url = "https://hamsauno.github.io/Miner/kursBTC.txt";
-    try {
-      const response = await fetch(url);
-      const data = await response.text();
-      const lines = data.trim().split("\n");
-
-      if (lines.length >= 9) {
-        document.getElementById("btcPrice").value = parseFloat(lines[0]).toFixed(2);
-        document.getElementById("usdtPrice").value = parseFloat(lines[1]).toFixed(2);
-        document.getElementById("profitPerTH").value = parseFloat(lines[2]).toFixed(8);
-        document.getElementById("ltcPrice").value = parseFloat(lines[3]).toFixed(2);
-        document.getElementById("dogePrice").value = parseFloat(lines[4]).toFixed(4);
-        document.getElementById("bellPrice").value = parseFloat(lines[5]).toFixed(4);
-        document.getElementById("profitPerLTC").value = parseFloat(lines[6]).toFixed(8);
-        document.getElementById("profitPerDOGE").value = parseFloat(lines[7]).toFixed(8);
-        document.getElementById("profitPerBELL").value = parseFloat(lines[8]).toFixed(8);
-      }
-    } catch (e) {
-      console.error("Ошибка загрузки курса:", e);
-    }
-  }
-
   async function fetchJsonData() {
-    const url = "https://hamsauno.github.io/Miner/json/calc.json";
     try {
-      const response = await fetch(url);
+      const response = await fetch("https://hamsauno.github.io/Miner/json/calc.json");
       const data = await response.json();
       jsonData = data["Расчёты"].filter(item => item["Алгоритм"] === currentAlgorithm);
-      console.log("Загруженные данные по алгоритму", currentAlgorithm, jsonData);
+      console.log("Загруженные данные по", currentAlgorithm, jsonData);
     } catch (e) {
       console.error("Ошибка загрузки JSON:", e);
     }
@@ -114,7 +114,7 @@
     const electricityCost = parseFloat(document.getElementById("electricityCost").value);
     const asicCost = parseFloat(document.getElementById("asicCost").value);
 
-    if (isNaN(hashrate) || isNaN(power) || isNaN(electricityCost) || isNaN(asicCost))
+    if ([hashrate, power, electricityCost, asicCost].some(isNaN))
       return alert("Некорректные данные");
 
     let dailyIncome = 0;
@@ -124,12 +124,12 @@
       const profitPerTH = parseFloat(document.getElementById("profitPerTH").value);
       dailyIncome = hashrate * profitPerTH * btcPrice;
     } else if (currentAlgorithm === "Scrypt") {
-      const profitPerLTC = parseFloat(document.getElementById("profitPerLTC").value);
       const ltcPrice = parseFloat(document.getElementById("ltcPrice").value);
-      const profitPerDOGE = parseFloat(document.getElementById("profitPerDOGE").value);
       const dogePrice = parseFloat(document.getElementById("dogePrice").value);
-      const profitPerBELL = parseFloat(document.getElementById("profitPerBELL").value);
       const bellPrice = parseFloat(document.getElementById("bellPrice").value);
+      const profitPerLTC = parseFloat(document.getElementById("profitPerLTC").value);
+      const profitPerDOGE = parseFloat(document.getElementById("profitPerDOGE").value);
+      const profitPerBELL = parseFloat(document.getElementById("profitPerBELL").value);
       dailyIncome =
         (hashrate * profitPerLTC * ltcPrice) +
         (hashrate * profitPerDOGE * dogePrice) +
@@ -152,4 +152,3 @@
     document.getElementById("roi").innerText = roi.toFixed(2);
     document.getElementById("payback").innerText = payback.toFixed(0);
   }
-
