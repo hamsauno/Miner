@@ -1,10 +1,20 @@
 let jsonData = [];
+let currentAlgorithm = "SHA-256";
 
 document.addEventListener("DOMContentLoaded", async function () {
     console.log("Загрузка страницы...");
 
     await fetchData();
     await fetchJsonData();
+
+    const algorithmSelect = document.getElementById("algorithmSelect");
+    algorithmSelect.addEventListener("change", async () => {
+        currentAlgorithm = algorithmSelect.value;
+        await fetchJsonData();
+        populateManufacturers();
+        updateModelList();
+    });
+
     populateManufacturers();
     updateModelList();
 
@@ -14,78 +24,52 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     if (manufacturerSelect) {
         manufacturerSelect.addEventListener("change", updateModelList);
-        console.log("Добавлен обработчик события для выбора производителя");
     }
     if (asicModel) {
         asicModel.addEventListener("change", updateAsicSpecs);
-        console.log("Добавлен обработчик события для выбора модели ASIC");
     }
     if (calcBtn) {
         calcBtn.addEventListener("click", calculateProfit);
-        console.log("Добавлен обработчик события для расчёта прибыли");
     }
 });
 
 async function fetchData() {
     const url = "https://hamsauno.github.io/Miner/kursBTC.txt";
-    console.log("Загрузка данных о курсе BTC...");
-
     try {
         const response = await fetch(url);
         if (!response.ok) throw new Error('Ошибка загрузки курса');
         const data = await response.text();
         const lines = data.trim().split("\n");
+
         if (lines.length >= 9) {
-            const btcPrice = parseFloat(lines[0].trim());
-            const usdtPrice = parseFloat(lines[1].trim());
-            const profitPerTH = parseFloat(lines[2].trim());
-            const ltcPrice = parseFloat(lines[3].trim());
-            const dogePrice = parseFloat(lines[4].trim());
-            const bellPrice = parseFloat(lines[5].trim());
-            const profitPerLTC = parseFloat(lines[6].trim());
-            const profitPerDOGE = parseFloat(lines[7].trim());
-            const profitPerBELL = parseFloat(lines[8].trim());
-
-            console.log("BTC:", btcPrice, "USDT:", usdtPrice);
-            console.log("LTC:", ltcPrice, "DOGE:", dogePrice, "BELL:", bellPrice);
-
-            if (!isNaN(btcPrice) && !isNaN(usdtPrice) && !isNaN(profitPerTH)) {
-                console.log("Курс BTC:", btcPrice);
-                console.log("Курс USDT:", usdtPrice);
-                console.log("Доходность за TH:", profitPerTH);
-
-                document.getElementById("btcPrice").value = btcPrice.toFixed(2);
-                document.getElementById("usdtPrice").value = usdtPrice.toFixed(2);
-                document.getElementById("profitPerTH").value = profitPerTH.toFixed(8);
-            }
+            document.getElementById("btcPrice").value = parseFloat(lines[0]).toFixed(2);
+            document.getElementById("usdtPrice").value = parseFloat(lines[1]).toFixed(2);
+            document.getElementById("profitPerTH").value = parseFloat(lines[2]).toFixed(8);
+            document.getElementById("ltcPrice").value = parseFloat(lines[3]).toFixed(2);
+            document.getElementById("dogePrice").value = parseFloat(lines[4]).toFixed(4);
+            document.getElementById("bellPrice").value = parseFloat(lines[5]).toFixed(4);
+            document.getElementById("profitPerLTC").value = parseFloat(lines[6]).toFixed(8);
+            document.getElementById("profitPerDOGE").value = parseFloat(lines[7]).toFixed(8);
+            document.getElementById("profitPerBELL").value = parseFloat(lines[8]).toFixed(8);
         }
     } catch (error) {
-        console.error("Ошибка загрузки:", error);
-        document.getElementById("btcPrice").value = "Ошибка";
-        document.getElementById("usdtPrice").value = "Ошибка";
-        document.getElementById("profitPerTH").value = "Ошибка";
+        console.error("Ошибка загрузки данных:", error);
     }
 }
 
 async function fetchJsonData() {
     const url = "https://hamsauno.github.io/Miner/json/calc.json";
-    console.log("Загрузка данных JSON...");
-
     try {
         const response = await fetch(url);
         if (!response.ok) throw new Error("Ошибка загрузки JSON: " + response.status);
         const data = await response.json();
-        jsonData = data["Расчёты"].filter(item => item["Алгоритм"] === "SHA-256");
-
-        console.log("Загружены данные JSON:", jsonData);
+        jsonData = data["Расчёты"].filter(item => item["Алгоритм"] === currentAlgorithm);
     } catch (err) {
         console.error("Ошибка JSON:", err);
     }
 }
 
 function populateManufacturers() {
-    console.log("Заполнение списка производителей...");
-    
     const select = document.getElementById("manufacturerSelect");
     const manufacturers = [...new Set(jsonData.map(item => item["Производитель"].toLowerCase()))];
     select.innerHTML = "";
@@ -95,24 +79,18 @@ function populateManufacturers() {
         opt.textContent = m.charAt(0).toUpperCase() + m.slice(1);
         select.appendChild(opt);
     });
-
-    console.log("Производители:", manufacturers);
 }
 
 function updateModelList() {
-    console.log("Обновление списка моделей...");
-
     const manufacturer = document.getElementById("manufacturerSelect").value;
     const modelSelect = document.getElementById("asicModel");
     modelSelect.innerHTML = "";
 
     const models = jsonData.filter(item => item["Производитель"].toLowerCase() === manufacturer);
-    console.log("Модели для производителя", manufacturer, ":", models);
-
     models.forEach(item => {
         const opt = document.createElement("option");
         opt.value = `${item["Модель"]}|${item["Хешрейт"]}`;
-        opt.textContent = `${item["Модель"]} (${item["Хешрейт"]} TH)`;
+        opt.textContent = `${item["Модель"]} (${item["Хешрейт"]} ${item["Ед. изм."]})`;
         modelSelect.appendChild(opt);
     });
 
@@ -120,62 +98,49 @@ function updateModelList() {
 }
 
 function updateAsicSpecs() {
-    console.log("Обновление характеристик ASIC...");
-
     const [model, hashrate] = document.getElementById("asicModel").value.split("|");
-    console.log("Выбрана модель:", model, "с хешрейтом:", hashrate);
-
     const item = jsonData.find(i => i["Модель"] === model && i["Хешрейт"] === hashrate);
     if (item) {
-        console.log("Характеристики модели:", item);
-
         document.getElementById("hashrate").textContent = item["Хешрейт"];
         document.getElementById("edprice").textContent = item["Ед. изм."];
         document.getElementById("power").textContent = Math.round(item["Потребление"]);
-        document.getElementById("asicCost").value = Math.ceil(item["Цена"] * parseFloat(document.getElementById("usdtPrice").value) / 100) * 100;
+        const usdt = parseFloat(document.getElementById("usdtPrice").value);
+        document.getElementById("asicCost").value = Math.ceil(item["Цена"] * usdt / 100) * 100;
     }
 }
 
 function calculateProfit() {
-    console.log("Расчёт прибыли...");
-
-    const btcPrice = parseFloat(document.getElementById("btcPrice").value);
     const usdtPrice = parseFloat(document.getElementById("usdtPrice").value);
-    const profitPerTH = parseFloat(document.getElementById("profitPerTH").value);
+    const hashrate = parseFloat(document.getElementById("hashrate").textContent);
+    const power = parseFloat(document.getElementById("power").textContent);
+    const electricityCost = parseFloat(document.getElementById("electricityCost").value);
+    const asicCost = parseFloat(document.getElementById("asicCost").value);
 
-    console.log("Курс BTC:", btcPrice);
-    console.log("Курс USDT:", usdtPrice);
-    console.log("Доходность за TH:", profitPerTH);
+    if (isNaN(hashrate) || isNaN(power) || isNaN(electricityCost) || isNaN(asicCost)) return alert("Некорректные данные");
 
-    if (isNaN(btcPrice) || isNaN(usdtPrice) || isNaN(profitPerTH)) return alert("Некорректные данные");
+    let dailyIncome = 0;
 
-    const a = parseFloat(document.getElementById("hashrate").textContent);
-    const b = parseFloat(document.getElementById("power").textContent);
-    const h = parseFloat(document.getElementById("electricityCost").value);
-    const c = parseFloat(document.getElementById("asicCost").value);
+    if (currentAlgorithm === "SHA-256") {
+        const btcPrice = parseFloat(document.getElementById("btcPrice").value);
+        const profitPerTH = parseFloat(document.getElementById("profitPerTH").value);
+        dailyIncome = hashrate * profitPerTH * btcPrice;
+    } else if (currentAlgorithm === "Scrypt") {
+        const profitPerLTC = parseFloat(document.getElementById("profitPerLTC").value);
+        const ltcPrice = parseFloat(document.getElementById("ltcPrice").value);
+        dailyIncome = hashrate * profitPerLTC * ltcPrice;
+    }
 
-    console.log("Хешрейт:", a, "Потребление:", b, "Стоимость электроэнергии:", h, "Стоимость оборудования:", c);
-
-    if (isNaN(a) || isNaN(b) || isNaN(h) || isNaN(c)) return alert("Проверьте значения");
-
-    const dailyIncome = a * profitPerTH * btcPrice;
-    const monthlyIncome = dailyIncome * 30.5;
-    const yearlyIncome = dailyIncome * 365;
-
-    const dailyElectricityCost = ((b / 1000) * h * 24) / usdtPrice;
+    const dailyElectricityCost = ((power / 1000) * electricityCost * 24) / usdtPrice;
     const dailyProfit = dailyIncome - dailyElectricityCost;
     const monthlyProfit = dailyProfit * 30.5;
     const yearlyProfit = dailyProfit * 365;
-    const roi = (dailyProfit * 365 / (c / usdtPrice)) * 100;
-    const payback = ((c / usdtPrice) / dailyProfit) / 30.5;
-
-    console.log("Ежедневный доход:", dailyIncome.toFixed(2));
-    console.log("Ежедневная прибыль:", dailyProfit.toFixed(2));
+    const roi = (yearlyProfit / (asicCost / usdtPrice)) * 100;
+    const payback = ((asicCost / usdtPrice) / dailyProfit) / 30.5;
 
     document.getElementById("income").innerText = dailyIncome.toFixed(2);
     document.getElementById("profit").innerText = dailyProfit.toFixed(2);
-    document.getElementById("incomeMonth").innerText = monthlyIncome.toFixed(2);
-    document.getElementById("incomeYear").innerText = yearlyIncome.toFixed(2);
+    document.getElementById("incomeMonth").innerText = (dailyIncome * 30.5).toFixed(2);
+    document.getElementById("incomeYear").innerText = (dailyIncome * 365).toFixed(2);
     document.getElementById("profitMonth").innerText = monthlyProfit.toFixed(2);
     document.getElementById("profitYear").innerText = yearlyProfit.toFixed(2);
     document.getElementById("roi").innerText = roi.toFixed(2);
