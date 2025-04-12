@@ -43,6 +43,44 @@ async function fetchData() {
   }
 }
 
+async function fetchData() {
+  try {
+    const response = await fetch("https://hamsauno.github.io/Miner/kursBTC.txt");
+    const data = (await response.text()).trim().split("\n");
+
+    console.log("✅ Загруженные строки из kursBTC.txt:", data);
+
+    if (data.length >= 9) {
+      const values = {
+        btcPrice: parseFloat(data[0]),
+        usdtPrice: parseFloat(data[1]),
+        profitPerTH: parseFloat(data[2]),
+        ltcPrice: parseFloat(data[3]),
+        dogePrice: parseFloat(data[4]),
+        bellPrice: parseFloat(data[5]),
+        profitPerLTC: parseFloat(data[6]),
+        profitPerDOGE: parseFloat(data[7]),
+        profitPerBELL: parseFloat(data[8]),
+      };
+
+      Object.entries(values).forEach(([id, val]) => {
+        const el = document.getElementById(id);
+        if (el && !isNaN(val)) {
+          el.value = val.toFixed(id.startsWith("profit") ? 8 : 2);
+        } else {
+          console.warn(`⚠️ Не удалось установить значение для ${id}`, val);
+        }
+      });
+
+      console.log("📥 Значения из TXT успешно загружены:", values);
+    } else {
+      console.warn("❗ Недостаточно строк в kursBTC.txt");
+    }
+  } catch (e) {
+    console.error("❌ Ошибка загрузки kursBTC.txt:", e);
+  }
+}
+
 async function onAlgorithmChange() {
   const algorithmSelect = document.getElementById("algorithmSelect");
   currentAlgorithm = algorithmSelect.value;
