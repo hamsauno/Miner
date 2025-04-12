@@ -16,19 +16,20 @@
 </head>
 <body>
 
-<div class="max-w-2xl mx-auto bg-white shadow-lg rounded-2xl p-6 space-y-6 dark:bg-gray-900 dark:text-white">
+<div class="max-w-2xl mx-auto bg-[#333333] text-white shadow-lg rounded-2xl p-6 space-y-6">
   <div class="space-y-4">
+
     <div>
-      <label for="algorithmSelect" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Алгоритм</label>
-      <select id="algorithmSelect" class="w-full mt-1 rounded-lg border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:border-gray-600">
+      <label for="algorithmSelect" class="block text-sm font-medium">Алгоритм</label>
+      <select id="algorithmSelect" class="w-full mt-1 rounded-lg border-gray-300 text-black">
         <option value="SHA-256">SHA-256</option>
         <option value="Scrypt">Scrypt</option>
       </select>
     </div>
 
     <div>
-      <label for="manufacturerSelect" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Производитель</label>
-      <select id="manufacturerSelect" class="w-full mt-1 rounded-lg border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:border-gray-600">
+      <label for="manufacturerSelect" class="block text-sm font-medium">Производитель</label>
+      <select id="manufacturerSelect" class="w-full mt-1 rounded-lg border-gray-300 text-black">
         <option value="antminer">Bitmain Antminer</option>
         <option value="whatsminer">MicroBT Whatsminer</option>
         <option value="avalon">Canaan Avalon</option>
@@ -36,30 +37,34 @@
     </div>
 
     <div>
-      <label for="asicModel" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Модель Асика</label>
-      <select id="asicModel" class="w-full mt-1 rounded-lg border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:border-gray-600">
+      <label for="asicModel" class="block text-sm font-medium">Модель Асика</label>
+      <select id="asicModel" class="w-full mt-1 rounded-lg border-gray-300 text-black">
         <!-- Модели будут добавляться динамически -->
       </select>
     </div>
 
-    <div class="flex justify-between items-center">
-      <label class="text-sm font-medium">Хэшрейт:</label>
-      <div><span id="hashrate" class="font-semibold"></span> <span id="edprice"></span></div>
+    <!-- Хэшрейт и Потребление -->
+    <div class="flex justify-between gap-4">
+      <div class="flex-1">
+        <label class="text-sm font-medium">Хэшрейт:</label>
+        <div><span id="hashrate" class="font-semibold"></span> <span id="edprice"></span></div>
+      </div>
+      <div class="flex-1">
+        <label class="text-sm font-medium">Потребление:</label>
+        <div><span id="power" class="font-semibold"></span> Вт</div>
+      </div>
     </div>
 
-    <div class="flex justify-between items-center">
-      <label class="text-sm font-medium">Потребление:</label>
-      <div><span id="power" class="font-semibold"></span> Вт</div>
-    </div>
-
-    <div>
-      <label for="electricityCost" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Стоимость розетки (руб)</label>
-      <input type="number" id="electricityCost" value="5" inputmode="numeric" class="w-full mt-1 rounded-lg border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:border-gray-600">
-    </div>
-
-    <div>
-      <label for="asicCost" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Стоимость Асика (руб)</label>
-      <input type="number" id="asicCost" inputmode="numeric" class="w-full mt-1 rounded-lg border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:border-gray-600">
+    <!-- Стоимость розетки и Асика -->
+    <div class="flex justify-between gap-4">
+      <div class="flex-1">
+        <label for="electricityCost" class="block text-sm font-medium">Стоимость розетки (руб)</label>
+        <input type="number" id="electricityCost" value="5" inputmode="numeric" class="w-full mt-1 rounded-lg border-gray-300 text-black">
+      </div>
+      <div class="flex-1">
+        <label for="asicCost" class="block text-sm font-medium">Стоимость Асика (руб)</label>
+        <input type="number" id="asicCost" inputmode="numeric" class="w-full mt-1 rounded-lg border-gray-300 text-black">
+      </div>
     </div>
 
     <!-- Скрытые поля -->
