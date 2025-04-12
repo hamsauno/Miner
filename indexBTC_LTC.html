@@ -14,79 +14,86 @@
 </head>
 <body>
 
-<div class="max-w-3xl mx-auto bg-white shadow-lg rounded-2xl p-6 space-y-4">
-  <h2 class="text-xl font-bold text-gray-800 mb-4">Калькулятор доходности</h2>
+  <div class="w-full max-w-2xl bg-white p-6 rounded-2xl shadow-xl space-y-5">
+    <h1 class="text-2xl font-bold text-center text-blue-600">Калькулятор доходности ASIC</h1>
 
-  <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-    <div>
-      <label for="algorithmSelect" class="block text-sm font-medium text-gray-700">Алгоритм</label>
-      <select id="algorithmSelect" class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500">
-        <option value="SHA-256">SHA-256</option>
-        <option value="Scrypt">Scrypt</option>
-      </select>
-    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <!-- Алгоритм -->
+      <div>
+        <label for="algorithmSelect" class="block text-sm font-semibold mb-1">Алгоритм:</label>
+        <select id="algorithmSelect" class="w-full rounded-xl border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500">
+          <option value="SHA-256">SHA-256</option>
+          <option value="Scrypt">Scrypt</option>
+        </select>
+      </div>
 
-    <div>
-      <label for="manufacturerSelect" class="block text-sm font-medium text-gray-700">Производитель</label>
-      <select id="manufacturerSelect" class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500">
-        <option value="antminer">Bitmain Antminer</option>
-        <option value="whatsminer">MicroBT Whatsminer</option>
-        <option value="avalon">Canaan Avalon</option>
-      </select>
-    </div>
+      <!-- Производитель -->
+      <div>
+        <label for="manufacturerSelect" class="block text-sm font-semibold mb-1">Производитель:</label>
+        <select id="manufacturerSelect" class="w-full rounded-xl border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500">
+          <option value="antminer">Bitmain Antminer</option>
+          <option value="whatsminer">MicroBT Whatsminer</option>
+          <option value="avalon">Canaan Avalon</option>
+        </select>
+      </div>
 
-    <div>
-      <label for="asicModel" class="block text-sm font-medium text-gray-700">Модель Асика</label>
-      <select id="asicModel" class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500">
-        <!-- Модели будут добавляться динамически -->
-      </select>
-    </div>
+      <!-- Модель -->
+      <div>
+        <label for="asicModel" class="block text-sm font-semibold mb-1">Модель Асика:</label>
+        <select id="asicModel" class="w-full rounded-xl border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500">
+          <!-- Модели будут подгружаться -->
+        </select>
+      </div>
 
-    <div>
-      <label class="block text-sm font-medium text-gray-700">Хэшрейт</label>
-      <div class="mt-1 text-gray-800">
-        <span id="hashrate" class="font-semibold"></span>
-        <span id="edprice" class="text-sm text-gray-500"></span>
+      <!-- Хэшрейт -->
+      <div>
+        <label class="block text-sm font-semibold mb-1">Хэшрейт:</label>
+        <div class="flex items-center space-x-2">
+          <span id="hashrate" class="font-medium text-blue-600">-</span>
+          <span id="edprice" class="text-sm text-gray-500">TH/s</span>
+        </div>
+      </div>
+
+      <!-- Потребление -->
+      <div>
+        <label class="block text-sm font-semibold mb-1">Потребление:</label>
+        <div class="flex items-center space-x-2">
+          <span id="power" class="font-medium text-blue-600">-</span>
+          <span class="text-sm text-gray-500">Вт</span>
+        </div>
+      </div>
+
+      <!-- Стоимость розетки -->
+      <div>
+        <label for="electricityCost" class="block text-sm font-semibold mb-1">Стоимость розетки (₽):</label>
+        <input type="number" id="electricityCost" value="5" inputmode="numeric" class="w-full rounded-xl border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500">
+      </div>
+
+      <!-- Стоимость Асика -->
+      <div>
+        <label for="asicCost" class="block text-sm font-semibold mb-1">Стоимость Асика (₽):</label>
+        <input type="number" id="asicCost" inputmode="numeric" class="w-full rounded-xl border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500">
       </div>
     </div>
 
-    <div>
-      <label class="block text-sm font-medium text-gray-700">Потребление</label>
-      <div class="mt-1 text-gray-800">
-        <span id="power" class="font-semibold"></span>
-        <span class="text-sm text-gray-500">Вт</span>
-      </div>
+    <!-- Скрытые поля -->
+    <div class="hidden">
+      <input type="hidden" id="btcPrice">
+      <input type="hidden" id="usdtPrice">
+      <input type="hidden" id="profitPerTH">
+      <input type="hidden" id="ltcPrice">
+      <input type="hidden" id="dogePrice">
+      <input type="hidden" id="bellPrice">
+      <input type="hidden" id="profitPerLTC">
+      <input type="hidden" id="profitPerDOGE">
+      <input type="hidden" id="profitPerBELL">
     </div>
 
-    <div>
-      <label for="electricityCost" class="block text-sm font-medium text-gray-700">Стоимость розетки (руб)</label>
-      <input type="number" id="electricityCost" value="5" inputmode="numeric"
-        class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500">
-    </div>
-
-    <div>
-      <label for="asicCost" class="block text-sm font-medium text-gray-700">Стоимость Асика (руб)</label>
-      <input type="number" id="asicCost" inputmode="numeric"
-        class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500">
+    <!-- Кнопка расчёта -->
+    <div class="text-center">
+      <button id="calculateBtn" class="px-6 py-2 bg-blue-600 text-white font-semibold rounded-xl hover:bg-blue-700 transition">Рассчитать</button>
     </div>
   </div>
-
-  <!-- Скрытые поля -->
-  <input type="hidden" id="btcPrice">
-  <input type="hidden" id="usdtPrice">
-  <input type="hidden" id="profitPerTH">
-  <input type="hidden" id="ltcPrice">
-  <input type="hidden" id="dogePrice">
-  <input type="hidden" id="bellPrice">
-  <input type="hidden" id="profitPerLTC">
-  <input type="hidden" id="profitPerDOGE">
-  <input type="hidden" id="profitPerBELL">
-
-  <div class="pt-4">
-    <button id="calculateBtn"
-      class="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition">Рассчитать</button>
-  </div>
-</div>
 
     <table class="result-table">
         <thead>
