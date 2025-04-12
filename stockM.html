@@ -6,24 +6,23 @@
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <link rel="icon" href="data:,">
     <link rel="stylesheet" href="css/bgscrol.css">
-    <link rel="stylesheet" href="css/stockM.css">
-    <script src="js/priceUSDT.js" defer></script><!--Загрузка курса USDT-->
-    <script src="js/stockM.js" defer></script><!--  Загрузка прайса-->
-    <script src="js/modelclose.js" defer></script><!--  закрытие  карточки товара-->
+    <script src="https://cdn.tailwindcss.com"></script>
 
 </head>
-<body>
-                
+<body class="bg-gray-100">
 
-    <div id="container"></div>
+  <!-- Кнопки выбора типа -->
+  <div class="sticky top-0 bg-white shadow z-10 p-4 flex gap-4 justify-center">
+    <button class="type-btn bg-blue-500 text-white px-4 py-2 rounded" data-type="Наличие">Наличие</button>
+    <button class="type-btn bg-blue-500 text-white px-4 py-2 rounded" data-type="В пути">В пути</button>
+    <button class="type-btn bg-blue-500 text-white px-4 py-2 rounded" data-type="Предзаказ">Предзаказ</button>
+  </div>
 
-    <!-- Модальное окно карточки товара -->
-    <div id="product-modal" class="modal">
-      <div class="modal-content">
-        <span class="close-button">&times;</span>
-        <div id="modal-body"></div>
-      </div>
-    </div>
+  <!-- Блок производителей -->
+  <div id="manufacturers" class="p-4 flex gap-2 overflow-x-auto"></div>
+
+  <!-- Блок моделей -->
+  <div id="models" class="p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
 
 </body>
 </html>
