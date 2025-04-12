@@ -1,46 +1,146 @@
-let jsonData = [];
-let currentAlgorithm = "SHA-256";
-
-document.addEventListener("DOMContentLoaded", async () => {
-  console.log("Загрузка страницы...");
-
+document.addEventListener("DOMContentLoaded", function () {
   const algorithmSelect = document.getElementById("algorithmSelect");
   const manufacturerSelect = document.getElementById("manufacturerSelect");
-  const asicModel = document.getElementById("asicModel");
-  const calcBtn = document.getElementById("calculateBtn");
+  const modelSelect = document.getElementById("modelSelect");
 
-  if (!algorithmSelect || !manufacturerSelect || !asicModel || !calcBtn) {
-    console.error("❌ Один из элементов не найден");
+  algorithmSelect.addEventListener("change", () => {
+    updateManufacturers(algorithmSelect.value);
+  });
+
+  manufacturerSelect.addEventListener("change", () => {
+    updateModels(algorithmSelect.value, manufacturerSelect.value);
+  });
+
+  modelSelect.addEventListener("change", () => {
+    updateModelData(algorithmSelect.value, manufacturerSelect.value, modelSelect.value);
+  });
+
+  fetch("https://hamsauno.github.io/Miner/calc.json")
+    .then((response) => response.json())
+    .then((data) => {
+      jsonData = data;
+      updateManufacturers(algorithmSelect.value);
+    });
+
+  fetchData();
+});
+
+let jsonData;
+let currentAlgorithm = "";
+
+function updateManufacturers(algorithm) {
+  currentAlgorithm = algorithm;
+  const manufacturerSelect = document.getElementById("manufacturerSelect");
+  const manufacturers = new Set();
+
+  jsonData["Расчёты"].forEach((item) => {
+    if (item["Алгоритм"] === algorithm) {
+      manufacturers.add(item["Производитель"]);
+    }
+  });
+
+  manufacturerSelect.innerHTML = [...manufacturers]
+    .map((manufacturer) => `<option value="${manufacturer}">${manufacturer}</option>`)
+    .join("");
+
+  if (manufacturers.size > 0) {
+    updateModels(algorithm, manufacturerSelect.value);
+  } else {
+    document.getElementById("modelSelect").innerHTML = "";
+  }
+}
+
+function updateModels(algorithm, manufacturer) {
+  const modelSelect = document.getElementById("modelSelect");
+  const models = jsonData["Расчёты"]
+    .filter((item) => item["Алгоритм"] === algorithm && item["Производитель"] === manufacturer)
+    .map((item) => item["Модель"]);
+
+  modelSelect.innerHTML = models
+    .map((model) => `<option value="${model}">${model}</option>`)
+    .join("");
+
+  if (models.length > 0) {
+    updateModelData(algorithm, manufacturer, models[0]);
+  }
+}
+
+function updateModelData(algorithm, manufacturer, model) {
+  const selected = jsonData["Расчёты"].find(
+    (item) =>
+      item["Алгоритм"] === algorithm &&
+      item["Производитель"] === manufacturer &&
+      item["Модель"] === model
+  );
+
+  if (selected) {
+    document.getElementById("hashrate").textContent = selected["Хешрейт"];
+    document.getElementById("unit").textContent = selected["Ед. изм."];
+    document.getElementById("power").textContent = selected["Потребление"];
+    document.getElementById("asicCost").value = selected["Цена"];
+    calculateProfit();
+  }
+}
+
+function calculateProfit() {
+  const usdtPrice = parseFloat(document.getElementById("usdtPrice").value);
+  const hashrate = parseFloat(document.getElementById("hashrate").textContent);
+  const power = parseFloat(document.getElementById("power").textContent);
+  const electricityCost = parseFloat(document.getElementById("electricityCost").value);
+  const asicCost = parseFloat(document.getElementById("asicCost").value);
+
+  if ([hashrate, power, electricityCost, asicCost].some(isNaN)) {
+    alert("Некорректные данные для расчёта");
     return;
   }
 
-  algorithmSelect.addEventListener("change", onAlgorithmChange);
-  manufacturerSelect.addEventListener("change", updateModelList);
-  asicModel.addEventListener("change", updateAsicSpecs);
-  calcBtn.addEventListener("click", calculateProfit);
+  let dailyIncome = 0;
 
-  await fetchData();
-  await onAlgorithmChange(); // начальная инициализация
-});
+  if (currentAlgorithm === "SHA-256") {
+    const btcPrice = parseFloat(document.getElementById("btcPrice").value);
+    const profitPerTH = parseFloat(document.getElementById("profitPerTH").value);
 
-async function fetchData() {
-  try {
-    const response = await fetch("https://hamsauno.github.io/Miner/kursBTC.txt");
-    const data = (await response.text()).trim().split("\n");
+    console.log("🔢 SHA-256 расчёт:");
+    console.log("Hashrate:", hashrate);
+    console.log("Profit/TH:", profitPerTH);
+    console.log("BTC Price:", btcPrice);
 
-    if (data.length >= 9) {
-      [
-        "btcPrice", "usdtPrice", "profitPerTH",
-        "ltcPrice", "dogePrice", "bellPrice",
-        "profitPerLTC", "profitPerDOGE", "profitPerBELL"
-      ].forEach((id, i) => {
-        const input = document.getElementById(id);
-        if (input) input.value = parseFloat(data[i]).toFixed(i < 6 ? 2 : 8);
-      });
+    if (!isNaN(hashrate) && !isNaN(profitPerTH) && !isNaN(btcPrice)) {
+      dailyIncome = hashrate * profitPerTH * btcPrice;
+    } else {
+      console.warn("⚠️ Пропущены данные SHA-256 для расчёта");
+      return;
     }
-  } catch (e) {
-    console.error("Ошибка загрузки курса:", e);
+  } else if (currentAlgorithm === "Scrypt") {
+    const ltcPrice = parseFloat(document.getElementById("ltcPrice").value);
+    const dogePrice = parseFloat(document.getElementById("dogePrice").value);
+    const bellPrice = parseFloat(document.getElementById("bellPrice").value);
+    const profitPerLTC = parseFloat(document.getElementById("profitPerLTC").value);
+    const profitPerDOGE = parseFloat(document.getElementById("profitPerDOGE").value);
+    const profitPerBELL = parseFloat(document.getElementById("profitPerBELL").value);
+
+    console.log("🔢 Scrypt расчёт:");
+    dailyIncome =
+      (hashrate * profitPerLTC * ltcPrice) +
+      (hashrate * profitPerDOGE * dogePrice) +
+      (hashrate * profitPerBELL * bellPrice);
   }
+
+  const dailyElectricityCost = ((power / 1000) * electricityCost * 24) / usdtPrice;
+  const dailyProfit = dailyIncome - dailyElectricityCost;
+  const monthlyProfit = dailyProfit * 30.5;
+  const yearlyProfit = dailyProfit * 365;
+  const roi = (yearlyProfit / (asicCost / usdtPrice)) * 100;
+  const payback = ((asicCost / usdtPrice) / dailyProfit) / 30.5;
+
+  document.getElementById("income").innerText = dailyIncome.toFixed(2);
+  document.getElementById("profit").innerText = dailyProfit.toFixed(2);
+  document.getElementById("incomeMonth").innerText = (dailyIncome * 30.5).toFixed(2);
+  document.getElementById("incomeYear").innerText = (dailyIncome * 365).toFixed(2);
+  document.getElementById("profitMonth").innerText = monthlyProfit.toFixed(2);
+  document.getElementById("profitYear").innerText = yearlyProfit.toFixed(2);
+  document.getElementById("roi").innerText = roi.toFixed(2);
+  document.getElementById("payback").innerText = payback.toFixed(0);
 }
 
 async function fetchData() {
@@ -79,117 +179,4 @@ async function fetchData() {
   } catch (e) {
     console.error("❌ Ошибка загрузки kursBTC.txt:", e);
   }
-}
-
-async function onAlgorithmChange() {
-  const algorithmSelect = document.getElementById("algorithmSelect");
-  currentAlgorithm = algorithmSelect.value;
-  await fetchJsonData();
-
-  const manufacturerSelect = document.getElementById("manufacturerSelect");
-  const uniqueManufacturers = [...new Set(jsonData.map(item => item["Производитель"].toLowerCase()))];
-  manufacturerSelect.innerHTML = "";
-
-  uniqueManufacturers.forEach(m => {
-    const opt = document.createElement("option");
-    opt.value = m;
-    opt.textContent = m.charAt(0).toUpperCase() + m.slice(1);
-    manufacturerSelect.appendChild(opt);
-  });
-
-  if (uniqueManufacturers.length > 0) {
-    manufacturerSelect.value = uniqueManufacturers[0];
-    updateModelList(); // и модель подтягивается
-  }
-}
-
-async function fetchJsonData() {
-  try {
-    const response = await fetch("https://hamsauno.github.io/Miner/json/calc.json");
-    const data = await response.json();
-    jsonData = data["Расчёты"].filter(item => item["Алгоритм"] === currentAlgorithm);
-    console.log("Загруженные данные по", currentAlgorithm, jsonData);
-  } catch (e) {
-    console.error("Ошибка загрузки JSON:", e);
-  }
-}
-
-function updateModelList() {
-  const manufacturer = document.getElementById("manufacturerSelect").value;
-  const modelSelect = document.getElementById("asicModel");
-  modelSelect.innerHTML = "";
-
-  const models = jsonData.filter(item => item["Производитель"].toLowerCase() === manufacturer);
-  models.forEach(item => {
-    const opt = document.createElement("option");
-    opt.value = `${item["Модель"]}|${item["Хешрейт"]}`;
-    opt.textContent = `${item["Модель"]} (${item["Хешрейт"]} ${item["Ед. изм."]})`;
-    modelSelect.appendChild(opt);
-  });
-
-  if (models.length > 0) {
-    modelSelect.selectedIndex = 0;
-    updateAsicSpecs();
-  }
-}
-
-function updateAsicSpecs() {
-  const modelData = document.getElementById("asicModel").value.split("|");
-  const model = modelData[0];
-  const hashrate = modelData[1];
-
-  const item = jsonData.find(i => i["Модель"] === model && i["Хешрейт"] === hashrate);
-  if (item) {
-    document.getElementById("hashrate").textContent = item["Хешрейт"];
-    document.getElementById("edprice").textContent = item["Ед. изм."];
-    document.getElementById("power").textContent = Math.round(item["Потребление"]);
-    const usdt = parseFloat(document.getElementById("usdtPrice").value);
-    document.getElementById("asicCost").value = Math.ceil(item["Цена"] * usdt / 100) * 100;
-  }
-}
-
-function calculateProfit() {
-  const usdtPrice = parseFloat(document.getElementById("usdtPrice").value);
-  const hashrate = parseFloat(document.getElementById("hashrate").textContent);
-  const power = parseFloat(document.getElementById("power").textContent);
-  const electricityCost = parseFloat(document.getElementById("electricityCost").value);
-  const asicCost = parseFloat(document.getElementById("asicCost").value);
-
-  if ([hashrate, power, electricityCost, asicCost].some(isNaN))
-    return alert("Некорректные данные");
-
-  let dailyIncome = 0;
-
-  if (currentAlgorithm === "SHA-256") {
-    const btcPrice = parseFloat(document.getElementById("btcPrice").value);
-    const profitPerTH = parseFloat(document.getElementById("profitPerTH").value);
-    dailyIncome = hashrate * profitPerTH * btcPrice;
-  } else if (currentAlgorithm === "Scrypt") {
-    const ltcPrice = parseFloat(document.getElementById("ltcPrice").value);
-    const dogePrice = parseFloat(document.getElementById("dogePrice").value);
-    const bellPrice = parseFloat(document.getElementById("bellPrice").value);
-    const profitPerLTC = parseFloat(document.getElementById("profitPerLTC").value);
-    const profitPerDOGE = parseFloat(document.getElementById("profitPerDOGE").value);
-    const profitPerBELL = parseFloat(document.getElementById("profitPerBELL").value);
-    dailyIncome =
-      (hashrate * profitPerLTC * ltcPrice) +
-      (hashrate * profitPerDOGE * dogePrice) +
-      (hashrate * profitPerBELL * bellPrice);
-  }
-
-  const dailyElectricityCost = ((power / 1000) * electricityCost * 24) / usdtPrice;
-  const dailyProfit = dailyIncome - dailyElectricityCost;
-  const monthlyProfit = dailyProfit * 30.5;
-  const yearlyProfit = dailyProfit * 365;
-  const roi = (yearlyProfit / (asicCost / usdtPrice)) * 100;
-  const payback = ((asicCost / usdtPrice) / dailyProfit) / 30.5;
-
-  document.getElementById("income").innerText = dailyIncome.toFixed(2);
-  document.getElementById("profit").innerText = dailyProfit.toFixed(2);
-  document.getElementById("incomeMonth").innerText = (dailyIncome * 30.5).toFixed(2);
-  document.getElementById("incomeYear").innerText = (dailyIncome * 365).toFixed(2);
-  document.getElementById("profitMonth").innerText = monthlyProfit.toFixed(2);
-  document.getElementById("profitYear").innerText = yearlyProfit.toFixed(2);
-  document.getElementById("roi").innerText = roi.toFixed(2);
-  document.getElementById("payback").innerText = payback.toFixed(0);
 }
