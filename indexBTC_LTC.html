@@ -16,32 +16,30 @@
 
                 <div class="header">
 
-<div class="max-w-md mx-auto bg-white p-6 rounded-2xl shadow-xl space-y-6">
+                            <div class="row">
+                               <label for="algorithmSelect">Алгоритм:</label>
+                               <select id="algorithmSelect">
+                                   <option value="SHA-256">SHA-256</option>
+                                   <option value="Scrypt">Scrypt</option>
+                               </select>
+                             </div>
+ 
+                     <div class="row">
+                         <label for="manufacturerSelect">Производитель:</label>
+                         <select id="manufacturerSelect">
+                             <option value="antminer">Bitmain Antminer</option>
+                             <option value="whatsminer">MicroBT Whatsminer</option>
+                             <option value="avalon">Canaan Avalon</option>
+                         </select>
+                     </div>
+ 
+                     <div class="row">
+                         <label for="asicModel">Модель Асика:</label>
+                         <select id="asicModel">
+                             <!-- Модели будут добавляться динамически -->
+                         </select>
+                     </div>>
 
-  <div class="space-y-2">
-    <label for="algorithmSelect" class="block text-gray-700 font-medium">Алгоритм:</label>
-    <select id="algorithmSelect" class="w-full p-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500">
-      <option value="SHA-256">SHA-256</option>
-      <option value="Scrypt">Scrypt</option>
-    </select>
-  </div>
-
-  <div class="space-y-2">
-    <label for="manufacturerSelect" class="block text-gray-700 font-medium">Производитель:</label>
-    <select id="manufacturerSelect" class="w-full p-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500">
-      <option value="antminer">Bitmain Antminer</option>
-      <option value="whatsminer">MicroBT Whatsminer</option>
-      <option value="avalon">Canaan Avalon</option>
-    </select>
-  </div>
-
-  <div class="space-y-2">
-    <label for="asicModel" class="block text-gray-700 font-medium">Модель Асика:</label>
-    <select id="asicModel" class="w-full p-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500">
-      <!-- Модели добавятся динамически -->
-    </select>
-  </div>
-</div>
                 
                     <div class="row">
                         <label for="hashrate">Хэшрейт : </label>
