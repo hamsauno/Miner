@@ -16,75 +16,82 @@
 </head>
 <body>
 
-<div class="max-w-2xl mx-auto bg-[#333333] text-white shadow-lg rounded-2xl p-6 mt-[52px] space-y-4">
-  <div class="space-y-3">
+<div class="max-w-2xl mx-auto bg-[#333333] text-white shadow-xl rounded-2xl p-6 mt-[52px] space-y-3">
+  <div class="space-y-2">
 
     <!-- Алгоритм и Производитель -->
-    <div class="flex justify-between gap-4">
-      <div class="flex-1">
-        <label for="algorithmSelect" class="block text-sm font-medium">Алгоритм</label>
-        <select id="algorithmSelect" class="w-full mt-1 rounded-lg border-gray-300 text-black">
-            <!-- Алгоритмы будут добавляться динамически -->
-            <option value="SHA-256">SHA-256</option>
-            <option value="Scrypt">SCRYPT</option>
+    <div class="flex gap-3">
+      <div class="w-1/2">
+        <label for="algorithmSelect" class="block text-base font-medium mb-1">Алгоритм</label>
+        <select id="algorithmSelect" class="w-full rounded-lg px-3 py-2 border border-gray-400 text-black focus:outline-none focus:ring-2 focus:ring-yellow-400">
+          <option value="SHA-256">SHA-256</option>
+          <option value="Scrypt">SCRYPT</option>
         </select>
       </div>
-
-      <div class="flex-1">
-        <label for="manufacturerSelect" class="block text-sm font-medium">Производитель</label>
-        <select id="manufacturerSelect" class="w-full mt-1 rounded-lg border-gray-300 text-black">
-            <!-- Производители будут добавляться динамически -->
+      <div class="w-1/2">
+        <label for="manufacturerSelect" class="block text-base font-medium mb-1">Производитель</label>
+        <select id="manufacturerSelect" class="w-full rounded-lg px-3 py-2 border border-gray-400 text-black focus:outline-none focus:ring-2 focus:ring-yellow-400">
+          <!-- Производители будут добавляться динамически -->
         </select>
       </div>
     </div>
 
+    <!-- Модель Асика -->
     <div>
-      <label for="asicModel" class="block text-sm font-medium">Модель Асика</label>
-      <select id="asicModel" class="w-full mt-1 rounded-lg border-gray-300 text-black">
+      <label for="asicModel" class="block text-base font-medium mb-1">Модель Асика</label>
+      <select id="asicModel" class="w-full rounded-lg px-3 py-2 border border-gray-400 text-black focus:outline-none focus:ring-2 focus:ring-yellow-400">
         <!-- Модели будут добавляться динамически -->
       </select>
     </div>
 
     <!-- Хэшрейт и Потребление -->
-    <div class="flex justify-between gap-4">
-      <div class="flex-1">
-        <label class="text-sm font-medium">Хэшрейт:</label>
-        <div><span id="hashrate" class="font-semibold"></span> <span id="edprice"></span></div>
+    <div class="flex gap-3">
+      <div class="w-1/2">
+        <label class="block text-base font-medium mb-1">Хэшрейт</label>
+        <div class="bg-[#444] rounded-md px-3 py-2">
+          <span id="hashrate" class="font-semibold"></span> <span id="edprice"></span>
+        </div>
       </div>
-      <div class="flex-1">
-        <label class="text-sm font-medium">Потребление:</label>
-        <div><span id="power" class="font-semibold"></span> Вт</div>
+      <div class="w-1/2">
+        <label class="block text-base font-medium mb-1">Потребление</label>
+        <div class="bg-[#444] rounded-md px-3 py-2">
+          <span id="power" class="font-semibold"></span> Вт
+        </div>
       </div>
     </div>
 
     <!-- Стоимость розетки и Асика -->
-    <div class="flex justify-between gap-4">
-      <div class="flex-1">
-        <label for="electricityCost" class="block text-sm font-medium">Стоимость розетки</label>
-        <input type="number" id="electricityCost" value="5" inputmode="numeric" class="w-full mt-1 rounded-lg border-gray-300 text-black">
+    <div class="flex gap-3">
+      <div class="w-1/2">
+        <label for="electricityCost" class="block text-base font-medium mb-1">Стоимость розетки (руб)</label>
+        <input type="number" id="electricityCost" value="5" inputmode="numeric"
+          class="w-full rounded-lg px-3 py-2 border border-gray-400 text-black focus:outline-none focus:ring-2 focus:ring-yellow-400">
       </div>
-      <div class="flex-1">
-        <label for="asicCost" class="block text-sm font-medium">Стоимость Асика</label>
-        <input type="number" id="asicCost" inputmode="numeric" class="w-full mt-1 rounded-lg border-gray-300 text-black">
+      <div class="w-1/2">
+        <label for="asicCost" class="block text-base font-medium mb-1">Стоимость Асика (руб)</label>
+        <input type="number" id="asicCost" inputmode="numeric"
+          class="w-full rounded-lg px-3 py-2 border border-gray-400 text-black focus:outline-none focus:ring-2 focus:ring-yellow-400">
       </div>
     </div>
 
     <!-- Скрытые поля -->
-    <input type="hidden" id="btcPrice" readonly>
-    <input type="hidden" id="usdtPrice" readonly>
-    <input type="hidden" id="profitPerTH" readonly>
-    <input type="hidden" id="ltcPrice" readonly>
-    <input type="hidden" id="dogePrice" readonly>
-    <input type="hidden" id="bellPrice" readonly>
-    <input type="hidden" id="profitPerLTC" readonly>
-    <input type="hidden" id="profitPerDOGE" readonly>
-    <input type="hidden" id="profitPerBELL" readonly>
+    <input type="hidden" id="btcPrice">
+    <input type="hidden" id="usdtPrice">
+    <input type="hidden" id="profitPerTH">
+    <input type="hidden" id="ltcPrice">
+    <input type="hidden" id="dogePrice">
+    <input type="hidden" id="bellPrice">
+    <input type="hidden" id="profitPerLTC">
+    <input type="hidden" id="profitPerDOGE">
+    <input type="hidden" id="profitPerBELL">
 
+    <!-- Кнопка -->
     <div class="pt-2">
-        <button id="calculateBtn" class="w-full text-black font-bold py-2 px-4 rounded-lg transition duration-200"
-          style="background: linear-gradient(90deg, #F6A314, #EC7E07);">
-          Рассчитать
-        </button>
+      <button id="calculateBtn"
+        class="w-full text-black font-bold text-lg py-2 px-4 rounded-lg transition duration-300 hover:brightness-110 shadow-md"
+        style="background: linear-gradient(90deg, #F6A314, #EC7E07);">
+        Рассчитать
+      </button>
     </div>
   </div>
 </div>
