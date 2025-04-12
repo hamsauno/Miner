@@ -125,7 +125,9 @@
 }
 
 .result-table td span {
-    color: #A76729; /* Цвет значений */
+    background: linear-gradient(90deg, #F6A314, #EC7E07); /* Градиент */
+    -webkit-background-clip: text;  /* "Обрезаем" фон по тексту */
+    -webkit-text-fill-color: transparent; /* Делаем текст прозрачным, чтобы был виден фон */
     font-weight: 700; /* Жирность значений */
 }
 
