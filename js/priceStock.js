@@ -1,4 +1,4 @@
-<script>
+
 let priceUSDT = 0;
 let allData = {};
 
@@ -88,4 +88,4 @@ function showModels(type, manufacturer) {
     modelsDiv.appendChild(div);
   });
 }
-</script>
+
