@@ -16,82 +16,63 @@
 </head>
 <body>
 
-<div class="calculator-container">
-  <div class="row">
-    <label for="algorithmSelect">Алгоритм:</label>
-    <div class="icon-select">
-      <label>
-        <input type="radio" name="algorithm" value="SHA-256" checked>
-        <img src="icons/sha256.png" alt="SHA-256" title="SHA-256">
-      </label>
-      <label>
-        <input type="radio" name="algorithm" value="Scrypt">
-        <img src="icons/scrypt.png" alt="Scrypt" title="Scrypt">
-      </label>
-    </div>
-  </div>
+<div class="header">                 
+           <div class="row">
+                               <label for="algorithmSelect">Алгоритм:</label>
+                               <select id="algorithmSelect">
+                                   <option value="SHA-256">SHA-256</option>
+                                   <option value="Scrypt">Scrypt</option>
+                               </select>
+                             </div>
+     
+                     <div class="row">
+                         <label for="manufacturerSelect">Производитель:</label>
+                         <select id="manufacturerSelect">
+                             <option value="antminer">Bitmain Antminer</option>
+                             <option value="whatsminer">MicroBT Whatsminer</option>
+                             <option value="avalon">Canaan Avalon</option>
+                         </select>
+                     </div>
+                     
+                     <div class="row">
+                         <label for="asicModel">Модель Асика:</label>
+                         <select id="asicModel">
+                             <!-- Модели будут добавляться динамически -->
+                         </select>
+                     </div>
 
-  <div class="row">
-    <label for="manufacturerSelect">Производитель:</label>
-    <div class="icon-select">
-      <label>
-        <input type="radio" name="manufacturer" value="antminer" checked>
-        <img src="icons/bitmain.png" alt="Bitmain" title="Bitmain Antminer">
-      </label>
-      <label>
-        <input type="radio" name="manufacturer" value="whatsminer">
-        <img src="icons/whatsminer.png" alt="Whatsminer" title="MicroBT Whatsminer">
-      </label>
-      <label>
-        <input type="radio" name="manufacturer" value="avalon">
-        <img src="icons/avalon.png" alt="Avalon" title="Canaan Avalon">
-      </label>
-    </div>
-  </div>
-
-  <div class="row">
-    <label for="asicModel">Модель Асика:</label>
-    <select id="asicModel">
-      <!-- Динамическая подгрузка -->
-    </select>
-  </div>
-
-  <div class="row data-output">
-    <label>Хэшрейт:</label>
-    <span id="hashrate">—</span><span id="edprice"></span>
-  </div>
-
-  <div class="row data-output">
-    <label>Потребление:</label>
-    <span id="power">—</span> Вт
-  </div>
-
-  <div class="row">
-    <label for="electricityCost">Стоимость розетки (₽):</label>
-    <input type="number" id="electricityCost" value="5" inputmode="numeric">
-  </div>
-
-  <div class="row">
-    <label for="asicCost">Стоимость Асика (₽):</label>
-    <input type="number" id="asicCost" inputmode="numeric">
-  </div>
-
-  <button id="calculateBtn">Рассчитать</button>
-
-  <!-- Скрытые поля -->
-  <div class="hidden">
-    <input type="hidden" id="btcPrice">
-    <input type="hidden" id="usdtPrice">
-    <input type="hidden" id="profitPerTH">
-    <input type="hidden" id="ltcPrice">
-    <input type="hidden" id="dogePrice">
-    <input type="hidden" id="bellPrice">
-    <input type="hidden" id="profitPerLTC">
-    <input type="hidden" id="profitPerDOGE">
-    <input type="hidden" id="profitPerBELL">
-  </div>
-</div>
-
+                    <div class="row">
+                         <label for="hashrate">Хэшрейт : </label>
+                         <span id="hashrate"></span><span id="edprice"></span>
+                     </div>
+ 
+                     <div class="row">
+                         <label for="power">Потребление : </label>
+                         <span id="power"></span> <span>Вт</span>
+                     </div>
+ 
+                     <div class="row">
+                         <label for="electricityCost">Стоимость розетки (руб):</label>
+                         <input type="number" id="electricityCost" value="5" inputmode="numeric">
+                     </div>
+ 
+                     <div class="row">
+                         <label for="asicCost">Стоимость Асика (руб):</label>
+                         <input type="number" id="asicCost" inputmode="numeric">
+                     </div>
+ 
+                     <label><input type="hidden" id="btcPrice" readonly></label>
+                     <label><input type="hidden" id="usdtPrice" readonly></label>
+                     <label><input type="hidden" id="profitPerTH"readonly ></label>
+                     <label><input type="hidden" id="ltcPrice" readonly></label>
+                     <label><input type="hidden" id="dogePrice" readonly></label>
+                     <label><input type="hidden" id="bellPrice" readonly></label>
+                     <label><input type="hidden" id="profitPerLTC" readonly></label>
+                     <label><input type="hidden" id="profitPerDOGE" readonly></label>
+                     <label><input type="hidden" id="profitPerBELL" readonly></label>
+ 
+                     <button id="calculateBtn">Рассчитать</button>
+                 </div>
     <table class="result-table">
         <thead>
             <tr>
