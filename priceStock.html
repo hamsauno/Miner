@@ -14,25 +14,25 @@
 
 </head>
 <body class="bg-[#222222] pt-[52px] text-white font-[Arial]">
-  <!-- Контейнер -->
   <div class="max-w-screen-xl mx-auto px-4">
     
     <!-- Кнопки выбора типа -->
     <div class="sticky top-0 z-10 p-4 flex gap-4 justify-center bg-[#222222] shadow">
-      <button class="type-btn bg-[#333333] hover:opacity-80 text-white px-4 py-1.5 rounded tracking-wide text-[15px] font-semibold font-[Arial]" data-type="Наличие">Наличие</button>
-      <button class="type-btn bg-[#333333] hover:opacity-80 text-white px-4 py-1.5 rounded tracking-wide text-[15px] font-semibold font-[Arial]" data-type="В пути">В пути</button>
-      <button class="type-btn bg-[#333333] hover:opacity-80 text-white px-4 py-1.5 rounded tracking-wide text-[15px] font-semibold font-[Arial]" data-type="Предзаказ">Предзаказ</button>
+      <button class="type-btn bg-[#333333] text-white px-4 py-1.5 rounded font-semibold tracking-wide text-sm" data-type="Наличие">Наличие</button>
+      <button class="type-btn bg-[#333333] text-white px-4 py-1.5 rounded font-semibold tracking-wide text-sm" data-type="В пути">В пути</button>
+      <button class="type-btn bg-[#333333] text-white px-4 py-1.5 rounded font-semibold tracking-wide text-sm" data-type="Предзаказ">Предзаказ</button>
     </div>
 
     <!-- Блок производителей -->
-    <div id="manufacturers" class="p-4 flex flex-wrap gap-2 justify-center">
-      <!-- Пример кнопки будет добавлен через JS -->
-    </div>
+    <div id="manufacturers" class="p-4 flex flex-wrap gap-2 justify-center"></div>
 
     <!-- Блок моделей -->
-    <div id="models" class="p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-      <!-- Пример карточек моделей добавится через JS -->
-    </div>
+    <div id="models" class="p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+  </div>
+
+  <!-- Модалка -->
+  <div id="product-modal" class="fixed inset-0 bg-black bg-opacity-50 items-center justify-center hidden z-50">
+    <div class="bg-white text-black p-6 rounded-lg w-[90%] max-w-md" id="modal-body"></div>
   </div>
 </body>
 </html>
