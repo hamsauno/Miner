@@ -40,7 +40,7 @@ function showManufacturers(type) {
 
   manufacturers.forEach(m => {
     const btn = document.createElement('button');
-    btn.className = "bg-gradient-to-r from-[#F6A314] to-[#EC7E07] text-black font-bold px-4 py-2 rounded min-w-[120px] text-center whitespace-nowrap hover:opacity-90 flex-shrink-0";
+    btn.className = "bg-gradient-to-r from-[#F6A314] to-[#EC7E07] text-black font-bold py-2 px-3 rounded text-center hover:opacity-90 w-full";
     btn.innerText = m;
     btn.addEventListener('click', () => showModels(type, m));
     manufacturersDiv.appendChild(btn);
