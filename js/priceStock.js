@@ -55,7 +55,7 @@ function showModels(type, manufacturer) {
 
   filtered.forEach(item => {
     const div = document.createElement('div');
-    div.className = "item bg-[#333333] p-4 rounded shadow cursor-pointer text-white transform opacity-0 scale-95 transition-all duration-300";
+    div.className = "item bg-[#333333] p-4 rounded shadow cursor-pointer text-white text-sm transform opacity-0 scale-95 transition-all duration-300";
 
     const model = item["Модель"] || "Неизвестно";
     const hash = item["Хешрейт"];
