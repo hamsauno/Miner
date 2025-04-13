@@ -73,6 +73,22 @@ div.addEventListener('click', () => {
 
   const telegramLink = `https://t.me/LEGIT_Mining_APP_Bot?start=main_5765882132`;
 
+  const gtdPrice = item["Цена ГТД РФ"];
+  const gtdNdsPrice = item["Цена с ГТД РФ и НДС"];
+
+  // Проверим, выбрана ли категория "Предзаказ"
+  const isPreorder = type === 'Предзаказ';
+
+  let gtdHTML = '';
+  if (isPreorder && (gtdPrice || gtdNdsPrice)) {
+    const gtdPriceFormatted = gtdPrice ? `${Math.ceil((parseFloat(gtdPrice) * priceUSDT) / 100) * 100} ₽ (${gtdPrice} $)` : '';
+    const gtdNdsPriceFormatted = gtdNdsPrice ? `${Math.ceil((parseFloat(gtdNdsPrice) * priceUSDT) / 100) * 100} ₽ (${gtdNdsPrice} $)` : '';
+    gtdHTML = `
+      ${gtdPrice ? `<p><strong>Цена ГТД РФ:</strong> ${gtdPriceFormatted}</p>` : ''}
+      ${gtdNdsPrice ? `<p><strong>С ГТД РФ и НДС:</strong> ${gtdNdsPriceFormatted}</p>` : ''}
+    `;
+  }
+
   modalBody.innerHTML = `
     <div style="
       background-color: #222222;
@@ -87,6 +103,7 @@ div.addEventListener('click', () => {
       <p><strong>Потребление:</strong> ${power} Вт</p>
       <p><strong>Цена:</strong> ${rubFormatted} ₽ (${usd} $)</p>
       <p><strong>Цена с НДС:</strong> ${ndsRub.toLocaleString('ru-RU')} ₽ (${ndsUsd} $)</p>
+      ${gtdHTML}
       <a href="${telegramLink}" class="buy-button" target="_blank" style="
         display: inline-block;
         margin-top: 16px;
