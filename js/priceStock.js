@@ -67,28 +67,42 @@ function showModels(type, manufacturer) {
     const ndsUsd = Math.ceil((usd * 1.2) / 10) * 10;
     const ndsRub = Math.ceil((ndsUsd * priceUSDT) / 100) * 100;
 
-    div.innerHTML = `<p>${model} ${hash} ${unit} — ${rubFormatted} ₽</p>`;
-      setTimeout(() => {
-      div.classList.remove("opacity-0", "scale-95");
-      div.classList.add("opacity-100", "scale-100");
-      }, 50);
+div.addEventListener('click', () => {
+  const modal = document.getElementById("product-modal");
+  const modalBody = document.getElementById("modal-body");
 
-    div.addEventListener('click', () => {
-      const modal = document.getElementById("product-modal");
-      const modalBody = document.getElementById("modal-body");
+  const telegramLink = `https://t.me/LEGIT_Mining_APP_Bot?start=main_5765882132`;
 
-      const telegramLink = `https://t.me/LEGIT_Mining_APP_Bot?start=main_5765882132`;
+  modalBody.innerHTML = `
+    <div style="
+      background-color: #222222;
+      border: 1px solid;
+      border-image: linear-gradient(90deg, #F6A314, #EC7E07) 1;
+      padding: 16px;
+      border-radius: 8px;
+      color: white;
+    ">
+      <h2 style="font-weight: bold; font-size: 1.25rem;">${manufacturer} ${model}</h2>
+      <p><strong>Хешрейт:</strong> ${hash} ${unit}</p>
+      <p><strong>Потребление:</strong> ${power} Вт</p>
+      <p><strong>Цена:</strong> ${rubFormatted} ₽ (${usd} $)</p>
+      <p><strong>Цена с НДС:</strong> ${ndsRub.toLocaleString('ru-RU')} ₽ (${ndsUsd} $)</p>
+      <a href="${telegramLink}" class="buy-button" target="_blank" style="
+        display: inline-block;
+        margin-top: 16px;
+        padding: 10px 20px;
+        color: black;
+        font-weight: bold;
+        text-align: center;
+        border-radius: 6px;
+        background: linear-gradient(90deg, #F6A314, #EC7E07);
+        text-decoration: none;
+      ">Хочу купить</a>
+    </div>
+  `;
 
-      modalBody.innerHTML = `
-        <h2>${manufacturer} ${model}</h2>
-        <p><strong>Хешрейт:</strong> ${hash} ${unit}</p>
-        <p><strong>Потребление:</strong> ${power} Вт</p>
-        <p><strong>Цена:</strong> ${rubFormatted} ₽ (${usd} $)</p>
-        <p><strong>Цена с НДС:</strong> ${ndsRub.toLocaleString('ru-RU')} ₽ (${ndsUsd} $)</p>
-        <a href="${telegramLink}" class="buy-button bg-blue-500 text-white px-4 py-2 rounded inline-block mt-4" target="_blank">Хочу купить</a>
-      `;
-      modal.style.display = "flex";
-    });
+  modal.style.display = "flex";
+});
 
     modelsDiv.appendChild(div);
   });
