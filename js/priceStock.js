@@ -96,16 +96,23 @@ div.addEventListener('click', () => {
   }
 
 modalBody.innerHTML = `
-  <div class="bg-[#222222] text-white p-6 rounded-lg w-full max-w-md shadow-lg">
-    <h2 class="text-xl font-bold mb-4">${manufacturer} ${model}</h2>
+    <h2 style="font-weight: bold; font-size: 1.25rem;">${manufacturer} ${model}</h2>
     <p><strong>Хешрейт:</strong> ${hash} ${unit}</p>
     <p><strong>Потребление:</strong> ${power} Вт</p>
     <p><strong>Цена ГТД РБ:</strong> ${rubFormatted} ₽ (${usd} $)</p>
     <p><strong>Цена РБ с НДС:</strong> ${ndsRub.toLocaleString('ru-RU')} ₽ (${ndsUsd} $)</p>
     ${gtdHTML}
-    <a href="${telegramLink}" target="_blank"
-      class="inline-block mt-4 px-5 py-2 rounded font-bold text-black bg-gradient-to-r from-[#F6A314] to-[#EC7E07] hover:opacity-90 transition"
-    >Хочу купить</a>
+    <a href="${telegramLink}" class="buy-button" target="_blank" style="
+      display: inline-block;
+      margin-top: 16px;
+      padding: 10px 20px;
+      color: black;
+      font-weight: bold;
+      text-align: center;
+      border-radius: 6px;
+      background: linear-gradient(90deg, #F6A314, #EC7E07);
+      text-decoration: none;
+    ">Хочу купить</a>
   </div>
 `;
 
