@@ -67,6 +67,12 @@ function showModels(type, manufacturer) {
     const ndsUsd = Math.ceil((usd * 1.2) / 10) * 10;
     const ndsRub = Math.ceil((ndsUsd * priceUSDT) / 100) * 100;
 
+div.innerHTML = `<p>${model} ${hash} ${unit} — ${rubFormatted} ₽</p>`;
+       setTimeout(() => {
+       div.classList.remove("opacity-0", "scale-95");
+       div.classList.add("opacity-100", "scale-100");
+       }, 50);
+
 div.addEventListener('click', () => {
   const modal = document.getElementById("product-modal");
   const modalBody = document.getElementById("modal-body");
