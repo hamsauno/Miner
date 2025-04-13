@@ -88,4 +88,9 @@ function showModels(type, manufacturer) {
     modelsDiv.appendChild(div);
   });
 }
+document.getElementById("product-modal").addEventListener('click', e => {
+  if (e.target.id === "product-modal") {
+    e.currentTarget.style.display = "none";
+  }
+});
 
