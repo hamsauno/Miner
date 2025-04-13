@@ -87,11 +87,11 @@ div.addEventListener('click', () => {
 
   let gtdHTML = '';
   if (isPreorder && (gtdPrice || gtdNdsPrice)) {
-    const gtdPriceFormatted = gtdPrice ? `${Math.ceil((parseFloat(gtdPrice) * priceUSDT) / 100) * 100} ₽ (${gtdPrice} $)` : '';
+    const gtdPriceFormatted = gtdPrice ? `${(Math.ceil((parseFloat(gtdPrice) * priceUSDT) / 100) * 100).toLocaleString('ru-RU')} ₽ (${gtdPrice} $)` : '';
     const gtdNdsPriceFormatted = gtdNdsPrice ? `${Math.ceil((parseFloat(gtdNdsPrice) * priceUSDT) / 100) * 100} ₽` : '';
     gtdHTML = `
       ${gtdPrice ? `<p><strong>Цена ГТД РФ:</strong> ${gtdPriceFormatted}</p>` : ''}
-      ${gtdNdsPrice ? `<p><strong>Цна РФ с НДС:</strong> ${gtdNdsPriceFormatted}</p>` : ''}
+      ${gtdNdsPrice ? `<p><strong>Цна РФ с НДС:</strong> ${gtdNdsPriceFormatted.toLocaleString('ru-RU')}</p>` : ''}
     `;
   }
 
