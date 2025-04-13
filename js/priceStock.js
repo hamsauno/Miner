@@ -116,7 +116,7 @@ modalBody.innerHTML = `
   </div>
 `;
 
-  modal.style.display = "flex";
+  modal.classList.remove("hidden");
 });
 
     modelsDiv.appendChild(div);
@@ -124,7 +124,7 @@ modalBody.innerHTML = `
 }
 document.getElementById("product-modal").addEventListener('click', e => {
   if (e.target.id === "product-modal") {
-    e.currentTarget.style.display = "none";
+    e.currentTarget.classList.add("hidden");
   }
 });
 
