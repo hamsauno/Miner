@@ -95,34 +95,35 @@ div.addEventListener('click', () => {
     `;
   }
 
-  modalBody.innerHTML = `
-      <div style="
-      background-color: #222222;
-      color: white;
-      padding: 16px;
-      border-radius: 8px;
-      border: 1px solid;
-      border-image: linear-gradient(90deg, #F6A314, #EC7E07) 1;
-    ">
-      <h2 style="font-weight: bold; font-size: 1.25rem;">${manufacturer} ${model}</h2>
-      <p><strong>Хешрейт:</strong> ${hash} ${unit}</p>
-      <p><strong>Потребление:</strong> ${power} Вт</p>
-      <p><strong>Цена ГТД РБ:</strong> ${rubFormatted} ₽ (${usd} $)</p>
-      <p><strong>Цена РБ с НДС:</strong> ${ndsRub.toLocaleString('ru-RU')} ₽</p>
-      ${gtdHTML}
-      <a href="${telegramLink}" class="buy-button" target="_blank" style="
-        display: inline-block;
-        margin-top: 16px;
-        padding: 10px 20px;
-        color: black;
-        font-weight: bold;
-        text-align: center;
-        border-radius: 6px;
-        background: linear-gradient(90deg, #F6A314, #EC7E07);
-        text-decoration: none;
-      ">Хочу купить</a>
-    </div>
-  `;
+modalBody.innerHTML = `
+  <div style="
+    background-color: #222222;
+    color: white;
+    padding: 16px;
+    border-radius: 8px;
+    outline: none;
+    box-shadow: none;
+    border: none;
+  ">
+    <h2 style="font-weight: bold; font-size: 1.25rem;">${manufacturer} ${model}</h2>
+    <p><strong>Хешрейт:</strong> ${hash} ${unit}</p>
+    <p><strong>Потребление:</strong> ${power} Вт</p>
+    <p><strong>Цена ГТД РБ:</strong> ${rubFormatted} ₽ (${usd} $)</p>
+    <p><strong>Цена РБ с НДС:</strong> ${ndsRub.toLocaleString('ru-RU')} ₽ (${ndsUsd} $)</p>
+    ${gtdHTML}
+    <a href="${telegramLink}" class="buy-button" target="_blank" style="
+      display: inline-block;
+      margin-top: 16px;
+      padding: 10px 20px;
+      color: black;
+      font-weight: bold;
+      text-align: center;
+      border-radius: 6px;
+      background: linear-gradient(90deg, #F6A314, #EC7E07);
+      text-decoration: none;
+    ">Хочу купить</a>
+  </div>
+`;
 
   modal.style.display = "flex";
 });
