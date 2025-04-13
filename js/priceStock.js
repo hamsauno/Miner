@@ -100,7 +100,7 @@ modalBody.innerHTML = `
     <p><strong>Хешрейт:</strong> ${hash} ${unit}</p>
     <p><strong>Потребление:</strong> ${power} Вт</p>
     <p><strong>Цена ГТД РБ:</strong> ${rubFormatted} ₽ (${usd} $)</p>
-    <p><strong>Цена РБ с НДС:</strong> ${ndsRub.toLocaleString('ru-RU')} ₽ (${ndsUsd} $)</p>
+    <p><strong>Цена РБ с НДС:</strong> ${ndsRub.toLocaleString('ru-RU')} ₽</p>
     ${gtdHTML}
     <a href="${telegramLink}" class="buy-button" target="_blank" style="
       display: inline-block;
