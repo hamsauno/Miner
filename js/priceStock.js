@@ -88,10 +88,10 @@ div.addEventListener('click', () => {
   let gtdHTML = '';
   if (isPreorder && (gtdPrice || gtdNdsPrice)) {
     const gtdPriceFormatted = gtdPrice ? `${Math.ceil((parseFloat(gtdPrice) * priceUSDT) / 100) * 100} ₽ (${gtdPrice} $)` : '';
-    const gtdNdsPriceFormatted = gtdNdsPrice ? `${Math.ceil((parseFloat(gtdNdsPrice) * priceUSDT) / 100) * 100} ₽ (${gtdNdsPrice} $)` : '';
+    const gtdNdsPriceFormatted = gtdNdsPrice ? `${Math.ceil((parseFloat(gtdNdsPrice) * priceUSDT) / 100) * 100} ₽` : '';
     gtdHTML = `
       ${gtdPrice ? `<p><strong>Цена ГТД РФ:</strong> ${gtdPriceFormatted}</p>` : ''}
-      ${gtdNdsPrice ? `<p><strong>С ГТД РФ и НДС:</strong> ${gtdNdsPriceFormatted}</p>` : ''}
+      ${gtdNdsPrice ? `<p><strong>Цна РФ с НДС:</strong> ${gtdNdsPriceFormatted}</p>` : ''}
     `;
   }
 
@@ -99,8 +99,8 @@ div.addEventListener('click', () => {
       <h2 style="font-weight: bold; font-size: 1.25rem;">${manufacturer} ${model}</h2>
       <p><strong>Хешрейт:</strong> ${hash} ${unit}</p>
       <p><strong>Потребление:</strong> ${power} Вт</p>
-      <p><strong>Цена ГТД РФ:</strong> ${rubFormatted} ₽ (${usd} $)</p>
-      <p><strong>Цена с НДС:</strong> ${ndsRub.toLocaleString('ru-RU')} ₽</p>
+      <p><strong>Цена ГТД РБ:</strong> ${rubFormatted} ₽ (${usd} $)</p>
+      <p><strong>Цена РБ с НДС:</strong> ${ndsRub.toLocaleString('ru-RU')} ₽</p>
       ${gtdHTML}
       <a href="${telegramLink}" class="buy-button" target="_blank" style="
         display: inline-block;
