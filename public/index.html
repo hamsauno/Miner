@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>Профиль</title>
+</head>
+<body>
+  <form id="profileForm">
+    <input type="text" name="fullName" placeholder="ФИО" required />
+    <input type="text" name="phone" placeholder="Телефон" required />
+    <button type="submit">Сохранить</button>
+  </form>
+
+  <script>
+    const tg = window.Telegram?.WebApp || { initDataUnsafe: { user: { id: 123456 } } }; // для локального теста
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      const res = await fetch(`/api/get-profile?userId=${tg.initDataUnsafe.user.id}`);
+      const profile = await res.json();
+      if (profile) {
+        document.querySelector('[name="fullName"]').value = profile.fullName;
+        document.querySelector('[name="phone"]').value = profile.phone;
+      }
+    });
+
+    document.getElementById('profileForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const fullName = e.target.fullName.value;
+      const phone = e.target.phone.value;
+      const userId = tg.initDataUnsafe.user.id;
+
+      await fetch('/api/save-profile', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId, fullName, phone })
+      });
+
+      alert('Профиль сохранён!');
+    });
+  </script>
+</body>
+</html>
