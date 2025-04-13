@@ -99,8 +99,8 @@ div.addEventListener('click', () => {
       <h2 style="font-weight: bold; font-size: 1.25rem;">${manufacturer} ${model}</h2>
       <p><strong>Хешрейт:</strong> ${hash} ${unit}</p>
       <p><strong>Потребление:</strong> ${power} Вт</p>
-      <p><strong>Цена:</strong> ${rubFormatted} ₽ (${usd} $)</p>
-      <p><strong>Цена с НДС:</strong> ${ndsRub.toLocaleString('ru-RU')} ₽ (${ndsUsd} $)</p>
+      <p><strong>Цена ГТД РФ:</strong> ${rubFormatted} ₽ (${usd} $)</p>
+      <p><strong>Цена с НДС:</strong> ${ndsRub.toLocaleString('ru-RU')} ₽</p>
       ${gtdHTML}
       <a href="${telegramLink}" class="buy-button" target="_blank" style="
         display: inline-block;
