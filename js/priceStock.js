@@ -40,7 +40,7 @@ function showManufacturers(type) {
 
   manufacturers.forEach(m => {
     const btn = document.createElement('button');
-    btn.className = "bg-gradient-to-r from-[#F6A314] to-[#EC7E07] text-black font-bold px-4 py-2 rounded flex-1 min-w-[120px] text-center hover:opacity-90";
+    btn.className = "bg-gradient-to-r from-[#F6A314] to-[#EC7E07] text-black font-bold px-4 py-2 rounded min-w-[120px] text-center whitespace-nowrap hover:opacity-90 flex-shrink-0";
     btn.innerText = m;
     btn.addEventListener('click', () => showModels(type, m));
     manufacturersDiv.appendChild(btn);
@@ -55,7 +55,7 @@ function showModels(type, manufacturer) {
 
   filtered.forEach(item => {
     const div = document.createElement('div');
-    div.className = "item bg-[#333333] p-4 rounded shadow cursor-pointer text-white";
+    div.className = "item bg-[#333333] p-4 rounded shadow cursor-pointer text-white transform opacity-0 scale-95 transition-all duration-300";
 
     const model = item["Модель"] || "Неизвестно";
     const hash = item["Хешрейт"];
@@ -68,6 +68,11 @@ function showModels(type, manufacturer) {
     const ndsRub = Math.ceil((ndsUsd * priceUSDT) / 100) * 100;
 
     div.innerHTML = `<p>${model} ${hash} ${unit} — ${rubFormatted} ₽ | ${usd} $</p>`;
+      setTimeout(() => {
+      div.classList.remove("opacity-0", "scale-95");
+      div.classList.add("opacity-100", "scale-100");
+      }, 50);
+
     div.addEventListener('click', () => {
       const modal = document.getElementById("product-modal");
       const modalBody = document.getElementById("modal-body");
@@ -93,4 +98,5 @@ document.getElementById("product-modal").addEventListener('click', e => {
     e.currentTarget.style.display = "none";
   }
 });
+
 
