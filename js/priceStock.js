@@ -96,6 +96,14 @@ div.addEventListener('click', () => {
   }
 
   modalBody.innerHTML = `
+      <div style="
+      background-color: #222222;
+      color: white;
+      padding: 16px;
+      border-radius: 8px;
+      border: 1px solid;
+      border-image: linear-gradient(90deg, #F6A314, #EC7E07) 1;
+    ">
       <h2 style="font-weight: bold; font-size: 1.25rem;">${manufacturer} ${model}</h2>
       <p><strong>Хешрейт:</strong> ${hash} ${unit}</p>
       <p><strong>Потребление:</strong> ${power} Вт</p>
