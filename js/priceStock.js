@@ -40,7 +40,7 @@ function showManufacturers(type) {
 
   manufacturers.forEach(m => {
     const btn = document.createElement('button');
-    btn.className = "bg-gray-200 px-3 py-1 rounded hover:bg-gray-300 whitespace-nowrap";
+    btn.className = "bg-gradient-to-r from-[#F6A314] to-[#EC7E07] text-black font-bold px-4 py-2 rounded flex-1 min-w-[120px] text-center hover:opacity-90";
     btn.innerText = m;
     btn.addEventListener('click', () => showModels(type, m));
     manufacturersDiv.appendChild(btn);
@@ -55,7 +55,7 @@ function showModels(type, manufacturer) {
 
   filtered.forEach(item => {
     const div = document.createElement('div');
-    div.className = "item bg-white p-4 rounded shadow cursor-pointer";
+    div.className = "item bg-[#333333] p-4 rounded shadow cursor-pointer text-white";
 
     const model = item["Модель"] || "Неизвестно";
     const hash = item["Хешрейт"];
