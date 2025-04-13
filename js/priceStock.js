@@ -60,7 +60,7 @@ function showModels(type, manufacturer) {
     const model = item["Модель"] || "Неизвестно";
     const hash = item["Хешрейт"];
     const unit = item["Ед. изм."];
-    const power = item["Потребление"];
+    const power = Math.round(item["Потребление"]);
     const usd = parseFloat(item["Цена"]) || 0;
     const rub = Math.ceil((usd * priceUSDT) / 100) * 100;
     const rubFormatted = rub.toLocaleString('ru-RU');
