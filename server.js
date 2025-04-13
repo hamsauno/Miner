@@ -1,28 +1,22 @@
-const express = require('express');
+require('dotenv').config(); // ← Добавить в начале
+
 const mongoose = require('mongoose');
+const express = require('express');
 const bcrypt = require('bcrypt');
-const path = require('path');
+const User = require('./models/User');
+
 const app = express();
 const PORT = 3000;
 
-// Подключение к MongoDB
-mongoose.connect('mongodb://localhost:27017/minerDB', {
+// Подключение к MongoDB из .env
+mongoose.connect(process.env.MONGODB_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true
 }).then(() => console.log('MongoDB подключена'))
   .catch((err) => console.error('Ошибка подключения:', err));
 
-// Модель пользователя
-const userSchema = new mongoose.Schema({
-  name: String,
-  email: { type: String, unique: true },
-  password: String,
-});
-const User = mongoose.model('User', userSchema);
-
-// Middleware
 app.use(express.json());
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static('public'));
 
 // Роут регистрации
 app.post('/api/register', async (req, res) => {
@@ -33,10 +27,10 @@ app.post('/api/register', async (req, res) => {
   const hashedPassword = await bcrypt.hash(password, 10);
   const newUser = new User({ name, email, password: hashedPassword });
   await newUser.save();
+
   res.status(201).json({ message: 'Пользователь зарегистрирован' });
 });
 
-// Запуск сервера
 app.listen(PORT, () => {
   console.log(`Сервер запущен на http://localhost:${PORT}`);
 });
