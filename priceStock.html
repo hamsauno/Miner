@@ -14,20 +14,22 @@
 
 </head>
 <body class="bg-[#222222] pt-[52px] text-white font-[Arial]">
-  <div class="max-w-screen-xl mx-auto px-2 sm:px-4">
 
-    <!-- Кнопки выбора типа -->
-    <div class="sticky top-0 z-10 p-4 flex flex-wrap gap-3 justify-center bg-[#222222] shadow">
-      <button class="type-btn bg-[#333333] text-white px-4 py-1.5 rounded font-semibold tracking-wide text-sm" data-type="Наличие">Наличие</button>
-      <button class="type-btn bg-[#333333] text-white px-4 py-1.5 rounded font-semibold tracking-wide text-sm" data-type="В пути">В пути</button>
-      <button class="type-btn bg-[#333333] text-white px-4 py-1.5 rounded font-semibold tracking-wide text-sm" data-type="Предзаказ">Предзаказ</button>
-    </div>
+  <!-- Кнопки выбора типа — за пределами ограничителя, чтобы sticky работал -->
+  <div class="sticky top-0 z-20 p-4 flex flex-wrap gap-3 justify-center bg-[#222222] shadow">
+    <button class="type-btn bg-[#333333] text-white px-4 py-1.5 rounded font-semibold tracking-wide text-sm" data-type="Наличие">Наличие</button>
+    <button class="type-btn bg-[#333333] text-white px-4 py-1.5 rounded font-semibold tracking-wide text-sm" data-type="В пути">В пути</button>
+    <button class="type-btn bg-[#333333] text-white px-4 py-1.5 rounded font-semibold tracking-wide text-sm" data-type="Предзаказ">Предзаказ</button>
+  </div>
 
-    <!-- Блок производителей (гориз. скролл на мобилке) -->
+  <!-- Контейнер с ограничением ширины -->
+  <div class="max-w-screen-xl mx-auto px-2 sm:px-3">
+
+    <!-- Производители (2x2 или больше) -->
     <div id="manufacturers" class="p-4 grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"></div>
 
-    <!-- Блок моделей -->
-    <div id="models" class="p-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+    <!-- Модели -->
+    <div id="models" class="p-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 text-[13px] sm:text-sm md:text-base"></div>
   </div>
 
   <!-- Модалка -->
