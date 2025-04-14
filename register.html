@@ -4,15 +4,23 @@
   <meta charset="UTF-8">
   <title>Регистрация</title>
   <script src="https://cdn.tailwindcss.com"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+<script>
+  const supabaseUrl = "https://your-project.supabase.co";
+  const supabaseKey = "your_anon_public_key";
+  const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+</script>
+  
 </head>
 <body class="bg-[#222222] text-white font-[Arial] p-6">
   <h2 class="text-xl mb-4">Регистрация</h2>
 
-  <form action="https://legitmining.wuaze.com/register.php" method="POST" class="flex flex-col gap-4 max-w-xs">
+
     <input name="username" type="text" placeholder="Имя пользователя" class="p-2 text-black rounded" required>
     <input name="password" type="password" placeholder="Пароль" class="p-2 text-black rounded" required>
     <button type="submit" class="bg-green-600 py-2 rounded">Зарегистрироваться</button>
-  </form>
+
 </body>
 </html>
 
