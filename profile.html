@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Профиль</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body class="bg-[#222] text-white font-[Arial] flex flex-col items-center justify-center min-h-screen p-4">
+
+  <div class="bg-[#333] w-full max-w-md p-6 rounded-2xl shadow-md">
+    <h2 class="text-xl font-bold mb-6 text-center">Личный профиль</h2>
+    
+    <label class="block mb-2">Имя:</label>
+    <input id="fullname" type="text" placeholder="Ваше имя"
+      class="w-full mb-4 p-2 rounded bg-[#444] text-white placeholder-gray-400 outline-none" />
+
+    <label class="block mb-2">Дата рождения:</label>
+    <input id="birthdate" type="date"
+      class="w-full mb-4 p-2 rounded bg-[#444] text-white outline-none" />
+
+    <label class="block mb-2">Email:</label>
+    <input id="email" type="email" placeholder="example@email.com"
+      class="w-full mb-6 p-2 rounded bg-[#444] text-white placeholder-gray-400 outline-none" />
+
+    <button id="saveProfileBtn"
+      class="w-full bg-green-600 hover:bg-green-700 py-2 rounded font-semibold transition-all">
+      Сохранить
+    </button>
+  </div>
+
+  <script>
+    const { createClient } = supabase;
+    let supabase;
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      const supabaseUrl = "https://yiprwrgmyqlkdmhgulmc.supabase.co";
+      const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlpcHJ3cmdteXFsa2RtaGd1bG1jIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ2NTI0NjgsImV4cCI6MjA2MDIyODQ2OH0.lfiTfr5ukGDEVuwq-X9U2kWs3nEZrp3N443HT5AkbfI";
+      supabase = createClient(supabaseUrl, supabaseKey);
+
+      const tg = window.Telegram.WebApp;
+      tg.ready();
+
+      const telegramId = tg.initDataUnsafe?.user?.id;
+
+      document.getElementById("saveProfileBtn").addEventListener("click", async () => {
+        const fullname = document.getElementById("fullname").value.trim();
+        const birthdate = document.getElementById("birthdate").value.trim();
+        const email = document.getElementById("email").value.trim();
+
+        if (!fullname || !birthdate || !email) {
+          alert("Пожалуйста, заполните все поля.");
+          return;
+        }
+
+        const { data, error } = await supabase
+          .from("users")
+          .update({ fullname, birthdate, email })
+          .eq("telegram_id", telegramId);
+
+        if (error) {
+          alert("Ошибка при сохранении: " + error.message);
+        } else {
+          alert("Данные сохранены!");
+        }
+      });
+    });
+  </script>
+</body>
+</html>
