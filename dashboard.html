@@ -13,20 +13,14 @@
     <button type="submit">Сохранить</button>
   </form>
 
-  <script>
-    const urlParams = new URLSearchParams(window.location.search);
-    const username = urlParams.get('user');
-    document.getElementById('username').value = username;
+<script>
+document.addEventListener("DOMContentLoaded", async () => {
+  const res = await fetch("https://legitmining.wuaze.com/profile.php?username=" + localStorage.getItem("username"));
+  const data = await res.json();
 
-    fetch(`profile.php?username=${username}`)
-      .then(res => res.json())
-      .then(data => {
-        document.getElementById('profile').innerHTML = `
-          Telegram: ${data.telegram_name} (${data.telegram_username})<br>
-          Email: ${data.email || "-"}<br>
-          Город: ${data.city || "-"}
-        `;
-      });
-  </script>
+  document.getElementById("email").value = data.email || "";
+  document.getElementById("city").value = data.city || "";
+});
+</script>
 </body>
 </html>
