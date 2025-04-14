@@ -1,9 +1,14 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
+  
   <meta charset="UTF-8" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <title>Регистрация</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Подключаем библиотеку Supabase -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body class="bg-gray-900 text-white flex items-center justify-center min-h-screen">
@@ -20,29 +25,32 @@
 
   <script>
     // Инициализация Supabase
-    const supabaseUrl = "https://yiprwrgmyqlkdmhgulmc.supabase.co";  // ← замените на свой URL
-    const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlpcHJ3cmdteXFsa2RtaGd1bG1jIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ2NTI0NjgsImV4cCI6MjA2MDIyODQ2OH0.lfiTfr5ukGDEVuwq-X9U2kWs3nEZrp3N443HT5AkbfI";                     // ← замените на свой ключ
-    const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+    document.addEventListener('DOMContentLoaded', () => {
+      const supabaseUrl = "https://your-project.supabase.co";  // ← замените на свой URL
+      const supabaseKey = "your-anon-key";                     // ← замените на свой ключ
+      const supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
-    document.getElementById("registerBtn").addEventListener("click", async function () {
-      const username = document.getElementById("username").value.trim();
-      const password = document.getElementById("password").value.trim();
+      // Обработчик для кнопки регистрации
+      document.getElementById("registerBtn").addEventListener("click", async function () {
+        const username = document.getElementById("username").value.trim();
+        const password = document.getElementById("password").value.trim();
 
-      if (!username || !password) {
-        alert("Пожалуйста, заполните все поля.");
-        return;
-      }
+        if (!username || !password) {
+          alert("Пожалуйста, заполните все поля.");
+          return;
+        }
 
-      const { data, error } = await supabase
-        .from("users")
-        .insert([{ username, password }]);
+        const { data, error } = await supabase
+          .from("users")
+          .insert([{ username, password }]);
 
-      if (error) {
-        alert("Ошибка: " + error.message);
-      } else {
-        alert("Вы успешно зарегистрированы!");
-        window.location.href = "index.html";
-      }
+        if (error) {
+          alert("Ошибка: " + error.message);
+        } else {
+          alert("Вы успешно зарегистрированы!");
+          window.location.href = "index.html";
+        }
+      });
     });
   </script>
 </body>
