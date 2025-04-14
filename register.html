@@ -72,11 +72,13 @@
             .from("users")
             .insert([{ username, password, telegram_id: telegramId }]);
 
-          if (insertError) {
-            alert("Ошибка при регистрации: " + insertError.message);
-          } else {
-            alert("Регистрация успешна!");
-            window.location.href = "profile.html";
+            if (insertError) {
+              console.error("Ошибка при регистрации:", insertError);
+              alert("Ошибка при регистрации: " + insertError.message);
+            } else {
+              alert("Регистрация успешна!");
+              window.location.href = "profile.html";
+            }
           }
         }
       });
