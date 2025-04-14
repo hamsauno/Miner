@@ -22,66 +22,77 @@
   </div>
 
  <script>
-  let supabase;
+document.addEventListener('DOMContentLoaded', async () => {
+  const supabaseUrl = "https://yiprwrgmyqlkdmhgulmc.supabase.co";
+  const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlpcHJ3cmdteXFsa2RtaGd1bG1jIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ2NTI0NjgsImV4cCI6MjA2MDIyODQ2OH0.lfiTfr5ukGDEVuwq-X9U2kWs3nEZrp3N443HT5AkbfI";
+  const supabase = createClient(supabaseUrl, supabaseKey);
+
+  const tg = window.Telegram.WebApp;
+  tg.ready();
+
   let telegramId = null;
 
-  document.addEventListener('DOMContentLoaded', async () => {
-    const { createClient } = window.supabase; // ✅ поправка здесь
-    const supabaseUrl = "https://yiprwrgmyqlkdmhgulmc.supabase.co";
-    const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlpcHJ3cmdteXFsa2RtaGd1bG1jIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ2NTI0NjgsImV4cCI6MjA2MDIyODQ2OH0.lfiTfr5ukGDEVuwq-X9U2kWs3nEZrp3N443HT5AkbfI";
-    supabase = createClient(supabaseUrl, supabaseKey);
+  if (tg.initDataUnsafe && tg.initDataUnsafe.user && tg.initDataUnsafe.user.id) {
+    telegramId = tg.initDataUnsafe.user.id;
 
-    const tg = window.Telegram.WebApp;
-    tg.ready();
+    // 👇 Автоматическая авторизация, если ID уже есть в базе
+    const { data: existingUser, error } = await supabase
+      .from("users")
+      .select("*")
+      .eq("telegram_id", telegramId)
+      .single();
 
-    if (tg.initDataUnsafe?.user?.id) {
-      telegramId = tg.initDataUnsafe.user.id;
-    } else {
-      console.warn("Telegram ID недоступен");
+    if (existingUser && !error) {
+      window.location.href = "profile.html";
+      return;
+    }
+  }
+
+  // Кнопка регистрации / входа (остается как есть)
+  document.getElementById("registerBtn").addEventListener("click", async function () {
+    const username = document.getElementById("username").value.trim();
+    const password = document.getElementById("password").value.trim();
+
+    if (!username || !password) {
+      alert("Пожалуйста, заполните все поля.");
+      return;
     }
 
-    document.getElementById("registerBtn").addEventListener("click", async function () {
-      const username = document.getElementById("username").value.trim();
-      const password = document.getElementById("password").value.trim();
+    // Проверка по username
+    const { data: existingUsers, error: selectError } = await supabase
+      .from("users")
+      .select("*")
+      .eq("username", username)
+      .limit(1);
 
-      if (!username || !password) {
-        alert("Пожалуйста, заполните все поля.");
-        return;
-      }
+    if (selectError) {
+      alert("Ошибка при проверке: " + selectError.message);
+      return;
+    }
 
-      const { data: existingUsers, error: selectError } = await supabase
-        .from("users")
-        .select("*")
-        .eq("username", username)
-        .limit(1);
-
-      if (selectError) {
-        alert("Ошибка при проверке: " + selectError.message);
-        return;
-      }
-
-      if (existingUsers.length > 0) {
-        const user = existingUsers[0];
-        if (user.password === password) {
-          alert("Добро пожаловать, " + username + "!");
-          window.location.href = "profile.html";
-        } else {
-          alert("Неверный пароль.");
-        }
+    if (existingUsers.length > 0) {
+      const user = existingUsers[0];
+      if (user.password === password) {
+        alert("Добро пожаловать, " + username + "!");
+        window.location.href = "profile.html";
       } else {
-        const { data: newUser, error: insertError } = await supabase
-          .from("users")
-          .insert([{ username, password, telegram_id: telegramId }]);
-
-        if (insertError) {
-          alert("Ошибка при регистрации: " + insertError.message);
-        } else {
-          alert("Регистрация успешна!");
-          window.location.href = "profile.html";
-        }
+        alert("Неверный пароль.");
       }
-    });
+    } else {
+      // Регистрируем нового
+      const { error: insertError } = await supabase
+        .from("users")
+        .insert([{ username, password, telegram_id: telegramId }]);
+
+      if (insertError) {
+        alert("Ошибка при регистрации: " + insertError.message);
+      } else {
+        alert("Регистрация успешна!");
+        window.location.href = "profile.html";
+      }
+    }
   });
+});
 </script>
 
 </body>
