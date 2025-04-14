@@ -1,53 +1,18 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html>
 <head>
   <meta charset="UTF-8">
   <title>Регистрация</title>
-  <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-[#222222] pt-[52px] text-white font-[Arial]">
-  <div class="max-w-md mx-auto p-4">
-    <h2 class="text-xl mb-4">Регистрация</h2>
-    
-    <input id="username" type="text" placeholder="Придумайте имя пользователя" class="w-full mb-2 p-2 rounded text-black">
-    <input id="password" type="password" placeholder="Придумайте пароль" class="w-full mb-2 p-2 rounded text-black">
-    
-    <button onclick="register()" class="bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded">Зарегистрироваться</button>
-  </div>
+<body class="bg-[#222222] text-white font-[Arial] p-6">
+  <h2 class="text-xl mb-4">Регистрация</h2>
 
-  <script>
-    async function register() {
-      const username = document.getElementById("username").value.trim();
-      const password = document.getElementById("password").value.trim();
-
-      if (!username || !password) {
-        alert("Введите имя пользователя и пароль");
-        return;
-      }
-
-      try {
-        const res = await fetch("https://legitmining.wuaze.com/register.php", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({ username, password })
-        });
-
-        const data = await res.json();
-        alert(data.message);
-
-        if (data.status === "ok") {
-          window.location.href = "dashboard.html";
-        }
-
-      } catch (err) {
-        alert("Ошибка подключения к серверу");
-        console.error(err);
-      }
-    }
-  </script>
+  <form action="https://legitmining.wuaze.com/register.php" method="POST" class="flex flex-col gap-4 max-w-xs">
+    <input name="username" type="text" placeholder="Имя пользователя" class="p-2 text-black rounded" required>
+    <input name="password" type="password" placeholder="Пароль" class="p-2 text-black rounded" required>
+    <button type="submit" class="bg-green-600 py-2 rounded">Зарегистрироваться</button>
+  </form>
 </body>
 </html>
 
