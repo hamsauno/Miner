@@ -46,7 +46,7 @@ document.getElementById("registerBtn").addEventListener("click", async function 
     return;
   }
 
-  // Проверка по username или telegram_id
+  // Проверка: существует ли пользователь с таким username или telegram_id
   const { data: existingUsers, error: selectError } = await supabase
     .from("users")
     .select("*")
@@ -54,27 +54,27 @@ document.getElementById("registerBtn").addEventListener("click", async function 
     .limit(1);
 
   if (selectError) {
-    console.error("Ошибка при проверке:", selectError);
-    alert("Ошибка при проверке: " + selectError.message);
+    alert("Ошибка при проверке пользователя: " + selectError.message);
     return;
   }
 
   if (existingUsers.length > 0) {
     const user = existingUsers[0];
-    if (user.password === password || user.telegram_id === telegramId) {
+
+    // Входим, если Telegram ID совпадает или пароль правильный
+    if (user.telegram_id === telegramId || user.password === password) {
       alert("Добро пожаловать, " + user.username + "!");
       window.location.href = "profile.html";
     } else {
       alert("Пользователь уже существует, но пароль неверный.");
     }
   } else {
-    // Регистрируем нового
-    const { data: newUser, error: insertError } = await supabase
+    // Новый пользователь — вставляем
+    const { error: insertError } = await supabase
       .from("users")
       .insert([{ username, password, telegram_id: telegramId }]);
 
     if (insertError) {
-      console.error("Ошибка при регистрации:", insertError);
       alert("Ошибка при регистрации: " + insertError.message);
     } else {
       alert("Регистрация успешна!");
