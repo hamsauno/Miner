@@ -1,17 +1,26 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <link rel="stylesheet" href="css/bg.css">
-    <script src="js/fullscr.js" defer></script><!-- открытие во весь экран и зафиксировать -->
-    <script src="js/nozoom.js" defer></script><!-- чтобы не было возможности делать зум -->
-    <script src="js/reg.js" defer></script><!-- загрузка курсов -->
+  <title>Вход</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <script src="reg.js" defer></script>
 </head>
 <body>
-   
-<div id="profile">Загрузка профиля...</div>
+  <h2>Войти</h2>
+  <form action="login.php" method="POST">
+    <input name="username" placeholder="Username" required><br>
+    <input name="password" type="password" placeholder="Пароль" required><br>
+    <button type="submit">Войти</button>
+  </form>
 
+  <h3>Нет аккаунта?</h3>
+  <form action="register.php" method="POST">
+    <input name="new_username" placeholder="Придумай Username" required><br>
+    <input name="new_password" type="password" placeholder="Придумай Пароль" required><br>
+    <input type="hidden" name="telegram_id" id="telegram_id">
+    <input type="hidden" name="telegram_username" id="telegram_username">
+    <input type="hidden" name="telegram_name" id="telegram_name">
+    <button type="submit">Зарегистрироваться</button>
+  </form>
 </body>
 </html>
