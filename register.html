@@ -1,36 +1,45 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  
   <meta charset="UTF-8" />
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <title>Регистрация</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Подключаем библиотеку Supabase -->
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
-<body class="bg-gray-900 text-white flex items-center justify-center min-h-screen">
-  <div class="bg-gray-800 p-8 rounded-lg w-full max-w-md shadow-lg">
-    <h1 class="text-2xl font-bold mb-6 text-center">Регистрация</h1>
-    <div class="flex flex-col space-y-4">
-      <input id="username" type="text" placeholder="Имя пользователя" class="p-3 rounded bg-gray-700 text-white" />
-      <input id="password" type="password" placeholder="Пароль" class="p-3 rounded bg-gray-700 text-white" />
-      <button id="registerBtn" class="bg-green-600 hover:bg-green-700 text-white p-3 rounded font-semibold">
-        Зарегистрироваться
-      </button>
-    </div>
+<body class="bg-[#222222] pt-[52px] text-white font-[Arial] flex flex-col items-center justify-center min-h-screen">
+
+  <div class="w-full max-w-sm p-4 bg-[#333333] rounded-2xl shadow-md">
+    <h2 class="text-xl font-bold mb-4 text-center">Регистрация</h2>
+    <input id="username" type="text" placeholder="Имя пользователя"
+      class="w-full mb-3 p-2 rounded bg-[#444] text-white placeholder-gray-400 outline-none" />
+    <input id="password" type="password" placeholder="Пароль"
+      class="w-full mb-4 p-2 rounded bg-[#444] text-white placeholder-gray-400 outline-none" />
+    <button id="registerBtn"
+      class="w-full bg-green-600 hover:bg-green-700 transition-all py-2 rounded font-semibold">
+      Зарегистрироваться / Войти
+    </button>
   </div>
 
   <script>
-    // Инициализация Supabase
-    document.addEventListener('DOMContentLoaded', () => {
-      const supabaseUrl = "https://your-project.supabase.co";  // ← замените на свой URL
-      const supabaseKey = "your-anon-key";                     // ← замените на свой ключ
-      const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+    let supabase;
+    let telegramId = null;
 
-      // Обработчик для кнопки регистрации
+    document.addEventListener('DOMContentLoaded', async () => {
+      const supabaseUrl = "https://yiprwrgmyqlkdmhgulmc.supabase.co"; // Заменить
+      const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlpcHJ3cmdteXFsa2RtaGd1bG1jIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ2NTI0NjgsImV4cCI6MjA2MDIyODQ2OH0.lfiTfr5ukGDEVuwq-X9U2kWs3nEZrp3N443HT5AkbfI";                    // Заменить
+      supabase = supabase.createClient(supabaseUrl, supabaseKey);
+
+      const tg = window.Telegram.WebApp;
+      tg.ready();
+
+      // Получаем Telegram ID, если доступен
+      if (tg.initDataUnsafe && tg.initDataUnsafe.user && tg.initDataUnsafe.user.id) {
+        telegramId = tg.initDataUnsafe.user.id;
+      } else {
+        console.warn("Telegram ID недоступен");
+      }
+
       document.getElementById("registerBtn").addEventListener("click", async function () {
         const username = document.getElementById("username").value.trim();
         const password = document.getElementById("password").value.trim();
@@ -40,18 +49,42 @@
           return;
         }
 
-        const { data, error } = await supabase
+        // Проверка, есть ли пользователь
+        const { data: existingUsers, error: selectError } = await supabase
           .from("users")
-          .insert([{ username, password }]);
+          .select("*")
+          .eq("username", username)
+          .limit(1);
 
-        if (error) {
-          alert("Ошибка: " + error.message);
+        if (selectError) {
+          alert("Ошибка при проверке: " + selectError.message);
+          return;
+        }
+
+        if (existingUsers.length > 0) {
+          const user = existingUsers[0];
+          if (user.password === password) {
+            alert("Добро пожаловать, " + username + "!");
+            window.location.href = "profile.html";
+          } else {
+            alert("Неверный пароль.");
+          }
         } else {
-          alert("Вы успешно зарегистрированы!");
-          window.location.href = "index.html";
+          // Регистрируем нового
+          const { data: newUser, error: insertError } = await supabase
+            .from("users")
+            .insert([{ username, password, telegram_id: telegramId }]);
+
+          if (insertError) {
+            alert("Ошибка при регистрации: " + insertError.message);
+          } else {
+            alert("Регистрация успешна!");
+            window.location.href = "profile.html";
+          }
         }
       });
     });
   </script>
 </body>
 </html>
+
