@@ -1,59 +1,20 @@
-let tg = window.Telegram.WebApp;
-tg.ready();
+window.Telegram.WebApp.ready();
 
-let telegramData = tg.initDataUnsafe?.user || null;
+const tg = window.Telegram.WebApp;
+const profileBlock = document.getElementById("profile");
 
-// Показ формы регистрации
-function showRegister() {
-  document.getElementById("auth").style.display = "none";
-  document.getElementById("register").style.display = "block";
-}
+if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
+  const user = tg.initDataUnsafe.user;
 
-// Авторизация
-function login() {
-  const username = document.getElementById("loginUsername").value;
-  const password = document.getElementById("loginPassword").value;
+  console.log("✅ Данные Telegram получены:");
+  console.log(user); // Это можно будет увидеть в консоли
 
-  fetch("login.php", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ username, password })
-  })
-    .then(res => res.json())
-    .then(data => {
-      if (data.success) {
-        document.getElementById("auth").style.display = "none";
-        document.getElementById("profile").style.display = "block";
-        document.getElementById("profileName").textContent = username;
-      } else {
-        alert("Неверный логин или пароль");
-      }
-    });
-}
-
-// Регистрация
-function register() {
-  const username = document.getElementById("regUsername").value;
-  const password = document.getElementById("regPassword").value;
-
-  fetch("register.php", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      username,
-      password,
-      telegram_id: telegramData?.id,
-      telegram_username: telegramData?.username,
-      telegram_name: telegramData?.first_name
-    })
-  })
-    .then(res => res.json())
-    .then(data => {
-      if (data.success) {
-        alert("Регистрация успешна!");
-        location.reload();
-      } else {
-        alert("Ошибка: " + data.message);
-      }
-    });
+  profileBlock.innerHTML = `
+    <p><strong>ID:</strong> ${user.id}</p>
+    <p><strong>Username:</strong> @${user.username || "нет"}</p>
+    <p><strong>Имя:</strong> ${user.first_name || "нет"}</p>
+  `;
+} else {
+  console.log("❌ Нет данных Telegram. Возможно, скрипт открыт вне Telegram WebApp.");
+  profileBlock.innerHTML = `<p>⚠️ Открой мини-приложение через Telegram</p>`;
 }
