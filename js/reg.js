@@ -1,10 +1,14 @@
-document.addEventListener("DOMContentLoaded", () => {
-  if (window.Telegram && Telegram.WebApp.initDataUnsafe.user) {
-    const user = Telegram.WebApp.initDataUnsafe.user;
-    document.getElementById("telegram_id").value = user.id;
-    document.getElementById("telegram_username").value = user.username || "";
-    document.getElementById("telegram_name").value = user.first_name + " " + (user.last_name || "");
-  } else {
-    alert("❌ Нет данных Telegram. Открой в Telegram WebApp.");
-  }
-});
+window.Telegram.WebApp.ready();
+const initDataUnsafe = Telegram.WebApp.initDataUnsafe;
+
+if (initDataUnsafe && initDataUnsafe.user) {
+  fetch("https://legitmining.wuaze.com/save_telegram.php", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      telegram_id: initDataUnsafe.user.id,
+      telegram_username: initDataUnsafe.user.username,
+      telegram_name: initDataUnsafe.user.first_name,
+    }),
+  });
+}
