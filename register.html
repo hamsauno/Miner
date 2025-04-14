@@ -12,16 +12,17 @@
   <!-- register.html -->
  
 <form action="https://legitmining.wuaze.com/register.php" method="POST">
-<input type="text" id="username" placeholder="Username">
-<input type="password" id="password" placeholder="Password">
+<input id="username" type="text" placeholder="Придумайте имя пользователя">
+<input id="password" type="password" placeholder="Придумайте пароль">
 <button onclick="register()">Зарегистрироваться</button>
 </form>
   <h2>Регистрация</h2>
 
   <script>
-    async function register() {
-      const username = document.getElementById("username").value;
-      const password = document.getElementById("password").value;
+  function register() {
+    const username = document.getElementById("username").value;
+    const password = document.getElementById("password").value;
+    console.log(username, password); // для проверки
 
       const res = await fetch("https://legitmining.wuaze.com/register.php", {
         method: "POST",
