@@ -1,12 +1,10 @@
 (function () {
-  // Если WebApp не инициализирован — ничего не делаем
-  if (!window.Telegram || !Telegram.WebApp || !Telegram.WebApp.initData) return;
+  const tg = window.Telegram?.WebApp;
+  const mainPage = '/index.html';
+  const current = window.location.pathname;
 
-  const mainPath = '/index.html'; // <-- путь к главной странице (можешь изменить)
-  const currentPath = window.location.pathname;
-
-  // Если мы не на главной — делаем redirect
-  if (!currentPath.endsWith(mainPath) && currentPath !== '/' && !currentPath.includes('index.html')) {
-    window.location.replace(mainPath);
+  // Если внутри Telegram и НЕ на главной — редиректим
+  if (tg && tg.initData && !current.endsWith(mainPage) && current !== '/') {
+    window.location.replace(mainPage);
   }
 })();
