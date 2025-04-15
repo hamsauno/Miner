@@ -1,24 +1,123 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <link rel="stylesheet" href="css/AllKurs.css">
-    <link rel="stylesheet" href="css/bg.css">
-    <script src="js/fullscr.js" defer></script><!-- открытие во весь экран и зафиксировать -->
-    <script src="js/nozoom.js" defer></script><!-- чтобы не было возможности делать зум -->
-    <script src="js/AllKurs.js" defer></script><!-- загрузка курсов -->
+  <meta charset="UTF-8" />
+  <title>Профиль</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/fullscr.js" defer></script>
+  <script src="js/nozoom.js" defer></script>
 </head>
-<body>
-   
-<div class="header">
-    <label>Курс USDT: <span id="usdtPrice"></span>₽</label>
-    <label>Курс BTC: <span id="btcPrice"></span>$</label>
-    <label>Курс LTC: <span id="ltcPrice"></span>$</label>
-    <label>Курс DOGE: <span id="dogePrice"></span>$</label>
-    <label>Курс BELL: <span id="bellPrice"></span>$</label>           
-</div>
+<body class="bg-[#1e1e1e] text-white pt-[52px] font-[Arial] flex flex-col items-center justify-center min-h-screen">
+
+  <!-- 📋 Профиль с формой -->
+  <div id="profileForm" class="w-full max-w-sm p-4 bg-[#2d2d2d] rounded-2xl shadow-md hidden">
+    <h2 class="text-xl font-bold mb-4 text-center">Редактирование профиля</h2>
+
+    <label class="block text-sm mb-1">Имя</label>
+    <input id="nameInput" type="text"
+      class="w-full mb-3 p-2 rounded bg-[#444] text-white placeholder-gray-400 outline-none" />
+
+    <label class="block text-sm mb-1">Дата рождения</label>
+    <input id="birthInput" type="date"
+      class="w-full mb-3 p-2 rounded bg-[#444] text-white outline-none" />
+
+    <label class="block text-sm mb-1">Email</label>
+    <input id="emailInput" type="email"
+      class="w-full mb-4 p-2 rounded bg-[#444] text-white placeholder-gray-400 outline-none" />
+
+    <button id="saveBtn"
+      class="w-full bg-green-600 hover:bg-green-700 transition-all py-2 rounded font-semibold"
+      style="background: linear-gradient(90deg, #F6A314, #EC7E07);">
+      💾 Сохранить
+    </button>
+  </div>
+
+  <!-- 🔄 Загрузка -->
+  <div id="loading" class="text-center text-white">
+    <p>Загрузка данных...</p>
+  </div>
+
+<script>
+  const { createClient } = supabase;
+  const supabaseUrl = "https://yiprwrgmyqlkdmhgulmc.supabase.co";
+  const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlpcHJ3cmdteXFsa2RtaGd1bG1jIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ2NTI0NjgsImV4cCI6MjA2MDIyODQ2OH0.lfiTfr5ukGDEVuwq-X9U2kWs3nEZrp3N443HT5AkbfI";
+  const supabaseClient = createClient(supabaseUrl, supabaseKey);
+
+  document.addEventListener("DOMContentLoaded", async () => {
+    const tg = window.Telegram.WebApp;
+    tg.ready();
+
+    const telegramId = tg?.initDataUnsafe?.user?.id;
+
+    const loadingEl = document.getElementById("loading");
+    const formEl = document.getElementById("profileForm");
+
+    if (!telegramId || typeof telegramId !== "number") {
+      alert("❗️ Telegram ID не найден.");
+      return;
+    }
+
+    try {
+      const { data, error } = await supabaseClient
+        .from("users")
+        .select("*")
+        .eq("telegram_id", telegramId.toString())
+        .single();
+
+      if (error && error.code !== "PGRST116") {
+        console.error("Ошибка загрузки:", error);
+        alert("Ошибка загрузки профиля.");
+        return;
+      }
+
+      if (data) {
+        document.getElementById("nameInput").value = data.name || "";
+        document.getElementById("birthInput").value = data.birth_date || "";
+        document.getElementById("emailInput").value = data.email || "";
+      }
+
+      formEl.style.display = "block";
+      loadingEl.style.display = "none";
+
+    } catch (err) {
+      console.error("Ошибка:", err);
+      alert("Произошла ошибка при загрузке.");
+    }
+  });
+
+  document.getElementById("saveBtn").addEventListener("click", async () => {
+    const tg = window.Telegram.WebApp;
+    const telegramId = tg?.initDataUnsafe?.user?.id;
+
+    const name = document.getElementById("nameInput").value.trim();
+    const birthDate = document.getElementById("birthInput").value;
+    const email = document.getElementById("emailInput").value.trim();
+
+    try {
+      const { data, error } = await supabaseClient
+        .from("users")
+        .update({
+          name: name,
+          birth_date: birthDate,
+          email: email
+        })
+        .eq("telegram_id", telegramId.toString());
+
+      if (error) {
+        console.error("Ошибка сохранения:", error);
+        alert("Ошибка при сохранении данных.");
+        return;
+      }
+
+      alert("✅ Данные успешно сохранены!");
+    } catch (err) {
+      console.error("Ошибка:", err);
+      alert("Ошибка при сохранении.");
+    }
+  });
+</script>
 
 </body>
 </html>
