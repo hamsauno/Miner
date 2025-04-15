@@ -13,28 +13,33 @@
     
 
 </head>
-<body class="bg-[#222222] pt-[52px] text-white font-[Arial]">
+<body class="bg-[#222222] text-white font-[Arial] h-screen overflow-hidden">
 
-  <!-- Кнопки выбора типа — за пределами ограничителя, чтобы sticky работал -->
-  <div class="sticky top-0 z-20 p-4 flex flex-wrap gap-3 justify-center bg-[#222222] shadow">
-    <button class="type-btn bg-[#333333] text-white px-4 py-1.5 rounded font-semibold tracking-wide text-sm" data-type="Наличие">Наличие</button>
-    <button class="type-btn bg-[#333333] text-white px-4 py-1.5 rounded font-semibold tracking-wide text-sm" data-type="В пути">В пути</button>
-    <button class="type-btn bg-[#333333] text-white px-4 py-1.5 rounded font-semibold tracking-wide text-sm" data-type="Предзаказ">Предзаказ</button>
-  </div>
-
-  <!-- Контейнер с ограничением ширины -->
-  <div class="max-w-screen-xl mx-auto px-2 sm:px-3">
-
-    <!-- Производители (2x2 или больше) -->
-    <div id="manufacturers" class="p-4 grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"></div>
-
-    <!-- Модели -->
-    <div id="models" class="p-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 text-[13px] sm:text-sm md:text-base"></div>
-  </div>
-
-    <!-- Модалка -->
-    <div id="product-modal" class="fixed inset-0 hidden bg-black bg-opacity-80 backdrop-blur-sm flex items-center justify-center z-50">
-      <div id="modal-body" class="bg-[#222222] text-white p-6 rounded-lg w-[90%] max-w-md shadow-lg"></div>
+  <!-- Закреплённая панель с кнопками и производителями -->
+  <div class="fixed top-0 left-0 w-full z-50 bg-[#222222] shadow">
+    <!-- Кнопки выбора типа -->
+    <div class="p-4 flex flex-wrap gap-3 justify-center">
+      <button class="type-btn bg-[#333333] text-white px-4 py-1.5 rounded font-semibold tracking-wide text-sm" data-type="Наличие">Наличие</button>
+      <button class="type-btn bg-[#333333] text-white px-4 py-1.5 rounded font-semibold tracking-wide text-sm" data-type="В пути">В пути</button>
+      <button class="type-btn bg-[#333333] text-white px-4 py-1.5 rounded font-semibold tracking-wide text-sm" data-type="Предзаказ">Предзаказ</button>
     </div>
+
+    <!-- Производители -->
+    <div id="manufacturers" class="p-4 grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 max-w-screen-xl mx-auto px-2 sm:px-3"></div>
+  </div>
+
+  <!-- Прокручиваемый контент -->
+  <div class="pt-[250px] max-h-screen overflow-y-auto">
+    <div class="max-w-screen-xl mx-auto px-2 sm:px-3">
+      <!-- Модели -->
+      <div id="models" class="p-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 text-[13px] sm:text-sm md:text-base"></div>
+    </div>
+  </div>
+
+  <!-- Модалка -->
+  <div id="product-modal" class="fixed inset-0 hidden bg-black bg-opacity-80 backdrop-blur-sm flex items-center justify-center z-50">
+    <div id="modal-body" class="bg-[#222222] text-white p-6 rounded-lg w-[90%] max-w-md shadow-lg"></div>
+  </div>
+
 </body>
 </html>
