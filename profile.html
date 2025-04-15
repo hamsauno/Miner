@@ -1,70 +1,102 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <title>Профиль</title>
+  <meta charset="UTF-8" />
+  <title>Регистрация</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
-<body class="bg-[#222] text-white font-[Arial] flex flex-col items-center justify-center min-h-screen p-4">
+<body class="bg-[#222222] pt-[52px] text-white font-[Arial] flex flex-col items-center justify-center min-h-screen">
 
-  <div class="bg-[#333] w-full max-w-md p-6 rounded-2xl shadow-md">
-    <h2 class="text-xl font-bold mb-6 text-center">Личный профиль</h2>
-    
-    <label class="block mb-2">Имя:</label>
-    <input id="fullname" type="text" placeholder="Ваше имя"
+  <div class="w-full max-w-sm p-4 bg-[#333333] rounded-2xl shadow-md" id="registerForm">
+    <h2 class="text-xl font-bold mb-4 text-center">Регистрация</h2>
+    <input id="username" type="text" placeholder="Имя пользователя"
+      class="w-full mb-3 p-2 rounded bg-[#444] text-white placeholder-gray-400 outline-none" />
+    <input id="password" type="password" placeholder="Пароль"
       class="w-full mb-4 p-2 rounded bg-[#444] text-white placeholder-gray-400 outline-none" />
-
-    <label class="block mb-2">Дата рождения:</label>
-    <input id="birthdate" type="date"
-      class="w-full mb-4 p-2 rounded bg-[#444] text-white outline-none" />
-
-    <label class="block mb-2">Email:</label>
-    <input id="email" type="email" placeholder="example@email.com"
-      class="w-full mb-6 p-2 rounded bg-[#444] text-white placeholder-gray-400 outline-none" />
-
-    <button id="saveProfileBtn"
-      class="w-full bg-green-600 hover:bg-green-700 py-2 rounded font-semibold transition-all">
-      Сохранить
+    <button id="registerBtn"
+      class="w-full bg-green-600 hover:bg-green-700 transition-all py-2 rounded font-semibold"
+      style="background: linear-gradient(90deg, #F6A314, #EC7E07);">
+      Зарегистрироваться
     </button>
   </div>
 
   <script>
     const { createClient } = supabase;
-    let supabase;
+    const supabaseUrl = "https://yiprwrgmyqlkdmhgulmc.supabase.co";
+    const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlpcHJ3cmdteXFsa2RtaGd1bG1jIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ2NTI0NjgsImV4cCI6MjA2MDIyODQ2OH0.lfiTfr5ukGDEVuwq-X9U2kWs3nEZrp3N443HT5AkbfI"; // замените на свой ключ
+    const supabaseClient = createClient(supabaseUrl, supabaseKey);
 
-    document.addEventListener('DOMContentLoaded', async () => {
-      const supabaseUrl = "https://yiprwrgmyqlkdmhgulmc.supabase.co";
-      const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlpcHJ3cmdteXFsa2RtaGd1bG1jIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ2NTI0NjgsImV4cCI6MjA2MDIyODQ2OH0.lfiTfr5ukGDEVuwq-X9U2kWs3nEZrp3N443HT5AkbfI";
-      supabase = createClient(supabaseUrl, supabaseKey);
+    let telegramId = null;
 
+    document.addEventListener("DOMContentLoaded", async () => {
       const tg = window.Telegram.WebApp;
       tg.ready();
 
-      const telegramId = tg.initDataUnsafe?.user?.id;
+      if (tg.initDataUnsafe?.user?.id) {
+        telegramId = tg.initDataUnsafe.user.id;
 
-      document.getElementById("saveProfileBtn").addEventListener("click", async () => {
-        const fullname = document.getElementById("fullname").value.trim();
-        const birthdate = document.getElementById("birthdate").value.trim();
-        const email = document.getElementById("email").value.trim();
+        // ШАГ 1: проверка, есть ли такой Telegram ID
+        const { data: existingUser, error } = await supabaseClient
+          .from("users")
+          .select("*")
+          .eq("telegram_id", telegramId)
+          .single();
 
-        if (!fullname || !birthdate || !email) {
-          alert("Пожалуйста, заполните все поля.");
+        if (error && error.code !== "PGRST116") {
+          console.error("Ошибка при запросе:", error.message);
           return;
         }
 
-        const { data, error } = await supabase
-          .from("users")
-          .update({ fullname, birthdate, email })
-          .eq("telegram_id", telegramId);
-
-        if (error) {
-          alert("Ошибка при сохранении: " + error.message);
-        } else {
-          alert("Данные сохранены!");
+        if (existingUser) {
+          // Уже зарегистрирован — вход
+          localStorage.setItem("username", existingUser.username);
+          window.location.href = "profile.html";
+          return;
         }
-      });
+
+        // ШАГ 2: если Telegram ID не найден — показываем форму регистрации
+        document.getElementById("registerForm").style.display = "block";
+
+        document.getElementById("registerBtn").addEventListener("click", async () => {
+          const username = document.getElementById("username").value.trim();
+          const password = document.getElementById("password").value.trim();
+
+          if (!username || !password) {
+            alert("Пожалуйста, заполните все поля.");
+            return;
+          }
+
+          // Проверяем, не занят ли username
+          const { data: userCheck, error: checkError } = await supabaseClient
+            .from("users")
+            .select("*")
+            .eq("username", username)
+            .maybeSingle();
+
+          if (userCheck) {
+            alert("Такой пользователь уже существует.");
+            return;
+          }
+
+          // ШАГ 3: регистрация
+          const { error: insertError } = await supabaseClient
+            .from("users")
+            .insert([{ username, password, telegram_id: telegramId }]);
+
+          if (insertError) {
+            alert("Ошибка при регистрации: " + insertError.message);
+            return;
+          }
+
+          alert("Регистрация успешна!");
+          localStorage.setItem("username", username);
+          window.location.href = "profile.html";
+        });
+      } else {
+        alert("Ошибка: Telegram ID не получен.");
+      }
     });
   </script>
 </body>
