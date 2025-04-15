@@ -52,23 +52,22 @@
     formEl.style.display = "none";
 
     const telegramId = tg?.initDataUnsafe?.user?.id;
-    //console.log("🤖 Telegram ID:", telegramId, "Тип:", typeof telegramId);
-    alert("Telegram ID: " + telegramId);
 
-    if (!telegramId) {
-      alert("Telegram ID не найден. Запустите через Telegram WebApp.");
+    // 💡 Убедимся, что ID найден и это число
+    if (!telegramId || typeof telegramId !== "number") {
+      alert("❗️ Telegram ID не найден. Запустите через Telegram WebApp.");
       loadingEl.style.display = "none";
       return;
     }
 
     try {
-      // ⛳️ Отладка: покажем всех пользователей
-      const { data: allUsers, error: allUsersError } = await supabaseClient
-        .from("users")
-        .select("*");
-      console.log("🔥 Все пользователи:", allUsers, allUsersError);
+      // 🛠 Отладка (если нужно увидеть всех пользователей)
+      // const { data: allUsers, error: allUsersError } = await supabaseClient
+      //   .from("users")
+      //   .select("*");
+      // console.log("🔥 Все пользователи:", allUsers, allUsersError);
 
-      // 🎯 Основной запрос
+      // 📦 Проверяем, есть ли пользователь с этим telegram_id
       const { data, error } = await supabaseClient
         .from("users")
         .select("*")
@@ -100,6 +99,7 @@
     }
   });
 </script>
+
 
 </body>
 </html>
