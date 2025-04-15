@@ -17,12 +17,7 @@
 
 
 
-.background-container {
-  position: relative;
-  display: inline-block;
-  overflow: hidden;
-}
-
+/* Эффект блеска */
 .background-container::before {
   content: '';
   position: absolute;
@@ -33,19 +28,19 @@
   background: linear-gradient(
     120deg,
     rgba(255, 255, 255, 0) 0%,
-    rgba(255, 255, 255, 0.4) 50%,
+    rgba(255, 255, 255, 0.6) 50%,
     rgba(255, 255, 255, 0) 100%
   );
   transform: skewX(-25deg);
-  pointer-events: none;
   animation: shine 6s infinite;
+  pointer-events: none;
 }
 
 @keyframes shine {
   0% {
     left: -100%;
   }
-  20% {
+  10% {
     left: 130%;
   }
   100% {
