@@ -66,13 +66,13 @@ document.addEventListener("DOMContentLoaded", async () => {
       const { data, error } = await supabaseClient
         .from("users")
         .select("*")
-        .eq("telegram_id", telegramId.toString())
+        .eq("telegram_id", telegramId.toString())  // <-- здесь fix
         .maybeSingle();
 
       console.log("Ответ от Supabase:", data, error);
 
       if (error) {
-        console.error("Ошибка при запросе к Supabase:", error.message);
+        console.error("Ошибка при запросе:", error.message);
         alert("Ошибка при проверке пользователя.");
         loadingEl.style.display = "none";
         return;
@@ -96,7 +96,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   }, 300);
 });
-
 </script>
 </body>
 </html>
