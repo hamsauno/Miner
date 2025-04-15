@@ -15,21 +15,22 @@
 </head>
 <body class="bg-[#222222] text-white font-[Arial] h-screen overflow-hidden">
 
-  <!-- Закреплённая панель с кнопками и производителями -->
+  <!-- Закреплённая панель -->
   <div class="fixed top-0 left-0 w-full z-50 bg-[#222222] shadow">
+
     <!-- Кнопки выбора типа -->
-    <div class="p-4 flex flex-wrap gap-3 justify-center">
+    <div class="flex flex-wrap gap-3 justify-center px-4 py-2">
       <button class="type-btn bg-[#333333] text-white px-4 py-1.5 rounded font-semibold tracking-wide text-sm" data-type="Наличие">Наличие</button>
       <button class="type-btn bg-[#333333] text-white px-4 py-1.5 rounded font-semibold tracking-wide text-sm" data-type="В пути">В пути</button>
       <button class="type-btn bg-[#333333] text-white px-4 py-1.5 rounded font-semibold tracking-wide text-sm" data-type="Предзаказ">Предзаказ</button>
     </div>
 
     <!-- Производители -->
-    <div id="manufacturers" class="p-4 grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 max-w-screen-xl mx-auto px-2 sm:px-3"></div>
+    <div id="manufacturers" class="pb-2 px-4 grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 max-w-screen-xl mx-auto"></div>
   </div>
 
-  <!-- Прокручиваемый контент -->
-  <div class="pt-[250px] max-h-screen overflow-y-auto">
+  <!-- Прокручиваемая часть -->
+  <div class="pt-[52px] max-h-screen overflow-y-auto">
     <div class="max-w-screen-xl mx-auto px-2 sm:px-3">
       <!-- Модели -->
       <div id="models" class="p-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 text-[13px] sm:text-sm md:text-base"></div>
@@ -42,4 +43,5 @@
   </div>
 
 </body>
+
 </html>
