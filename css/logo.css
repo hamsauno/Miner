@@ -17,37 +17,53 @@
 
 
 
-/* Сам блеск */
-.background-container::before {
-  content: '';
+/* Блеск-звезда */
+.background-container {
   position: absolute;
-  top: 0;
-  left: -100%;
-  width: 30%;
-  height: 100%;
+  top: 50%;
+  left: -50px;
+  width: 40px;
+  height: 40px;
   background: radial-gradient(
-    circle at 50% 50%,
-    rgba(255, 255, 255, 0.8) 0%,
-    rgba(255, 255, 255, 0.4) 40%,
+    circle,
+    rgba(255, 255, 255, 1) 0%,
+    rgba(255, 255, 255, 0.8) 30%,
     rgba(255, 255, 255, 0) 70%
   );
-  mix-blend-mode: screen;
-  filter: blur(2px);
-  animation: sparkle 5s infinite;
+  border-radius: 50%;
+  opacity: 0;
+  transform: scale(0.5) rotate(0deg);
+  animation: sparkle-move 5s infinite;
   pointer-events: none;
+  filter: blur(1px);
 }
 
-@keyframes sparkle {
+@keyframes sparkle-move {
   0% {
-    left: -100%;
-    top: 0%;
+    left: -50px;
+    top: 40%;
+    opacity: 0;
+    transform: scale(0.5) rotate(0deg);
   }
-  15% {
-    left: 110%;
-    top: 100%;
+
+  10% {
+    left: 40%;
+    top: 35%;
+    opacity: 1;
+    transform: scale(1) rotate(45deg);
   }
+
+  12% {
+    left: 42%;
+    top: 35%;
+    opacity: 0;
+    transform: scale(0.5) rotate(90deg);
+  }
+
   100% {
     left: 110%;
-    top: 100%;
+    top: 60%;
+    opacity: 0;
+    transform: scale(0.5) rotate(180deg);
   }
 }
