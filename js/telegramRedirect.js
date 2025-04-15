@@ -1,6 +1,7 @@
 document.addEventListener("DOMContentLoaded", function () {
   const tg = window.Telegram.WebApp;
   const isTelegram = tg && tg.initData;
+  const isMain = location.pathname.endsWith('/index.html') || location.pathname === '/';
 
   // Замените это на URL вашей главной страницы (абсолютный или относительный)
   const MAIN_PAGE = '/index.html';
