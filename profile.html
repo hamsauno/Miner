@@ -9,7 +9,7 @@
 </head>
 <body class="bg-[#222222] pt-[52px] text-white font-[Arial] flex flex-col items-center justify-center min-h-screen">
 
-  <div class="w-full max-w-sm p-4 bg-[#333333] rounded-2xl shadow-md" id="registerForm">
+  <div class="w-full max-w-sm p-4 bg-[#333333] rounded-2xl shadow-md" id="registerForm" style="display: none;">
     <h2 class="text-xl font-bold mb-4 text-center">Регистрация</h2>
     <input id="username" type="text" placeholder="Имя пользователя"
       class="w-full mb-3 p-2 rounded bg-[#444] text-white placeholder-gray-400 outline-none" />
@@ -25,7 +25,7 @@
   <script>
     const { createClient } = supabase;
     const supabaseUrl = "https://yiprwrgmyqlkdmhgulmc.supabase.co";
-    const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlpcHJ3cmdteXFsa2RtaGd1bG1jIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ2NTI0NjgsImV4cCI6MjA2MDIyODQ2OH0.lfiTfr5ukGDEVuwq-X9U2kWs3nEZrp3N443HT5AkbfI"; // замените на свой ключ
+    const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlpcHJ3cmdteXFsa2RtaGd1bG1jIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ2NTI0NjgsImV4cCI6MjA2MDIyODQ2OH0.lfiTfr5ukGDEVuwq-X9U2kWs3nEZrp3N443HT5AkbfI";
     const supabaseClient = createClient(supabaseUrl, supabaseKey);
 
     let telegramId = null;
@@ -86,8 +86,18 @@
             .insert([{ username, password, telegram_id: telegramId }]);
 
           if (insertError) {
-            alert("Ошибка при регистрации: " + insertError.message);
-            return;
+            if (
+              insertError.code === '23505' ||
+              insertError.message.toLowerCase().includes("duplicate key")
+            ) {
+              alert("Вы уже зарегистрированы, вход выполнен.");
+              localStorage.setItem("username", username);
+              window.location.href = "profile.html";
+              return;
+            } else {
+              alert("Ошибка при регистрации: " + insertError.message);
+              return;
+            }
           }
 
           alert("Регистрация успешна!");
