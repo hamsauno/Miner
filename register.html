@@ -41,59 +41,62 @@
   const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlpcHJ3cmdteXFsa2RtaGd1bG1jIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ2NTI0NjgsImV4cCI6MjA2MDIyODQ2OH0.lfiTfr5ukGDEVuwq-X9U2kWs3nEZrp3N443HT5AkbfI";
   const supabaseClient = createClient(supabaseUrl, supabaseKey);
 
-  document.addEventListener("DOMContentLoaded", async () => {
-    const tg = window.Telegram.WebApp;
-    tg.ready();
+document.addEventListener("DOMContentLoaded", async () => {
+  const tg = window.Telegram.WebApp;
+  tg.ready();
 
-    const loadingEl = document.getElementById("loading");
-    const formEl = document.getElementById("registerForm");
+  const loadingEl = document.getElementById("loading");
+  const formEl = document.getElementById("registerForm");
 
-    // Показываем "загрузку"
-    loadingEl.style.display = "flex";
-    formEl.style.display = "none";
+  loadingEl.style.display = "flex";
+  formEl.style.display = "none";
 
-    // Ждём, пока Telegram загрузит данные пользователя
-    setTimeout(async () => {
-      const telegramId = tg?.initDataUnsafe?.user?.id;
-      console.log("Получен Telegram ID:", telegramId);
+  setTimeout(async () => {
+    const telegramId = tg?.initDataUnsafe?.user?.id;
 
-      if (!telegramId) {
-        alert("Telegram ID не найден. Запустите через Telegram WebApp.");
+    console.log("Получен Telegram ID:", telegramId, "Тип:", typeof telegramId);
+
+    if (!telegramId) {
+      alert("Telegram ID не найден. Запустите через Telegram WebApp.");
+      loadingEl.style.display = "none";
+      return;
+    }
+
+    try {
+      const { data, error } = await supabaseClient
+        .from("users")
+        .select("*")
+        .eq("telegram_id", telegramId)
+        .maybeSingle();
+
+      console.log("Ответ от Supabase:", data, error);
+
+      if (error) {
+        console.error("Ошибка при запросе к Supabase:", error.message);
+        alert("Ошибка при проверке пользователя.");
         loadingEl.style.display = "none";
         return;
       }
 
-      try {
-        const { data: existingUser, error } = await supabaseClient
-          .from("users")
-          .select("*")
-          .eq("telegram_id", telegramId)
-          .maybeSingle();
-
-        console.log("Пользователь в базе:", existingUser);
-
-        if (error) {
-          console.error("Ошибка при запросе:", error.message);
-        }
-
-        if (existingUser) {
-          // ✅ Уже зарегистрирован — редиректим
-          localStorage.setItem("username", existingUser.username);
-          window.location.href = "profile.html";
-        } else {
-          // 🆕 Новый пользователь — показываем форму, скрываем загрузку
-          loadingEl.style.display = "none";
-          formEl.style.display = "block";
-        }
-
-      } catch (err) {
-        console.error("Неожиданная ошибка:", err);
-        alert("Ошибка при проверке Telegram ID.");
+      if (data) {
+        console.log("✅ Пользователь найден, редиректим...");
+        localStorage.setItem("username", data.username);
+        window.location.href = "profile.html";
+      } else {
+        console.log("🆕 Пользователь не найден, показываем форму.");
         loadingEl.style.display = "none";
+        formEl.style.display = "block";
       }
 
-    }, 300); // небольшая задержка (можно убрать)
-  });
+    } catch (err) {
+      console.error("Неожиданная ошибка:", err);
+      alert("Ошибка при проверке Telegram ID.");
+      loadingEl.style.display = "none";
+    }
+
+  }, 300);
+});
+
 </script>
 </body>
 </html>
