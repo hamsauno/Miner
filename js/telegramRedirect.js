@@ -1,17 +1,12 @@
-document.addEventListener("DOMContentLoaded", function () {
-  const tg = window.Telegram.WebApp;
-  const isTelegram = tg && tg.initData;
-  const isMain = location.pathname.endsWith('/index.html') || location.pathname === '/';
+(function () {
+  // Если WebApp не инициализирован — ничего не делаем
+  if (!window.Telegram || !Telegram.WebApp || !Telegram.WebApp.initData) return;
 
-  // Замените это на URL вашей главной страницы (абсолютный или относительный)
-  const MAIN_PAGE = '/index.html';
+  const mainPath = '/index.html'; // <-- путь к главной странице (можешь изменить)
+  const currentPath = window.location.pathname;
 
-  if (isTelegram) {
-    const current = window.location.pathname;
-
-    // Если это не главная страница — редиректим
-    if (current !== MAIN_PAGE) {
-      window.location.replace(MAIN_PAGE);
-    }
+  // Если мы не на главной — делаем redirect
+  if (!currentPath.endsWith(mainPath) && currentPath !== '/' && !currentPath.includes('index.html')) {
+    window.location.replace(mainPath);
   }
-});
+})();
