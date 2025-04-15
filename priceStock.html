@@ -15,20 +15,22 @@
 </head>
 <body class="bg-[#222222] text-white font-[Arial] h-screen overflow-hidden">
 
-  <!-- Закреплённая панель высотой 52px -->
-  <div class="fixed top-0 left-0 w-full h-[52px] z-50 bg-[#222222] shadow flex items-center justify-center gap-3 px-2 overflow-x-auto">
-    <button class="type-btn bg-[#333333] text-white px-4 py-1.5 rounded font-semibold tracking-wide text-sm whitespace-nowrap" data-type="Наличие">Наличие</button>
-    <button class="type-btn bg-[#333333] text-white px-4 py-1.5 rounded font-semibold tracking-wide text-sm whitespace-nowrap" data-type="В пути">В пути</button>
-    <button class="type-btn bg-[#333333] text-white px-4 py-1.5 rounded font-semibold tracking-wide text-sm whitespace-nowrap" data-type="Предзаказ">Предзаказ</button>
+  <!-- Фиксированная обёртка с отступом сверху -->
+  <div class="fixed top-[52px] left-0 w-full z-50 bg-[#222222] shadow">
+
+    <!-- Кнопки -->
+    <div class="p-4 flex flex-wrap gap-3 justify-center">
+      <button class="type-btn bg-[#333333] text-white px-4 py-1.5 rounded font-semibold tracking-wide text-sm" data-type="Наличие">Наличие</button>
+      <button class="type-btn bg-[#333333] text-white px-4 py-1.5 rounded font-semibold tracking-wide text-sm" data-type="В пути">В пути</button>
+      <button class="type-btn bg-[#333333] text-white px-4 py-1.5 rounded font-semibold tracking-wide text-sm" data-type="Предзаказ">Предзаказ</button>
+    </div>
+
+    <!-- Производители -->
+    <div id="manufacturers" class="pb-2 px-4 grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 max-w-screen-xl mx-auto"></div>
   </div>
 
-  <!-- Вторая закреплённая часть: производители -->
-  <div class="fixed top-[52px] left-0 w-full bg-[#222222] z-40">
-    <div id="manufacturers" class="p-4 grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 max-w-screen-xl mx-auto px-2 sm:px-3"></div>
-  </div>
-
-  <!-- Прокручиваемая область -->
-  <div class="pt-[52px] sm:pt-[170px] max-h-screen overflow-y-auto">
+  <!-- Контент с отступом (высота блока выше + 52px сверху) -->
+  <div class="pt-[250px] max-h-screen overflow-y-auto">
     <div class="max-w-screen-xl mx-auto px-2 sm:px-3">
       <!-- Модели -->
       <div id="models" class="p-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 text-[13px] sm:text-sm md:text-base"></div>
@@ -41,6 +43,5 @@
   </div>
 
 </body>
-
 
 </html>
