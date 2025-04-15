@@ -35,67 +35,106 @@
     </button>
   </div>
 
-<script>
-  const { createClient } = supabase;
-  const supabaseUrl = "https://yiprwrgmyqlkdmhgulmc.supabase.co";
-  const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlpcHJ3cmdteXFsa2RtaGd1bG1jIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ2NTI0NjgsImV4cCI6MjA2MDIyODQ2OH0.lfiTfr5ukGDEVuwq-X9U2kWs3nEZrp3N443HT5AkbfI";
-  const supabaseClient = createClient(supabaseUrl, supabaseKey);
+  <!-- 🔍 Проверка пользователя -->
+  <script>
+    const { createClient } = supabase;
+    const supabaseUrl = "https://yiprwrgmyqlkdmhgulmc.supabase.co";
+    const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlpcHJ3cmdteXFsa2RtaGd1bG1jIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ2NTI0NjgsImV4cCI6MjA2MDIyODQ2OH0.lfiTfr5ukGDEVuwq-X9U2kWs3nEZrp3N443HT5AkbfI";
+    const supabaseClient = createClient(supabaseUrl, supabaseKey);
 
-document.addEventListener("DOMContentLoaded", async () => {
-  const tg = window.Telegram.WebApp;
-  tg.ready();
+    document.addEventListener("DOMContentLoaded", async () => {
+      const tg = window.Telegram.WebApp;
+      tg.ready();
 
-  const loadingEl = document.getElementById("loading");
-  const formEl = document.getElementById("registerForm");
+      const loadingEl = document.getElementById("loading");
+      const formEl = document.getElementById("registerForm");
 
-  loadingEl.style.display = "flex";
-  formEl.style.display = "none";
+      loadingEl.style.display = "flex";
+      formEl.style.display = "none";
 
-  setTimeout(async () => {
-    const telegramId = tg?.initDataUnsafe?.user?.id;
+      setTimeout(async () => {
+        const telegramId = tg?.initDataUnsafe?.user?.id;
 
-    console.log("Получен Telegram ID:", telegramId, "Тип:", typeof telegramId);
+        console.log("Получен Telegram ID:", telegramId, "Тип:", typeof telegramId);
 
-    if (!telegramId) {
-      alert("Telegram ID не найден. Запустите через Telegram WebApp.");
-      loadingEl.style.display = "none";
-      return;
-    }
+        if (!telegramId) {
+          alert("Telegram ID не найден. Запустите через Telegram WebApp.");
+          loadingEl.style.display = "none";
+          return;
+        }
 
-    try {
-      const { data, error } = await supabaseClient
-        .from("users")
-        .select("*")
-        .eq("telegram_id", telegramId.toString())  // <-- здесь fix
-        .maybeSingle();
+        try {
+          const { data, error } = await supabaseClient
+            .from("users")
+            .select("*")
+            .eq("telegram_id", telegramId.toString())
+            .maybeSingle();
 
-      console.log("Ответ от Supabase:", data, error);
+          console.log("Ответ от Supabase:", data, error);
 
-      if (error) {
-        console.error("Ошибка при запросе:", error.message);
-        alert("Ошибка при проверке пользователя.");
-        loadingEl.style.display = "none";
+          if (error) {
+            console.error("Ошибка при запросе:", error.message);
+            alert("Ошибка при проверке пользователя.");
+            loadingEl.style.display = "none";
+            return;
+          }
+
+          if (data) {
+            console.log("✅ Пользователь найден, редиректим...");
+            localStorage.setItem("username", data.username);
+            window.location.href = "profile.html";
+          } else {
+            console.log("🆕 Пользователь не найден, показываем форму.");
+            loadingEl.style.display = "none";
+            formEl.style.display = "block";
+          }
+
+        } catch (err) {
+          console.error("Неожиданная ошибка:", err);
+          alert("Ошибка при проверке Telegram ID.");
+          loadingEl.style.display = "none";
+        }
+      }, 300);
+    });
+  </script>
+
+  <!-- 📝 Обработка регистрации -->
+  <script>
+    async function registerUser() {
+      const username = document.getElementById("username").value.trim();
+      const password = document.getElementById("password").value.trim();
+      const tg = window.Telegram.WebApp;
+      const telegramId = tg?.initDataUnsafe?.user?.id;
+
+      if (!username || !password) {
+        alert("Введите имя и пароль.");
         return;
       }
 
-      if (data) {
-        console.log("✅ Пользователь найден, редиректим...");
-        localStorage.setItem("username", data.username);
-        window.location.href = "profile.html";
-      } else {
-        console.log("🆕 Пользователь не найден, показываем форму.");
-        loadingEl.style.display = "none";
-        formEl.style.display = "block";
+      if (!telegramId) {
+        alert("Telegram ID не найден.");
+        return;
       }
 
-    } catch (err) {
-      console.error("Неожиданная ошибка:", err);
-      alert("Ошибка при проверке Telegram ID.");
-      loadingEl.style.display = "none";
+      const { data, error } = await supabaseClient.from("users").insert([
+        {
+          username: username,
+          password: password,
+          telegram_id: telegramId.toString(),
+        },
+      ]);
+
+      console.log("🔁 Результат вставки:", data, error);
+
+      if (error) {
+        alert("Ошибка при регистрации: " + error.message);
+      } else {
+        localStorage.setItem("username", username);
+        window.location.href = "profile.html";
+      }
     }
 
-  }, 300);
-});
-</script>
+    document.getElementById("registerBtn").addEventListener("click", registerUser);
+  </script>
 </body>
 </html>
