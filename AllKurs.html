@@ -13,48 +13,60 @@
 <body class="bg-[#111] text-white font-[Arial]">
 
   <!-- Контейнер с отступом сверху 52px -->
-  <div class="pt-[52px] px-4 max-w-screen-md mx-auto">
+  <div class="pt-[52px] px-4 max-w-screen-md mx-auto bg-[#222222] rounded-xl shadow-md py-6">
 
     <!-- Основная обёртка — 2 колонки -->
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 items-center">
-
-      <!-- Правая колонка (BTC) -->
-      <div class="flex flex-col items-center justify-center text-center">
-        <span class="text-xl font-semibold">BTC:</span>
-        <img src="img/BTC.webp" alt="BTC" class="w-12 h-12 mb-2">
-        <span id="btcPrice" class="text-2xl underline">$...</span>
-      </div>
 
       <!-- Левая колонка (остальные курсы) -->
       <div class="grid grid-cols-2 gap-4">
 
         <div class="flex flex-col items-center">
-          <img src="img/usdt.png" alt="USDT" class="w-8 h-8 mb-1">
           <span class="text-sm">USDT:</span>
-          <span id="usdtPrice" class="underline">... ₽</span>
+          <div class="flex items-center gap-1">
+            <img src="img/usdt.png" alt="USDT" class="w-5 h-5">
+            <span id="usdtPrice" class="underline text-sm">... ₽</span>
+          </div>
         </div>
 
         <div class="flex flex-col items-center">
-          <img src="img/LTC.webp" alt="LTC" class="w-8 h-8 mb-1">
           <span class="text-sm">LTC:</span>
-          <span id="ltcPrice" class="underline">$...</span>
+          <div class="flex items-center gap-1">
+            <img src="img/LTC.webp" alt="LTC" class="w-5 h-5">
+            <span id="ltcPrice" class="underline text-sm">$...</span>
+          </div>
         </div>
 
         <div class="flex flex-col items-center">
-          <img src="img/DOGE.png" alt="DOGE" class="w-8 h-8 mb-1">
           <span class="text-sm">DOGE:</span>
-          <span id="dogePrice" class="underline">$...</span>
+          <div class="flex items-center gap-1">
+            <img src="img/DOGE.png" alt="DOGE" class="w-5 h-5">
+            <span id="dogePrice" class="underline text-sm">$...</span>
+          </div>
         </div>
 
         <div class="flex flex-col items-center">
-          <img src="img/BELL.webp" alt="BELL" class="w-8 h-8 mb-1">
           <span class="text-sm">BELL:</span>
-          <span id="bellPrice" class="underline">$...</span>
+          <div class="flex items-center gap-1">
+            <img src="img/BELL.webp" alt="BELL" class="w-5 h-5">
+            <span id="bellPrice" class="underline text-sm">$...</span>
+          </div>
         </div>
 
       </div>
+
+      <!-- Правая колонка (BTC) -->
+      <div class="flex flex-col items-center justify-center text-center">
+        <span class="text-xl font-semibold mb-1">BTC:</span>
+        <div class="flex items-center gap-2">
+          <img src="img/BTC.webp" alt="BTC" class="w-7 h-7">
+          <span id="btcPrice" class="text-xl underline">$...</span>
+        </div>
+      </div>
+
     </div>
   </div>
 
 </body>
 </html>
+
