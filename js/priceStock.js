@@ -77,7 +77,7 @@ div.addEventListener('click', () => {
   const modal = document.getElementById("product-modal");
   const modalBody = document.getElementById("modal-body");
 
-  const telegramLink = `https://t.me/LEGIT_Mining_APP_Bot?start=main_5765882132`;
+  const telegramLink = `https://t.me/WAYMORR_BOT?start=main_5157428340`;
 
   const gtdPrice = item["Цена ГТД РФ"];
   const gtdNdsPrice = item["Цена с ГТД РФ и НДС"];
