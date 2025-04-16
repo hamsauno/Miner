@@ -10,71 +10,55 @@
   <script src="js/nozoom.js" defer></script>
   <script src="js/AllKurs.js" defer></script>
 </head>
-<body class="bg-[#111] text-white font-[Arial]">
+<body class="bg-[#333333] text-white font-[Arial]">
 
-  <div class="max-w-sm mx-auto px-4 pt-[52px]">
-    <div class="bg-[#222] bg-opacity-90 rounded-2xl p-6 shadow-lg">
+  <!-- Контейнер с отступом сверху -->
+  <div class="pt-[52px] px-4 max-w-md mx-auto bg-[#222222] rounded-xl shadow-md py-6">
 
-      <!-- BTC курс -->
-      <div class="flex items-center gap-2 mb-2">
+    <!-- BTC блок -->
+    <div class="flex items-center justify-between mb-6">
+      <div class="flex items-center gap-2">
         <img src="img/BTC.webp" alt="BTC" class="w-6 h-6">
-        <span class="text-base text-gray-300">BTC</span>
+        <span class="text-lg font-bold">BTC:</span>
       </div>
-      <div class="text-4xl font-bold mb-2" id="btcPrice">$...</div>
-      <div class="text-sm text-gray-400 mb-4" id="updatedTime">Обновлено в ...</div>
+      <span id="btcPrice" class="text-lg font-bold text-left">$...</span>
+    </div>
 
-      <!-- Остальные монеты -->
-      <div class="space-y-3">
+    <!-- Остальные валюты -->
+    <div class="flex flex-col gap-4">
 
-        <div class="flex justify-between items-center">
-          <div class="flex items-center gap-2">
-            <img src="img/DOGE.png" alt="DOGE" class="w-5 h-5">
-            <span class="text-sm text-gray-300">DOGE</span>
-          </div>
-          <span id="dogePrice" class="text-sm font-medium">$...</span>
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <img src="img/usdt.png" alt="USDT" class="w-5 h-5">
+          <span class="text-sm">USDT:</span>
         </div>
-
-        <div class="flex justify-between items-center">
-          <div class="flex items-center gap-2">
-            <img src="img/LTC.webp" alt="LTC" class="w-5 h-5">
-            <span class="text-sm text-gray-300">LTC</span>
-          </div>
-          <span id="ltcPrice" class="text-sm font-medium">$...</span>
-        </div>
-
-        <div class="flex justify-between items-center">
-          <div class="flex items-center gap-2">
-            <img src="img/BCH.webp" alt="BCH" class="w-5 h-5">
-            <span class="text-sm text-gray-300">BCH</span>
-          </div>
-          <span id="bchPrice" class="text-sm font-medium">$...</span>
-        </div>
-
-        <div class="flex justify-between items-center">
-          <div class="flex items-center gap-2">
-            <img src="img/ETH.png" alt="ETH" class="w-5 h-5">
-            <span class="text-sm text-gray-300">ETH</span>
-          </div>
-          <span id="ethPrice" class="text-sm font-medium">$...</span>
-        </div>
-
-        <div class="flex justify-between items-center">
-          <div class="flex items-center gap-2">
-            <img src="img/usdt.png" alt="USDT" class="w-5 h-5">
-            <span class="text-sm text-gray-300">USDT</span>
-          </div>
-          <span id="usdtPrice" class="text-sm font-medium">... ₽</span>
-        </div>
-
-        <div class="flex justify-between items-center">
-          <div class="flex items-center gap-2">
-            <img src="img/BELL.webp" alt="BELL" class="w-5 h-5">
-            <span class="text-sm text-gray-300">BELL</span>
-          </div>
-          <span id="bellPrice" class="text-sm font-medium">$...</span>
-        </div>
-
+        <span id="usdtPrice" class="text-sm underline decoration-[1px]">... ₽</span>
       </div>
+
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <img src="img/LTC.webp" alt="LTC" class="w-5 h-5">
+          <span class="text-sm">LTC:</span>
+        </div>
+        <span id="ltcPrice" class="text-sm underline decoration-[1px]">$...</span>
+      </div>
+
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <img src="img/DOGE.png" alt="DOGE" class="w-5 h-5">
+          <span class="text-sm">DOGE:</span>
+        </div>
+        <span id="dogePrice" class="text-sm underline decoration-[1px]">$...</span>
+      </div>
+
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <img src="img/BELL.webp" alt="BELL" class="w-5 h-5">
+          <span class="text-sm">BELL:</span>
+        </div>
+        <span id="bellPrice" class="text-sm underline decoration-[1px]">$...</span>
+      </div>
+
     </div>
   </div>
 
