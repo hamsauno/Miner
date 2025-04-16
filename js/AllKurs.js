@@ -1,6 +1,7 @@
+
 // Функция для получения данных с удалённого текстового файла
 async function fetchData() {
-    const url = "https://hamsauno.github.io/Miner/kursBTC.txt"; // Новый URL
+    const url = "https://hamsauno.github.io/Miner/kursBTC.txt";
 
     try {
         const response = await fetch(url);
@@ -9,31 +10,25 @@ async function fetchData() {
         }
         const data = await response.text();
 
-        console.log("Содержимое файла:", data); // Логируем содержимое файла
-
-        // Разбиваем данные на строки
         const lines = data.trim().split("\n").map(line => line.trim());
 
-        // Проверяем, достаточно ли строк
         if (lines.length >= 6) {
-            console.log("Разобранные строки:", lines);
-
             const btcPrice = parseFloat(lines[0]); // BTC
             const usdtPrice = parseFloat(lines[1]); // USDT
             const ltcPrice = parseFloat(lines[3]); // LTC
             const dogePrice = parseFloat(lines[4]); // DOGE
             const bellPrice = parseFloat(lines[5]); // BELL
 
-            console.log("BTC:", btcPrice, "USDT:", usdtPrice, "LTC:", ltcPrice, "DOGE:", dogePrice, "BELL:", bellPrice);
-
-            // Проверяем, что все значения - числа
             if ([btcPrice, usdtPrice, ltcPrice, dogePrice, bellPrice].every(val => !isNaN(val))) {
-                // Обновляем текст в <span> вместо установки в поле ввода
-                setTextValue("usdtPrice", usdtPrice.toFixed(2));
-                setTextValue("btcPrice", btcPrice.toFixed(2));
-                setTextValue("ltcPrice", ltcPrice.toFixed(2));
-                setTextValue("dogePrice", dogePrice.toFixed(4));
-                setTextValue("bellPrice", bellPrice.toFixed(4));
+                // Устанавливаем значения с нужными знаками валют
+                setTextValue("btcPrice", `$${btcPrice.toFixed(2)}`);
+                setTextValue("usdtPrice", `₽${usdtPrice.toFixed(2)}`);
+                setTextValue("ltcPrice", `$${ltcPrice.toFixed(2)}`);
+                setTextValue("dogePrice", `$${dogePrice.toFixed(4)}`);
+                setTextValue("bellPrice", `$${bellPrice.toFixed(4)}`);
+
+                // Обновляем время
+                updateTime();
             } else {
                 console.error("Ошибка: Данные содержат неверные значения.");
                 setErrorPlaceholders();
@@ -58,18 +53,22 @@ function setTextValue(id, value) {
     }
 }
 
-// Функция для установки плейсхолдера "Ошибка" в элементы
+// Устанавливает плейсхолдеры "Ошибка"
 function setErrorPlaceholders() {
-    ["usdtPrice", "btcPrice", "ltcPrice", "dogePrice", "bellPrice"].forEach(id => {
-        const element = document.getElementById(id);
-        if (element) {
-            element.textContent = "Ошибка";
-        } else {
-            console.error("Элемент не найден:", id);
-        }
-    });
+    const ids = ["btcPrice", "usdtPrice", "ltcPrice", "dogePrice", "bellPrice"];
+    ids.forEach(id => setTextValue(id, "Ошибка"));
 }
 
-// Загрузка данных при загрузке страницы
+// Обновляет время последнего обновления
+function updateTime() {
+    const now = new Date();
+    const timeString = now.toLocaleTimeString("ru-RU", { hour: "2-digit", minute: "2-digit" });
+    const element = document.getElementById("updatedTime");
+    if (element) {
+        element.textContent = `Обновлено в ${timeString}`;
+    }
+}
+
+// Запускаем при загрузке страницы
 document.addEventListener("DOMContentLoaded", fetchData);
 
