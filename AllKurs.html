@@ -10,58 +10,53 @@
   <script src="js/nozoom.js" defer></script>
   <script src="js/AllKurs.js" defer></script>
 </head>
-<body class="bg-[#111] text-white font-[Arial]">
+<body class="bg-[#333333] text-white font-[Arial]">
 
-  <!-- Контейнер с отступом сверху 52px -->
-  <div class="pt-[52px] px-4 max-w-screen-md mx-auto bg-[#222222] rounded-xl shadow-md py-6">
+  <!-- Контейнер с отступом сверху -->
+  <div class="pt-[52px] px-4 max-w-md mx-auto bg-[#222222] rounded-xl shadow-md py-6">
 
-    <!-- Основная обёртка — 2 колонки -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 items-center">
+    <!-- BTC блок -->
+    <div class="flex items-center justify-between mb-6">
+      <div class="flex items-center gap-2">
+        <img src="img/BTC.webp" alt="BTC" class="w-6 h-6">
+        <span class="text-lg font-bold">BTC:</span>
+      </div>
+      <span id="btcPrice" class="text-lg font-bold text-left">$...</span>
+    </div>
 
-      <!-- Левая колонка (остальные курсы) -->
-      <div class="grid grid-cols-2 gap-4">
+    <!-- Остальные валюты -->
+    <div class="flex flex-col gap-4">
 
-        <div class="flex flex-col items-center">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <img src="img/usdt.png" alt="USDT" class="w-5 h-5">
           <span class="text-sm">USDT:</span>
-          <div class="flex items-center gap-1">
-            <img src="img/usdt.png" alt="USDT" class="w-5 h-5">
-            <span id="usdtPrice" class="underline text-sm">... ₽</span>
-          </div>
         </div>
-
-        <div class="flex flex-col items-center">
-          <span class="text-sm">LTC:</span>
-          <div class="flex items-center gap-1">
-            <img src="img/LTC.webp" alt="LTC" class="w-5 h-5">
-            <span id="ltcPrice" class="underline text-sm">$...</span>
-          </div>
-        </div>
-
-        <div class="flex flex-col items-center">
-          <span class="text-sm">DOGE:</span>
-          <div class="flex items-center gap-1">
-            <img src="img/DOGE.png" alt="DOGE" class="w-5 h-5">
-            <span id="dogePrice" class="underline text-sm">$...</span>
-          </div>
-        </div>
-
-        <div class="flex flex-col items-center">
-          <span class="text-sm">BELL:</span>
-          <div class="flex items-center gap-1">
-            <img src="img/BELL.webp" alt="BELL" class="w-5 h-5">
-            <span id="bellPrice" class="underline text-sm">$...</span>
-          </div>
-        </div>
-
+        <span id="usdtPrice" class="text-sm underline decoration-[1px]">... ₽</span>
       </div>
 
-      <!-- Правая колонка (BTC) -->
-      <div class="flex flex-col items-center justify-center text-center">
-        <span class="text-xl font-semibold mb-1">BTC:</span>
+      <div class="flex items-center justify-between">
         <div class="flex items-center gap-2">
-          <img src="img/BTC.webp" alt="BTC" class="w-7 h-7">
-          <span id="btcPrice" class="text-xl underline">$...</span>
+          <img src="img/LTC.webp" alt="LTC" class="w-5 h-5">
+          <span class="text-sm">LTC:</span>
         </div>
+        <span id="ltcPrice" class="text-sm underline decoration-[1px]">$...</span>
+      </div>
+
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <img src="img/DOGE.png" alt="DOGE" class="w-5 h-5">
+          <span class="text-sm">DOGE:</span>
+        </div>
+        <span id="dogePrice" class="text-sm underline decoration-[1px]">$...</span>
+      </div>
+
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <img src="img/BELL.webp" alt="BELL" class="w-5 h-5">
+          <span class="text-sm">BELL:</span>
+        </div>
+        <span id="bellPrice" class="text-sm underline decoration-[1px]">$...</span>
       </div>
 
     </div>
