@@ -70,46 +70,4 @@ function setErrorPlaceholders() {
     });
 }
 
-// Загружаем данные при загрузке страницы
-window.onload = async function() {
-    await fetchData();
-};
 
-
-// Хранилище предыдущих значений
-const previousPrices = {
-  btc: null,
-  usdt: null,
-  ltc: null,
-  doge: null,
-  bell: null
-};
-
-// Обновление курса с анимацией и цветом
-function updatePrice(id, newValue, symbol = '', currency = '') {
-  const el = document.getElementById(id);
-  const prev = previousPrices[id];
-
-  if (el && newValue !== prev) {
-    const cleanNew = parseFloat(newValue);
-
-    el.textContent = `${symbol}${newValue}${currency}`;
-
-    // Определяем изменение
-    if (prev !== null) {
-      if (cleanNew > prev) {
-        el.classList.add('text-green-400', 'animate-pulse');
-      } else if (cleanNew < prev) {
-        el.classList.add('text-red-400', 'animate-pulse');
-      }
-    }
-
-    // Удаляем стили через 1.5 сек
-    setTimeout(() => {
-      el.classList.remove('text-green-400', 'text-red-400', 'animate-pulse');
-    }, 1500);
-
-    // Сохраняем новое значение
-    previousPrices[id] = cleanNew;
-  }
-}
