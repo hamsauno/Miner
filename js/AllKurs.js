@@ -70,4 +70,6 @@ function setErrorPlaceholders() {
     });
 }
 
+// Загрузка данных при загрузке страницы
+document.addEventListener("DOMContentLoaded", fetchData);
 
