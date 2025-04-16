@@ -1,25 +1,60 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="css/bg.css">
-    <script src="js/fullscr.js" defer></script><!-- открытие во весь экран и зафиксировать -->
-    <script src="js/nozoom.js" defer></script><!-- чтобы не было возможности делать зум -->
-    
-    <script src="js/AllKurs.js" defer></script><!-- загрузка курсов -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="css/bg.css">
+  <script src="js/fullscr.js" defer></script>
+  <script src="js/nozoom.js" defer></script>
+  <script src="js/AllKurs.js" defer></script>
 </head>
-<body>
-   
-<div class="header">
-    <label>Курс USDT: <span id="usdtPrice"></span>₽</label>
-    <label>Курс BTC: <span id="btcPrice"></span>$</label>
-    <label>Курс LTC: <span id="ltcPrice"></span>$</label>
-    <label>Курс DOGE: <span id="dogePrice"></span>$</label>
-    <label>Курс BELL: <span id="bellPrice"></span>$</label>           
-</div>
+<body class="bg-[#111] text-white font-[Arial]">
+
+  <!-- Контейнер с отступом сверху 52px -->
+  <div class="pt-[52px] px-4 max-w-screen-md mx-auto">
+
+    <!-- Основная обёртка — 2 колонки -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 items-center">
+
+      <!-- Левая колонка (BTC) -->
+      <div class="flex flex-col items-center justify-center text-center">
+        <img src="img/BTC.webp" alt="BTC" class="w-16 h-16 mb-2">
+        <span class="text-xl font-semibold">BTC:</span>
+        <span id="btcPrice" class="text-2xl underline">$...</span>
+      </div>
+
+      <!-- Правая колонка (остальные) -->
+      <div class="grid grid-cols-2 gap-4">
+
+        <div class="flex flex-col items-center">
+          <img src="img/usdt.png" alt="USDT" class="w-10 h-10 mb-1">
+          <span class="text-sm">USDT:</span>
+          <span id="usdtPrice" class="underline">... ₽</span>
+        </div>
+
+        <div class="flex flex-col items-center">
+          <img src="img/LTC.webp" alt="LTC" class="w-10 h-10 mb-1">
+          <span class="text-sm">LTC:</span>
+          <span id="ltcPrice" class="underline">$...</span>
+        </div>
+
+        <div class="flex flex-col items-center">
+          <img src="img/DOGE.png" alt="DOGE" class="w-10 h-10 mb-1">
+          <span class="text-sm">DOGE:</span>
+          <span id="dogePrice" class="underline">$...</span>
+        </div>
+
+        <div class="flex flex-col items-center">
+          <img src="img/BELL.webp" alt="BELL" class="w-10 h-10 mb-1">
+          <span class="text-sm">BELL:</span>
+          <span id="bellPrice" class="underline">$...</span>
+        </div>
+
+      </div>
+    </div>
+  </div>
 
 </body>
 </html>
