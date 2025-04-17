@@ -13,43 +13,43 @@
 <body class="bg-[#222222] text-white font-[Arial]">
 
   <div class="w-full pt-[52px]">
-    <div class="bg-[#333333] bg-opacity-90 rounded-2xl p-6 shadow-lg">
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div class="bg-[#333333] bg-opacity-90 rounded-2xl p-6 shadow-lg max-w-md mx-auto">
+      <div class="flex items-center justify-between">
 
-        <!-- Левая колонка — BTC -->
+        <!-- Левая часть — BTC -->
         <div>
           <div class="flex items-center gap-2 mb-2">
             <img src="img/BTC.webp" alt="BTC" class="w-6 h-6">
             <span class="text-base text-gray-300">BTC</span>
           </div>
-          <div class="text-4xl font-bold mb-2" id="btcPrice">$...</div>
-          <div class="text-sm text-gray-400" id="updatedTime">Обновлено в ...</div>
+          <div class="text-4xl font-bold mb-2" id="btcPrice">$85303.70</div>
+          <div class="text-sm text-gray-400" id="updatedTime">Обновлено в 22:30</div>
         </div>
 
-        <!-- Правая колонка — Остальные монеты -->
-        <div class="space-y-4">
-          <div class="flex items-center gap-2">
+        <!-- Правая часть — остальные монеты -->
+        <div class="space-y-2 text-right">
+          <div class="flex items-center gap-2 justify-end">
             <img src="img/DOGE.png" alt="DOGE" class="w-5 h-5">
             <span class="text-sm text-gray-300">DOGE:</span>
-            <span id="dogePrice" class="text-sm font-medium">$...</span>
+            <span id="dogePrice" class="text-sm font-medium">$0.1588</span>
           </div>
 
-          <div class="flex items-center gap-2">
+          <div class="flex items-center gap-2 justify-end">
             <img src="img/LTC.webp" alt="LTC" class="w-5 h-5">
             <span class="text-sm text-gray-300">LTC:</span>
-            <span id="ltcPrice" class="text-sm font-medium">$...</span>
+            <span id="ltcPrice" class="text-sm font-medium">$76.14</span>
           </div>
 
-          <div class="flex items-center gap-2">
+          <div class="flex items-center gap-2 justify-end">
             <img src="img/usdt.png" alt="USDT" class="w-5 h-5">
             <span class="text-sm text-gray-300">USDT:</span>
-            <span id="usdtPrice" class="text-sm font-medium">... ₽</span>
+            <span id="usdtPrice" class="text-sm font-medium">₽85.00</span>
           </div>
 
-          <div class="flex items-center gap-2">
+          <div class="flex items-center gap-2 justify-end">
             <img src="img/BELL.webp" alt="BELL" class="w-5 h-5">
             <span class="text-sm text-gray-300">BELL:</span>
-            <span id="bellPrice" class="text-sm font-medium">$...</span>
+            <span id="bellPrice" class="text-sm font-medium">$0.6504</span>
           </div>
         </div>
 
