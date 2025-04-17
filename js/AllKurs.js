@@ -1,14 +1,16 @@
-
 // Функция для получения данных с удалённого текстового файла
 async function fetchData() {
     const url = "https://hamsauno.github.io/Miner/kursBTC.txt";
 
+    console.log("🔄 Начинаем загрузку курсов с:", url);
+
     try {
         const response = await fetch(url);
         if (!response.ok) {
-            throw new Error("Не удалось загрузить данные.");
+            throw new Error("❌ Не удалось загрузить данные. Статус: " + response.status);
         }
         const data = await response.text();
+        console.log("📄 Полученные данные:\n", data);
 
         const lines = data.trim().split("\n").map(line => line.trim());
 
@@ -19,26 +21,32 @@ async function fetchData() {
             const dogePrice = parseFloat(lines[4]); // DOGE
             const bellPrice = parseFloat(lines[5]); // BELL
 
+            console.log("📈 Распарсенные значения:");
+            console.log("BTC:", btcPrice);
+            console.log("USDT:", usdtPrice);
+            console.log("LTC:", ltcPrice);
+            console.log("DOGE:", dogePrice);
+            console.log("BELL:", bellPrice);
+
             if ([btcPrice, usdtPrice, ltcPrice, dogePrice, bellPrice].every(val => !isNaN(val))) {
-                // Устанавливаем значения с нужными знаками валют
                 setTextValue("btcPrice", `$${btcPrice.toFixed(2)}`);
                 setTextValue("usdtPrice", `₽${usdtPrice.toFixed(2)}`);
                 setTextValue("ltcPrice", `$${ltcPrice.toFixed(2)}`);
                 setTextValue("dogePrice", `$${dogePrice.toFixed(4)}`);
                 setTextValue("bellPrice", `$${bellPrice.toFixed(4)}`);
 
-                // Обновляем время
                 updateTime();
+                console.log("✅ Курсы успешно обновлены");
             } else {
-                console.error("Ошибка: Данные содержат неверные значения.");
+                console.error("❌ Ошибка: Данные содержат неверные значения.");
                 setErrorPlaceholders();
             }
         } else {
-            console.error("Ошибка: недостаточно строк в файле.");
+            console.error("❌ Ошибка: недостаточно строк в файле.");
             setErrorPlaceholders();
         }
     } catch (error) {
-        console.error("Ошибка загрузки файла:", error);
+        console.error("❌ Ошибка загрузки файла:", error);
         setErrorPlaceholders();
     }
 }
@@ -49,7 +57,7 @@ function setTextValue(id, value) {
     if (element) {
         element.textContent = value;
     } else {
-        console.error("Элемент не найден:", id);
+        console.error("⚠️ Элемент не найден:", id);
     }
 }
 
@@ -66,9 +74,9 @@ function updateTime() {
     const element = document.getElementById("updatedTime");
     if (element) {
         element.textContent = `Обновлено в ${timeString}`;
+        console.log("🕒 Время обновления установлено:", timeString);
     }
 }
 
 // Запускаем при загрузке страницы
 document.addEventListener("DOMContentLoaded", fetchData);
-
