@@ -92,7 +92,7 @@
       if (data && data.length > 0) {
         console.log("✅ Пользователь найден:", data[0]);
         localStorage.setItem("username", data[0].username);
-        window.location.href = "profile.html";
+        window.location.href = "myprofile.html";
       } else {
         console.log("🆕 Пользователь не найден, показываем форму.");
         loadingEl.style.display = "none";
