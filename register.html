@@ -121,13 +121,13 @@
 
     try {
       const { data, error } = await supabaseClient
-        .from("users")
-        .insert([{
-          telegram_id: telegramId.toString(),
-          username: username,
-          password: password
-          bonus: 0  // ➕ Добавляем поле bonus со значением 0
-        }]);
+      .from("users")
+      .insert([{
+        telegram_id: telegramId.toString(),
+        username: username,
+        password: password,
+        bonus: 0  // ← записываем 0 при регистрации
+      }]);
 
       if (error) {
         console.error("❌ Ошибка при регистрации:", error.message);
