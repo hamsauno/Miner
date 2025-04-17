@@ -1,1 +1,89 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+      <script src="js/fullscr.js" defer></script><!-- открытие во весь экран и зафиксировать -->
+      <script src="js/nozoom.js" defer></script><!-- чтобы не было возможности делать зум -->
+  
+  <script type="module">
+    import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
+
+    const supabaseUrl = "https://yiprwrgmyqlkdmhgulmc.supabase.co";
+    const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlpcHJ3cmdteXFsa2RtaGd1bG1jIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ2NTI0NjgsImV4cCI6MjA2MDIyODQ2OH0.lfiTfr5ukGDEVuwq-X9U2kWs3nEZrp3N443HT5AkbfI";
+    const supabase = createClient(supabaseUrl, supabaseKey);
+
+    // 🔹 Заменить на telegram_id из Telegram WebApp initData
+    const telegram_id = window.Telegram.WebApp?.initDataUnsafe?.user?.id || 123456789;
+
+    document.addEventListener("DOMContentLoaded", async () => {
+      const idField = document.getElementById("telegram_id");
+      const nameInput = document.getElementById("name");
+      const birthInput = document.getElementById("birthdate");
+      const bonusField = document.getElementById("bonus");
+
+      idField.textContent = telegram_id;
+
+      // Загружаем существующие данные
+      const { data, error } = await supabase
+        .from("users")
+        .select("*")
+        .eq("telegram_id", telegram_id)
+        .single();
+
+      if (data) {
+        nameInput.value = data.name || "";
+        birthInput.value = data.birthdate || "";
+        bonusField.textContent = data.bonus ?? 0;
+      } else {
+        // Если нет пользователя — создаём
+        await supabase.from("users").insert({
+          telegram_id,
+          bonus: 0
+        });
+        bonusField.textContent = 0;
+      }
+
+      // Сохраняем имя и дату рождения при вводе
+      const saveData = async () => {
+        const name = nameInput.value.trim();
+        const birthdate = birthInput.value;
+        await supabase.from("users").upsert({
+          telegram_id,
+          name,
+          birthdate
+        });
+      };
+
+      nameInput.addEventListener("change", saveData);
+      birthInput.addEventListener("change", saveData);
+    });
+  </script>
+</head>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center">
+  <div class="bg-white rounded-2xl shadow-xl p-6 w-full max-w-md space-y-4">
+    <h2 class="text-2xl font-semibold text-center">👤 Личный кабинет</h2>
+
+    <div class="text-sm text-gray-500">Telegram ID:</div>
+    <div id="telegram_id" class="bg-gray-100 px-3 py-2 rounded text-gray-700 font-mono text-sm"></div>
+
+    <label class="block mt-4">
+      <span class="text-gray-700">Имя:</span>
+      <input id="name" type="text" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" placeholder="Введите имя">
+    </label>
+
+    <label class="block mt-4">
+      <span class="text-gray-700">Дата рождения:</span>
+      <input id="birthdate" type="date" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
+    </label>
+
+    <div class="mt-4">
+      <div class="text-gray-700">🎁 Ваши бонусы:</div>
+      <div id="bonus" class="text-xl font-bold text-green-600">0</div>
+    </div>
+  </div>
+</body>
+</html>
 
