@@ -20,18 +20,18 @@
       const bonusField = document.getElementById("bonus");
       const notification = document.getElementById("notification");
 
-      // Получаем telegram_id (либо тестовый)
+      // Временно жёстко заданный Telegram ID (для теста)
       const telegram_id = window.Telegram?.WebApp?.initDataUnsafe?.user?.id || 111111111;
       idField.textContent = telegram_id;
 
-      // Пытаемся получить пользователя
+      // Получаем данные
       let { data: user, error } = await supabase
         .from("users")
         .select("*")
         .eq("telegram_id", telegram_id)
         .single();
 
-      // Если не найден — создаём
+      // Если пользователя нет — создаём
       if (!user) {
         const { data, error: insertError } = await supabase
           .from("users")
@@ -41,16 +41,25 @@
         user = data;
       }
 
-      // Заполняем поля
-      nameInput.value = user.name || "";
-      birthInput.value = user.birthdate || "";
+      // Отображаем данные
+      if (user.name) nameInput.value = user.name;
+      if (user.birthdate) birthInput.value = user.birthdate;
       bonusField.textContent = user.bonus ?? 0;
 
-      // Сохраняем данные
-      saveButton.addEventListener("click", async () => {
+      // Показываем кнопку при изменении полей
+      nameInput.addEventListener("input", () => {
+        saveButton.classList.remove('hidden');
+      });
+
+      birthInput.addEventListener("input", () => {
+        saveButton.classList.remove('hidden');
+      });
+
+      // Обработчик сохранения
+      const saveField = async () => {
         const updates = {
           name: nameInput.value.trim(),
-          birthdate: birthInput.value
+          birthdate: birthInput.value,
         };
 
         const { error } = await supabase
@@ -59,10 +68,17 @@
           .eq("telegram_id", telegram_id);
 
         if (!error) {
-          notification.classList.remove("hidden");
-          setTimeout(() => notification.classList.add("hidden"), 3000);
+          saveButton.classList.add('hidden');
+          notification.classList.remove('hidden');
+          setTimeout(() => {
+            notification.classList.add('hidden');
+          }, 3000);
+        } else {
+          alert("Ошибка при сохранении данных.");
         }
-      });
+      };
+
+      saveButton.addEventListener("click", saveField);
     });
   </script>
 </head>
@@ -80,14 +96,14 @@
     <div class="flex justify-between gap-4">
       <!-- Имя -->
       <div class="flex-1">
-        <label class="block mb-1">Имя:</label>
+        <label class="mb-1 block">Имя:</label>
         <input id="name" type="text"
           class="w-full rounded-md bg-gray-800 border border-gray-600 px-3 py-1 text-white">
       </div>
 
       <!-- Дата рождения -->
       <div class="flex-1">
-        <label class="block mb-1">Дата рождения:</label>
+        <label class="mb-1 block">Дата рождения:</label>
         <input id="birthdate" type="date"
           class="w-full rounded-md bg-gray-800 border border-gray-600 px-3 py-1 text-white">
       </div>
@@ -95,7 +111,7 @@
 
     <!-- Кнопка Сохранить -->
     <div class="flex justify-center">
-      <button id="save-button" class="mt-4 px-6 py-2 bg-green-500 text-white rounded-lg shadow-md">
+      <button id="save-button" class="mt-4 px-6 py-2 bg-green-500 text-white rounded-lg shadow-md hidden">
         Сохранить
       </button>
     </div>
@@ -113,3 +129,4 @@
   </div>
 </body>
 </html>
+
