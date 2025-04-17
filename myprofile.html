@@ -5,87 +5,102 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Личный кабинет</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <script type="module">
-    import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
+<script type="module">
+  import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
 
-    const supabaseUrl = "https://yiprwrgmyqlkdmhgulmc.supabase.co";
-    const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlpcHJ3cmdteXFsa2RtaGd1bG1jIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ2NTI0NjgsImV4cCI6MjA2MDIyODQ2OH0.lfiTfr5ukGDEVuwq-X9U2kWs3nEZrp3N443HT5AkbfI";
-    const supabase = createClient(supabaseUrl, supabaseKey);
+  const supabaseUrl = "https://yiprwrgmyqlkdmhgulmc.supabase.co";
+  const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlpcHJ3cmdteXFsa2RtaGd1bG1jIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ2NTI0NjgsImV4cCI6MjA2MDIyODQ2OH0.lfiTfr5ukGDEVuwq-X9U2kWs3nEZrp3N443HT5AkbfI";
+  const supabase = createClient(supabaseUrl, supabaseKey);
 
-    document.addEventListener("DOMContentLoaded", async () => {
-      const nameInput = document.getElementById("name");
-      const birthInput = document.getElementById("birthdate");
-      const saveButton = document.getElementById("save-button");
-      const idField = document.getElementById("telegram_id");
-      const bonusField = document.getElementById("bonus");
-      const notification = document.getElementById("notification");
+  document.addEventListener("DOMContentLoaded", async () => {
+    const nameInput = document.getElementById("name");
+    const birthInput = document.getElementById("birthdate");
+    const saveButton = document.getElementById("save-button");
+    const idField = document.getElementById("telegram_id");
+    const bonusField = document.getElementById("bonus");
+    const notification = document.getElementById("notification");
 
-      // Получаем telegram_id
-      let telegram_id = null;
-      if (window.Telegram?.WebApp?.initDataUnsafe?.user?.id) {
-        telegram_id = window.Telegram.WebApp.initDataUnsafe.user.id;
-      } else {
-        telegram_id = 111111111; // 🔧 тестовый ID
-        console.warn("Telegram WebApp неактивен. Используется тестовый telegram_id:", telegram_id);
-      }
+    // Получаем telegram_id
+    let telegram_id = null;
+    if (window.Telegram?.WebApp?.initDataUnsafe?.user?.id) {
+      telegram_id = window.Telegram.WebApp.initDataUnsafe.user.id;
+      console.log("✅ Определён telegram_id из Telegram WebApp:", telegram_id);
+    } else {
+      telegram_id = 111111111; // тестовый
+      console.warn("⚠️ Telegram WebApp неактивен. Используется тестовый telegram_id:", telegram_id);
+    }
 
-      // Отображаем telegram_id
-      idField.textContent = telegram_id;
+    // Отображаем telegram_id
+    idField.textContent = telegram_id;
 
-      // Ищем пользователя по telegram_id
-      let { data: user, error } = await supabase
+    // Ищем пользователя в таблице
+    let { data: user, error } = await supabase
+      .from("users")
+      .select("*")
+      .eq("telegram_id", telegram_id)
+      .single();
+
+    if (error) {
+      console.error("❌ Ошибка при поиске пользователя:", error.message);
+    }
+
+    if (user) {
+      console.log("✅ Найден пользователь в базе:", user);
+    } else {
+      console.log("🔍 Пользователь не найден, создаём нового...");
+      const { data, error: insertError } = await supabase
         .from("users")
-        .select("*")
-        .eq("telegram_id", telegram_id)
+        .insert([{ telegram_id, name: "", birthdate: "", bonus: 0 }])
+        .select()
         .single();
-
-      // Если не найден — создаём
-      if (!user) {
-        const { data, error: insertError } = await supabase
-          .from("users")
-          .insert([{ telegram_id, name: "", birthdate: "", bonus: 0 }])
-          .select()
-          .single();
+      if (insertError) {
+        console.error("❌ Ошибка при создании пользователя:", insertError.message);
+      } else {
         user = data;
+        console.log("✅ Новый пользователь успешно создан:", user);
       }
+    }
 
-      // Заполняем поля
-      if (user.name) nameInput.value = user.name;
-      if (user.birthdate) birthInput.value = user.birthdate;
-      bonusField.textContent = user.bonus ?? 0;
+    // Заполняем поля
+    if (user.name) nameInput.value = user.name;
+    if (user.birthdate) birthInput.value = user.birthdate;
+    bonusField.textContent = user.bonus ?? 0;
 
-      // Показываем кнопку при изменении
-      nameInput.addEventListener("input", () => {
-        saveButton.classList.remove("hidden");
-      });
-      birthInput.addEventListener("input", () => {
-        saveButton.classList.remove("hidden");
-      });
-
-      // Сохранение
-      saveButton.addEventListener("click", async () => {
-        const updates = {
-          name: nameInput.value.trim(),
-          birthdate: birthInput.value,
-        };
-
-        const { error } = await supabase
-          .from("users")
-          .update(updates)
-          .eq("telegram_id", telegram_id);
-
-        if (!error) {
-          saveButton.classList.add("hidden");
-          notification.classList.remove("hidden");
-          setTimeout(() => {
-            notification.classList.add("hidden");
-          }, 3000);
-        } else {
-          alert("Ошибка при сохранении.");
-        }
-      });
+    // Показываем кнопку при изменении
+    nameInput.addEventListener("input", () => {
+      saveButton.classList.remove("hidden");
     });
-  </script>
+    birthInput.addEventListener("input", () => {
+      saveButton.classList.remove("hidden");
+    });
+
+    // Сохранение
+    saveButton.addEventListener("click", async () => {
+      const updates = {
+        name: nameInput.value.trim(),
+        birthdate: birthInput.value,
+      };
+
+      const { error } = await supabase
+        .from("users")
+        .update(updates)
+        .eq("telegram_id", telegram_id);
+
+      if (!error) {
+        console.log("💾 Данные успешно обновлены для пользователя:", telegram_id, updates);
+        saveButton.classList.add("hidden");
+        notification.classList.remove("hidden");
+        setTimeout(() => {
+          notification.classList.add("hidden");
+        }, 3000);
+      } else {
+        console.error("❌ Ошибка при обновлении данных:", error.message);
+        alert("Ошибка при сохранении.");
+      }
+    });
+  });
+</script>
+
 </head>
 <body class="min-h-screen bg-[#222222] text-white">
   <div class="max-w-md mx-auto mt-[60px] p-6 bg-[#333333] rounded-2xl shadow-xl space-y-6">
