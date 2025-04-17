@@ -13,8 +13,6 @@
     const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlpcHJ3cmdteXFsa2RtaGd1bG1jIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ2NTI0NjgsImV4cCI6MjA2MDIyODQ2OH0.lfiTfr5ukGDEVuwq-X9U2kWs3nEZrp3N443HT5AkbfI";
     const supabase = createClient(supabaseUrl, supabaseKey);
 
-    const telegram_id = window.Telegram.WebApp?.initDataUnsafe?.user?.id || 123456789;
-
     document.addEventListener("DOMContentLoaded", async () => {
       const nameInput = document.getElementById("name");
       const birthInput = document.getElementById("birthdate");
@@ -25,43 +23,54 @@
       const bonusField = document.getElementById("bonus");
       const notification = document.getElementById("notification");
 
+      // 🧪 временно жестко заданный ID
+      const telegram_id = window.Telegram?.WebApp?.initDataUnsafe?.user?.id || 111111111;
       idField.textContent = telegram_id;
 
-      const { data: userData } = await supabase
+      // Пытаемся получить данные
+      let { data: user, error } = await supabase
         .from("users")
         .select("*")
         .eq("telegram_id", telegram_id)
         .single();
 
-      if (userData) {
-        if (userData.name) {
-          nameInput.value = userData.name;
-          nameInput.disabled = true;
-        }
-
-        if (userData.birthdate) {
-          birthInput.value = userData.birthdate;
-          birthInput.disabled = true;
-        }
-
-        bonusField.textContent = userData.bonus ?? 0;
-      } else {
-        await supabase.from("users").insert({ telegram_id, bonus: 0 });
-        bonusField.textContent = 0;
+      // Если пользователя нет — создаём
+      if (!user) {
+        const { data, error: insertError } = await supabase
+          .from("users")
+          .insert([{ telegram_id, name: "", birthdate: "", bonus: 0 }])
+          .select()
+          .single();
+        user = data;
       }
 
-      const saveField = async (field, value) => {
-        await supabase.from("users")
-          .update({ [field]: value })
-          .eq("telegram_id", telegram_id);
-      };
+      // Показываем данные
+      if (user.name) {
+        nameInput.value = user.name;
+        nameInput.disabled = true;
+      }
+      if (user.birthdate) {
+        birthInput.value = user.birthdate;
+        birthInput.disabled = true;
+      }
+      bonusField.textContent = user.bonus ?? 0;
 
-      const showNotification = (message) => {
-        notification.textContent = message;
-        notification.classList.remove('hidden');
-        setTimeout(() => {
-          notification.classList.add('hidden');
-        }, 3000);
+      const saveField = async () => {
+        const updates = {
+          name: nameInput.value.trim(),
+          birthdate: birthInput.value,
+        };
+        const { error } = await supabase
+          .from("users")
+          .update(updates)
+          .eq("telegram_id", telegram_id);
+        if (!error) {
+          nameInput.disabled = true;
+          birthInput.disabled = true;
+          saveButton.classList.add('hidden');
+          notification.classList.remove('hidden');
+          setTimeout(() => notification.classList.add('hidden'), 3000);
+        }
       };
 
       nameEdit.addEventListener("click", () => {
@@ -76,20 +85,7 @@
         saveButton.classList.remove('hidden');
       });
 
-      saveButton.addEventListener("click", async () => {
-        if (nameInput.value.trim() !== "" && !nameInput.disabled) {
-          nameInput.disabled = true;
-          await saveField("name", nameInput.value.trim());
-        }
-
-        if (birthInput.value && !birthInput.disabled) {
-          birthInput.disabled = true;
-          await saveField("birthdate", birthInput.value);
-        }
-
-        saveButton.classList.add('hidden');
-        showNotification("Данные успешно сохранены!");
-      });
+      saveButton.addEventListener("click", saveField);
     });
   </script>
 </head>
@@ -154,5 +150,3 @@
   </script>
 </body>
 </html>
-
-
