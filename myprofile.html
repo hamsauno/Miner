@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Личный кабинет</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://unpkg.com/lucide@latest"></script>
   <script type="module">
     import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
 
@@ -16,25 +15,23 @@
     document.addEventListener("DOMContentLoaded", async () => {
       const nameInput = document.getElementById("name");
       const birthInput = document.getElementById("birthdate");
-      const nameEdit = document.getElementById("edit-name");
-      const birthEdit = document.getElementById("edit-birth");
       const saveButton = document.getElementById("save-button");
       const idField = document.getElementById("telegram_id");
       const bonusField = document.getElementById("bonus");
       const notification = document.getElementById("notification");
 
-      // 🧪 временно жестко заданный ID
+      // Получаем telegram_id (либо тестовый)
       const telegram_id = window.Telegram?.WebApp?.initDataUnsafe?.user?.id || 111111111;
       idField.textContent = telegram_id;
 
-      // Пытаемся получить данные
+      // Пытаемся получить пользователя
       let { data: user, error } = await supabase
         .from("users")
         .select("*")
         .eq("telegram_id", telegram_id)
         .single();
 
-      // Если пользователя нет — создаём
+      // Если не найден — создаём
       if (!user) {
         const { data, error: insertError } = await supabase
           .from("users")
@@ -44,48 +41,28 @@
         user = data;
       }
 
-      // Показываем данные
-      if (user.name) {
-        nameInput.value = user.name;
-        nameInput.disabled = true;
-      }
-      if (user.birthdate) {
-        birthInput.value = user.birthdate;
-        birthInput.disabled = true;
-      }
+      // Заполняем поля
+      nameInput.value = user.name || "";
+      birthInput.value = user.birthdate || "";
       bonusField.textContent = user.bonus ?? 0;
 
-      const saveField = async () => {
+      // Сохраняем данные
+      saveButton.addEventListener("click", async () => {
         const updates = {
           name: nameInput.value.trim(),
-          birthdate: birthInput.value,
+          birthdate: birthInput.value
         };
+
         const { error } = await supabase
           .from("users")
           .update(updates)
           .eq("telegram_id", telegram_id);
+
         if (!error) {
-          nameInput.disabled = true;
-          birthInput.disabled = true;
-          saveButton.classList.add('hidden');
-          notification.classList.remove('hidden');
-          setTimeout(() => notification.classList.add('hidden'), 3000);
+          notification.classList.remove("hidden");
+          setTimeout(() => notification.classList.add("hidden"), 3000);
         }
-      };
-
-      nameEdit.addEventListener("click", () => {
-        nameInput.disabled = false;
-        nameInput.focus();
-        saveButton.classList.remove('hidden');
       });
-
-      birthEdit.addEventListener("click", () => {
-        birthInput.disabled = false;
-        birthInput.focus();
-        saveButton.classList.remove('hidden');
-      });
-
-      saveButton.addEventListener("click", saveField);
     });
   </script>
 </head>
@@ -103,32 +80,22 @@
     <div class="flex justify-between gap-4">
       <!-- Имя -->
       <div class="flex-1">
-        <label class="flex items-center justify-between mb-1">
-          <span>Имя:</span>
-          <button id="edit-name" class="text-gray-400 hover:text-white">
-            <i data-lucide="pencil" class="w-4 h-4"></i>
-          </button>
-        </label>
+        <label class="block mb-1">Имя:</label>
         <input id="name" type="text"
-          class="w-full rounded-md bg-gray-800 border border-gray-600 px-3 py-1 text-white disabled:opacity-80 disabled:cursor-not-allowed">
+          class="w-full rounded-md bg-gray-800 border border-gray-600 px-3 py-1 text-white">
       </div>
 
       <!-- Дата рождения -->
       <div class="flex-1">
-        <label class="flex items-center justify-between mb-1">
-          <span>Дата рождения:</span>
-          <button id="edit-birth" class="text-gray-400 hover:text-white">
-            <i data-lucide="pencil" class="w-4 h-4"></i>
-          </button>
-        </label>
+        <label class="block mb-1">Дата рождения:</label>
         <input id="birthdate" type="date"
-          class="w-full rounded-md bg-gray-800 border border-gray-600 px-3 py-1 text-white disabled:opacity-80 disabled:cursor-not-allowed">
+          class="w-full rounded-md bg-gray-800 border border-gray-600 px-3 py-1 text-white">
       </div>
     </div>
 
     <!-- Кнопка Сохранить -->
     <div class="flex justify-center">
-      <button id="save-button" class="mt-4 px-6 py-2 bg-green-500 text-white rounded-lg shadow-md hidden">
+      <button id="save-button" class="mt-4 px-6 py-2 bg-green-500 text-white rounded-lg shadow-md">
         Сохранить
       </button>
     </div>
@@ -139,14 +106,10 @@
     </div>
 
     <!-- Бонусы -->
-     <div class="mt-4 text-right">
+    <div class="mt-4 text-right">
       <div class="text-white text-lg">Ваши бонусы:</div>
       <div id="bonus" class="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-[#F6A314] to-[#EC7E07]">0</div>
     </div>
   </div>
-
-  <script>
-    lucide.createIcons();
-  </script>
 </body>
 </html>
