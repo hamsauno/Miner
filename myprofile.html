@@ -15,7 +15,7 @@
 
     document.addEventListener("DOMContentLoaded", async () => {
       const tg = window.Telegram?.WebApp;
-      tg.ready?.();
+      tg?.ready?.();
 
       const loadingEl = document.getElementById("loading");
       const formEl = document.getElementById("registerForm");
@@ -34,10 +34,8 @@
           return;
         }
 
-        // Покажем Telegram ID в интерфейсе
         telegramIdSpan.textContent = telegramId;
 
-        // 🔍 Проверяем наличие пользователя
         const { data, error } = await supabase
           .from("users")
           .select("*")
@@ -55,7 +53,11 @@
         if (data && data.length > 0) {
           console.log("✅ Пользователь найден:", data[0]);
           localStorage.setItem("username", data[0].username);
-          window.location.href = "myprofile.html";
+
+          // Здесь можешь показать данные пользователя или профиль
+          // Например, отобразить имя, бонусы и т.п.
+          loadingEl.style.display = "none";
+          formEl.style.display = "block"; // или можешь показать отдельный "профиль" блок
         } else {
           console.log("🆕 Пользователь не найден. Показываем форму.");
           loadingEl.style.display = "none";
