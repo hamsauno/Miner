@@ -12,74 +12,81 @@
     const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlpcHJ3cmdteXFsa2RtaGd1bG1jIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ2NTI0NjgsImV4cCI6MjA2MDIyODQ2OH0.lfiTfr5ukGDEVuwq-X9U2kWs3nEZrp3N443HT5AkbfI";
     const supabase = createClient(supabaseUrl, supabaseKey);
 
-    document.addEventListener("DOMContentLoaded", async () => {
-      const nameInput = document.getElementById("name");
-      const birthInput = document.getElementById("birthdate");
-      const saveButton = document.getElementById("save-button");
-      const idField = document.getElementById("telegram_id");
-      const bonusField = document.getElementById("bonus");
-      const notification = document.getElementById("notification");
+document.addEventListener("DOMContentLoaded", async () => {
+  const nameInput = document.getElementById("name");
+  const birthInput = document.getElementById("birthdate");
+  const saveButton = document.getElementById("save-button");
+  const idField = document.getElementById("telegram_id");
+  const bonusField = document.getElementById("bonus");
+  const notification = document.getElementById("notification");
 
-      // Временно жёстко заданный Telegram ID (для теста)
-      const telegram_id = window.Telegram?.WebApp?.initDataUnsafe?.user?.id || 111111111;
-      idField.textContent = telegram_id;
+  // Проверка на Telegram WebApp
+  let telegram_id = null;
+  if (window.Telegram?.WebApp?.initDataUnsafe?.user?.id) {
+    telegram_id = window.Telegram.WebApp.initDataUnsafe.user.id;
+  } else {
+    // ВРЕМЕННЫЙ ID для локальной отладки (можно убрать в продакшене)
+    telegram_id = 111111111; // замени на реальный ID для теста
+    console.warn("⚠️ Telegram WebApp неактивен. Используется тестовый telegram_id:", telegram_id);
+  }
 
-      // Получаем данные
-      let { data: user, error } = await supabase
-        .from("users")
-        .select("*")
-        .eq("telegram_id", telegram_id)
-        .single();
+  // Отображаем ID
+  idField.textContent = telegram_id;
 
-      // Если пользователя нет — создаём
-      if (!user) {
-        const { data, error: insertError } = await supabase
-          .from("users")
-          .insert([{ telegram_id, name: "", birthdate: "", bonus: 0 }])
-          .select()
-          .single();
-        user = data;
-      }
+  // Получаем пользователя по telegram_id
+  let { data: user, error } = await supabase
+    .from("users")
+    .select("*")
+    .eq("telegram_id", telegram_id)
+    .single();
 
-      // Отображаем данные
-      if (user.name) nameInput.value = user.name;
-      if (user.birthdate) birthInput.value = user.birthdate;
-      bonusField.textContent = user.bonus ?? 0;
+  // Если пользователь не найден — создаём
+  if (!user) {
+    const { data, error: insertError } = await supabase
+      .from("users")
+      .insert([{ telegram_id, name: "", birthdate: "", bonus: 0 }])
+      .select()
+      .single();
+    user = data;
+  }
 
-      // Показываем кнопку при изменении полей
-      nameInput.addEventListener("input", () => {
-        saveButton.classList.remove('hidden');
-      });
+  // Заполняем поля
+  if (user.name) nameInput.value = user.name;
+  if (user.birthdate) birthInput.value = user.birthdate;
+  bonusField.textContent = user.bonus ?? 0;
 
-      birthInput.addEventListener("input", () => {
-        saveButton.classList.remove('hidden');
-      });
+  // Показываем кнопку при изменении
+  nameInput.addEventListener("input", () => {
+    saveButton.classList.remove('hidden');
+  });
+  birthInput.addEventListener("input", () => {
+    saveButton.classList.remove('hidden');
+  });
 
-      // Обработчик сохранения
-      const saveField = async () => {
-        const updates = {
-          name: nameInput.value.trim(),
-          birthdate: birthInput.value,
-        };
+  // Сохранение
+  saveButton.addEventListener("click", async () => {
+    const updates = {
+      name: nameInput.value.trim(),
+      birthdate: birthInput.value,
+    };
 
-        const { error } = await supabase
-          .from("users")
-          .update(updates)
-          .eq("telegram_id", telegram_id);
+    const { error } = await supabase
+      .from("users")
+      .update(updates)
+      .eq("telegram_id", telegram_id);
 
-        if (!error) {
-          saveButton.classList.add('hidden');
-          notification.classList.remove('hidden');
-          setTimeout(() => {
-            notification.classList.add('hidden');
-          }, 3000);
-        } else {
-          alert("Ошибка при сохранении данных.");
-        }
-      };
+    if (!error) {
+      saveButton.classList.add('hidden');
+      notification.classList.remove('hidden');
+      setTimeout(() => {
+        notification.classList.add('hidden');
+      }, 3000);
+    } else {
+      alert("Ошибка при сохранении данных.");
+    }
+  });
+});
 
-      saveButton.addEventListener("click", saveField);
-    });
   </script>
 </head>
 <body class="min-h-screen bg-[#222222] text-white">
