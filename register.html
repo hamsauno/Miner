@@ -40,11 +40,11 @@
             </button>.
           </div>
     
-    <button id="registerBtn"
-      class="w-full bg-green-600 hover:bg-green-700 transition-all py-2 rounded font-semibold"
-      style="background: linear-gradient(90deg, #F6A314, #EC7E07);">
-      Зарегистрироваться
-    </button>
+          <button id="registerBtn"
+            class="w-full bg-green-600 hover:bg-green-700 transition-all py-2 rounded font-semibold text-black"
+            style="background: linear-gradient(90deg, #F6A314, #EC7E07);">
+            Зарегистрироваться
+          </button>
 
           <div class="text-sm text-gray-500 pt-2">
             <p><b>Telegram ID:</b> <span id="telegram_id"></span></p>
@@ -74,9 +74,13 @@
                   </ul>
                   <p>Нажимая кнопку «Зарегистрироваться», я подтверждаю своё согласие на обработку персональных данных.</p>
                 </div>
-                <div class="mt-4 flex justify-end">
-                  <button onclick="document.getElementById('consentModal').close()" class="px-4 py-2 bg-orange-500 hover:bg-orange-600 rounded text-white">Закрыть</button>
-                </div>
+                    <div class="mt-4 flex justify-end">
+                      <button onclick="document.getElementById('consentModal').close()"
+                        class="px-4 py-2 rounded text-black font-semibold transition-all"
+                        style="background: linear-gradient(90deg, #F6A314, #EC7E07);">
+                        Закрыть
+                      </button>
+                    </div>
               </dialog>
 
 <script>
