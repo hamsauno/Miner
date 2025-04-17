@@ -2,45 +2,26 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8" />
-  <title>Регистрация</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Личный кабинет</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://telegram.org/js/telegram-web-app.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <style>
-    body {
-      background-color: #222222;
-    }
-    .card-container {
-      background-color: #333333;
-      margin-top: 60px;
-    }
-    .gradient-text {
-      background: linear-gradient(90deg, #F6A314, #EC7E07);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-    input[disabled] {
-      cursor: not-allowed;
-      opacity: 0.8;
-    }
-  </style>
-
+  <script src="https://unpkg.com/lucide@latest"></script>
   <script type="module">
     import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
 
     const supabaseUrl = "https://yiprwrgmyqlkdmhgulmc.supabase.co";
-    const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...";
+    const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlpcHJ3cmdteXFsa2RtaGd1bG1jIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ2NTI0NjgsImV4cCI6MjA2MDIyODQ2OH0.lfiTfr5ukGDEVuwq-X9U2kWs3nEZrp3N443HT5AkbfI";
     const supabase = createClient(supabaseUrl, supabaseKey);
 
     const telegram_id = window.Telegram.WebApp?.initDataUnsafe?.user?.id || 123456789;
 
     document.addEventListener("DOMContentLoaded", async () => {
-      const idField = document.getElementById("telegram_id");
       const nameInput = document.getElementById("name");
       const birthInput = document.getElementById("birthdate");
-      const bonusField = document.getElementById("bonus");
       const nameEdit = document.getElementById("edit-name");
       const birthEdit = document.getElementById("edit-birth");
+      const idField = document.getElementById("telegram_id");
+      const bonusField = document.getElementById("bonus");
 
       idField.textContent = telegram_id;
 
@@ -51,19 +32,21 @@
         .single();
 
       if (userData) {
-        nameInput.value = userData.name || "";
-        birthInput.value = userData.birthdate || "";
+        if (userData.name) {
+          nameInput.value = userData.name;
+          nameInput.disabled = true;
+        }
+
+        if (userData.birthdate) {
+          birthInput.value = userData.birthdate;
+          birthInput.disabled = true;
+        }
+
         bonusField.textContent = userData.bonus ?? 0;
       } else {
-        await supabase.from("users").insert({
-          telegram_id,
-          bonus: 0
-        });
+        await supabase.from("users").insert({ telegram_id, bonus: 0 });
         bonusField.textContent = 0;
       }
-
-      nameInput.disabled = true;
-      birthInput.disabled = true;
 
       const saveField = async (field, value) => {
         await supabase.from("users")
@@ -71,31 +54,35 @@
           .eq("telegram_id", telegram_id);
       };
 
+      nameInput.addEventListener("blur", async () => {
+        if (nameInput.value.trim() !== "" && !nameInput.disabled) {
+          nameInput.disabled = true;
+          await saveField("name", nameInput.value.trim());
+        }
+      });
+
+      birthInput.addEventListener("blur", async () => {
+        if (birthInput.value && !birthInput.disabled) {
+          birthInput.disabled = true;
+          await saveField("birthdate", birthInput.value);
+        }
+      });
+
       nameEdit.addEventListener("click", () => {
         nameInput.disabled = false;
         nameInput.focus();
-      });
-
-      nameInput.addEventListener("blur", async () => {
-        nameInput.disabled = true;
-        await saveField("name", nameInput.value.trim());
       });
 
       birthEdit.addEventListener("click", () => {
         birthInput.disabled = false;
         birthInput.focus();
       });
-
-      birthInput.addEventListener("blur", async () => {
-        birthInput.disabled = true;
-        await saveField("birthdate", birthInput.value);
-      });
     });
   </script>
 </head>
-<body class="min-h-screen text-white">
-  <div class="card-container mx-auto rounded-2xl shadow-xl p-6 w-full max-w-md space-y-6">
-    <h2 class="text-2xl font-semibold text-center">Личный кабинет</h2>
+<body class="min-h-screen bg-[#222222] text-white">
+  <div class="max-w-md mx-auto mt-[60px] p-6 bg-[#333333] rounded-2xl shadow-xl space-y-6">
+    <h2 class="text-2xl font-semibold text-center">👤 Личный кабинет</h2>
 
     <!-- Telegram ID -->
     <div class="flex justify-between text-sm text-gray-300 border-b border-gray-600 pb-2">
@@ -103,31 +90,37 @@
       <span id="telegram_id" class="font-mono text-white"></span>
     </div>
 
-    <!-- Имя и дата рождения -->
+    <!-- Имя и Дата рождения -->
     <div class="flex justify-between gap-4">
       <!-- Имя -->
       <div class="flex-1">
         <label class="flex items-center justify-between mb-1">
           <span>Имя:</span>
-          <button id="edit-name"><i data-lucide="pencil" class="w-4 h-4"></i></button>
+          <button id="edit-name" class="text-gray-400 hover:text-white">
+            <i data-lucide="pencil" class="w-4 h-4"></i>
+          </button>
         </label>
-        <input id="name" type="text" class="w-full rounded-md bg-gray-800 border border-gray-600 px-3 py-1 text-white" disabled>
+        <input id="name" type="text"
+          class="w-full rounded-md bg-gray-800 border border-gray-600 px-3 py-1 text-white disabled:opacity-80 disabled:cursor-not-allowed">
       </div>
 
       <!-- Дата рождения -->
       <div class="flex-1">
         <label class="flex items-center justify-between mb-1">
           <span>Дата рождения:</span>
-          <button id="edit-birth"><i data-lucide="pencil" class="w-4 h-4"></i></button>
+          <button id="edit-birth" class="text-gray-400 hover:text-white">
+            <i data-lucide="pencil" class="w-4 h-4"></i>
+          </button>
         </label>
-        <input id="birthdate" type="date" class="w-full rounded-md bg-gray-800 border border-gray-600 px-3 py-1 text-white" disabled>
+        <input id="birthdate" type="date"
+          class="w-full rounded-md bg-gray-800 border border-gray-600 px-3 py-1 text-white disabled:opacity-80 disabled:cursor-not-allowed">
       </div>
     </div>
 
     <!-- Бонусы -->
     <div class="mt-4 text-center">
-      <div class="text-white text-lg">Ваши бонусы:</div>
-      <div id="bonus" class="text-3xl font-bold gradient-text">0</div>
+      <div class="text-white text-lg">🎁 Ваши бонусы:</div>
+      <div id="bonus" class="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-[#F6A314] to-[#EC7E07]">0</div>
     </div>
   </div>
 
@@ -136,4 +129,5 @@
   </script>
 </body>
 </html>
+
 
