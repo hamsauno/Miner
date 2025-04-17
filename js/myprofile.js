@@ -21,6 +21,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   try {
     const telegramUser = tg?.initDataUnsafe?.user;
     const telegramId = telegramUser?.id;
+    const telegramName = telegramUser?.first_name || "Без имени";
 
     if (!telegramId) {
       alert("❗️ Telegram ID не найден. Запустите через Telegram WebApp.");
@@ -39,15 +40,18 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     if (data && data.length > 0) {
       const user = data[0];
-      nameDisplay.textContent = user.name || "Без имени";
+      nameDisplay.textContent = user.name || telegramName;
       bonusEl.textContent = user.bonus ?? 0;
-      profileView.style.display = "block";
     } else {
-      alert("Пользователь не найден в базе данных.");
+      nameDisplay.textContent = telegramName;
+      bonusEl.textContent = 0;
     }
+
+    profileView.style.display = "block";
   } catch (err) {
     alert("Ошибка при инициализации: " + err.message);
   } finally {
     loadingEl.style.display = "none";
   }
 });
+
