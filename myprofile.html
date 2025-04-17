@@ -11,68 +11,56 @@
   const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlpcHJ3cmdteXFsa2RtaGd1bG1jIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ2NTI0NjgsImV4cCI6MjA2MDIyODQ2OH0.lfiTfr5ukGDEVuwq-X9U2kWs3nEZrp3N443HT5AkbfI";
   const supabaseClient = createClient(supabaseUrl, supabaseKey);
 
-    let telegram_id;
+  document.addEventListener("DOMContentLoaded", async () => {
+    const tg = window.Telegram.WebApp;
+    tg.ready();
 
-    // === Получение telegram_id ===
-    if (window.Telegram?.WebApp?.initDataUnsafe?.user?.id) {
-      telegram_id = window.Telegram.WebApp.initDataUnsafe.user.id.toString();
-      console.log("✅ Пользователь из Telegram:", telegram_id);
-    } else {
-      alert("❌ Откройте приложение через Telegram!");
-      throw new Error("Telegram WebApp неактивен. Остановлено.");
+    const loadingEl = document.getElementById("loading");
+    const formEl = document.getElementById("registerForm");
+
+    loadingEl.style.display = "flex";
+    formEl.style.display = "none";
+
+    const telegramId = tg?.initDataUnsafe?.user?.id;
+
+    // 💡 Убедимся, что ID найден и это число
+    if (!telegramId || typeof telegramId !== "number") {
+      alert("❗️ Telegram ID не найден. Запустите через Telegram WebApp.");
+      loadingEl.style.display = "none";
+      return;
     }
+ // 📦 Проверяем, есть ли пользователь с этим telegram_id
+      const { data, error } = await supabaseClient
+        .from("users")
+        .select("*")
+        .eq("telegram_id", telegramId.toString());
 
-    // === Получение профиля пользователя ===
-    async function loadUserProfile() {
-      try {
-        const { data, error } = await supabase
-          .from('users')
-          .select('*')
-          .eq('telegram_id', telegram_id)
-          .single();
-
-        if (error) throw error;
-
-        console.log("✅ Пользователь найден:", data);
-
-        document.getElementById('name').value = data.name || '';
-        document.getElementById('birthdate').value = data.birthdate || '';
-      } catch (error) {
-        console.error("❌ Ошибка при загрузке пользователя:", error.message);
-        alert("Ошибка при загрузке профиля. Проверьте консоль.");
-      }
-    }
-
-    // === Обновление профиля ===
-    async function saveProfile() {
-      const name = document.getElementById('name').value;
-      const birthdate = document.getElementById('birthdate').value;
-
-      const { data, error } = await supabase
-        .from('users')
-        .update({ name, birthdate })
-        .eq('telegram_id', telegram_id)
-        .select();
+      console.log("📦 Ответ от Supabase:", data, error);
 
       if (error) {
-        console.error("❌ Ошибка при обновлении:", error.message);
-        alert("Ошибка при сохранении. Проверьте консоль.");
-      } else {
-        console.log("✅ Данные успешно обновлены:", data[0]);
-
-        const saveBtn = document.getElementById('saveBtn');
-        saveBtn.textContent = 'Сохранено ✅';
-        setTimeout(() => {
-          saveBtn.style.display = 'none';
-        }, 2000);
+        console.error("❌ Ошибка запроса:", error.message);
+        alert("Ошибка при проверке пользователя.");
+        loadingEl.style.display = "none";
+        return;
       }
+
+      if (data && data.length > 0) {
+        console.log("✅ Пользователь найден:", data[0]);
+        localStorage.setItem("username", data[0].username);
+        window.location.href = "myprofile.html";
+      } else {
+        console.log("🆕 Пользователь не найден, показываем форму.");
+        loadingEl.style.display = "none";
+        formEl.style.display = "block";
+      }
+
+    } catch (err) {
+      console.error("❗️ Неожиданная ошибка:", err);
+      alert("Ошибка при проверке Telegram ID.");
+      loadingEl.style.display = "none";
     }
-
-    window.addEventListener('DOMContentLoaded', () => {
-      loadUserProfile();
-
-      document.getElementById('saveBtn').addEventListener('click', saveProfile);
-    });
+  });
+    
   </script>
 </head>
 <body class="min-h-screen bg-[#222222] text-white">
