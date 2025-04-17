@@ -5,66 +5,80 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Личный кабинет</title>
   <script src="https://cdn.tailwindcss.com"></script>
-    <script type="module">
-  const { createClient } = supabase;
-  const supabaseUrl = "https://yiprwrgmyqlkdmhgulmc.supabase.co";
-  const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlpcHJ3cmdteXFsa2RtaGd1bG1jIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ2NTI0NjgsImV4cCI6MjA2MDIyODQ2OH0.lfiTfr5ukGDEVuwq-X9U2kWs3nEZrp3N443HT5AkbfI";
-  const supabaseClient = createClient(supabaseUrl, supabaseKey);
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <script type="module">
+    import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
 
-  document.addEventListener("DOMContentLoaded", async () => {
-    const tg = window.Telegram.WebApp;
-    tg.ready();
+    const supabaseUrl = "https://yiprwrgmyqlkdmhgulmc.supabase.co";
+    const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlpcHJ3cmdteXFsa2RtaGd1bG1jIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ2NTI0NjgsImV4cCI6MjA2MDIyODQ2OH0.lfiTfr5ukGDEVuwq-X9U2kWs3nEZrp3N443HT5AkbfI";
+    const supabase = createClient(supabaseUrl, supabaseKey);
 
-    const loadingEl = document.getElementById("loading");
-    const formEl = document.getElementById("registerForm");
+    document.addEventListener("DOMContentLoaded", async () => {
+      const tg = window.Telegram?.WebApp;
+      tg.ready?.();
 
-    loadingEl.style.display = "flex";
-    formEl.style.display = "none";
+      const loadingEl = document.getElementById("loading");
+      const formEl = document.getElementById("registerForm");
+      const telegramIdSpan = document.getElementById("telegram_id");
 
-    const telegramId = tg?.initDataUnsafe?.user?.id;
+      loadingEl.style.display = "flex";
+      formEl.style.display = "none";
 
-    // 💡 Убедимся, что ID найден и это число
-    if (!telegramId || typeof telegramId !== "number") {
-      alert("❗️ Telegram ID не найден. Запустите через Telegram WebApp.");
-      loadingEl.style.display = "none";
-      return;
-    }
- // 📦 Проверяем, есть ли пользователь с этим telegram_id
-      const { data, error } = await supabaseClient
-        .from("users")
-        .select("*")
-        .eq("telegram_id", telegramId.toString());
+      try {
+        const telegramUser = tg?.initDataUnsafe?.user;
+        const telegramId = telegramUser?.id;
 
-      console.log("📦 Ответ от Supabase:", data, error);
+        if (!telegramId) {
+          alert("❗️ Telegram ID не найден. Запустите через Telegram WebApp.");
+          loadingEl.style.display = "none";
+          return;
+        }
 
-      if (error) {
-        console.error("❌ Ошибка запроса:", error.message);
-        alert("Ошибка при проверке пользователя.");
+        // Покажем Telegram ID в интерфейсе
+        telegramIdSpan.textContent = telegramId;
+
+        // 🔍 Проверяем наличие пользователя
+        const { data, error } = await supabase
+          .from("users")
+          .select("*")
+          .eq("telegram_id", telegramId.toString());
+
+        console.log("📦 Ответ от Supabase:", data, error);
+
+        if (error) {
+          console.error("❌ Ошибка запроса:", error.message);
+          alert("Ошибка при проверке пользователя.");
+          loadingEl.style.display = "none";
+          return;
+        }
+
+        if (data && data.length > 0) {
+          console.log("✅ Пользователь найден:", data[0]);
+          localStorage.setItem("username", data[0].username);
+          window.location.href = "myprofile.html";
+        } else {
+          console.log("🆕 Пользователь не найден. Показываем форму.");
+          loadingEl.style.display = "none";
+          formEl.style.display = "block";
+        }
+
+      } catch (err) {
+        console.error("❗️ Неожиданная ошибка:", err);
+        alert("Ошибка при инициализации.");
         loadingEl.style.display = "none";
-        return;
       }
-
-      if (data && data.length > 0) {
-        console.log("✅ Пользователь найден:", data[0]);
-        localStorage.setItem("username", data[0].username);
-        window.location.href = "myprofile.html";
-      } else {
-        console.log("🆕 Пользователь не найден, показываем форму.");
-        loadingEl.style.display = "none";
-        formEl.style.display = "block";
-      }
-
-    } catch (err) {
-      console.error("❗️ Неожиданная ошибка:", err);
-      alert("Ошибка при проверке Telegram ID.");
-      loadingEl.style.display = "none";
-    }
-  });
-    
+    });
   </script>
 </head>
 <body class="min-h-screen bg-[#222222] text-white">
-  <div class="max-w-md mx-auto mt-[60px] p-6 bg-[#333333] rounded-2xl shadow-xl space-y-6">
+
+  <!-- Загрузка -->
+  <div id="loading" class="flex items-center justify-center min-h-screen text-lg">
+    Загрузка...
+  </div>
+
+  <!-- Форма регистрации -->
+  <div id="registerForm" class="max-w-md mx-auto mt-[60px] p-6 bg-[#333333] rounded-2xl shadow-xl space-y-6 hidden">
     <h2 class="text-2xl font-semibold text-center">Личный кабинет</h2>
 
     <!-- Telegram ID -->
@@ -75,24 +89,21 @@
 
     <!-- Имя и Дата рождения -->
     <div class="flex justify-between gap-4">
-      <!-- Имя -->
       <div class="flex-1">
         <label class="mb-1 block">Имя:</label>
         <input id="name" type="text"
-          class="w-full rounded-md bg-gray-800 border border-gray-600 px-3 py-1 text-white disabled:opacity-80 disabled:cursor-not-allowed">
+          class="w-full rounded-md bg-gray-800 border border-gray-600 px-3 py-1 text-white">
       </div>
-
-      <!-- Дата рождения -->
       <div class="flex-1">
         <label class="mb-1 block">Дата рождения:</label>
         <input id="birthdate" type="date"
-          class="w-full rounded-md bg-gray-800 border border-gray-600 px-3 py-1 text-white disabled:opacity-80 disabled:cursor-not-allowed">
+          class="w-full rounded-md bg-gray-800 border border-gray-600 px-3 py-1 text-white">
       </div>
     </div>
 
     <!-- Кнопка Сохранить -->
     <div class="flex justify-center">
-      <button id="save-button" class="mt-4 px-6 py-2 bg-green-500 text-white rounded-lg shadow-md hidden">
+      <button id="save-button" class="mt-4 px-6 py-2 bg-green-500 text-white rounded-lg shadow-md">
         Сохранить
       </button>
     </div>
