@@ -5,105 +5,74 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Личный кабинет</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <script type="module">
-    import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
+    <script type="module">
+    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 
-    const supabaseUrl = "https://yiprwrgmyqlkdmhgulmc.supabase.co";
-    const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlpcHJ3cmdteXFsa2RtaGd1bG1jIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ2NTI0NjgsImV4cCI6MjA2MDIyODQ2OH0.lfiTfr5ukGDEVuwq-X9U2kWs3nEZrp3N443HT5AkbfI";
+    const supabaseUrl = 'https://yiprwrgmyqlkdmhgulmc.supabase.co';
+    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlpcHJ3cmdteXFsa2RtaGd1bG1jIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ2NTI0NjgsImV4cCI6MjA2MDIyODQ2OH0.lfiTfr5ukGDEVuwq-X9U2kWs3nEZrp3N443HT5AkbfI'; // замени на свой ключ!
     const supabase = createClient(supabaseUrl, supabaseKey);
 
-    document.addEventListener("DOMContentLoaded", async () => {
-      const nameInput = document.getElementById("name");
-      const birthInput = document.getElementById("birthdate");
-      const saveButton = document.getElementById("save-button");
-      const idField = document.getElementById("telegram_id");
-      const bonusField = document.getElementById("bonus");
-      const notification = document.getElementById("notification");
+    let telegram_id;
 
-      // Получаем telegram_id
-      let telegram_id = window.Telegram?.WebApp?.initDataUnsafe?.user?.id;
-      if (!telegram_id) {
-        telegram_id = "111111111";
-        console.warn("⚠️ Telegram WebApp неактивен. Используется тестовый telegram_id: " + telegram_id);
-      } else {
-        console.log("✅ Пользователь из Telegram:", telegram_id);
+    // === Получение telegram_id ===
+    if (window.Telegram?.WebApp?.initDataUnsafe?.user?.id) {
+      telegram_id = window.Telegram.WebApp.initDataUnsafe.user.id.toString();
+      console.log("✅ Пользователь из Telegram:", telegram_id);
+    } else {
+      alert("❌ Откройте приложение через Telegram!");
+      throw new Error("Telegram WebApp неактивен. Остановлено.");
+    }
+
+    // === Получение профиля пользователя ===
+    async function loadUserProfile() {
+      try {
+        const { data, error } = await supabase
+          .from('users')
+          .select('*')
+          .eq('telegram_id', telegram_id)
+          .single();
+
+        if (error) throw error;
+
+        console.log("✅ Пользователь найден:", data);
+
+        document.getElementById('name').value = data.name || '';
+        document.getElementById('birthdate').value = data.birthdate || '';
+      } catch (error) {
+        console.error("❌ Ошибка при загрузке пользователя:", error.message);
+        alert("Ошибка при загрузке профиля. Проверьте консоль.");
       }
+    }
 
-      telegram_id = telegram_id.toString();
-      idField.textContent = telegram_id;
+    // === Обновление профиля ===
+    async function saveProfile() {
+      const name = document.getElementById('name').value;
+      const birthdate = document.getElementById('birthdate').value;
 
-      // Получение пользователя
-      let { data: user, error } = await supabase
-        .from("users")
-        .select("*")
-        .eq("telegram_id", telegram_id)
-        .single();
+      const { data, error } = await supabase
+        .from('users')
+        .update({ name, birthdate })
+        .eq('telegram_id', telegram_id)
+        .select();
 
       if (error) {
-        console.error("❌ Ошибка при поиске пользователя:", error.message);
-      }
-
-      // Если пользователя нет — создаём
-      if (!user) {
-        console.log("🔍 Пользователь не найден, создаём нового...");
-        const { data: newUser, error: insertError } = await supabase
-          .from("users")
-          .insert([{ telegram_id, name: "", birthdate: "", bonus: 0 }])
-          .select()
-          .single();
-        if (insertError) {
-          console.error("❌ Ошибка при создании пользователя:", insertError.message);
-          return;
-        }
-        user = newUser;
-        console.log("✅ Новый пользователь успешно создан:", user);
+        console.error("❌ Ошибка при обновлении:", error.message);
+        alert("Ошибка при сохранении. Проверьте консоль.");
       } else {
-        console.log("✅ Пользователь найден:", user);
+        console.log("✅ Данные успешно обновлены:", data[0]);
+
+        const saveBtn = document.getElementById('saveBtn');
+        saveBtn.textContent = 'Сохранено ✅';
+        setTimeout(() => {
+          saveBtn.style.display = 'none';
+        }, 2000);
       }
+    }
 
-      // Заполняем поля
-      if (user.name) {
-        nameInput.value = user.name;
-        nameInput.disabled = true;
-      }
-      if (user.birthdate) {
-        birthInput.value = user.birthdate;
-        birthInput.disabled = true;
-      }
-      bonusField.textContent = user.bonus ?? 0;
+    window.addEventListener('DOMContentLoaded', () => {
+      loadUserProfile();
 
-      // Сохранение данных
-      const saveField = async () => {
-        const updates = {
-          name: nameInput.value.trim(),
-          birthdate: birthInput.value,
-        };
-        const { error } = await supabase
-          .from("users")
-          .update(updates)
-          .eq("telegram_id", telegram_id);
-
-        if (!error) {
-          console.log("✅ Данные успешно обновлены:", updates);
-          nameInput.disabled = true;
-          birthInput.disabled = true;
-          saveButton.classList.add('hidden');
-          notification.classList.remove('hidden');
-          setTimeout(() => notification.classList.add('hidden'), 3000);
-        } else {
-          console.error("❌ Ошибка при обновлении данных:", error.message);
-        }
-      };
-
-      nameInput.addEventListener("input", () => {
-        saveButton.classList.remove('hidden');
-      });
-
-      birthInput.addEventListener("input", () => {
-        saveButton.classList.remove('hidden');
-      });
-
-      saveButton.addEventListener("click", saveField);
+      document.getElementById('saveBtn').addEventListener('click', saveProfile);
     });
   </script>
 </head>
