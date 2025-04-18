@@ -3,25 +3,25 @@
 
   const supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
-  document.addEventListener("DOMContentLoaded", async () => {
-    if (window.Telegram && Telegram.WebApp) {
-      const user = Telegram.WebApp.initDataUnsafe?.user;
-      if (user) {
-        const { error } = await supabase
-          .from("visits")
-          .insert([
-            {
-              telegram_id: user.id.toString(),
-              username: user.username || "",
-              timestamp: new Date().toISOString()
-            }
-          ]);
+document.addEventListener("DOMContentLoaded", async () => {
+  if (window.Telegram && Telegram.WebApp) {
+    const user = Telegram.WebApp.initDataUnsafe?.user;
+    if (user) {
+      const { error } = await supabase
+        .from("visits")
+        .insert([
+          {
+            telegram_id: user.id.toString(),
+            username: user.username || "",
+            timestamp: new Date().toISOString()
+          }
+        ]);
 
-        if (error) {
-          console.error("Ошибка при сохранении визита:", error.message);
-        } else {
-          console.log("Визит сохранён в Supabase");
-        }
+      if (error) {
+        console.error("Ошибка при сохранении визита:", error.message);
+      } else {
+        console.log("Визит сохранён в Supabase");
       }
     }
-  });
+  }
+});
