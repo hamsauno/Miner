@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Админка Legit Mining</title>
+  <link rel="stylesheet" href="admin/style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+</head>
+<body>
+  <h1>Статистика посещений</h1>
+  <table>
+    <thead>
+      <tr>
+        <th>Telegram ID</th>
+        <th>Username</th>
+        <th>Время входа</th>
+      </tr>
+    </thead>
+    <tbody id="visitsTableBody"></tbody>
+  </table>
+
+  <h2>График по дням</h2>
+  <canvas id="visitsChart" width="400" height="200"></canvas>
+
+  <script src="admin/admin.js"></script>
+</body>
+</html>
