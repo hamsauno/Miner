@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Поиск устройств в сети</title>
+  <style>
+    body { font-family: sans-serif; padding: 1rem; background: #f4f4f4; }
+    h1 { margin-bottom: 1rem; }
+    .filters button {
+      margin-right: 10px;
+      padding: 8px 12px;
+      cursor: pointer;
+      border: none;
+      border-radius: 5px;
+      background-color: #ddd;
+    }
+    .filters button.active {
+      background-color: #4caf50;
+      color: white;
+    }
+    .device-list { display: flex; flex-wrap: wrap; gap: 1rem; margin-top: 1rem; }
+    .device-card {
+      background: white;
+      padding: 1rem;
+      border-radius: 10px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      width: 250px;
+    }
+    .device-card h3 {
+      margin-top: 0;
+    }
+  </style>
+</head>
+<body>
+  <h1>Поиск устройств в сети</h1>
+  <div class="filters">
+    <button onclick="filterDevices('all')" class="active">Все</button>
+    <button onclick="filterDevices('asic')">ASIC</button>
+    <button onclick="filterDevices('server')">Сервер</button>
+    <button onclick="filterDevices('other')">Прочее</button>
+  </div>
+  <div id="status">🔍 Сканирование...</div>
+  <div class="device-list" id="devices"></div>
+
+  <script>
+    let allDevices = [];
+
+    async function scanMultipleNetworks(subnets = ['192.168.0.', '192.168.1.', '10.0.0.'], port = 8080) {
+      const allResults = [];
+
+      for (const base of subnets) {
+        document.getElementById("status").textContent = `📡 Сканирование ${base}...`;
+        const result = await scanSubnet(base, port);
+        allResults.push(...result);
+      }
+
+      return allResults;
+    }
+
+    async function scanSubnet(base, port) {
+      const foundDevices = [];
+      const requests = [];
+
+      for (let i = 1; i <= 254; i++) {
+        const ip = `${base}${i}`;
+        const url = `http://${ip}:${port}/identify`;
+
+        const req = fetch(url, { method: 'GET' })
+          .then(async res => {
+            const json = await res.json();
+            foundDevices.push({
+              type: json.type || 'other',
+              model: json.model || json.name || 'Неизвестное устройство',
+              ip
+            });
+          })
+          .catch(() => {}); // игнорируем ошибки
+
+        requests.push(req);
+      }
+
+      await Promise.allSettled(requests);
+      return foundDevices;
+    }
+
+    function renderDevices(devices) {
+      const container = document.getElementById("devices");
+      container.innerHTML = "";
+
+      devices.forEach(device => {
+        const el = document.createElement("div");
+        el.className = "device-card";
+        el.innerHTML = `
+          <h3>${device.model}</h3>
+          <p><strong>Тип:</strong> ${device.type.toUpperCase()}</p>
+          <p><strong>IP:</strong> ${device.ip}</p>
+          <button onclick="connectToDevice('${device.ip}')">Подключиться</button>
+        `;
+        container.appendChild(el);
+      });
+
+      document.getElementById("status").textContent = `✅ Найдено устройств: ${devices.length}`;
+    }
+
+    function filterDevices(type) {
+      document.querySelectorAll(".filters button").forEach(btn => btn.classList.remove("active"));
+      document.querySelector(`.filters button[onclick*="${type}"]`).classList.add("active");
+
+      if (type === "all") {
+        renderDevices(allDevices);
+      } else {
+        renderDevices(allDevices.filter(d => d.type === type));
+      }
+    }
+
+    function connectToDevice(ip) {
+      const url = `http://${ip}:8080/info`;
+      fetch(url)
+        .then(res => res.json())
+        .then(data => {
+          alert(`Данные с ${ip}:\n${JSON.stringify(data, null, 2)}`);
+        })
+        .catch(() => alert(`Не удалось подключиться к ${ip}`));
+    }
+
+    // Запуск при загрузке
+    (async () => {
+      allDevices = await scanMultipleNetworks(['192.168.0.', '192.168.1.', '10.0.0.']);
+      renderDevices(allDevices);
+    })();
+  </script>
+</body>
+</html>
