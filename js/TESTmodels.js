@@ -185,19 +185,26 @@ let jsonData = [];
    const payback = ((asicCost / usdtPrice) / dailyProfit) / 30.5;
  
    document.getElementById("income").innerText = dailyIncome.toFixed(2);
-   document.getElementById("income_rub").innerText = Number((dailyIncome * usdtPrice).toFixed(0)).toLocaleString('ru-RU');
+   document.getElementById("income_rub").innerText = Number(dailyIncome * usdtPrice).toLocaleString('ru-RU');
+   
    document.getElementById("profit").innerText = dailyProfit.toFixed(2);
-   document.getElementById("profit_rub").innerText =  Number((dailyProfit * usdtPrice).toFixed(0)).toLocaleString('ru-RU');
+   document.getElementById("profit_rub").innerText = Number(dailyProfit * usdtPrice).toLocaleString('ru-RU');
+   
    document.getElementById("incomeMonth").innerText = (dailyIncome * 30.5).toFixed(2);
-   document.getElementById("incomeMonth_rub").innerText =  Number((dailyIncome * 30.5 * usdtPrice).toFixed(0)).toLocaleString('ru-RU');
+   document.getElementById("incomeMonth_rub").innerText = Number(dailyIncome * 30.5 * usdtPrice).toLocaleString('ru-RU');
+   
    document.getElementById("incomeYear").innerText = (dailyIncome * 365).toFixed(2);
-   document.getElementById("incomeYear_rub").innerText =  Number((dailyIncome * 365 * usdtPrice).toFixed(0)).toLocaleString('ru-RU');
+   document.getElementById("incomeYear_rub").innerText = Number(dailyIncome * 365 * usdtPrice).toLocaleString('ru-RU');
+   
    document.getElementById("profitMonth").innerText = monthlyProfit.toFixed(2);
-   document.getElementById("profitMonth_rub").innerText =  Number((monthlyProfit * usdtPrice).toFixed(0)).toLocaleString('ru-RU');
+   document.getElementById("profitMonth_rub").innerText = Number(monthlyProfit * usdtPrice).toLocaleString('ru-RU');
+   
    document.getElementById("profitYear").innerText = yearlyProfit.toFixed(2);
-   document.getElementById("profitYear_rub").innerText =  Number((yearlyProfit * usdtPrice).toFixed(0)).toLocaleString('ru-RU');
+   document.getElementById("profitYear_rub").innerText = Number(yearlyProfit * usdtPrice).toLocaleString('ru-RU');
+   
    document.getElementById("roi").innerText = roi.toFixed(2);
-   document.getElementById("roi_rub").innerText = roi.toFixed(2);
+   document.getElementById("roi_rub").innerText = roi.toFixed(2); 
+   
    document.getElementById("payback").innerText = payback.toFixed(0);
-   document.getElementById("payback_rub").innerText = payback.toFixed(0);
+   document.getElementById("payback_rub").innerText = payback.toFixed(0); 
  }
