@@ -6,8 +6,9 @@
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-[#222222] font-[Arial] min-h-screen flex items-center justify-center p-4">
+<body class="bg-[#222222] font-[Arial] min-h-screen flex flex-col items-center justify-center p-4 gap-6">
 
+  <!-- Сетка с кнопками -->
   <div class="grid grid-cols-3 gap-4 w-full max-w-md">
     <button class="aspect-square bg-gradient-to-r from-[#F6A314] to-[#EC7E07] text-black text-base font-bold rounded-xl shadow" onclick="loadPage('scan.html')">Сканер</button>
     <button class="aspect-square bg-gradient-to-r from-[#F6A314] to-[#EC7E07] text-black text-base font-bold rounded-xl shadow">Кнопка 2</button>
@@ -20,5 +21,17 @@
     <button class="aspect-square bg-gradient-to-r from-[#F6A314] to-[#EC7E07] text-black text-base font-bold rounded-xl shadow">Кнопка 9</button>
   </div>
 
+  <!-- iframe для загрузки страниц -->
+  <iframe id="pageIframe" style="display:none; width:100%; max-width:768px; height:80vh; border:none;"></iframe>
+
+  <!-- Скрипт загрузки страницы -->
+  <script>
+    function loadPage(page) {
+      const iframe = document.getElementById('pageIframe');
+      iframe.src = page;
+      iframe.style.display = 'block';
+    }
+  </script>
+
 </body>
-</html
+</html>
