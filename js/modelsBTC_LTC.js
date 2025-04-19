@@ -185,7 +185,6 @@ let jsonData = [];
    const payback = ((asicCost / usdtPrice) / dailyProfit) / 30.5;
  
    document.getElementById("income").innerText = dailyIncome.toFixed(2);
-   document.getElementById("income_rub").innerText = (dailyIncome * usdtPrice).toFixed(2);
    document.getElementById("profit").innerText = dailyProfit.toFixed(2);
    document.getElementById("incomeMonth").innerText = (dailyIncome * 30.5).toFixed(2);
    document.getElementById("incomeYear").innerText = (dailyIncome * 365).toFixed(2);
