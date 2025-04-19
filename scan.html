@@ -105,39 +105,45 @@
   </div>
 </div>
     
-    <table class="result-table">
-        <thead>
-            <tr>
-                <th></th>
-                <th>День</th>
-                <th>Месяц</th>
-                <th>Год</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>Доход</td>
-                <td><span id="income">0</span> $</td>
-                <td><span id="incomeMonth">0</span> $</td>
-                <td><span id="incomeYear">0</span> $</td>
-            </tr>
-            <tr>
-                <td>Прибыль</td>
-                <td><span id="profit">0</span> $</td>
-                <td><span id="profitMonth">0</span> $</td>
-                <td><span id="profitYear">0</span> $</td>
-            </tr>
-            <tr>
-                <td>Годовой %</td>
-                <td colspan="3"><span id="roi">0</span> %</td>
-            </tr>
-            <tr>
-                <td>Окупаемость</td>
-                <td colspan="3"><span id="payback">0</span> месяцев</td>
-            </tr>
-        </tbody>
-    </table>
+<table class="result-table">
+    <thead>
+        <tr>
+            <th>
+                <label class="currency-toggle">
+                    <input type="checkbox" id="currencyToggle" />
+                    <span id="currencyLabel">USD</span>
+                </label>
+            </th>
+            <th>День</th>
+            <th>Месяц</th>
+            <th>Год</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Доход</td>
+            <td><span id="income">0</span> <span id="currencySymbol">$</span></td>
+            <td><span id="incomeMonth">0</span> <span id="currencySymbolMonth">$</span></td>
+            <td><span id="incomeYear">0</span> <span id="currencySymbolYear">$</span></td>
+        </tr>
+        <tr>
+            <td>Прибыль</td>
+            <td><span id="profit">0</span> <span id="currencySymbol">$</span></td>
+            <td><span id="profitMonth">0</span> <span id="currencySymbolMonth">$</span></td>
+            <td><span id="profitYear">0</span> <span id="currencySymbolYear">$</span></td>
+        </tr>
+        <tr>
+            <td>Годовой %</td>
+            <td colspan="3"><span id="roi">0</span> %</td>
+        </tr>
+        <tr>
+            <td>Окупаемость</td>
+            <td colspan="3"><span id="payback">0</span> месяцев</td>
+        </tr>
+    </tbody>
+</table>
     
 <script src="js/modelsBTC_LTC.js" defer></script><!-- метрика моделей -->
+     <script src="js/priceusdt_rub.js" defer></script>
 </body>
 </html>
