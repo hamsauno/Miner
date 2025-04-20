@@ -6,102 +6,98 @@
   <title>Статистика посещений</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-</head>
-<body class="bg-[#222222] text-white min-h-screen p-6">
-
-  <section>
-    <h2 class="text-2xl font-semibold mb-2">👤 Уникальные пользователи</h2>
-    <ul id="userList" class="list-disc list-inside space-y-1 text-sm">Загрузка...</ul>
-  </section>
-
-  <section class="mt-10">
-    <h2 class="text-2xl font-semibold mb-2">📅 Количество визитов по дням</h2>
-    <div class="overflow-x-auto">
-      <table class="w-full text-sm text-left border border-gray-600">
-        <thead class="bg-gray-800 text-white">
-          <tr>
-            <th class="p-2 border border-gray-600">Дата</th>
-            <th class="p-2 border border-gray-600">Количество визитов</th>
-          </tr>
-        </thead>
-        <tbody id="calendarTable" class="bg-gray-900"></tbody>
-      </table>
-    </div>
-  </section>
-
-  <!-- Скрипт внизу — ВЕСЬ внутри DOMContentLoaded -->
-  <script>
- document.addEventListener('DOMContentLoaded', async () => {
-  const supabaseUrl = 'https://yiprwrgmyqlkdmhgulmc.supabase.co';
-  const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlpcHJ3cmdteXFsa2RtaGd1bG1jIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ2NTI0NjgsImV4cCI6MjA2MDIyODQ2OH0.lfiTfr5ukGDEVuwq-X9U2kWs3nEZrp3N443HT5AkbfI';
-  const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
-
-  console.log("Запрос к Supabase начался...");
-
-  // Запрос без фильтрации
-  const { data, error } = await supabase
-    .from('visits')
-    .select('*')
-    .order('timestamp', { ascending: true });
-
-  if (error) {
-    console.error("Ошибка при запросе данных:", error);
-    return;
-  }
-
-  console.log("Данные успешно загружены:", data);
-
-  // Показать данные в консоли
-  if (data.length === 0) {
-    console.log("В таблице нет данных.");
-  }
-
-  // Если данные есть
-  const uniqueUsers = new Map();
-  data.forEach(visit => {
-    if (!uniqueUsers.has(visit.telegram_id)) {
-      uniqueUsers.set(visit.telegram_id, {
-        username: visit.username,
-        telegram_id: visit.telegram_id,
-        firstSeen: visit.timestamp,
-      });
+  <style>
+    .scroll-snap-x {
+      scroll-snap-type: x mandatory;
     }
+    .snap-start {
+      scroll-snap-align: start;
+    }
+  </style>
+</head>
+<body class="bg-[#222222] text-white min-h-screen p-6 overflow-x-hidden">
+
+  <div class="flex space-x-6 overflow-x-auto scroll-snap-x">
+    
+    <!-- 👤 Уникальные пользователи -->
+    <section class="min-w-full snap-start">
+      <h2 class="text-xl font-semibold mb-2">👤 Уникальные пользователи</h2>
+      <ul id="userList" class="list-disc list-inside space-y-1 text-sm">Загрузка...</ul>
+    </section>
+
+    <!-- 📅 Визиты по дням -->
+    <section class="min-w-full snap-start">
+      <h2 class="text-2xl font-semibold mb-2">📅 Количество визитов по дням</h2>
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm text-left border border-gray-600">
+          <thead class="bg-gray-800 text-white">
+            <tr>
+              <th class="p-2 border border-gray-600">Дата</th>
+              <th class="p-2 border border-gray-600">Количество визитов</th>
+            </tr>
+          </thead>
+          <tbody id="calendarTable" class="bg-gray-900"></tbody>
+        </table>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- Скрипт -->
+  <script>
+  document.addEventListener('DOMContentLoaded', async () => {
+    const supabaseUrl = 'https://yiprwrgmyqlkdmhgulmc.supabase.co';
+    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlpcHJ3cmdteXFsa2RtaGd1bG1jIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ2NTI0NjgsImV4cCI6MjA2MDIyODQ2OH0.lfiTfr5ukGDEVuwq-X9U2kWs3nEZrp3N443HT5AkbfI';
+    const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+
+    const { data, error } = await supabase
+      .from('visits')
+      .select('*')
+      .order('timestamp', { ascending: true });
+
+    if (error) {
+      console.error("Ошибка при запросе данных:", error);
+      return;
+    }
+
+    const uniqueUsers = new Map();
+    data.forEach(visit => {
+      if (!uniqueUsers.has(visit.telegram_id)) {
+        uniqueUsers.set(visit.telegram_id, {
+          username: visit.username,
+          telegram_id: visit.telegram_id
+        });
+      }
+    });
+
+    const userList = document.getElementById('userList');
+    userList.innerHTML = '';
+    uniqueUsers.forEach(user => {
+      const li = document.createElement('li');
+      li.textContent = `@${user.username || 'unknown'} (${user.telegram_id})`;
+      userList.appendChild(li);
+    });
+
+    const visitsByDate = {};
+    data.forEach(visit => {
+      const date = new Date(visit.timestamp).toISOString().split('T')[0];
+      visitsByDate[date] = (visitsByDate[date] || 0) + 1;
+    });
+
+    const calendarTable = document.getElementById('calendarTable');
+    calendarTable.innerHTML = '';
+    Object.entries(visitsByDate).forEach(([date, count]) => {
+      const row = document.createElement('tr');
+      row.innerHTML = `
+        <td class="p-2 border border-gray-700">${date}</td>
+        <td class="p-2 border border-gray-700">${count}</td>`;
+      calendarTable.appendChild(row);
+    });
   });
-
-  console.log("Уникальные пользователи:", uniqueUsers);
-
-  // Заполняем список уникальных пользователей
-  const userList = document.getElementById('userList');
-  userList.innerHTML = '';
-  uniqueUsers.forEach(user => {
-    const li = document.createElement('li');
-    li.textContent = `${user.username || 'Без имени'} (${user.telegram_id}) — с ${new Date(user.firstSeen).toLocaleDateString()}`;
-    userList.appendChild(li);
-  });
-
-  // Формируем статистику по дням
-  const visitsByDate = {};
-  data.forEach(visit => {
-    const date = new Date(visit.timestamp).toISOString().split('T')[0];
-    visitsByDate[date] = (visitsByDate[date] || 0) + 1;
-  });
-
-  console.log("Визиты по дням:", visitsByDate);
-
-  // Отображаем статистику по дням
-  const calendarTable = document.getElementById('calendarTable');
-  calendarTable.innerHTML = '';
-  Object.entries(visitsByDate).forEach(([date, count]) => {
-    const row = document.createElement('tr');
-    row.innerHTML = `
-      <td class="p-2 border border-gray-700">${date}</td>
-      <td class="p-2 border border-gray-700">${count}</td>`;
-    calendarTable.appendChild(row);
-  });
-});
   </script>
 
 </body>
 </html>
+
 
 
