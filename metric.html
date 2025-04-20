@@ -4,45 +4,30 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Статистика посещений</title>
+  <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <style>
-    body {
-      font-family: sans-serif;
-      padding: 20px;
-      background: #f9f9f9;
-    }
-    h2 {
-      margin-top: 40px;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 10px;
-    }
-    table, th, td {
-      border: 1px solid #ccc;
-    }
-    th, td {
-      padding: 8px;
-      text-align: left;
-    }
-    ul {
-      padding-left: 20px;
-    }
-  </style>
 </head>
-<body>
+<body class="bg-[#222222] text-white min-h-screen p-6">
 
-  <h1>📊 Админка Legit Mining</h1>
+  <section>
+    <h2 class="text-2xl font-semibold mb-2">👤 Уникальные пользователи</h2>
+    <ul id="userList" class="list-disc list-inside space-y-1 text-sm">Загрузка...</ul>
+  </section>
 
-  <h2>👤 Уникальные пользователи</h2>
-  <ul id="userList">Загрузка...</ul>
-
-  <h2>📅 Количество визитов по дням</h2>
-  <table id="calendarTable">
-    <thead><tr><th>Дата</th><th>Количество визитов</th></tr></thead>
-    <tbody></tbody>
-  </table>
+  <section class="mt-10">
+    <h2 class="text-2xl font-semibold mb-2">📅 Количество визитов по дням</h2>
+    <div class="overflow-x-auto">
+      <table class="w-full text-sm text-left border border-gray-600">
+        <thead class="bg-gray-800 text-white">
+          <tr>
+            <th class="p-2 border border-gray-600">Дата</th>
+            <th class="p-2 border border-gray-600">Количество визитов</th>
+          </tr>
+        </thead>
+        <tbody id="calendarTable" class="bg-gray-900"></tbody>
+      </table>
+    </div>
+  </section>
 
   <script>
     const supabaseUrl = 'https://yiprwrgmyqlkdmhgulmc.supabase.co';
@@ -88,10 +73,13 @@
         visitsByDate[date] = (visitsByDate[date] || 0) + 1;
       });
 
-      const calendarTable = document.querySelector('#calendarTable tbody');
+      const calendarTable = document.getElementById('calendarTable');
+      calendarTable.innerHTML = '';
       Object.entries(visitsByDate).forEach(([date, count]) => {
         const row = document.createElement('tr');
-        row.innerHTML = `<td>${date}</td><td>${count}</td>`;
+        row.innerHTML = `
+          <td class="p-2 border border-gray-700">${date}</td>
+          <td class="p-2 border border-gray-700">${count}</td>`;
         calendarTable.appendChild(row);
       });
     }
@@ -100,3 +88,4 @@
   </script>
 </body>
 </html>
+
