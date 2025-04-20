@@ -30,74 +30,75 @@
   </section>
 
   <!-- Скрипт внизу — ВЕСЬ внутри DOMContentLoaded -->
-  <script>
-  document.addEventListener('DOMContentLoaded', async () => {
-    const supabaseUrl = 'https://yiprwrgmyqlkdmhgulmc.supabase.co';
-    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlpcHJ3cmdteXFsa2RtaGd1bG1jIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ2NTI0NjgsImV4cCI6MjA2MDIyODQ2OH0.lfiTfr5ukGDEVuwq-X9U2kWs3nEZrp3N443HT5AkbfI'; // сокращён для примера
+ document.addEventListener('DOMContentLoaded', async () => {
+  const supabaseUrl = 'https://yiprwrgmyqlkdmhgulmc.supabase.co';
+  const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlpcHJ3cmdteXFsa2RtaGd1bG1jIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ2NTI0NjgsImV4cCI6MjA2MDIyODQ2OH0.lfiTfr5ukGDEVuwq-X9U2kWs3nEZrp3N443HT5AkbfI';
+  const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
 
-    const sb = window.supabase.createClient(supabaseUrl, supabaseKey);
+  console.log("Запрос к Supabase начался...");
 
-    console.log("Запрос к Supabase начался...");
+  // Запрос без фильтрации
+  const { data, error } = await supabase
+    .from('visits')
+    .select('*')
+    .order('timestamp', { ascending: true });
 
-    // Загружаем данные из таблицы
-    const { data, error } = await sb
-      .from('visits')
-      .select('*')
-      .order('timestamp', { ascending: true });
+  if (error) {
+    console.error("Ошибка при запросе данных:", error);
+    return;
+  }
 
-    // Если ошибка
-    if (error) {
-      console.error("Ошибка загрузки данных:", error);
-      document.getElementById('userList').textContent = 'Ошибка загрузки данных';
-      return;
+  console.log("Данные успешно загружены:", data);
+
+  // Показать данные в консоли
+  if (data.length === 0) {
+    console.log("В таблице нет данных.");
+  }
+
+  // Если данные есть
+  const uniqueUsers = new Map();
+  data.forEach(visit => {
+    if (!uniqueUsers.has(visit.telegram_id)) {
+      uniqueUsers.set(visit.telegram_id, {
+        username: visit.username,
+        telegram_id: visit.telegram_id,
+        firstSeen: visit.timestamp,
+      });
     }
-
-    console.log("Данные успешно загружены:", data);
-
-    // Отображаем уникальных пользователей
-    const uniqueUsers = new Map();
-    data.forEach(visit => {
-      if (!uniqueUsers.has(visit.telegram_id)) {
-        uniqueUsers.set(visit.telegram_id, {
-          username: visit.username,
-          telegram_id: visit.telegram_id,
-          firstSeen: visit.timestamp,
-        });
-      }
-    });
-
-    console.log("Уникальные пользователи:", uniqueUsers);
-
-    // Отображаем пользователей на странице
-    const userList = document.getElementById('userList');
-    userList.innerHTML = '';
-    uniqueUsers.forEach(user => {
-      const li = document.createElement('li');
-      li.textContent = `${user.username || 'Без имени'} (${user.telegram_id}) — с ${new Date(user.firstSeen).toLocaleDateString()}`;
-      userList.appendChild(li);
-    });
-
-    // Подсчитываем визиты по дням
-    const visitsByDate = {};
-    data.forEach(visit => {
-      const date = new Date(visit.timestamp).toISOString().split('T')[0];
-      visitsByDate[date] = (visitsByDate[date] || 0) + 1;
-    });
-
-    console.log("Визиты по дням:", visitsByDate);
-
-    // Отображаем визиты по дням в таблице
-    const calendarTable = document.getElementById('calendarTable');
-    calendarTable.innerHTML = '';
-    Object.entries(visitsByDate).forEach(([date, count]) => {
-      const row = document.createElement('tr');
-      row.innerHTML = `
-        <td class="p-2 border border-gray-700">${date}</td>
-        <td class="p-2 border border-gray-700">${count}</td>`;
-      calendarTable.appendChild(row);
-    });
   });
-</script>
+
+  console.log("Уникальные пользователи:", uniqueUsers);
+
+  // Заполняем список уникальных пользователей
+  const userList = document.getElementById('userList');
+  userList.innerHTML = '';
+  uniqueUsers.forEach(user => {
+    const li = document.createElement('li');
+    li.textContent = `${user.username || 'Без имени'} (${user.telegram_id}) — с ${new Date(user.firstSeen).toLocaleDateString()}`;
+    userList.appendChild(li);
+  });
+
+  // Формируем статистику по дням
+  const visitsByDate = {};
+  data.forEach(visit => {
+    const date = new Date(visit.timestamp).toISOString().split('T')[0];
+    visitsByDate[date] = (visitsByDate[date] || 0) + 1;
+  });
+
+  console.log("Визиты по дням:", visitsByDate);
+
+  // Отображаем статистику по дням
+  const calendarTable = document.getElementById('calendarTable');
+  calendarTable.innerHTML = '';
+  Object.entries(visitsByDate).forEach(([date, count]) => {
+    const row = document.createElement('tr');
+    row.innerHTML = `
+      <td class="p-2 border border-gray-700">${date}</td>
+      <td class="p-2 border border-gray-700">${count}</td>`;
+    calendarTable.appendChild(row);
+  });
+});
+
 
 </body>
 </html>
