@@ -33,56 +33,72 @@
   <script>
   document.addEventListener('DOMContentLoaded', async () => {
     const supabaseUrl = 'https://yiprwrgmyqlkdmhgulmc.supabase.co';
-    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlpcHJ3cmdteXFsa2RtaGd1bG1jIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ2NTI0NjgsImV4cCI6MjA2MDIyODQ2OH0.lfiTfr5ukGDEVuwq-X9U2kWs3nEZrp3N443HT5AkbfI'; // усечён
-    const client = window.supabase.createClient(supabaseUrl, supabaseKey); // ✅ новое имя
+    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlpcHJ3cmdteXFsa2RtaGd1bG1jIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ2NTI0NjgsImV4cCI6MjA2MDIyODQ2OH0.lfiTfr5ukGDEVuwq-X9U2kWs3nEZrp3N443HT5AkbfI'; // сокращён для примера
 
-    const { data, error } = await client
+    const sb = window.supabase.createClient(supabaseUrl, supabaseKey);
+
+    console.log("Запрос к Supabase начался...");
+
+    // Загружаем данные из таблицы
+    const { data, error } = await sb
       .from('visits')
       .select('*')
       .order('timestamp', { ascending: true });
 
+    // Если ошибка
     if (error) {
+      console.error("Ошибка загрузки данных:", error);
       document.getElementById('userList').textContent = 'Ошибка загрузки данных';
-      console.error(error);
       return;
     }
 
-      const uniqueUsers = new Map();
-      data.forEach(visit => {
-        if (!uniqueUsers.has(visit.telegram_id)) {
-          uniqueUsers.set(visit.telegram_id, {
-            username: visit.username,
-            telegram_id: visit.telegram_id,
-            firstSeen: visit.timestamp,
-          });
-        }
-      });
+    console.log("Данные успешно загружены:", data);
 
-      const userList = document.getElementById('userList');
-      userList.innerHTML = '';
-      uniqueUsers.forEach(user => {
-        const li = document.createElement('li');
-        li.textContent = `${user.username || 'Без имени'} (${user.telegram_id}) — с ${new Date(user.firstSeen).toLocaleDateString()}`;
-        userList.appendChild(li);
-      });
-
-      const visitsByDate = {};
-      data.forEach(visit => {
-        const date = new Date(visit.timestamp).toISOString().split('T')[0];
-        visitsByDate[date] = (visitsByDate[date] || 0) + 1;
-      });
-
-      const calendarTable = document.getElementById('calendarTable');
-      calendarTable.innerHTML = '';
-      Object.entries(visitsByDate).forEach(([date, count]) => {
-        const row = document.createElement('tr');
-        row.innerHTML = `
-          <td class="p-2 border border-gray-700">${date}</td>
-          <td class="p-2 border border-gray-700">${count}</td>`;
-        calendarTable.appendChild(row);
-      });
+    // Отображаем уникальных пользователей
+    const uniqueUsers = new Map();
+    data.forEach(visit => {
+      if (!uniqueUsers.has(visit.telegram_id)) {
+        uniqueUsers.set(visit.telegram_id, {
+          username: visit.username,
+          telegram_id: visit.telegram_id,
+          firstSeen: visit.timestamp,
+        });
+      }
     });
-  </script>
+
+    console.log("Уникальные пользователи:", uniqueUsers);
+
+    // Отображаем пользователей на странице
+    const userList = document.getElementById('userList');
+    userList.innerHTML = '';
+    uniqueUsers.forEach(user => {
+      const li = document.createElement('li');
+      li.textContent = `${user.username || 'Без имени'} (${user.telegram_id}) — с ${new Date(user.firstSeen).toLocaleDateString()}`;
+      userList.appendChild(li);
+    });
+
+    // Подсчитываем визиты по дням
+    const visitsByDate = {};
+    data.forEach(visit => {
+      const date = new Date(visit.timestamp).toISOString().split('T')[0];
+      visitsByDate[date] = (visitsByDate[date] || 0) + 1;
+    });
+
+    console.log("Визиты по дням:", visitsByDate);
+
+    // Отображаем визиты по дням в таблице
+    const calendarTable = document.getElementById('calendarTable');
+    calendarTable.innerHTML = '';
+    Object.entries(visitsByDate).forEach(([date, count]) => {
+      const row = document.createElement('tr');
+      row.innerHTML = `
+        <td class="p-2 border border-gray-700">${date}</td>
+        <td class="p-2 border border-gray-700">${count}</td>`;
+      calendarTable.appendChild(row);
+    });
+  });
+</script>
+
 </body>
 </html>
 
