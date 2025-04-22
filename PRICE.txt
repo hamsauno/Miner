@@ -5,13 +5,13 @@
 • Antminer T21 190Th — $2100
 • Antminer S19k pro 120Th — $700
 • Antminer S19j pro  104Th — $410
-• Whatsminer M60 19,9W 176Th — $1700
+• Whatsminer M60 19,9W 176Th — $1550
 • Whatsminer M50 28W 120Th — $570
 • Whatsminer M30S++ 31W 108Th — $300
 
 
 ⚡️ Scrypt (LTC/DOGE):
-• Antminer L7 8800Mh — $2700
+• Antminer L7 8800Mh — $2550
 
 
 🧠 Kaspa (KAS):
