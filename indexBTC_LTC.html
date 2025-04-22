@@ -6,7 +6,7 @@
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <link rel="stylesheet" href="css/styles.css"><!--Стиль для нижнего блока -->
     <link rel="stylesheet" href="css/bg.css">
-    <!--<link rel="stylesheet" href="css/styles_header.csss"> <!--Стиль для верхнего блока -->
+    <link rel="stylesheet" href="css/svaip.css"> <!--свайп -->
     
     <script src="https://cdn.tailwindcss.com"></script>  <!--Подключение Tailwind -->
     <script src="js/fullscr.js" defer></script><!-- открытие во весь экран и зафиксировать -->
@@ -105,39 +105,85 @@
   </div>
 </div>
     
-    <table class="result-table">
-        <thead>
-            <tr>
-                <th></th>
-                <th>День</th>
-                <th>Месяц</th>
-                <th>Год</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>Доход</td>
-                <td><span id="income">0</span> $</td>
-                <td><span id="incomeMonth">0</span> $</td>
-                <td><span id="incomeYear">0</span> $</td>
-            </tr>
-            <tr>
-                <td>Прибыль</td>
-                <td><span id="profit">0</span> $</td>
-                <td><span id="profitMonth">0</span> $</td>
-                <td><span id="profitYear">0</span> $</td>
-            </tr>
-            <tr>
-                <td>Годовой %</td>
-                <td colspan="3"><span id="roi">0</span> %</td>
-            </tr>
-            <tr>
-                <td>Окупаемость</td>
-                <td colspan="3"><span id="payback">0</span> месяцев</td>
-            </tr>
-        </tbody>
-    </table>
+
+
+<div class="scroll-container">
+    <!-- Таблица в USD -->
+    <div class="currency-table">
+            <table class="result-table">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>День</th>
+                        <th>Месяц</th>
+                        <th>Год</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Доход</td>
+                        <td><span id="income">0</span> $</td>
+                        <td><span id="incomeMonth">0</span> $</td>
+                        <td><span id="incomeYear">0</span> $</td>
+                    </tr>
+                    <tr>
+                        <td>Прибыль</td>
+                        <td><span id="profit">0</span> $</td>
+                        <td><span id="profitMonth">0</span> $</td>
+                        <td><span id="profitYear">0</span> $</td>
+                    </tr>
+                    <tr>
+                        <td>Годовой %</td>
+                        <td colspan="3"><span id="roi">0</span> %</td>
+                    </tr>
+                    <tr>
+                        <td>Окупаемость</td>
+                        <td colspan="3"><span id="payback">0</span> месяцев</td>
+                    </tr>
+                </tbody>
+            </table>
+    </div>
+
+    <!-- Таблица в RUB -->
+    <div class="currency-table">
+            <table class="result-table">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>День</th>
+                        <th>Месяц</th>
+                        <th>Год</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Доход</td>
+                        <td><span id="income_rub">0</span> ₽</td>
+                        <td><span id="incomeMonth_rub">0</span> ₽</td>
+                        <td><span id="incomeYear_rub">0</span> ₽</td>
+                    </tr>
+                    <tr>
+                        <td>Прибыль</td>
+                        <td><span id="profit_rub">0</span> ₽</td>
+                        <td><span id="profitMonth_rub">0</span> ₽</td>
+                        <td><span id="profitYear_rub">0</span> ₽</td>
+                    </tr>
+                    <tr>
+                        <td>Годовой %</td>
+                        <td colspan="3"><span id="roi_rub">0</span> %</td>
+                    </tr>
+                    <tr>
+                        <td>Окупаемость</td>
+                        <td colspan="3"><span id="payback_rub">0</span> месяцев</td>
+                    </tr>
+                </tbody>
+            </table>
+    </div>
+</div>
+
+
+
     
-<script src="js/modelsBTC_LTC.js" defer></script><!-- метрика моделей -->
+<script src="js/TESTmodels.js" defer></script><!-- метрика моделей -->
 </body>
 </html>
