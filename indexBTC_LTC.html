@@ -182,7 +182,63 @@
     </div>
 </div>
 
+<!-- Кнопка снизу -->
+<button id="togglePrices" class="fixed bottom-4 right-4 z-50 bg-yellow-500 text-black p-3 rounded-full shadow-lg hover:bg-yellow-400 transition-all">
+  Курсы
+</button>
 
+<!-- Блок с ценами (изначально скрыт) -->
+<div id="pricePanel" class="fixed bottom-20 right-4 w-full max-w-md bg-[#333333] bg-opacity-90 rounded-2xl p-6 shadow-lg transition-all duration-300 transform translate-y-full opacity-0 z-40">
+  <div class="flex items-center justify-between">
+    <!-- Левая часть — BTC -->
+    <div>
+      <div class="flex items-center gap-2 mb-2">
+        <img src="img/BTC.webp" alt="BTC" class="w-6 h-6">
+        <span class="text-base text-gray-300">BTC</span>
+      </div>
+      <div class="text-4xl font-bold mb-2" id="btcPrice">$85303.70</div>
+      <div class="text-sm text-gray-400" id="updatedTime">Обновлено в 22:30</div>
+    </div>
+
+    <!-- Правая часть — остальные монеты -->
+    <div class="space-y-2 ml-auto text-right">
+      <div class="flex items-center justify-end gap-2">
+        <span class="text-sm text-gray-300">DOGE:</span>
+        <span id="dogePrice" class="text-sm font-medium">$0.1588</span>
+        <img src="img/DOGE.png" alt="DOGE" class="w-5 h-5">
+      </div>
+      <div class="flex items-center justify-end gap-2">
+        <span class="text-sm text-gray-300">LTC:</span>
+        <span id="ltcPrice" class="text-sm font-medium">$76.14</span>
+        <img src="img/LTC.webp" alt="LTC" class="w-5 h-5">
+      </div>
+      <div class="flex items-center justify-end gap-2">
+        <span class="text-sm text-gray-300">USDT:</span>
+        <span id="usdtPrice" class="text-sm font-medium">₽85.00</span>
+        <img src="img/usdt.png" alt="USDT" class="w-5 h-5">
+      </div>
+      <div class="flex items-center justify-end gap-2">
+        <span class="text-sm text-gray-300">BELL:</span>
+        <span id="bellPrice" class="text-sm font-medium">$0.6504</span>
+        <img src="img/BELL.webp" alt="BELL" class="w-5 h-5">
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Скрипт для показа/скрытия -->
+<script>
+  const toggleBtn = document.getElementById('togglePrices');
+  const pricePanel = document.getElementById('pricePanel');
+
+  toggleBtn.addEventListener('click', () => {
+    const isVisible = pricePanel.classList.contains('translate-y-0');
+    pricePanel.classList.toggle('translate-y-0', !isVisible);
+    pricePanel.classList.toggle('translate-y-full', isVisible);
+    pricePanel.classList.toggle('opacity-100', !isVisible);
+    pricePanel.classList.toggle('opacity-0', isVisible);
+  });
+</script>
 
     
 <script src="js/modelsBTC_LTC.js" defer></script><!-- метрика моделей -->
