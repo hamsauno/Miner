@@ -12,7 +12,7 @@
 </head>
 <body class="bg-[#222222] pt-[52px] text-white font-[Arial] flex flex-col items-center justify-center min-h-screen">
 
-  <!-- 🔄 Блок загрузки -->
+  <!--  Блок загрузки -->
   <div id="loading" class="flex flex-col items-center justify-center text-center text-white mb-6">
     <svg class="animate-spin h-8 w-8 text-orange-400 mb-2" xmlns="http://www.w3.org/2000/svg" fill="none"
          viewBox="0 0 24 24">
@@ -24,7 +24,7 @@
     <span class="text-sm">Проверяем пользователя...</span>
   </div>
 
-  <!-- 📋 Форма регистрации -->
+  <!--  Форма регистрации -->
   <div class="w-full max-w-sm p-4 bg-[#333333] rounded-2xl shadow-md hidden" id="registerForm">
     <h2 class="text-xl font-bold mb-4 text-center">Регистрация</h2>
     <input id="username" type="text" placeholder="Имя пользователя"
@@ -32,7 +32,7 @@
     <input id="password" type="password" placeholder="Пароль"
       class="w-full mb-4 p-2 rounded bg-[#444] text-white placeholder-gray-400 outline-none" />
 
-          <!-- 📄 Согласие на обработку данных -->
+          <!--  Согласие на обработку данных -->
           <div class="text-xs text-gray-400 mb-3 text-center">
             Нажимая кнопку «Зарегистрироваться», вы принимаете 
             <button onclick="document.getElementById('consentModal').showModal()" class="underline text-orange-400 hover:text-orange-300">
@@ -113,15 +113,15 @@
       // const { data: allUsers, error: allUsersError } = await supabaseClient
       //   .from("users")
       //   .select("*");
-      // console.log("🔥 Все пользователи:", allUsers, allUsersError);
+      // console.log(" Все пользователи:", allUsers, allUsersError);
 
-      // 📦 Проверяем, есть ли пользователь с этим telegram_id
+      //  Проверяем, есть ли пользователь с этим telegram_id
       const { data, error } = await supabaseClient
         .from("users")
         .select("*")
         .eq("telegram_id", telegramId.toString());
 
-      console.log("📦 Ответ от Supabase:", data, error);
+      console.log(" Ответ от Supabase:", data, error);
 
       if (error) {
         console.error("❌ Ошибка запроса:", error.message);
