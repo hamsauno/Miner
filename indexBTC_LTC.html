@@ -183,12 +183,17 @@
 </div>
 
 <!-- Кнопка снизу -->
-<button id="togglePrices" class="fixed bottom-4 right-4 z-50 bg-yellow-500 text-black p-3 rounded-full shadow-lg hover:bg-yellow-400 transition-all">
-  Курсы
-</button>
+            <button id="togglePrices" 
+              class="fixed bottom-4 right-4 z-50 text-black p-3 rounded-full shadow-lg hover:opacity-90 transition-all"
+              style="background: linear-gradient(90deg, #F6A314, #EC7E07);">
+              Курсы
+            </button>
+
 
 <!-- Блок с ценами (изначально скрыт) -->
-<div id="pricePanel" class="fixed bottom-20 right-4 w-full max-w-md bg-[#333333] bg-opacity-90 rounded-2xl p-6 shadow-lg transition-all duration-300 transform translate-y-full opacity-0 z-40">
+<!-- Правильная позиция для центра -->
+<div id="pricePanel"
+     class="fixed bottom-20 left-1/2 transform -translate-x-1/2 w-full max-w-md bg-[#333333] bg-opacity-90 rounded-2xl p-6 shadow-lg transition-all duration-300 translate-y-full opacity-0 z-40">
   <div class="flex items-center justify-between">
     <!-- Левая часть — BTC -->
     <div>
