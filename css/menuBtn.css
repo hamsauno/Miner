@@ -23,7 +23,7 @@
     top: 0;
     width: 250px;
     height: 100%;
-    background: #333;
+    background: ##E2E2E2;
     color: white;
     transition: left 0.3s ease-in-out;  /* Плавное движение */
     padding-top: 60px;
@@ -67,7 +67,7 @@
     font-weight: 600;
     cursor: pointer;
     padding: 10px 20px;
-    background: linear-gradient(90deg, #F6A314, #EC7E07); /* Градиент */
+    background: #2511A8; /* Градиент */
     -webkit-background-clip: text;  /* "Обрезаем" фон по тексту */
     -webkit-text-fill-color: transparent; /* Делаем текст прозрачным, чтобы был виден фон */
     border: none;
