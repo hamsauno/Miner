@@ -77,7 +77,8 @@ div.addEventListener('click', () => {
   const modal = document.getElementById("product-modal");
   const modalBody = document.getElementById("modal-body");
 
-  const telegramLink = `https://t.me/WAYMORR_BOT?start=Хочу купить`;
+  const encodedModel = encodeURIComponent(`${manufacturer}_${model}`);
+  const telegramLink = `https://t.me/WAYMORR_BOT?start=Хочу купить${encodedModel}`;
 
   const gtdPrice = item["Цена ГТД РФ"];
   const gtdNdsPrice = item["Цена с ГТД РФ и НДС"];
