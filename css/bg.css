@@ -1,6 +1,5 @@
 body {
     background-color: #000000; /* Темный фон */
-    color: Black; /* Белый цвет текста */
     height: 100vh; /* Полноэкранный режим */
     overflow: hidden; /* Отключение прокрутки */
 }
