@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <link rel="stylesheet" href="css/styles.css"><!--Стиль для нижнего блока -->
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>    
     <link rel="stylesheet" href="css/bg.css">
     <link rel="stylesheet" href="css/svaip.css"> <!--свайп -->
     
@@ -17,232 +16,141 @@
         
 </head>
 <body>
-
-<div class="max-w-lg mx-auto bg-[#333333] text-white shadow-xl rounded-2xl p-5 mt-[52px] mb-[3px] space-y-3">
-  <div class="space-y-2">
-
-    <!-- Алгоритм и Производитель -->
-    <div class="flex gap-3">
-      <div class="w-1/2">
-        <label for="algorithmSelect" class="block text-sm font-medium mb-1">Алгоритм</label>
-        <select id="algorithmSelect" class="w-full rounded-md px-2 py-1 border border-gray-400 text-black text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400">
-          <option value="SHA-256">SHA-256</option>
-          <option value="Scrypt">SCRYPT</option>
+  <div class="w-full bg-[#000000] text-white shadow-xl p-5 mt-0 mb-[3px] space-y-3">
+    <div class="space-y-2">
+  
+      <!-- Алгоритм и Производитель -->
+      <div class="flex gap-3">
+        <div class="w-1/2">
+          <label for="algorithmSelect" class="block text-sm font-medium mb-1">Алгоритм</label>
+          <select id="algorithmSelect"
+            class="bg-[#E2E2E2] w-full px-2 py-1 border border-gray-400 text-black text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400">
+            <option value="SHA-256">SHA-256</option>
+            <option value="Scrypt">SCRYPT</option>
+          </select>
+        </div>
+        <div class="w-1/2">
+          <label for="manufacturerSelect" class="block text-sm font-medium mb-1">Производитель</label>
+          <select id="manufacturerSelect"
+            class="bg-[#E2E2E2] w-full px-2 py-1 border border-gray-400 text-black text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400">
+            <!-- Производители будут добавляться динамически -->
+          </select>
+        </div>
+      </div>
+  
+      <!-- Модель Асика -->
+      <div>
+        <label for="asicModel" class="block text-sm font-medium mb-1">Модель Асика</label>
+        <select id="asicModel"
+          class="bg-[#E2E2E2] w-full px-2 py-1 border border-gray-400 text-black text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400">
+          <!-- Модели будут добавляться динамически -->
         </select>
       </div>
-      <div class="w-1/2">
-        <label for="manufacturerSelect" class="block text-sm font-medium mb-1">Производитель</label>
-        <select id="manufacturerSelect" class="w-full rounded-md px-2 py-1 border border-gray-400 text-black text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400">
-          <!-- Производители будут добавляться динамически -->
-        </select>
-      </div>
-    </div>
-
-    <!-- Модель Асика -->
-    <div>
-      <label for="asicModel" class="block text-sm font-medium mb-1">Модель Асика</label>
-      <select id="asicModel" class="w-full rounded-md px-2 py-1 border border-gray-400 text-black text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400">
-        <!-- Модели будут добавляться динамически -->
-      </select>
-    </div>
-
-    <!-- Хэшрейт и Потребление -->
-    <div class="flex gap-3">
-      <div class="w-1/2">
-        <label class="block text-sm font-medium mb-1">Хэшрейт</label>
-        <div class="bg-[#444] rounded-md px-2 py-1 text-sm">
-          <span id="hashrate" class="font-semibold"></span> <span id="edprice"></span>
+  
+          <!-- Хэшрейт и Потребление -->
+          <div class="flex gap-3">
+            <div class="w-1/2">
+              <label class="block text-sm font-medium mb-1">Хэшрейт</label>
+              <div class="bg-[#E2E2E2] px-2 py-1 text-sm text-black">
+                <span id="hashrate" class="font-semibold"></span> <span id="edprice"></span>
+              </div>
+            </div>
+            <div class="w-1/2">
+              <label class="block text-sm font-medium mb-1">Потребление</label>
+              <div class="bg-[#E2E2E2] px-2 py-1 text-sm text-black">
+                <span id="power" class="font-semibold"></span> Вт
+              </div>
+            </div>
+          </div>
+  
+      <!-- Стоимость розетки и Асика -->
+      <div class="flex gap-3">
+        <div class="w-1/2">
+          <label for="electricityCost" class="block text-sm font-medium mb-1">Стоимость розетки</label>
+          <div class="relative">
+            <input type="number" id="electricityCost" value="5" inputmode="numeric"
+              class="bg-[#E2E2E2] w-full px-2 py-1 pr-6 border border-gray-400 text-black text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400">
+            <span class="absolute right-2 top-1/2 -translate-y-1/2 text-black text-xs">₽</span>
+          </div>
+        </div>
+        <div class="w-1/2">
+          <label for="asicCost" class="block text-sm font-medium mb-1">Стоимость Асика</label>
+          <div class="relative">
+            <input type="number" id="asicCost" inputmode="numeric"
+              class="bg-[#E2E2E2] w-full px-2 py-1 pr-6 border border-gray-400 text-black text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400">
+            <span class="absolute right-2 top-1/2 -translate-y-1/2 text-black text-xs">₽</span>
+          </div>
         </div>
       </div>
-      <div class="w-1/2">
-        <label class="block text-sm font-medium mb-1">Потребление</label>
-        <div class="bg-[#444] rounded-md px-2 py-1 text-sm">
-          <span id="power" class="font-semibold"></span> Вт
+  
+      <!-- Скрытые поля -->
+      <input type="hidden" id="btcPrice">
+      <input type="hidden" id="usdtPrice">
+      <input type="hidden" id="profitPerTH">
+      <input type="hidden" id="ltcPrice">
+      <input type="hidden" id="dogePrice">
+      <input type="hidden" id="bellPrice">
+      <input type="hidden" id="profitPerLTC">
+      <input type="hidden" id="profitPerDOGE">
+      <input type="hidden" id="profitPerBELL">
+  
+        <!-- Кнопка -->
+        <div class="pt-2">
+          <button id="calculateBtn"
+            class="w-full text-white font-bold text-base py-2 px-4 transition duration-300 hover:brightness-110 shadow-md"
+            style="background-color: #2511A8;">
+            Рассчитать
+          </button>
         </div>
-      </div>
-    </div>
-
-    <!-- Стоимость розетки и Асика -->
-    <div class="flex gap-3">
-      <div class="w-1/2">
-        <label for="electricityCost" class="block text-sm font-medium mb-1">Стоимость розетки</label>
-        <div class="relative">
-          <input type="number" id="electricityCost" value="5" inputmode="numeric"
-            class="w-full rounded-md px-2 py-1 pr-6 border border-gray-400 text-black text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400">
-          <span class="absolute right-2 top-1/2 -translate-y-1/2 text-black text-xs">₽</span>
-        </div>
-      </div>
-      <div class="w-1/2">
-        <label for="asicCost" class="block text-sm font-medium mb-1">Стоимость Асика</label>
-        <div class="relative">
-          <input type="number" id="asicCost" inputmode="numeric"
-            class="w-full rounded-md px-2 py-1 pr-6 border border-gray-400 text-black text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400">
-          <span class="absolute right-2 top-1/2 -translate-y-1/2 text-black text-xs">₽</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- Скрытые поля -->
-    <input type="hidden" id="btcPrice">
-    <input type="hidden" id="usdtPrice">
-    <input type="hidden" id="profitPerTH">
-    <input type="hidden" id="ltcPrice">
-    <input type="hidden" id="dogePrice">
-    <input type="hidden" id="bellPrice">
-    <input type="hidden" id="profitPerLTC">
-    <input type="hidden" id="profitPerDOGE">
-    <input type="hidden" id="profitPerBELL">
-
-    <!-- Кнопка -->
-    <div class="pt-2">
-      <button id="calculateBtn"
-        class="w-full text-black font-bold text-base py-2 px-4 rounded-lg transition duration-300 hover:brightness-110 shadow-md"
-        style="background: linear-gradient(90deg, #F6A314, #EC7E07);">
-        Рассчитать
-      </button>
-    </div>
-
-  </div>
-</div>
-    
-
-
-<div class="scroll-container">
-    <!-- Таблица в USD -->
-    <div class="currency-table">
-            <table class="result-table">
-                <thead>
-                    <tr>
-                        <th></th>
-                        <th>День</th>
-                        <th>Месяц</th>
-                        <th>Год</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>Доход</td>
-                        <td>$ <span id="income">0</span></td>
-                        <td>$ <span id="incomeMonth">0</span></td>
-                        <td>$ <span id="incomeYear">0</span></td>
-                    </tr>
-                    <tr>
-                        <td>Прибыль</td>
-                        <td>$ <span id="profit">0</span></td>
-                        <td>$ <span id="profitMonth">0</span></td>
-                        <td>$ <span id="profitYear">0</span></td>
-                    </tr>
-                    <tr>
-                        <td>Годовой %</td>
-                        <td colspan="3"><span id="roi">0</span></td>
-                    </tr>
-                    <tr>
-                        <td>Окупаемость мес</td>
-                        <td colspan="3"><span id="payback">0</span></td>
-                    </tr>
-                </tbody>
-            </table>
-    </div>
-
-    <!-- Таблица в RUB -->
-    <div class="currency-table">
-            <table class="result-table">
-                <thead>
-                    <tr>
-                        <th></th>
-                        <th>День</th>
-                        <th>Месяц</th>
-                        <th>Год</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>Доход</td>
-                        <td><span id="income_rub">0</span> ₽</td>
-                        <td><span id="incomeMonth_rub">0</span> ₽</td>
-                        <td><span id="incomeYear_rub">0</span> ₽</td>
-                    </tr>
-                    <tr>
-                        <td>Прибыль</td>
-                        <td><span id="profit_rub">0</span> ₽</td>
-                        <td><span id="profitMonth_rub">0</span> ₽</td>
-                        <td><span id="profitYear_rub">0</span> ₽</td>
-                    </tr>
-                    <tr>
-                        <td>Годовой %</td>
-                        <td colspan="3"><span id="roi_rub">0</span></td>
-                    </tr>
-                    <tr>
-                        <td>Окупаемость мес</td>
-                        <td colspan="3"><span id="payback_rub">0</span></td>
-                    </tr>
-                </tbody>
-            </table>
-    </div>
-</div>
-
-<!-- Кнопка снизу -->
-            <button id="togglePrices" 
-              class="fixed bottom-4 right-4 z-50 text-black p-3 rounded-full shadow-lg hover:opacity-90 transition-all"
-              style="background: linear-gradient(90deg, #F6A314, #EC7E07);">
-              Курсы
-            </button>
-
-
-<!-- Блок с ценами (изначально скрыт) -->
-<!-- Правильная позиция для центра -->
-<div id="pricePanel"
-     class="fixed bottom-20 left-1/2 transform -translate-x-1/2 w-full max-w-md bg-[#333333] bg-opacity-90 rounded-2xl p-6 shadow-lg transition-all duration-300 translate-y-full opacity-0 z-40">
-  <div class="flex items-center justify-between">
-    <!-- Левая часть — BTC -->
-    <div>
-      <div class="flex items-center gap-2 mb-2">
-        <img src="img/BTC.webp" alt="BTC" class="w-6 h-6">
-        <span class="text-base text-gray-300">BTC</span>
-      </div>
-      <div class="text-4xl font-bold mb-2" id="btcPrice">$85303.70</div>
-      <div class="text-sm text-gray-400" id="updatedTime">Обновлено в 22:30</div>
-    </div>
-
-    <!-- Правая часть — остальные монеты -->
-    <div class="space-y-2 ml-auto text-right">
-      <div class="flex items-center justify-end gap-2">
-        <span class="text-sm text-gray-300">DOGE:</span>
-        <span id="dogePrice" class="text-sm font-medium">$0.1588</span>
-        <img src="img/DOGE.png" alt="DOGE" class="w-5 h-5">
-      </div>
-      <div class="flex items-center justify-end gap-2">
-        <span class="text-sm text-gray-300">LTC:</span>
-        <span id="ltcPrice" class="text-sm font-medium">$76.14</span>
-        <img src="img/LTC.webp" alt="LTC" class="w-5 h-5">
-      </div>
-      <div class="flex items-center justify-end gap-2">
-        <span class="text-sm text-gray-300">USDT:</span>
-        <span id="usdtPrice" class="text-sm font-medium">₽85.00</span>
-        <img src="img/usdt.png" alt="USDT" class="w-5 h-5">
-      </div>
-      <div class="flex items-center justify-end gap-2">
-        <span class="text-sm text-gray-300">BELL:</span>
-        <span id="bellPrice" class="text-sm font-medium">$0.6504</span>
-        <img src="img/BELL.webp" alt="BELL" class="w-5 h-5">
-      </div>
+  
     </div>
   </div>
+
+<!-- Контейнер доходности -->
+<div class="w-screen h-screen p-0 m-0 bg-[#E2E2E2] text-sm space-y-4 shadow-md flex flex-col">
+  
+  <!-- Прогресс-бар -->
+  <div class="w-full bg-gray-300 h-5 relative overflow-hidden">
+    <div id="dailyProfit" class="absolute top-0 left-0 h-full bg-green-500 transition-all duration-500"></div>
+    <div id="dailyElectricityCost" class="absolute top-0 h-full bg-red-500 transition-all duration-500"></div>
+  </div>
+
+  <!-- Окупаемость и ROI -->
+  <div class="mt-2 text-black flex justify-between px-3">
+    <div>Окупаемость мес.: <span id="payback">—</span></div>
+    <div>Годовой %: <span id="roi">—</span></div>
+  </div>
+
+  <!-- Таблица -->
+  <div class="scroll-container overflow-x-auto px-3">
+    <table class="result-table w-full text-sm text-center border-collapse">
+      <thead>
+        <tr>
+          <th class="bg-black text-white p-2 w-24"> </th>
+          <th class="bg-black text-white p-2">День</th>
+          <th class="bg-black text-white p-2">Месяц</th>
+          <th class="bg-black text-white p-2">Год</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="bg-black text-white p-2 w-24">Доход</td>
+          <td class="bg-[#E2E2E2] text-black p-2">$ <span class="text-[#2511A8] font-semibold" id="income">0</span></td>
+          <td class="bg-[#E2E2E2] text-black p-2">$ <span class="text-[#2511A8] font-semibold" id="incomeMonth">0</span></td>
+          <td class="bg-[#E2E2E2] text-black p-2">$ <span class="text-[#2511A8] font-semibold" id="incomeYear">0</span></td>
+        </tr>
+        <tr>
+          <td class="bg-black text-white p-2 w-24">Прибыль</td>
+          <td class="bg-[#E2E2E2] text-black p-2">$ <span class="text-[#2511A8] font-semibold" id="profit">0</span></td>
+          <td class="bg-[#E2E2E2] text-black p-2">$ <span class="text-[#2511A8] font-semibold" id="profitMonth">0</span></td>
+          <td class="bg-[#E2E2E2] text-black p-2">$ <span class="text-[#2511A8] font-semibold" id="profitYear">0</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
 </div>
 
-<!-- Скрипт для показа/скрытия -->
-<script>
-  const toggleBtn = document.getElementById('togglePrices');
-  const pricePanel = document.getElementById('pricePanel');
-
-  toggleBtn.addEventListener('click', () => {
-    const isVisible = pricePanel.classList.contains('translate-y-0');
-    pricePanel.classList.toggle('translate-y-0', !isVisible);
-    pricePanel.classList.toggle('translate-y-full', isVisible);
-    pricePanel.classList.toggle('opacity-100', !isVisible);
-    pricePanel.classList.toggle('opacity-0', isVisible);
-  });
-</script>
 
    
 <script src="js/modelsBTC_LTC.js" defer></script><!-- метрика моделей -->
