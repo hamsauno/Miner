@@ -23,25 +23,6 @@ let jsonData = [];
     await onAlgorithmChange(); // начальная инициализация
   });
  
-  async function fetchData() {
-    try {
-      const response = await fetch("https://hamsauno.github.io/Miner/kursBTC.txt");
-      const data = (await response.text()).trim().split("\n");
- 
-      if (data.length >= 9) {
-        [
-          "btcPrice", "usdtPrice", "profitPerTH",
-          "ltcPrice", "dogePrice", "bellPrice",
-          "profitPerLTC", "profitPerDOGE", "profitPerBELL"
-        ].forEach((id, i) => {
-          const input = document.getElementById(id);
-          if (input) input.value = parseFloat(data[i]).toFixed(i < 6 ? 2 : 8);
-        });
-      }
-    } catch (e) {
-      console.error("Ошибка загрузки курса:", e);
-    }
-  }
  
   async function fetchData() {
     try {
@@ -182,7 +163,7 @@ let jsonData = [];
     const monthlyProfit = dailyProfit * 30.5;
     const yearlyProfit = dailyProfit * 365;
     const roi = (yearlyProfit / (asicCost / usdtPrice)) * 100;
-    const payback = ((asicCost / usdtPrice) / dailyProfit) / 30.5;
+    const payback = dailyProfit > 0 ? ((asicCost / usdtPrice) / dailyProfit) / 30.5 : Infinity;
  
     document.getElementById("income").innerText = dailyIncome.toFixed(2);
     document.getElementById("profit").innerText = dailyProfit.toFixed(2);
