@@ -118,9 +118,17 @@
         buyButton.className = "ml-2";
         buyButton.innerHTML = `<img src="img/buy.png" alt="Купить" class="w-6 h-6">`;
         buyButton.addEventListener('click', () => {
-          const message = `Добрый день, хочу купить ${item["Модель"] || "Неизвестно"}`;
+          const model = item["Модель"] || "Неизвестно";
+          const encodedModel = encodeURIComponent(model); // на всякий случай, чтобы в URL не было проблем
+        
           if (window.Telegram && window.Telegram.WebApp) {
-            Telegram.WebApp.sendData(message);
+            Telegram.WebApp.openTelegramLink(`https://t.me/WAYMORR_BOT?start=${encodedModel}`);
+            
+            buyButton.classList.add('animate-ping', 'opacity-50', 'pointer-events-none');
+        
+            setTimeout(() => {
+              buyButton.style.display = 'none';
+            }, 1500);
           } else {
             alert('Ошибка: Telegram WebApp не инициализирован');
           }
