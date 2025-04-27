@@ -39,10 +39,10 @@
     </div>
   </div>
 
-  <!-- Контент -->
-  <div id="content" class="pt-[60px] max-h-screen overflow-y-auto">
-    <div id="models-container" class="max-w-screen-xl mx-auto px-2 sm:px-3 space-y-2"> </div>
-  </div>
+    <!-- Контент -->
+    <div id="content" class="pt-[60px] max-h-screen overflow-y-auto">
+      <div id="models-container" class="max-w-screen-xl mx-auto px-2 sm:px-3 space-y-2 pt-4"> </div>
+    </div>
 
   <script>
     const typeButtons = document.querySelectorAll('.type-btn');
@@ -72,11 +72,11 @@
     typeButtons.forEach(button => {
       button.addEventListener('click', () => {
         typeButtons.forEach(btn => {
-          btn.classList.remove('bg-[#E2E2E2]', 'text-black');
+          btn.classList.remove('bg-[#FFFFFF]', 'text-black');
           btn.classList.add('bg-[#000000]', 'text-white');
         });
         button.classList.remove('bg-[#000000]', 'text-white');
-        button.classList.add('bg-[#E2E2E2]', 'text-black');
+        button.classList.add('bg-[#FFFFFF]', 'text-black');
 
         modelsContainer.innerHTML = '';
         openManufacturer = null;
@@ -108,11 +108,28 @@
         // Заполняем модели
         const filteredModels = data.filter(item => item["Производитель"] === manufacturer);
         filteredModels.forEach(item => {
-          const model = document.createElement('div');
-          model.className = "item";
-          model.innerHTML = `${item["Модель"] || "Неизвестно"} ${item["Хешрейт"]} ${item["Ед. изм."]} — ${Math.ceil((parseFloat(item["Цена"]) || 0) * priceUSDT / 100) * 100} ₽`;
-          modelsDiv.appendChild(model);
+        const modelWrapper = document.createElement('div');
+        modelWrapper.className = "flex items-center justify-between item";
+
+        const modelText = document.createElement('div');
+        modelText.innerHTML = `${item["Модель"] || "Неизвестно"} ${item["Хешрейт"]} ${item["Ед. изм."]} — ${Math.ceil((parseFloat(item["Цена"]) || 0) * priceUSDT / 100) * 100} ₽`;
+
+        const buyButton = document.createElement('button');
+        buyButton.className = "ml-2";
+        buyButton.innerHTML = `<img src="img/buy.png" alt="Купить" class="w-6 h-6">`;
+        buyButton.addEventListener('click', () => {
+          const message = `Добрый день, хочу купить ${item["Модель"] || "Неизвестно"}`;
+          if (window.Telegram && window.Telegram.WebApp) {
+            Telegram.WebApp.sendData(message);
+          } else {
+            alert('Ошибка: Telegram WebApp не инициализирован');
+          }
         });
+
+        modelWrapper.appendChild(modelText);
+        modelWrapper.appendChild(buyButton);
+        modelsDiv.appendChild(modelWrapper);
+      });
 
         // При клике — разворачивать
         button.addEventListener('click', () => {
