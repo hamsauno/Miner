@@ -118,12 +118,13 @@
         buyButton.className = "ml-2";
         buyButton.innerHTML = `<img src="img/buy.png" alt="Купить" class="w-6 h-6">`;
         buyButton.addEventListener('click', () => {
-          const modelName = item["Модель"] || "Неизвестно";
-          const message = `Добрый день, хочу купить ${modelName}`;
-          
+          const modelName = item["Модель"] || "Неизвестно"; // Получаем название модели
+          const message = `Добрый день, хочу купить ${modelName}`; // Формируем сообщение
+        
+          // Формируем ссылку для перехода в Telegram с предзаполненным сообщением
           const telegramUrl = `https://t.me/WAYMORR_BOT?start=${encodeURIComponent(message)}`;
-          
-          // Открываем Telegram-бота с сообщением
+        
+          // Открываем ссылку в новом окне/вкладке, чтобы пользователь мог перейти в Telegram
           window.open(telegramUrl, '_blank');
         });
 
