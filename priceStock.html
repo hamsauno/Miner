@@ -118,14 +118,19 @@
         buyButton.className = "ml-2";
         buyButton.innerHTML = `<img src="img/buy.png" alt="Купить" class="w-6 h-6">`;
         buyButton.addEventListener('click', () => {
-          const modelName = item["Модель"] || "Неизвестно"; // Получаем название модели
-          const message = `Добрый день, хочу купить ${modelName}`; // Формируем сообщение
-        
-          // Формируем ссылку для перехода в Telegram с предзаполненным сообщением
-          const telegramUrl = `https://t.me/WAYMORR_BOT?start=${encodeURIComponent(message)}`;
-        
-          // Открываем ссылку в новом окне/вкладке, чтобы пользователь мог перейти в Telegram
-          window.open(telegramUrl, '_blank');
+          // Собираем название модели + хешрейт + единицу измерения
+          const modelName = `${item["Модель"] || "Неизвестно"} ${item["Хешрейт"] || ""}`;
+
+          // Очищаем строку: пробелы заменяем на подчеркивания, удаляем все знаки препинания
+          const safeMessage = modelName
+            .replace(/[^\w\s]/gi, '')   // Убираем все символы кроме букв, цифр и пробелов
+            .replace(/\s+/g, '_');      // Пробелы заменяем на подчеркивания
+
+          // Формируем ссылку на бота
+          const telegramLink = `https://t.me/WAYMORR_BOT?start=${safeMessage}`;
+
+          // Открываем ссылку в новой вкладке
+          window.open(telegramLink, '_blank');
         });
 
         modelWrapper.appendChild(modelText);
