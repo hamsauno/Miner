@@ -1,49 +1,141 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <link rel="icon" href="data:,">
-    <link rel="stylesheet" href="css/bgscrol.css">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="js/priceStock.js" defer></script>
-   
-    
-    
-    
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="css/bg.css">
+  <style>
+    .model-container {
+      background-color: #000000;
+      margin-bottom: 2px;
+      overflow: hidden;
+      transition: max-height 0.5s ease, opacity 0.5s ease;
+    }
+    .model-container.hidden {
+      max-height: 0;
+      opacity: 0;
+    }
+    .model-container.visible {
+      max-height: 1000px;
+      opacity: 1;
+    }
+    .item {
+      padding: 10px;
+      color: white;
+    }
+  </style>
 </head>
-<body class="bg-[#222222] text-white font-[Arial] h-screen overflow-hidden">
+<body class="text-black font-[Arial] h-screen overflow-hidden">
 
-  <!-- Фиксированная обёртка с отступом сверху -->
-  <div class="fixed top-[47px] left-0 w-full z-50 bg-[#222222] shadow">
-
-    <!-- Кнопки -->
-        <div class="p-4 flex flex-wrap gap-2 justify-center">
-          <button class="type-btn w-[22%] bg-[#333333] text-white px-2 py-1 rounded font-semibold tracking-wide text-[11px]" data-type="Наличие">Наличие</button>
-          <button class="type-btn w-[22%] bg-[#333333] text-white px-2 py-1 rounded font-semibold tracking-wide text-[11px]" data-type="В пути">В пути</button>
-          <button class="type-btn w-[22%] bg-[#333333] text-white px-2 py-1 rounded font-semibold tracking-wide text-[11px]" data-type="Предзаказ">Предзаказ</button>
-          <button class="type-btn w-[22%] bg-[#333333] text-white px-2 py-1 rounded font-semibold tracking-wide text-[11px]" data-type="БУ">Б/У</button>
-        </div>
-
-    <!-- Производители -->
-    <div id="manufacturers" class="pb-2 px-4 grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 max-w-screen-xl mx-auto"></div>
-  </div>
-
-  <!-- Контент с отступом (высота блока выше + 52px сверху) -->
-  <div class="pt-[200px] max-h-screen overflow-y-auto">
-    <div class="max-w-screen-xl mx-auto px-2 sm:px-3">
-      <!-- Модели -->
-      <div id="models" class="p-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 text-[13px] sm:text-sm md:text-base"></div>
+  <!-- Верхняя панель -->
+  <div class="fixed top-0 left-0 w-full z-50 bg-[#000000] shadow h-[60px]">
+    <div class="flex h-full" id="type-buttons">
+      <button class="type-btn w-1/4 h-full bg-[#000000] text-white font-semibold text-[11px] flex items-center justify-center uppercase" data-type="Наличие">Наличие</button>
+      <button class="type-btn w-1/4 h-full bg-[#000000] text-white font-semibold text-[11px] flex items-center justify-center uppercase" data-type="В пути">В пути</button>
+      <button class="type-btn w-1/4 h-full bg-[#000000] text-white font-semibold text-[11px] flex items-center justify-center uppercase" data-type="Предзаказ">Предзаказ</button>
+      <button class="type-btn w-1/4 h-full bg-[#000000] text-white font-semibold text-[11px] flex items-center justify-center uppercase" data-type="БУ">Б/У</button>
     </div>
   </div>
 
-  <!-- Модалка -->
-  <div id="product-modal" class="fixed inset-0 hidden bg-black bg-opacity-80 backdrop-blur-sm flex items-center justify-center z-50">
-    <div id="modal-body" class="bg-[#222222] text-white p-6 rounded-lg w-[90%] max-w-md shadow-lg"></div>
+  <!-- Контент -->
+  <div id="content" class="pt-[60px] max-h-screen overflow-y-auto">
+    <div id="models-container" class="max-w-screen-xl mx-auto px-2 sm:px-3 space-y-2"> </div>
   </div>
 
-</body>
+  <script>
+    const typeButtons = document.querySelectorAll('.type-btn');
+    const modelsContainer = document.getElementById('models-container');
+    let priceUSDT = 0;
+    let allData = {};
+    let openManufacturer = null;
 
+    fetch('https://hamsauno.github.io/Miner/kursBTC.txt')
+      .then(res => res.text())
+      .then(text => {
+        const lines = text.split('\n');
+        if (lines.length > 1) {
+          priceUSDT = parseFloat(lines[1].trim());
+          loadAllData();
+        }
+      });
+
+    function loadAllData() {
+      fetch('https://hamsauno.github.io/Miner/json/data.json')
+        .then(res => res.json())
+        .then(data => {
+          allData = data;
+        });
+    }
+
+    typeButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        typeButtons.forEach(btn => {
+          btn.classList.remove('bg-[#E2E2E2]', 'text-black');
+          btn.classList.add('bg-[#000000]', 'text-white');
+        });
+        button.classList.remove('bg-[#000000]', 'text-white');
+        button.classList.add('bg-[#E2E2E2]', 'text-black');
+
+        modelsContainer.innerHTML = '';
+        openManufacturer = null;
+        showManufacturers(button.dataset.type);
+      });
+    });
+
+    function showManufacturers(type) {
+      modelsContainer.innerHTML = '';
+      const data = allData[type];
+      if (!data) return;
+
+      const manufacturers = ["Antminer", "Whatsminer", "Elphapex", "Avalon"];
+
+      manufacturers.forEach(manufacturer => {
+        const block = document.createElement('div');
+
+        // Кнопка производителя
+        const button = document.createElement('button');
+        button.className = "bg-[#2511A8] text-white font-bold py-2 px-4 w-full text-left hover:opacity-90";
+        button.textContent = manufacturer;
+        block.appendChild(button);
+
+        // Контейнер моделей (скрыт по умолчанию)
+        const modelsDiv = document.createElement('div');
+        modelsDiv.className = "model-container hidden";
+        block.appendChild(modelsDiv);
+
+        // Заполняем модели
+        const filteredModels = data.filter(item => item["Производитель"] === manufacturer);
+        filteredModels.forEach(item => {
+          const model = document.createElement('div');
+          model.className = "item";
+          model.innerHTML = `${item["Модель"] || "Неизвестно"} ${item["Хешрейт"]} ${item["Ед. изм."]} — ${Math.ceil((parseFloat(item["Цена"]) || 0) * priceUSDT / 100) * 100} ₽`;
+          modelsDiv.appendChild(model);
+        });
+
+        // При клике — разворачивать
+        button.addEventListener('click', () => {
+          if (openManufacturer && openManufacturer !== modelsDiv) {
+            openManufacturer.classList.remove('visible');
+            openManufacturer.classList.add('hidden');
+          }
+
+          if (modelsDiv.classList.contains('visible')) {
+            modelsDiv.classList.remove('visible');
+            modelsDiv.classList.add('hidden');
+            openManufacturer = null;
+          } else {
+            modelsDiv.classList.remove('hidden');
+            modelsDiv.classList.add('visible');
+            openManufacturer = modelsDiv;
+          }
+        });
+
+        modelsContainer.appendChild(block);
+      });
+    }
+  </script>
+
+</body>
 </html>
