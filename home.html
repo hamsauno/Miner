@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+    <!-- Подключаем шрифт Suisse Intl через Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Suisse+Intl:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Подключаем Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script src="js/fullscr.js" defer></script>
+    <script src="js/visits.js" defer></script>
+    <script src="js/admin.js" defer></script>
+
+    <link rel="stylesheet" href="css/bg.css">
+</head>
+<body class="bg-gray-100">
+
+    <!-- Контейнер для закреплённой шапки и меню -->
+    <div class="fixed top-0 left-0 w-full h-[47px] bg-[#2511A8] text-white z-50 flex items-center justify-between px-4 font-semibold text-lg">
+        <!-- Кнопка открытия меню -->
+        <button id="menuBtn" class="menu-btn text-white text-xl bg-transparent border-none cursor-pointer z-20 transition-colors duration-300">
+            <span class="menu-icon">☰</span> Меню
+        </button>
+
+        <!-- Логотип -->
+        <img src="img/WAYMORR.png" alt="WAYMORR" class="h-4 mt-[2px]">
+    </div>
+
+    <!-- Основной контент -->
+    <div class="content pt-[47px]">
+        <!-- Здесь будет отображаться основной контент -->
+    </div>
+
+    <!-- Боковое меню -->
+    <div id="sidebar" class="sidebar fixed top-0 left-[-250px] w-[250px] h-full bg-[#E2E2E2] flex flex-col pt-[60px] transition-all duration-500 ease-in-out z-40">
+        <!-- Кнопки меню выровненные по левому краю -->
+        <button onclick="goHome()" class="py-3 px-4 text-lg w-full text-left hover:bg-gray-300 transition-all duration-300">Главная</button>
+        <button onclick="loadPage('indexBTC_LTC.html')" class="py-3 px-4 text-lg w-full text-left hover:bg-gray-300 transition-all duration-300">Калькулятор</button>
+        <button onclick="loadPage('priceStock.html')" class="py-3 px-4 text-lg w-full text-left hover:bg-gray-300 transition-all duration-300">Прайс</button>
+        <button onclick="loadPage('register.html')" class="py-3 px-4 text-lg w-full text-left hover:bg-gray-300 transition-all duration-300">Профиль</button>
+        <button id="adminBtn" onclick="loadPage('admin.html')" class="py-3 px-4 text-lg w-full text-left hover:bg-gray-300 transition-all duration-300">Админка</button>
+    </div>
+
+    <!-- Затемнение фона, если меню открыто -->
+    <div class="overlay fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 hidden z-5" id="overlay"></div>
+
+    <!-- Основной контент (iframe для загрузки других страниц) -->
+    <div class="content">
+        <iframe src="" id="pageIframe" class="w-full h-[calc(100vh-47px-47px)] border-none hidden"></iframe>
+    </div>    
+
+    <!-- Контейнер для закреплённой шапки внизу -->
+    <div class="fixed bottom-0 left-0 w-full h-[47px] bg-[#2511A8] text-white z-50 flex items-center justify-between px-2 font-semibold text-base sm:text-lg" id="panel">
+        <div class="w-full flex justify-between items-center h-full" id="buttonContainer">
+          <button class="panel-button flex-1 mx-1 mt-1 h-[calc(100%-4px)] py-1 text-white transition-all duration-300">#</button>
+          <button class="panel-button flex-1 mx-1 mt-1 h-[calc(100%-4px)] py-1 text-white transition-all duration-300">#</button>
+          <button class="panel-button flex-1 mx-1 mt-1 h-[calc(100%-4px)] py-1 text-white transition-all duration-300">#</button>
+          <button id="kursBtn" class="panel-button flex-1 mx-1 mt-1 h-[calc(100%-4px)] py-1 text-white transition-all duration-300">Курсы</button>
+        </div>
+      </div>
+      
+      <div id="kursFrame" class="fixed bottom-[-140px] left-0 w-full bg-[#E2E2E2] h-[140px] z-40 transition-transform duration-300 ease-in-out">
+        <iframe src="AllKurs.html" class="w-full h-full border-none"></iframe>
+      </div>
+      
+      <script>
+        const buttons = document.querySelectorAll('.panel-button');
+        const kursBtn = document.getElementById('kursBtn');
+        const panel = document.getElementById('panel');
+        const kursFrame = document.getElementById('kursFrame');
+        let activeButton = null;
+      
+        buttons.forEach(button => {
+          button.addEventListener('click', () => {
+            const isSameButton = (activeButton === button);
+      
+            // Сброс всех кнопок
+            buttons.forEach(btn => {
+              btn.style.backgroundColor = "";
+              btn.style.color = "white";
+            });
+      
+            if (isSameButton) {
+              activeButton = null;
+              // Закрываем курс-фрейм, если кликнули снова по Курсам
+              if (button === kursBtn) {
+                panel.style.transform = "translateY(0)";
+                kursFrame.style.bottom = "-140px";
+              }
+            } else {
+              button.style.backgroundColor = "#E2E2E2";
+              button.style.color = "black";
+              activeButton = button;
+              
+              if (button === kursBtn) {
+                panel.style.transform = "translateY(-140px)";
+                kursFrame.style.bottom = "0";
+              } else {
+                panel.style.transform = "translateY(0)";
+                kursFrame.style.bottom = "-140px"; // Закрыть курсы, если выбрана другая кнопка
+              }
+            }
+          });
+        });
+      </script>
+      
+      <style>
+        /* Немного подправим поведение кнопок без hover на мобильных */
+        .panel-button:active {
+          background-color: #E2E2E2;
+          color: black;
+        }
+      </style>
+      
+      
+    
+
+    <script>
+        // Функция для открытия/закрытия бокового меню
+        function toggleMenu() {
+            const sidebar = document.getElementById("sidebar");
+            const overlay = document.getElementById("overlay");
+            const menuBtn = document.getElementById("menuBtn");
+
+            if (sidebar) {
+                sidebar.classList.toggle("left-0");
+                sidebar.classList.toggle("left-[-250px]"); // скрытие меню
+            }
+
+            if (menuBtn) {
+                menuBtn.classList.toggle("text-[#2511A8]"); // Изменение цвета кнопки
+            }
+
+            if (overlay) {
+                overlay.classList.toggle("hidden"); // Затемнение фона
+            }
+        }
+
+        // Функция для загрузки страницы в iframe и скрытия меню
+        function loadPage(page) {
+            const iframe = document.getElementById("pageIframe");
+            const sidebar = document.getElementById("sidebar");
+            const overlay = document.getElementById("overlay");
+
+            if (iframe) {
+                iframe.src = page;
+                iframe.classList.remove("hidden"); // Показываем iframe
+            }
+
+            // Закрываем меню и убираем затемнение
+            if (sidebar) sidebar.classList.add("left-[-250px]");
+            if (overlay) overlay.classList.add("hidden");
+        }
+
+        // Закрытие меню при клике на затемнённый фон
+        document.addEventListener("DOMContentLoaded", function () {
+            const overlay = document.getElementById("overlay");
+            const menuBtn = document.getElementById("menuBtn");
+
+            if (overlay) {
+                overlay.addEventListener("click", toggleMenu);
+            }
+
+            if (menuBtn) {
+                menuBtn.addEventListener("click", toggleMenu);
+            }
+        });
+
+        // Функция для возврата на главную страницу (скрываем iframe)
+        function goHome() {
+            const iframe = document.getElementById("pageIframe");
+            const sidebar = document.getElementById("sidebar");
+            const overlay = document.getElementById("overlay");
+
+            if (iframe) {
+                iframe.src = ""; // Очищаем iframe
+                iframe.classList.add("hidden"); // Скрываем iframe
+            }
+
+            if (sidebar) sidebar.classList.add("left-[-250px]"); // Закрываем меню
+            if (overlay) overlay.classList.add("hidden"); // Убираем затемнение
+        }
+    </script>
+
+    <style>
+        /* Контейнер для шапки и меню всегда поверх всех окон */
+        .fixed {
+            z-index: 50; /* Обеспечиваем, чтобы шапка всегда была сверху */
+        }
+
+        /* Контейнер для бокового меню */
+        #sidebar {
+            background-color: #E2E2E2 !important; /* Убираем прозрачность, устанавливаем цвет #E2E2E2 */
+            z-index: 40; /* Панель меню имеет z-index меньше чем шапка */
+        }
+
+        /* Кнопки меню */
+        #sidebar button {
+            transition: background-color 0.3s ease;
+        }
+
+        #sidebar button:hover {
+            background-color: #ccc; /* Затемнение при наведении */
+        }
+
+        /* Шрифт для всего текста */
+        * {
+            font-family: 'Suisse Intl', sans-serif;
+        }
+
+        /* Изменение цвета только символа "☰" при наведении */
+        #menuBtn:hover .menu-icon {
+            color: black; /* Меняем цвет на чёрный */
+        }
+
+        /* Оставляем текст Меню белым, при наведении на всю кнопку */
+        #menuBtn:hover {
+            color: white; /* Текст остаётся белым */
+        }
+
+        /* Меню всегда белое */
+        #menuBtn {
+            color: white;
+        }
+
+        /* Сделать меню не исчезающим при открытии панели */
+        #menuBtn {
+            position: relative;
+            z-index: 100; /* Устанавливаем высокий z-index, чтобы меню было всегда поверх панели */
+        }
+
+        /* Затемнение фона, кроме шапки и панели меню */
+        .overlay {
+            z-index: 10; /* Устанавливаем z-index ниже, чтобы верхняя панель и меню были сверху */
+        }
+
+        .overlay.hidden {
+            display: none; /* Прячем затемнение */
+        }
+    </style>
+
+
+</body>
+</html>
