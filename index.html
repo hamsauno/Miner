@@ -2,99 +2,114 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8" />
-  <title>Стартовая загрузка</title>
+  <title>WAYMORR - Старт</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
   <style>
-    @keyframes pulse {
-      0%, 100% { transform: scale(1); opacity: 1; }
-      50% { transform: scale(1.2); opacity: 0.7; }
-    }
-    @keyframes bgTransition {
+    /* Анимация фона */
+    @keyframes fadeToBlue {
       0% { background-color: #000000; }
       100% { background-color: #2511A8; }
     }
-    body {
-      animation: bgTransition 2s forwards;
+    /* Анимация пульсации */
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.1); opacity: 0.7; }
+    }
+    body, html {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      overflow: hidden;
+      font-family: 'Arial', sans-serif;
+      background-color: #000000;
+      animation: fadeToBlue 2s forwards;
     }
   </style>
 </head>
-<body class="flex flex-col items-center justify-center min-h-screen overflow-hidden">
+<body class="flex flex-col items-center justify-center text-white">
 
-  <!-- Блок загрузки -->
-  <div id="startScreen" class="flex flex-col items-center justify-center w-full h-screen bg-black">
-    <img id="logo" src="img/WAYMORR.png" class="w-full max-w-md opacity-0 transition-opacity duration-1000" alt="WAYMORR Logo" />
-    <button id="startBtn" class="mt-6 text-white text-2xl font-bold opacity-0 animate-pulse">НАЧАТЬ</button>
+  <!-- Центрированный контент -->
+  <div id="startScreen" class="flex flex-col items-center justify-center w-full h-full">
+    <img src="img/WAYMORR.png" alt="WAYMORR" class="w-[80%] max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg mb-8 transition-all duration-700" />
+    <button id="startButton" class="text-2xl sm:text-3xl font-bold animate-pulse" style="animation: pulse 2s infinite;">
+      НАЧАТЬ
+    </button>
   </div>
 
-<script>
-const { createClient } = supabase;
-const supabaseUrl = "https://yiprwrgmyqlkdmhgulmc.supabase.co";
-const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlpcHJ3cmdteXFsa2RtaGd1bG1jIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ2NTI0NjgsImV4cCI6MjA2MDIyODQ2OH0.lfiTfr5ukGDEVuwq-X9U2kWs3nEZrp3N443HT5AkbfI";
-const supabaseClient = createClient(supabaseUrl, supabaseKey);
+  <!-- Скрипты -->
+  <script>
+    const { createClient } = supabase;
+    const supabaseUrl = "https://yiprwrgmyqlkdmhgulmc.supabase.co";
+    const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlpcHJ3cmdteXFsa2RtaGd1bG1jIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ2NTI0NjgsImV4cCI6MjA2MDIyODQ2OH0.lfiTfr5ukGDEVuwq-X9U2kWs3nEZrp3N443HT5AkbfI";
+    const supabaseClient = createClient(supabaseUrl, supabaseKey);
 
-document.addEventListener("DOMContentLoaded", async () => {
-  const tg = window.Telegram.WebApp;
-  tg.ready();
+    document.addEventListener("DOMContentLoaded", () => {
+      const tg = window.Telegram.WebApp;
+      tg.ready();
 
-  const logo = document.getElementById("logo");
-  const startBtn = document.getElementById("startBtn");
+      const startButton = document.getElementById('startButton');
+      const startScreen = document.getElementById('startScreen');
 
-  setTimeout(() => {
-    logo.classList.add("opacity-100");
-    startBtn.classList.add("opacity-100");
-  }, 2000);
+      startButton.addEventListener('click', async () => {
+        startButton.disabled = true; // Чтобы пользователь не кликал дважды
 
-  startBtn.addEventListener("click", async () => {
-    const telegramId = tg?.initDataUnsafe?.user?.id;
-    const username = tg?.initDataUnsafe?.user?.username || "unknown";
+        const telegramId = tg?.initDataUnsafe?.user?.id;
+        const username = tg?.initDataUnsafe?.user?.username || "";
 
-    if (!telegramId || typeof telegramId !== "number") {
-      alert("❗️ Telegram ID не найден. Запустите через Telegram.");
-      return;
-    }
+        if (!telegramId) {
+          alert("❗️ Ошибка получения Telegram ID. Пожалуйста, откройте через Telegram WebApp.");
+          return;
+        }
 
-    try {
-      const { data, error } = await supabaseClient
-        .from("users")
-        .select("*")
-        .eq("telegram_id", telegramId.toString());
+        try {
+          const { data, error } = await supabaseClient
+            .from("users")
+            .select("*")
+            .eq("telegram_id", telegramId.toString());
 
-      if (error) {
-        console.error("❌ Ошибка запроса:", error.message);
-        alert("Ошибка при проверке пользователя.");
-        return;
-      }
+          if (error) {
+            console.error("❌ Ошибка запроса:", error.message);
+            alert("Ошибка при проверке пользователя.");
+            return;
+          }
 
-      if (data && data.length === 0) {
-        console.log("🆕 Новый пользователь. Создаем запись.");
-        await supabaseClient
-          .from("users")
-          .insert([{
-            telegram_id: telegramId.toString(),
-            username: username,
-            bonus: 0
-          }]);
-      } else {
-        console.log("✅ Пользователь уже существует.");
-      }
+          if (!data || data.length === 0) {
+            // Пользователь не найден, регистрируем
+            const { error: insertError } = await supabaseClient
+              .from("users")
+              .insert([{
+                telegram_id: telegramId.toString(),
+                username: username,
+                bonus: 0
+              }]);
 
-      // Плавное исчезновение
-      document.getElementById("startScreen").classList.add("opacity-0", "transition-opacity", "duration-1000");
-      setTimeout(() => {
-        window.location.href = "home.html";
-      }, 1000);
+            if (insertError) {
+              console.error("❌ Ошибка регистрации:", insertError.message);
+              alert("Ошибка регистрации пользователя.");
+              return;
+            }
 
-    } catch (err) {
-      console.error("❗️ Ошибка:", err);
-      alert("Не удалось обработать запрос.");
-    }
-  });
-});
-</script>
+            console.log("🆕 Новый пользователь зарегистрирован!");
+          } else {
+            console.log("✅ Пользователь найден:", data[0]);
+          }
 
+          // Плавное исчезновение контента
+          startScreen.classList.add('opacity-0', 'transition-opacity', 'duration-700');
+          setTimeout(() => {
+            window.location.href = "home.html";
+          }, 800);
+
+        } catch (err) {
+          console.error("❗️ Ошибка:", err);
+          alert("Не удалось выполнить вход.");
+        }
+      });
+    });
+  </script>
 </body>
 </html>
 
