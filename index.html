@@ -40,7 +40,7 @@
         <button onclick="goHome()" class="py-3 px-4 text-lg w-full text-left hover:bg-gray-300 transition-all duration-300">Главная</button>
         <button onclick="loadPage('indexBTC_LTC.html')" class="py-3 px-4 text-lg w-full text-left hover:bg-gray-300 transition-all duration-300">Калькулятор</button>
         <button onclick="loadPage('priceStock.html')" class="py-3 px-4 text-lg w-full text-left hover:bg-gray-300 transition-all duration-300">Прайс</button>
-        <!--<button onclick="loadPage('register.html')" class="py-3 px-4 text-lg w-full text-left hover:bg-gray-300 transition-all duration-300">Профиль</button>-->
+        <button onclick="loadPage('register.html')" class="py-3 px-4 text-lg w-full text-left hover:bg-gray-300 transition-all duration-300">Профиль</button>
         <button id="adminBtn" onclick="loadPage('admin.html')" class="py-3 px-4 text-lg w-full text-left hover:bg-gray-300 transition-all duration-300">Админка</button>
     </div>
 
@@ -49,13 +49,66 @@
 
     <!-- Основной контент (iframe для загрузки других страниц) -->
     <div class="content">
-        <iframe src="" id="pageIframe" class="w-full h-[calc(100vh-47px)] border-none hidden"></iframe>
-    </div>
+        <iframe src="" id="pageIframe" class="w-full h-[calc(100vh-47px-47px)] border-none hidden"></iframe>
+    </div>    
 
     <!-- Контейнер для закреплённой шапки внизу -->
-    <div class="fixed bottom-0 left-0 w-full h-[47px] bg-[#2511A8] text-white z-50 flex items-center justify-between px-4 font-semibold text-lg">
-        <!-- Твой контент сюда -->
-    </div>
+    <div class="fixed bottom-0 left-0 w-full h-[47px] bg-[#2511A8] text-white z-50 flex items-center justify-between px-2 font-semibold text-lg" id="panel">
+        <div class="w-full flex justify-between items-center h-full" id="buttonContainer">
+          <button class="panel-button flex-1 mx-1 mt-1 h-[calc(100%-4px)] py-1 text-white hover:bg-[#E2E2E2] hover:text-black transition-all duration-300">#</button>
+          <button class="panel-button flex-1 mx-1 mt-1 h-[calc(100%-4px)] py-1 text-white hover:bg-[#E2E2E2] hover:text-black transition-all duration-300">#</button>
+          <button class="panel-button flex-1 mx-1 mt-1 h-[calc(100%-4px)] py-1 text-white hover:bg-[#E2E2E2] hover:text-black transition-all duration-300">#</button>
+          <button id="kursBtn" class="panel-button flex-1 mx-1 mt-1 h-[calc(100%-4px)] py-1 text-white hover:bg-[#E2E2E2] hover:text-black transition-all duration-300">Курсы</button>
+        </div>
+      </div>
+      
+      <div id="kursFrame" class="fixed bottom-[-140px] left-0 w-full bg-[#E2E2E2] h-[140px] z-50 transition-transform duration-300 ease-in-out">
+        <iframe src="AllKurs.html" class="w-full h-full border-none"></iframe>
+      </div>
+      
+      <script>
+        let activeButton = null; // Сохраняем текущую активную кнопку
+      
+        document.querySelectorAll('.panel-button').forEach(function(button) {
+          button.addEventListener('click', function(e) {
+            // Если нажали на уже активную кнопку — деактивируем её
+            if (activeButton === button) {
+              button.style.backgroundColor = "";
+              button.style.color = "white";
+              activeButton = null;
+      
+              // Если это была кнопка "Курсы", закрываем панель
+              if (button.id === "kursBtn") {
+                document.getElementById('panel').style.transform = "translateY(0)";
+                document.getElementById('kursFrame').style.bottom = "-140px";
+              }
+              return;
+            }
+      
+            // Сброс цвета у всех кнопок
+            document.querySelectorAll('.panel-button').forEach(function(btn) {
+              btn.style.backgroundColor = "";
+              btn.style.color = "white";
+            });
+      
+            // Активируем нажатую кнопку
+            button.style.backgroundColor = "#E2E2E2";
+            button.style.color = "black";
+            activeButton = button;
+      
+            // Открыть или закрыть панель для кнопки "Курсы"
+            if (button.id === "kursBtn") {
+              document.getElementById('panel').style.transform = "translateY(-140px)";
+              document.getElementById('kursFrame').style.bottom = "0";
+            } else {
+              document.getElementById('panel').style.transform = "translateY(0)";
+              document.getElementById('kursFrame').style.bottom = "-140px";
+            }
+          });
+        });
+      </script>
+      
+    
 
     <script>
         // Функция для открытия/закрытия бокового меню
