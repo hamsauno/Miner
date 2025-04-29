@@ -44,122 +44,130 @@
       <div id="models-container" class="max-w-screen-xl mx-auto px-2 sm:px-3 space-y-2 pt-4"> </div>
     </div>
 
-  <script>
-    const typeButtons = document.querySelectorAll('.type-btn');
-    const modelsContainer = document.getElementById('models-container');
-    let priceUSDT = 0;
-    let allData = {};
-    let openManufacturer = null;
-
-    fetch('https://hamsauno.github.io/Miner/kursBTC.txt')
-      .then(res => res.text())
-      .then(text => {
-        const lines = text.split('\n');
-        if (lines.length > 1) {
-          priceUSDT = parseFloat(lines[1].trim());
-          loadAllData();
-        }
-      });
-
-    function loadAllData() {
-      fetch('https://hamsauno.github.io/Miner/json/data.json')
-        .then(res => res.json())
-        .then(data => {
-          allData = data;
+    <script>
+      const typeButtons = document.querySelectorAll('.type-btn');
+      const modelsContainer = document.getElementById('models-container');
+      let priceUSDT = 0;
+      let allData = {};
+      let openManufacturer = null;
+    
+      fetch('https://hamsauno.github.io/Miner/kursBTC.txt')
+        .then(res => res.text())
+        .then(text => {
+          const lines = text.split('\n');
+          if (lines.length > 1) {
+            priceUSDT = parseFloat(lines[1].trim());
+            loadAllData();
+          }
         });
-    }
-
-    typeButtons.forEach(button => {
-      button.addEventListener('click', () => {
-        typeButtons.forEach(btn => {
-          btn.classList.remove('bg-[#FFFFFF]', 'text-black');
-          btn.classList.add('bg-[#000000]', 'text-white');
-        });
-        button.classList.remove('bg-[#000000]', 'text-white');
-        button.classList.add('bg-[#FFFFFF]', 'text-black');
-
-        modelsContainer.innerHTML = '';
-        openManufacturer = null;
-        showManufacturers(button.dataset.type);
-      });
-    });
-
-    function showManufacturers(type) {
-      modelsContainer.innerHTML = '';
-      const data = allData[type];
-      if (!data) return;
-
-      const manufacturers = ["Antminer", "Whatsminer", "Elphapex", "Avalon"];
-
-      manufacturers.forEach(manufacturer => {
-        const block = document.createElement('div');
-
-        // Кнопка производителя
-        const button = document.createElement('button');
-        button.className = "bg-[#2511A8] text-white font-bold py-2 px-4 w-full text-left hover:opacity-90";
-        button.textContent = manufacturer;
-        block.appendChild(button);
-
-        // Контейнер моделей (скрыт по умолчанию)
-        const modelsDiv = document.createElement('div');
-        modelsDiv.className = "model-container hidden";
-        block.appendChild(modelsDiv);
-
-        // Заполняем модели
-        const filteredModels = data.filter(item => item["Производитель"] === manufacturer);
-        filteredModels.forEach(item => {
-        const modelWrapper = document.createElement('div');
-        modelWrapper.className = "flex items-center justify-between item";
-
-        const modelText = document.createElement('div');
-        modelText.innerHTML = `${item["Модель"] || "Неизвестно"} ${item["Хешрейт"]} ${item["Ед. изм."]} — ${Math.ceil((parseFloat(item["Цена"]) || 0) * priceUSDT / 100) * 100} ₽`;
-
-        const buyButton = document.createElement('button');
-        buyButton.className = "ml-2";
-        buyButton.innerHTML = `<img src="img/buy.png" alt="Купить" class="w-6 h-6">`;
-        buyButton.addEventListener('click', () => {
-          // Собираем название модели + хешрейт + единицу измерения
-          const modelName = `${item["Модель"] || "Неизвестно"} ${item["Хешрейт"] || ""}`;
-
-          // Очищаем строку: пробелы заменяем на подчеркивания, удаляем все знаки препинания
-          const safeMessage = modelName
-            .replace(/[^\w\s]/gi, '')   // Убираем все символы кроме букв, цифр и пробелов
-            .replace(/\s+/g, '_');      // Пробелы заменяем на подчеркивания
-
-          // Формируем ссылку на бота
-          const telegramLink = `https://t.me/WAYMORR_BOT?start=${safeMessage}`;
-
-          // Открываем ссылку в новой вкладке
-          window.open(telegramLink, '_blank');
-        });
-
-        modelWrapper.appendChild(modelText);
-        modelWrapper.appendChild(buyButton);
-        modelsDiv.appendChild(modelWrapper);
-      });
-
-        // При клике — разворачивать
+    
+      function loadAllData() {
+        fetch('https://hamsauno.github.io/Miner/json/data.json')
+          .then(res => res.json())
+          .then(data => {
+            allData = data;
+          });
+      }
+    
+      typeButtons.forEach(button => {
         button.addEventListener('click', () => {
-          if (openManufacturer && openManufacturer !== modelsDiv) {
-            openManufacturer.classList.remove('visible');
-            openManufacturer.classList.add('hidden');
-          }
-
-          if (modelsDiv.classList.contains('visible')) {
-            modelsDiv.classList.remove('visible');
-            modelsDiv.classList.add('hidden');
-            openManufacturer = null;
-          } else {
-            modelsDiv.classList.remove('hidden');
-            modelsDiv.classList.add('visible');
-            openManufacturer = modelsDiv;
-          }
+          typeButtons.forEach(btn => {
+            btn.classList.remove('bg-[#FFFFFF]', 'text-black');
+            btn.classList.add('bg-[#000000]', 'text-white');
+          });
+          button.classList.remove('bg-[#000000]', 'text-white');
+          button.classList.add('bg-[#FFFFFF]', 'text-black');
+    
+          modelsContainer.innerHTML = '';
+          openManufacturer = null;
+          showManufacturers(button.dataset.type);
         });
-
-        modelsContainer.appendChild(block);
       });
-    }
-  </script>
+    
+      function showManufacturers(type) {
+        modelsContainer.innerHTML = '';
+        const data = allData[type];
+        if (!data) return;
+    
+        const manufacturers = ["Antminer", "Whatsminer", "Elphapex", "Avalon"];
+    
+        manufacturers.forEach(manufacturer => {
+          const block = document.createElement('div');
+    
+          // Кнопка производителя
+          const button = document.createElement('button');
+          button.className = "bg-[#2511A8] text-white font-bold py-2 px-4 w-full text-left hover:opacity-90";
+          button.textContent = manufacturer;
+          block.appendChild(button);
+    
+          // Контейнер моделей (скрыт по умолчанию)
+          const modelsDiv = document.createElement('div');
+          modelsDiv.className = "model-container hidden";
+          block.appendChild(modelsDiv);
+    
+          // Заполняем модели
+          const filteredModels = data.filter(item => item["Производитель"] === manufacturer);
+          filteredModels.forEach((item, index) => {
+            const modelWrapper = document.createElement('div');
+            modelWrapper.className = "flex justify-between items-center px-4 py-2";
+            modelWrapper.style.backgroundColor = index % 2 === 0 ? "#000000" : "#151719";
+    
+            // Модель (слева)
+            const modelText = document.createElement('div');
+            modelText.className = "text-white text-left truncate";
+            modelText.textContent = `${item["Модель"] || "Неизвестно"} ${item["Хешрейт"]} ${item["Ед. изм."]}`;
+    
+            // Цена (по правому краю)
+            const priceDiv = document.createElement('div');
+            priceDiv.className = "text-white text-right whitespace-nowrap";
+            priceDiv.textContent = `${Math.ceil((parseFloat(item["Цена"]) || 0) * priceUSDT / 100) * 100} ₽`;
+    
+            // Кнопка покупки
+            const buyButton = document.createElement('button');
+            buyButton.className = "ml-2";
+            buyButton.innerHTML = `<img src="img/buy.png" alt="Купить" class="w-6 h-6">`;
+            buyButton.addEventListener('click', () => {
+              const modelName = `${item["Модель"] || "Неизвестно"} ${item["Хешрейт"] || ""}`;
+              const safeMessage = modelName.replace(/[^\w\s]/gi, '').replace(/\s+/g, '_');
+              const telegramLink = `https://t.me/WAYMORR_BOT?start=${safeMessage}`;
+              window.open(telegramLink, '_blank');
+            });
+    
+            // Правая часть: цена + кнопка
+            const rightSection = document.createElement('div');
+            rightSection.className = "flex items-center gap-2";
+            rightSection.appendChild(priceDiv);
+            rightSection.appendChild(buyButton);
+    
+            modelWrapper.appendChild(modelText);
+            modelWrapper.appendChild(rightSection);
+            modelsDiv.appendChild(modelWrapper);
+          });
+    
+          // Клик по производителю
+          button.addEventListener('click', () => {
+            if (openManufacturer && openManufacturer !== modelsDiv) {
+              openManufacturer.classList.remove('visible');
+              openManufacturer.classList.add('hidden');
+            }
+    
+            if (modelsDiv.classList.contains('visible')) {
+              modelsDiv.classList.remove('visible');
+              modelsDiv.classList.add('hidden');
+              openManufacturer = null;
+            } else {
+              modelsDiv.classList.remove('hidden');
+              modelsDiv.classList.add('visible');
+              openManufacturer = modelsDiv;
+            }
+          });
+    
+          modelsContainer.appendChild(block);
+        });
+      }
+    </script>
+    
+
 
 </body>
 </html>
