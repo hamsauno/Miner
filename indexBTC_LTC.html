@@ -8,70 +8,7 @@
 
 <title>Калькулятор доходности майнинга</title>
 <meta name="description" content="Удобный Telegram-калькулятор для расчета доходности ASIC-майнеров. Доход, прибыль, ROI, окупаемость — всё в одном месте.">
-<style>
-  html, body {
-    margin: 0;
-    padding: 0;
-    width: 100%;
-    overflow-x: hidden;
-    background-color: #E2E2E2; /* Фон для body */
-  }
 
-  /* --- Стили для сворачивающейся шапки --- */
-
-  /* Плавный переход для самой шапки (высота, отступы) */
-  #headerSection {
-    transition: height 0.3s ease-in-out, padding 0.3s ease-in-out;
-    /* Начальное состояние - обычное, без position:fixed */
-  }
-
-  /* Класс для фиксированного и свернутого состояния */
-  #headerSection.header-fixed-collapsed {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0; /* Растягиваем на всю ширину */
-    z-index: 1000; /* Поверх всего контента */
-    height: 70px !important; /* Высота свернутой шапки */
-    padding-top: 5px !important;
-    padding-bottom: 5px !important;
-    overflow: hidden; /* Скрываем все, что не помещается */
-    background-color: #000000; /* Фон обязателен для fixed */
-    box-shadow: 0 2px 5px rgba(0,0,0,0.2); /* Тень для выделения */
-  }
-
-  /* Плавное скрытие контента формы */
-  #headerSection .form-content {
-    transition: opacity 0.2s ease-in-out, visibility 0.2s ease-in-out;
-  }
-
-  #headerSection.header-fixed-collapsed .form-content {
-    opacity: 0;
-    visibility: hidden;
-  }
-
-  /* Позиционирование кнопки в свернутом состоянии */
-   #headerSection .button-container { /* Обертка для кнопки */
-       transition: transform 0.3s ease-in-out;
-   }
-
-  #headerSection.header-fixed-collapsed .button-container {
-    position: absolute; /* Абсолютное позиционирование внутри шапки */
-    bottom: 10px; /* Отступ снизу */
-    left: 20px;  /* Отступ слева (равен padding-x родителя) */
-    right: 20px; /* Отступ справа (равен padding-x родителя) */
-    padding-top: 0 !important; /* Убираем верхний отступ у контейнера кнопки */
-  }
-
-
-
-  /* Плавный переход для отступа основного контента */
-  #resultsContainer {
-    transition: padding-top 0.3s ease-in-out;
-  }
-  /* --- Конец стилей для шапки --- */
-
-</style>
 
 </head>
 <body> <div id="headerSection" class="w-full bg-[#000000] text-white shadow-xl p-5 mb-[3px]">
