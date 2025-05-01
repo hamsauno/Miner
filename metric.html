@@ -41,11 +41,6 @@
     <section class="min-w-full snap-start">
       <h2 class="text-xl font-semibold mb-2"> Уникальные пользователи</h2>
       <div id="userList" class="space-y-2 text-sm">Загрузка...</div>
-      <!-- Добавь это в <body>, сразу после <div id="userList"> -->
-      <div id="swipePanel" class="swipe-panel fixed top-0 right-[-100%] bg-white z-50 transition-all duration-300">
-        <h2 class="text-lg font-semibold mb-4">📊 Детали</h2>
-        <p>Здесь можно вывести дополнительную статистику или информацию.</p>
-      </div>
     </section>
 
 
@@ -175,28 +170,7 @@
   
         userList.appendChild(monthBlock);
       });
-  
-      // --- Свайп влево на блоке секции ---
-      let touchStartX = 0;
-      let touchEndX = 0;
-  
-      userList.addEventListener('touchstart', e => {
-        touchStartX = e.changedTouches[0].screenX;
-      });
-  
-      userList.addEventListener('touchend', e => {
-        touchEndX = e.changedTouches[0].screenX;
-        handleSwipeGesture();
-      });
-  
-      function handleSwipeGesture() {
-        const threshold = 80;
-        if (touchStartX - touchEndX > threshold) {
-          swipePanel.style.right = '0';
-        } else if (touchEndX - touchStartX > threshold) {
-          swipePanel.style.right = '-100%';
-        }
-      }
+
     });
   </script>
   
