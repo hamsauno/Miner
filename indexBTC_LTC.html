@@ -3,138 +3,169 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>    
-    <link rel="stylesheet" href="css/bar.css">
-        
-    <script src="https://cdn.tailwindcss.com"></script>  <!--Подключение Tailwind -->
-    
-    
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+
 <title>Калькулятор доходности майнинга</title>
-<meta name="description" content="Удобный Telegram-калькулятор для расчета доходности ASIC-майнеров. Доход, прибыль, ROI, окупаемость — всё в одном месте."> 
+<meta name="description" content="Удобный Telegram-калькулятор для расчета доходности ASIC-майнеров. Доход, прибыль, ROI, окупаемость — всё в одном месте.">
 <style>
   html, body {
     margin: 0;
     padding: 0;
-    width: 100vw;
+    width: 100%;
     overflow-x: hidden;
+    background-color: #E2E2E2; /* Фон для body */
   }
-</style> 
+
+  /* --- Стили для сворачивающейся шапки --- */
+
+  /* Плавный переход для самой шапки (высота, отступы) */
+  #headerSection {
+    transition: height 0.3s ease-in-out, padding 0.3s ease-in-out;
+    /* Начальное состояние - обычное, без position:fixed */
+  }
+
+  /* Класс для фиксированного и свернутого состояния */
+  #headerSection.header-fixed-collapsed {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0; /* Растягиваем на всю ширину */
+    z-index: 1000; /* Поверх всего контента */
+    height: 70px !important; /* Высота свернутой шапки */
+    padding-top: 5px !important;
+    padding-bottom: 5px !important;
+    overflow: hidden; /* Скрываем все, что не помещается */
+    background-color: #000000; /* Фон обязателен для fixed */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2); /* Тень для выделения */
+  }
+
+  /* Плавное скрытие контента формы */
+  #headerSection .form-content {
+    transition: opacity 0.2s ease-in-out, visibility 0.2s ease-in-out;
+  }
+
+  #headerSection.header-fixed-collapsed .form-content {
+    opacity: 0;
+    visibility: hidden;
+  }
+
+  /* Позиционирование кнопки в свернутом состоянии */
+   #headerSection .button-container { /* Обертка для кнопки */
+       transition: transform 0.3s ease-in-out;
+   }
+
+  #headerSection.header-fixed-collapsed .button-container {
+    position: absolute; /* Абсолютное позиционирование внутри шапки */
+    bottom: 10px; /* Отступ снизу */
+    left: 20px;  /* Отступ слева (равен padding-x родителя) */
+    right: 20px; /* Отступ справа (равен padding-x родителя) */
+    padding-top: 0 !important; /* Убираем верхний отступ у контейнера кнопки */
+  }
+
+
+
+  /* Плавный переход для отступа основного контента */
+  #resultsContainer {
+    transition: padding-top 0.3s ease-in-out;
+  }
+  /* --- Конец стилей для шапки --- */
+
+</style>
 
 </head>
-<body class="flex flex-col h-screen">
-   <!-- Форма ввода -->
-   <div id="headerSection" class="w-screen bg-[#000000] text-white shadow-xl p-5 mt-0 mb-[3px] space-y-3">
-    <div class="space-y-2">
-      <!-- Алгоритм и Производитель -->
-      <div class="flex gap-3">
-        <div class="w-1/2">
-          <label for="algorithmSelect" class="block text-sm font-medium mb-1">Алгоритм</label>
-          <select id="algorithmSelect"
-            class="bg-[#E2E2E2] w-full px-2 py-1 border border-gray-400 text-black text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400">
-            <option value="SHA-256">SHA-256</option>
-            <option value="Scrypt">SCRYPT</option>
-          </select>
-        </div>
-        <div class="w-1/2">
-          <label for="manufacturerSelect" class="block text-sm font-medium mb-1">Производитель</label>
-          <select id="manufacturerSelect"
-            class="bg-[#E2E2E2] w-full px-2 py-1 border border-gray-400 text-black text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400">
-            <!-- Производители будут добавляться динамически -->
-          </select>
-        </div>
-      </div>
+<body> <div id="headerSection" class="w-full bg-[#000000] text-white shadow-xl p-5 mb-[3px]">
+      <div class="form-content space-y-2">
+         <div class="flex gap-3">
+           <div class="w-1/2">
+             <label for="algorithmSelect" class="block text-sm font-medium mb-1">Алгоритм</label>
+             <select id="algorithmSelect"
+               class="bg-[#E2E2E2] w-full px-2 py-1 border border-gray-400 text-black text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400">
+               <option value="SHA-256">SHA-256</option>
+               <option value="Scrypt">SCRYPT</option>
+             </select>
+           </div>
+           <div class="w-1/2">
+             <label for="manufacturerSelect" class="block text-sm font-medium mb-1">Производитель</label>
+             <select id="manufacturerSelect"
+               class="bg-[#E2E2E2] w-full px-2 py-1 border border-gray-400 text-black text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400">
+               </select>
+           </div>
+         </div>
 
-      <!-- Модель Асика -->
-      <div>
-        <label for="asicModel" class="block text-sm font-medium mb-1">Модель Асика</label>
-        <select id="asicModel"
-          class="bg-[#E2E2E2] w-full px-2 py-1 border border-gray-400 text-black text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400">
-          <!-- Модели будут добавляться динамически -->
-        </select>
-      </div>
+         <div>
+           <label for="asicModel" class="block text-sm font-medium mb-1">Модель Асика</label>
+           <select id="asicModel"
+             class="bg-[#E2E2E2] w-full px-2 py-1 border border-gray-400 text-black text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400">
+             </select>
+         </div>
 
-      <!-- Хэшрейт и Потребление -->
-      <div class="flex gap-3">
-        <div class="w-1/2">
-          <label class="block text-sm font-medium mb-1">Хэшрейт</label>
-          <div class="bg-[#E2E2E2] px-2 py-1 text-sm text-black">
-            <span id="hashrate"></span> <span id="edprice"></span>
-          </div>
-        </div>
-        <div class="w-1/2">
-          <label class="block text-sm font-medium mb-1">Потребление</label>
-          <div class="bg-[#E2E2E2] px-2 py-1 text-sm text-black">
-            <span id="power"></span> Вт
-          </div>
-        </div>
-      </div>
+         <div class="flex gap-3">
+           <div class="w-1/2">
+             <label class="block text-sm font-medium mb-1">Хэшрейт</label>
+             <div class="bg-[#E2E2E2] px-2 py-1 text-sm text-black min-h-[28px]"> <span id="hashrate"></span> <span id="edprice"></span>
+             </div>
+           </div>
+           <div class="w-1/2">
+             <label class="block text-sm font-medium mb-1">Потребление</label>
+             <div class="bg-[#E2E2E2] px-2 py-1 text-sm text-black min-h-[28px]"> <span id="power"></span><span id="power_unit"></span> </div>
+           </div>
+         </div>
 
-      <!-- Стоимость розетки и Асика -->
-      <div class="flex gap-3">
-        <div class="w-1/2">
-          <label for="electricityCost" class="block text-sm font-medium mb-1">Стоимость розетки</label>
-          <div class="relative">
-            <input 
-              type="number" 
-              id="electricityCost" 
-              value="5" 
-              inputmode="decimal" 
-              step="any"
-              class="bg-[#E2E2E2] w-full px-2 py-1 pr-6 border border-gray-400 text-black text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400">
-            <span class="absolute right-2 top-1/2 -translate-y-1/2 text-black text-xs">₽</span>
-          </div>
-        </div>
-        <div class="w-1/2">
-          <label for="asicCost" class="block text-sm font-medium mb-1">Стоимость Асика</label>
-          <div class="relative">
-            <input type="number" id="asicCost" inputmode="numeric"
-              class="bg-[#E2E2E2] w-full px-2 py-1 pr-6 border border-gray-400 text-black text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400">
-            <span class="absolute right-2 top-1/2 -translate-y-1/2 text-black text-xs">₽</span>
-          </div>
-        </div>
-      </div>
+         <div class="flex gap-3">
+           <div class="w-1/2">
+             <label for="electricityCost" class="block text-sm font-medium mb-1">Стоимость розетки</label>
+             <div class="relative">
+               <input
+                 type="number"
+                 id="electricityCost"
+                 value="5"
+                 inputmode="decimal"
+                 step="any"
+                 class="bg-[#E2E2E2] w-full px-2 py-1 pr-6 border border-gray-400 text-black text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400">
+               <span class="absolute right-2 top-1/2 -translate-y-1/2 text-black text-xs">₽</span>
+             </div>
+           </div>
+           <div class="w-1/2">
+             <label for="asicCost" class="block text-sm font-medium mb-1">Стоимость Асика</label>
+             <div class="relative">
+               <input type="number" id="asicCost" inputmode="numeric"
+                 class="bg-[#E2E2E2] w-full px-2 py-1 pr-6 border border-gray-400 text-black text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400"
+                 placeholder="Авто/Ручной ввод"> <span class="absolute right-2 top-1/2 -translate-y-1/2 text-black text-xs">₽</span>
+             </div>
+           </div>
+         </div>
 
-      <!-- Скрытые поля -->
-      <input type="hidden" id="btcPrice">
-      <input type="hidden" id="usdtPrice">
-      <input type="hidden" id="profitPerTH">
-      <input type="hidden" id="ltcPrice">
-      <input type="hidden" id="dogePrice">
-      <input type="hidden" id="bellPrice">
-      <input type="hidden" id="profitPerLTC">
-      <input type="hidden" id="profitPerDOGE">
-      <input type="hidden" id="profitPerBELL">
-
-      <!-- Кнопка -->
-      <div class="pt-2">
+         <input type="hidden" id="btcPrice">
+         <input type="hidden" id="usdtPrice">
+         <input type="hidden" id="profitPerTH">
+         <input type="hidden" id="ltcPrice">
+         <input type="hidden" id="dogePrice">
+         <input type="hidden" id="bellPrice">
+         <input type="hidden" id="profitPerLTC">
+         <input type="hidden" id="profitPerDOGE">
+         <input type="hidden" id="profitPerBELL">
+      </div> <div class="button-container pt-2">
         <button id="calculateBtn"
           class="w-full text-white font-bold text-base py-2 px-4 transition duration-300 hover:brightness-110 shadow-md"
           style="background-color: #2511A8;">
           Рассчитать
         </button>
       </div>
-    </div>
-  </div>
-
-  <!-- Контейнер доходности -->
-  <div class="w-screen flex-1 overflow-y-auto bg-[#E2E2E2] text-sm space-y-4 shadow-md flex flex-col">
-    <!-- Прогресс-бар и показатели -->
-    <div class="w-screen px-4 mt-2">
-      <!-- Прогресс-бар -->
+   </div> <div id="resultsContainer" class="w-full bg-[#E2E2E2] text-sm space-y-4 shadow-md px-4 pb-4 pt-4">
+    <div>
       <div class="w-full h-5 relative overflow-hidden border" style="border-color: #2511A8;">
         <div id="dailyProfit" class="absolute top-0 left-0 h-full transition-all duration-500" style="background-color: #2511A8;"></div>
         <div id="dailyElectricityCost" class="absolute top-0 h-full transition-all duration-500" style="background-color: #E2E2E2;"></div>
       </div>
 
-      <!-- Окупаемость и ROI -->
       <div class="mt-2 text-black flex justify-between">
         <div>Окупаемость мес.: <span id="payback">—</span></div>
         <div>Годовой %: <span id="roi">—</span></div>
       </div>
     </div>
 
-    <!-- Таблица -->
-    <div class="scroll-container w-screen overflow-x-auto px-4">
+    <div class="scroll-container w-full overflow-x-auto">
       <table class="result-table w-full text-sm text-center border-collapse">
         <thead>
           <tr>
@@ -152,62 +183,587 @@
           <tr>
             <td class="bg-black text-white p-2 w-24">Доход</td>
             <td class="bg-[#E2E2E2] text-black p-2">
-              <span class="text-[#2511A8] font-semibold" id="income">0</span>
-              <span class="text-[#2511A8] font-semibold hidden" id="income_rub">0</span> 
+              <span class="text-[#2511A8] font-semibold" id="income">$ --.--</span>
+              <span class="text-[#2511A8] font-semibold hidden" id="income_rub">-- ₽</span>
             </td>
             <td class="bg-[#E2E2E2] text-black p-2">
-              <span class="text-[#2511A8] font-semibold" id="incomeMonth">0</span>
-              <span class="text-[#2511A8] font-semibold hidden" id="incomeMonth_rub">0</span> 
+              <span class="text-[#2511A8] font-semibold" id="incomeMonth">$ --.--</span>
+              <span class="text-[#2511A8] font-semibold hidden" id="incomeMonth_rub">-- ₽</span>
             </td>
             <td class="bg-[#E2E2E2] text-black p-2">
-              <span class="text-[#2511A8] font-semibold" id="incomeYear">0</span>
-              <span class="text-[#2511A8] font-semibold hidden" id="incomeYear_rub">0</span> 
+              <span class="text-[#2511A8] font-semibold" id="incomeYear">$ --.--</span>
+              <span class="text-[#2511A8] font-semibold hidden" id="incomeYear_rub">-- ₽</span>
             </td>
           </tr>
           <tr>
             <td class="bg-black text-white p-2 w-24">Прибыль</td>
             <td class="bg-[#E2E2E2] text-black p-2">
-              <span class="text-[#2511A8] font-semibold" id="profit">0</span>
-              <span class="text-[#2511A8] font-semibold hidden" id="profit_rub">0</span> 
+              <span class="text-[#2511A8] font-semibold" id="profit">$ --.--</span>
+              <span class="text-[#2511A8] font-semibold hidden" id="profit_rub">-- ₽</span>
             </td>
             <td class="bg-[#E2E2E2] text-black p-2">
-              <span class="text-[#2511A8] font-semibold" id="profitMonth">0</span>
-              <span class="text-[#2511A8] font-semibold hidden" id="profitMonth_rub">0</span> 
+              <span class="text-[#2511A8] font-semibold" id="profitMonth">$ --.--</span>
+              <span class="text-[#2511A8] font-semibold hidden" id="profitMonth_rub">-- ₽</span>
             </td>
             <td class="bg-[#E2E2E2] text-black p-2">
-              <span class="text-[#2511A8] font-semibold" id="profitYear">0</span>
-              <span class="text-[#2511A8] font-semibold hidden" id="profitYear_rub">0</span> 
+              <span class="text-[#2511A8] font-semibold" id="profitYear">$ --.--</span>
+              <span class="text-[#2511A8] font-semibold hidden" id="profitYear_rub">-- ₽</span>
             </td>
           </tr>
         </tbody>
       </table>
     </div>
-  </div>
+      <div style="height: 1000px; background: #f0f0f0; margin-top: 20px; padding: 10px; border: 1px solid #ccc;">
+        Просто блок для увеличения высоты страницы и теста скролла.
+      </div>
+  </div> <script>
+let jsonData = [];
+let currentAlgorithm = "SHA-256";
+let dailyIncome = 0;
+let dailyProfitValue = 0;
+let monthlyProfit = 0;
+let yearlyProfit = 0;
+let usdtPrice = 0; // Храним актуальный курс USDT
+let isUSD = true; // По умолчанию показываем доллары
 
-  <script>
-    const header = document.getElementById("headerSection");
+document.addEventListener("DOMContentLoaded", async () => {
+    console.log("Загрузка страницы...");
+
+    // Получение элементов DOM
+    const algorithmSelect = document.getElementById("algorithmSelect");
+    const manufacturerSelect = document.getElementById("manufacturerSelect");
+    const asicModel = document.getElementById("asicModel");
     const calcBtn = document.getElementById("calculateBtn");
-  
-    let isCollapsed = false;
-  
-    window.addEventListener("scroll", () => {
-      if (window.scrollY > 20 && !isCollapsed) {
-        header.classList.add("h-[60px]", "overflow-hidden", "transition-all", "duration-500");
-        header.classList.remove("space-y-3", "p-5");
-        calcBtn.classList.add("scale-90");
-        isCollapsed = true;
-      } else if (window.scrollY <= 20 && isCollapsed) {
-        header.classList.remove("h-[60px]", "overflow-hidden");
-        header.classList.add("space-y-3", "p-5");
-        calcBtn.classList.remove("scale-90");
-        isCollapsed = false;
-      }
-    });
-  </script>
-  
+    const toggleButton = document.getElementById('toggleCurrency');
+    const header = document.getElementById("headerSection");
+    const resultsContainer = document.getElementById("resultsContainer"); // Контейнер с результатами
 
-   
-   
-<script src="js/modelsBTC_LTC.js" defer></script><!-- метрика моделей -->
+    // Проверка на существование критичных элементов
+    if (!algorithmSelect || !manufacturerSelect || !asicModel || !calcBtn || !toggleButton || !header || !resultsContainer) {
+        console.error("❌ Один или несколько критичных элементов DOM не найдены!");
+        alert("Ошибка инициализации страницы. Некоторые элементы отсутствуют.");
+        return; // Прерываем выполнение, если чего-то не хватает
+    } else {
+         console.log("✅ Все основные элементы найдены.");
+    }
+
+    // Привязка обработчиков событий
+    algorithmSelect.addEventListener("change", onAlgorithmChange);
+    manufacturerSelect.addEventListener("change", updateModelList);
+    asicModel.addEventListener("change", updateAsicSpecs);
+    calcBtn.addEventListener("click", calculateProfit);
+    toggleButton.addEventListener('click', updateValues);
+
+    // --- Логика фиксации/сворачивания хедера ---
+    let isHeaderFixed = false;
+    const scrollThreshold = 20; // Порог прокрутки в пикселях
+    const collapsedHeaderHeight = 70; // Высота хедера в свернутом состоянии (из CSS)
+
+    window.addEventListener("scroll", () => {
+        const scrollY = window.scrollY; // Текущая позиция скролла
+
+        if (scrollY > scrollThreshold && !isHeaderFixed) {
+            // Фиксируем и сворачиваем хедер
+            // console.log("Fixing header");
+            header.classList.add("header-fixed-collapsed");
+            resultsContainer.style.paddingTop = `${collapsedHeaderHeight}px`; // Добавляем отступ контенту
+            isHeaderFixed = true;
+
+        } else if (scrollY === 0 && isHeaderFixed) { // Возвращаем только при скролле на самый верх
+            // Разворачиваем хедер
+            // console.log("Unfixing header");
+            header.classList.remove("header-fixed-collapsed");
+            resultsContainer.style.paddingTop = '0px'; // Убираем отступ у контента
+            isHeaderFixed = false;
+        }
+    }, { passive: true }); // Оптимизация скролла
+    // --- Конец логики хедера ---
+
+    // Загрузка данных и начальная инициализация
+    try {
+       await fetchData(); // Загружаем курс и данные profitPer...
+       await onAlgorithmChange(); // Загружаем JSON и заполняем селекты
+       // Не вызываем calculateProfit здесь, чтобы не было расчета до выбора пользователя
+    } catch (error) {
+        console.error("❌ Ошибка при начальной загрузке данных:", error);
+        alert("Ошибка загрузки начальных данных. Проверьте консоль.");
+    }
+
+});
+
+
+async function fetchData() {
+    console.log("Загрузка kursBTC.txt...");
+    try {
+        const response = await fetch("https://hamsauno.github.io/Miner/kursBTC.txt");
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const text = await response.text();
+        const data = text.trim().split("\n");
+        console.log("✅ Строки из kursBTC.txt:", data);
+
+        if (data.length >= 9) {
+            const values = {
+                btcPrice: parseFloat(data[0]),
+                usdtPrice: parseFloat(data[1]), // Обновляем глобальный usdtPrice
+                profitPerTH: parseFloat(data[2]),
+                ltcPrice: parseFloat(data[3]),
+                dogePrice: parseFloat(data[4]),
+                bellPrice: parseFloat(data[5]),
+                profitPerLTC: parseFloat(data[6]),
+                profitPerDOGE: parseFloat(data[7]),
+                profitPerBELL: parseFloat(data[8]),
+            };
+
+            let dataValid = true;
+            Object.entries(values).forEach(([key, val]) => {
+                if (isNaN(val)) {
+                    console.warn(`⚠️ Некорректное значение для ${key} из TXT:`, data[Object.keys(values).indexOf(key)]);
+                    dataValid = false;
+                }
+                const el = document.getElementById(key);
+                if (el && !isNaN(val)) {
+                    el.value = val.toFixed(key.startsWith("profit") ? 8 : 2); // Форматируем для скрытых полей
+                    if (key === "usdtPrice") {
+                        usdtPrice = val; // Сохраняем в глобальную переменную
+                        console.log(`Курс USDT обновлен: ${usdtPrice}`);
+                    }
+                } else if (!el) {
+                     console.warn(`⚠️ Элемент с ID ${key} не найден для установки значения из TXT.`);
+                }
+            });
+
+            if (!dataValid) {
+                alert("Внимание: Некоторые данные из kursBTC.txt не удалось прочитать корректно. Расчеты могут быть неверны.");
+            } else {
+                console.log("📥 Значения из TXT успешно загружены и установлены.");
+            }
+        } else {
+            console.warn("❗ Недостаточно строк в kursBTC.txt. Ожидалось 9 или больше.");
+            alert("Ошибка: Не удалось загрузить все необходимые данные из kursBTC.txt.");
+        }
+    } catch (e) {
+        console.error("❌ Критическая ошибка загрузки kursBTC.txt:", e);
+        alert(`Критическая ошибка при загрузке данных курса (${e.message}). Расчеты невозможны.`);
+        // Можно заблокировать кнопку расчета или показать сообщение об ошибке
+        const calcBtn = document.getElementById('calculateBtn');
+        if(calcBtn) calcBtn.disabled = true;
+    }
+}
+
+
+async function fetchJsonData() {
+    // Загрузка JSON для выбранного алгоритма
+    console.log(`Загрузка calc.json для алгоритма: ${currentAlgorithm}...`);
+    try {
+        const response = await fetch("https://hamsauno.github.io/Miner/json/calc.json");
+         if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        // Фильтруем данные сразу при получении
+        jsonData = data["Расчёты"] ? data["Расчёты"].filter(item => item["Алгоритм"] === currentAlgorithm) : [];
+        console.log(`✅ Загружено ${jsonData.length} моделей для ${currentAlgorithm}`);
+        if (jsonData.length === 0) {
+             console.warn(`⚠️ Модели для алгоритма ${currentAlgorithm} не найдены в calc.json`);
+        }
+    } catch (e) {
+        console.error(`❌ Ошибка загрузки или парсинга calc.json:`, e);
+        jsonData = []; // Очищаем данные в случае ошибки
+        alert(`Ошибка загрузки данных моделей (${e.message}). Выбор модели невозможен.`);
+        // Очищаем списки, чтобы пользователь видел проблему
+        const manufacturerSelect = document.getElementById("manufacturerSelect");
+        const modelSelect = document.getElementById("asicModel");
+        if (manufacturerSelect) manufacturerSelect.innerHTML = '<option>Ошибка загрузки</option>';
+        if (modelSelect) modelSelect.innerHTML = '<option>Ошибка загрузки</option>';
+    }
+}
+
+async function onAlgorithmChange() {
+    // Вызывается при смене алгоритма
+    const algorithmSelect = document.getElementById("algorithmSelect");
+    if (!algorithmSelect) return;
+    currentAlgorithm = algorithmSelect.value;
+    console.log(`Алгоритм изменен на: ${currentAlgorithm}`);
+
+    await fetchJsonData(); // Перезагружаем JSON для нового алгоритма
+
+    // Обновляем список производителей
+    const manufacturerSelect = document.getElementById("manufacturerSelect");
+    if (!manufacturerSelect) return;
+
+    // Получаем уникальных производителей (приводим к нижнему регистру для надежности)
+    const uniqueManufacturers = [...new Set(jsonData.map(item => item["Производитель"]?.toLowerCase() || 'unknown'))]
+                                .filter(m => m !== 'unknown') // Убираем возможные пустые
+                                .sort(); // Сортируем для порядка
+
+    manufacturerSelect.innerHTML = ""; // Очищаем старые опции
+
+    if (uniqueManufacturers.length > 0) {
+        uniqueManufacturers.forEach(m => {
+            const opt = document.createElement("option");
+            opt.value = m;
+            // Делаем первую букву заглавной
+            opt.textContent = m.charAt(0).toUpperCase() + m.slice(1);
+            manufacturerSelect.appendChild(opt);
+        });
+        manufacturerSelect.disabled = false;
+         console.log(`Производители для ${currentAlgorithm} обновлены.`);
+        updateModelList(); // Обновляем список моделей для первого производителя
+    } else {
+        manufacturerSelect.innerHTML = '<option>Нет данных</option>';
+        manufacturerSelect.disabled = true;
+        // Очищаем и деактивируем список моделей
+        const modelSelect = document.getElementById("asicModel");
+         if (modelSelect) {
+             modelSelect.innerHTML = '<option>Нет данных</option>';
+             modelSelect.disabled = true;
+         }
+         // Очищаем поля характеристик
+         updateAsicSpecs(); // Вызываем для очистки полей
+         console.warn(`Производители для ${currentAlgorithm} не найдены.`);
+    }
+}
+
+
+function updateModelList() {
+    // Обновление списка моделей при смене производителя
+    const manufacturerSelect = document.getElementById("manufacturerSelect");
+    const modelSelect = document.getElementById("asicModel");
+    if (!manufacturerSelect || !modelSelect) return;
+
+    const selectedManufacturer = manufacturerSelect.value?.toLowerCase(); // Нижний регистр для сравнения
+    console.log(`Выбран производитель: ${selectedManufacturer}`);
+    modelSelect.innerHTML = ""; // Очищаем старые модели
+
+    // Фильтруем модели по выбранному производителю
+    const models = jsonData.filter(item => item["Производитель"]?.toLowerCase() === selectedManufacturer);
+
+    if (models.length > 0) {
+        models.forEach(item => {
+            const opt = document.createElement("option");
+            // В value храним Модель|Хешрейт для легкого поиска
+            opt.value = `${item["Модель"]}|${item["Хешрейт"]}`;
+            opt.textContent = `${item["Модель"]} (${item["Хешрейт"]} ${item["Ед. изм."]})`;
+            modelSelect.appendChild(opt);
+        });
+        modelSelect.disabled = false;
+        console.log(`Модели для ${selectedManufacturer} обновлены.`);
+        updateAsicSpecs(); // Обновляем характеристики для первой модели в списке
+    } else {
+        modelSelect.innerHTML = '<option>Нет моделей</option>';
+        modelSelect.disabled = true;
+        updateAsicSpecs(); // Вызываем для очистки полей
+        console.warn(`Модели для ${selectedManufacturer} не найдены.`);
+    }
+}
+
+
+function updateAsicSpecs() {
+    // Обновляет Хешрейт, Потребление и Стоимость Асика при смене модели
+    const modelSelect = document.getElementById("asicModel");
+    const asicCostInput = document.getElementById("asicCost");
+    const hashrateEl = document.getElementById("hashrate");
+    const edpriceEl = document.getElementById("edprice");
+    const powerEl = document.getElementById("power");
+    const powerUnitEl = document.getElementById("power_unit"); // Элемент для "Вт"
+
+    if (!modelSelect || !asicCostInput || !hashrateEl || !edpriceEl || !powerEl || !powerUnitEl) {
+        console.error("Один из элементов для обновления характеристик ASIC не найден.");
+        return;
+    }
+
+    // Сбрасываем поля по умолчанию
+    hashrateEl.textContent = '';
+    edpriceEl.textContent = '';
+    powerEl.textContent = '';
+    powerUnitEl.textContent = '';
+    asicCostInput.value = ''; // Очищаем стоимость
+
+    const selectedValue = modelSelect.value;
+    // Проверяем, есть ли выбранная модель (не "Нет моделей" или "Ошибка загрузки")
+    if (!selectedValue || modelSelect.selectedOptions.length === 0 || modelSelect.selectedOptions[0].disabled) {
+        console.log("Нет выбранной модели для обновления характеристик.");
+        return; // Выходим, если модель не выбрана или выбрана "заглушка"
+    }
+
+
+    const modelData = selectedValue.split("|");
+    if (modelData.length < 2) {
+        console.warn("Некорректное значение в modelSelect:", selectedValue);
+        return;
+    }
+    const modelName = modelData[0];
+    const modelHashrate = modelData[1];
+
+    // Ищем соответствующий элемент в загруженных данных JSON
+    const item = jsonData.find(i => i["Модель"] === modelName && i["Хешрейт"] === modelHashrate);
+
+    if (item) {
+        console.log("Найдена модель:", item);
+        // Обновляем хешрейт и единицы
+        hashrateEl.textContent = item["Хешрейт"] || '';
+        edpriceEl.textContent = item["Ед. изм."] || '';
+
+        // Обновляем потребление
+        const powerValue = parseFloat(item["Потребление"]);
+        if (!isNaN(powerValue)) {
+            powerEl.textContent = Math.round(powerValue);
+            powerUnitEl.textContent = ' Вт'; // Добавляем "Вт" только если есть значение
+        } else {
+             console.warn("Некорректное значение потребления:", item["Потребление"]);
+        }
+
+
+        // --- Расчет стоимости асика ---
+        const itemPriceUSD = parseFloat(item["Цена"]);
+
+        if (!isNaN(itemPriceUSD) && usdtPrice > 0) { // Проверяем цену и курс USDT
+            // Рассчитываем стоимость в рублях
+            const calculatedCostRUB = itemPriceUSD * usdtPrice;
+            // Округляем ВВЕРХ до ближайших 100 рублей
+            asicCostInput.value = Math.ceil(calculatedCostRUB / 100) * 100;
+            console.log(`Стоимость асика рассчитана: ${asicCostInput.value} ₽ (Цена: $${itemPriceUSD}, Курс: ${usdtPrice} ₽/$)`);
+        } else {
+            asicCostInput.placeholder = 'Цена не найдена'; // Указываем, что цена не найдена
+            console.warn(`Не удалось рассчитать стоимость ASIC. Цена: ${item["Цена"]}, Курс USDT: ${usdtPrice}`);
+        }
+        // --- Конец расчета стоимости ---
+
+    } else {
+        console.warn(`Данные для модели ${modelName} (${modelHashrate}) не найдены в jsonData.`);
+        asicCostInput.placeholder = 'Данные не найдены';
+    }
+}
+
+
+function calculateProfit() {
+    console.log("Начало расчета...");
+    // Получение и проверка всех необходимых элементов DOM
+    const elements = {
+        usdtPriceInput: document.getElementById("usdtPrice"),
+        hashrateEl: document.getElementById("hashrate"),
+        powerEl: document.getElementById("power"),
+        electricityCostInput: document.getElementById('electricityCost'),
+        asicCostInput: document.getElementById("asicCost"),
+        btcPriceInput: document.getElementById("btcPrice"),
+        profitPerTHInput: document.getElementById("profitPerTH"),
+        ltcPriceInput: document.getElementById("ltcPrice"),
+        dogePriceInput: document.getElementById("dogePrice"),
+        bellPriceInput: document.getElementById("bellPrice"),
+        profitPerLTCInput: document.getElementById("profitPerLTC"),
+        profitPerDOGEInput: document.getElementById("profitPerDOGE"),
+        profitPerBELLInput: document.getElementById("profitPerBELL"),
+        incomeEl: document.getElementById("income"),
+        incomeRubEl: document.getElementById("income_rub"),
+        profitEl: document.getElementById("profit"),
+        profitRubEl: document.getElementById("profit_rub"),
+        incomeMonthEl: document.getElementById("incomeMonth"),
+        incomeMonthRubEl: document.getElementById("incomeMonth_rub"),
+        incomeYearEl: document.getElementById("incomeYear"),
+        incomeYearRubEl: document.getElementById("incomeYear_rub"),
+        profitMonthEl: document.getElementById("profitMonth"),
+        profitMonthRubEl: document.getElementById("profitMonth_rub"),
+        profitYearEl: document.getElementById("profitYear"),
+        profitYearRubEl: document.getElementById("profitYear_rub"),
+        roiEl: document.getElementById("roi"),
+        paybackEl: document.getElementById("payback"),
+        incomeBar: document.getElementById("dailyProfit"),
+        electricityBar: document.getElementById("dailyElectricityCost")
+    };
+
+    for (const key in elements) {
+        if (!elements[key]) {
+            console.error(`❌ Ошибка: Элемент ${key} не найден! Расчет прерван.`);
+            alert(`Критическая ошибка: элемент ${key} отсутствует на странице.`);
+            return;
+        }
+    }
+     console.log("Все элементы для расчета найдены.");
+
+    // Получение и парсинг значений
+    const values = {
+        currentUsdtPrice: parseFloat(elements.usdtPriceInput.value),
+        hashrate: parseFloat(elements.hashrateEl.textContent), // Берем из textContent
+        power: parseFloat(elements.powerEl.textContent),       // Берем из textContent
+        electricityCost: parseFloat(elements.electricityCostInput.value.replace(',', '.')),
+        asicCost: parseFloat(elements.asicCostInput.value) // Стоимость асика в рублях
+    };
+
+    // Проверка базовых значений на валидность
+     const baseValuesValid = !isNaN(values.currentUsdtPrice) && values.currentUsdtPrice > 0 &&
+                            !isNaN(values.hashrate) && values.hashrate > 0 &&
+                            !isNaN(values.power) && values.power >= 0 && // Потребление может быть 0?
+                            !isNaN(values.electricityCost) && values.electricityCost >= 0 &&
+                            !isNaN(values.asicCost) && values.asicCost >= 0; // Стоимость может быть 0
+
+    if (!baseValuesValid) {
+         console.error("❌ Ошибка: Некорректные базовые значения для расчета.", values);
+         alert("Пожалуйста, проверьте введенные данные (хэшрейт, потребление, стоимость розетки, стоимость асика). Они должны быть корректными числами.");
+         // Можно подсветить некорректные поля или сбросить результаты
+         // resetCalculationResults(elements); // Функция для сброса полей
+         return;
+    }
+     console.log("Базовые значения для расчета:", values);
+
+
+    // Расчет дохода в $
+    dailyIncome = 0;
+    if (currentAlgorithm === "SHA-256") {
+        const btcPrice = parseFloat(elements.btcPriceInput.value);
+        const profitPerTH = parseFloat(elements.profitPerTHInput.value);
+        if (!isNaN(btcPrice) && !isNaN(profitPerTH)) {
+            dailyIncome = values.hashrate * profitPerTH * btcPrice;
+        } else {
+             console.error("❌ Ошибка: Некорректные данные BTC или ProfitPerTH.");
+             alert("Ошибка данных для расчета SHA-256."); return;
+        }
+    } else if (currentAlgorithm === "Scrypt") {
+        const ltcPrice = parseFloat(elements.ltcPriceInput.value);
+        const dogePrice = parseFloat(elements.dogePriceInput.value);
+        const bellPrice = parseFloat(elements.bellPriceInput.value);
+        const profitPerLTC = parseFloat(elements.profitPerLTCInput.value);
+        const profitPerDOGE = parseFloat(elements.profitPerDOGEInput.value);
+        const profitPerBELL = parseFloat(elements.profitPerBELLInput.value);
+         if (!isNaN(ltcPrice) && !isNaN(dogePrice) && !isNaN(bellPrice) &&
+            !isNaN(profitPerLTC) && !isNaN(profitPerDOGE) && !isNaN(profitPerBELL))
+         {
+            const incomeLTC = values.hashrate * profitPerLTC * ltcPrice;
+            const incomeDOGE = values.hashrate * profitPerDOGE * dogePrice;
+            const incomeBELL = values.hashrate * profitPerBELL * bellPrice;
+            dailyIncome = incomeLTC + incomeDOGE + incomeBELL;
+         } else {
+              console.error("❌ Ошибка: Некорректные данные для расчета Scrypt.");
+              alert("Ошибка данных для расчета Scrypt."); return;
+         }
+    }
+     console.log(`Дневной доход ($): ${dailyIncome}`);
+
+    // Расчет стоимости электричества в $
+    // (Мощность_кВт * Стоимость_Руб_кВтч * 24 часа) / Курс_Руб_$
+    const dailyElectricityCostRub = (values.power / 1000) * values.electricityCost * 24;
+    const dailyElectricityCostValue = dailyElectricityCostRub / values.currentUsdtPrice;
+    console.log(`Дневные расходы на электричество ($): ${dailyElectricityCostValue}`);
+
+
+    // Расчет прибыли
+    dailyProfitValue = dailyIncome - dailyElectricityCostValue;
+    monthlyProfit = dailyProfitValue * 30.5; // Среднее кол-во дней в месяце
+    yearlyProfit = dailyProfitValue * 365;
+    console.log(`Дневная прибыль ($): ${dailyProfitValue}`);
+
+    // Расчет ROI и окупаемости
+    const asicCostInUSD = values.asicCost / values.currentUsdtPrice; // Стоимость асика в $
+    const roi = (yearlyProfit && asicCostInUSD > 0) ? (yearlyProfit / asicCostInUSD) * 100 : 0;
+    // Окупаемость в месяцах
+    const payback = (dailyProfitValue > 0 && asicCostInUSD > 0) ? (asicCostInUSD / dailyProfitValue) / 30.5 : Infinity;
+    console.log(`Стоимость асика ($): ${asicCostInUSD}, Годовой ROI: ${roi}%, Окупаемость (мес): ${payback}`);
+
+
+    // --- Обновление интерфейса ---
+    const formatCurrency = (value, currency = "$", fractionDigits = 2) => {
+        if (isNaN(value) || !isFinite(value)) return currency === "$" ? "$ --.--" : "-- ₽";
+        // Округление до указанного числа знаков перед форматированием
+        const multiplier = Math.pow(10, fractionDigits);
+        const roundedValue = Math.round(value * multiplier) / multiplier;
+        return currency + roundedValue.toLocaleString('ru-RU', { minimumFractionDigits: fractionDigits, maximumFractionDigits: fractionDigits });
+    };
+     const formatCurrencyRub = (value, fractionDigits = 0) => {
+        if (isNaN(value) || !isFinite(value) || isNaN(values.currentUsdtPrice) || values.currentUsdtPrice <= 0) return "-- ₽";
+        const rubValue = value * values.currentUsdtPrice;
+         const multiplier = Math.pow(10, fractionDigits);
+        const roundedValue = Math.round(rubValue * multiplier) / multiplier;
+        return roundedValue.toLocaleString('ru-RU', { maximumFractionDigits: fractionDigits }) + " ₽";
+    };
+
+    // Обновление таблицы
+    elements.incomeEl.innerText           = formatCurrency(dailyIncome);
+    elements.incomeRubEl.innerText       = formatCurrencyRub(dailyIncome);
+    elements.profitEl.innerText           = formatCurrency(dailyProfitValue);
+    elements.profitRubEl.innerText       = formatCurrencyRub(dailyProfitValue);
+    elements.incomeMonthEl.innerText      = formatCurrency(dailyIncome * 30.5);
+    elements.incomeMonthRubEl.innerText  = formatCurrencyRub(dailyIncome * 30.5);
+    elements.incomeYearEl.innerText       = formatCurrency(dailyIncome * 365);
+    elements.incomeYearRubEl.innerText   = formatCurrencyRub(dailyIncome * 365);
+    elements.profitMonthEl.innerText      = formatCurrency(monthlyProfit);
+    elements.profitMonthRubEl.innerText  = formatCurrencyRub(monthlyProfit);
+    elements.profitYearEl.innerText       = formatCurrency(yearlyProfit);
+    elements.profitYearRubEl.innerText   = formatCurrencyRub(yearlyProfit);
+
+    // Обновление ROI и окупаемости
+    elements.roiEl.innerText = isFinite(roi) ? roi.toFixed(1) : "∞"; // Оставим 1 знак после запятой
+    elements.paybackEl.innerText = isFinite(payback) ? payback.toFixed(1) : "∞"; // Оставим 1 знак
+
+    // Обновление прогресс-бара
+    const incomeBar = elements.incomeBar;
+    const electricityBar = elements.electricityBar;
+
+    if (dailyIncome > 0 && isFinite(dailyIncome) && isFinite(dailyElectricityCostValue)) {
+        let profitPercentage = Math.max(0, (dailyProfitValue / dailyIncome) * 100);
+        let electricityPercentage = Math.max(0, (dailyElectricityCostValue / dailyIncome) * 100);
+
+        // Корректировка, чтобы сумма не превышала 100% и обрабатываем убытки
+        if (dailyProfitValue <= 0) {
+            profitPercentage = 0;
+            electricityPercentage = 100; // Если прибыли нет, все расходы
+        } else {
+            // Убедимся, что сумма не больше 100
+             if (profitPercentage + electricityPercentage > 100.1) { // Небольшой допуск на погрешность
+                electricityPercentage = 100 - profitPercentage;
+             }
+        }
+         // Ограничиваем значения 0-100%
+        profitPercentage = Math.min(100, Math.max(0, profitPercentage));
+        electricityPercentage = Math.min(100, Math.max(0, electricityPercentage));
+
+
+        incomeBar.style.width = `${profitPercentage}%`;
+        incomeBar.style.backgroundColor = "#2511A8";
+
+        electricityBar.style.width = `${electricityPercentage}%`;
+        electricityBar.style.left = `${profitPercentage}%`;
+        electricityBar.style.backgroundColor = "#E2E2E2";
+    } else {
+        incomeBar.style.width = "0%";
+        electricityBar.style.width = "0%";
+        electricityBar.style.left = "0%";
+    }
+     console.log("Расчет завершен, интерфейс обновлен.");
+}
+
+
+function updateValues() {
+    // Переключение отображения валюты $ / ₽
+    const elementsToToggle = [
+        "income", "incomeMonth", "incomeYear",
+        "profit", "profitMonth", "profitYear"
+    ];
+    const toggleButton = document.getElementById('toggleCurrency');
+    if (!toggleButton) return;
+
+    elementsToToggle.forEach(id => {
+        const usdEl = document.getElementById(id);
+        const rubEl = document.getElementById(`${id}_rub`);
+        if (usdEl && rubEl) {
+            if (isUSD) { // Если сейчас USD, переключаем на RUB
+                usdEl.classList.add("hidden");
+                rubEl.classList.remove("hidden");
+            } else { // Если сейчас RUB, переключаем на USD
+                usdEl.classList.remove("hidden");
+                rubEl.classList.add("hidden");
+            }
+        } else {
+            console.warn(`Элементы для переключения валюты ${id} / ${id}_rub не найдены.`);
+        }
+    });
+
+    // Обновляем текст кнопки и состояние
+    isUSD = !isUSD; // Инвертируем состояние
+    toggleButton.innerHTML = isUSD ? "&lt; $ &gt;" : "&lt; ₽ &gt;";
+    console.log(`Валюта переключена на: ${isUSD ? 'USD' : 'RUB'}`);
+}
+
+  </script>
 </body>
 </html>
