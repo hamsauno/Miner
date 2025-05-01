@@ -15,6 +15,22 @@
     .accordion-content.open {
       max-height: 1000px; /* достаточно большое значение */
     }
+
+    .swipe-panel {
+      position: absolute;
+      top: 0;
+      right: -100%;
+      width: 80%;
+      max-width: 300px;
+      height: 100%;
+      background-color: #f8fafc;
+      box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
+      padding: 15px;
+      overflow-y: auto;
+      transition: right 0.3s ease-in-out;
+      z-index: 20;
+      border-left: 2px solid #ddd;
+    }
   </style>
 </head>
 <body class="bg-[#E2E2E2] text-black min-h-screen p-6 overflow-x-hidden">
@@ -25,6 +41,11 @@
     <section class="min-w-full snap-start">
       <h2 class="text-xl font-semibold mb-2"> Уникальные пользователи</h2>
       <div id="userList" class="space-y-2 text-sm">Загрузка...</div>
+      <!-- Добавь это в <body>, сразу после <div id="userList"> -->
+      <div id="swipePanel" class="swipe-panel fixed top-0 right-[-100%] bg-white z-50 transition-all duration-300">
+        <h2 class="text-lg font-semibold mb-4">📊 Детали</h2>
+        <p>Здесь можно вывести дополнительную статистику или информацию.</p>
+      </div>
     </section>
 
 
@@ -34,45 +55,44 @@
   <script>
     document.addEventListener('DOMContentLoaded', async () => {
       const supabaseUrl = 'https://yiprwrgmyqlkdmhgulmc.supabase.co';
-      const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlpcHJ3cmdteXFsa2RtaGd1bG1jIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ2NTI0NjgsImV4cCI6MjA2MDIyODQ2OH0.lfiTfr5ukGDEVuwq-X9U2kWs3nEZrp3N443HT5AkbfI';
+      const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlpcHJ3cmdteXFsa2RtaGd1bG1jIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ2NTI0NjgsImV4cCI6MjA2MDIyODQ2OH0.lfiTfr5ukGDEVuwq-X9U2kWs3nEZrp3N443HT5AkbfI'; // тот же ключ
       const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
-    
+      const userList = document.getElementById('userList');
+      const swipePanel = document.getElementById('swipePanel');
+  
       const { data, error } = await supabase
         .from('visits')
         .select('*')
         .order('timestamp', { ascending: true });
-    
+  
       if (error) {
         console.error("Ошибка при запросе данных:", error);
         return;
       }
-    
-      const userList = document.getElementById('userList');
+  
       userList.innerHTML = '';
-    
       const usersByMonth = {};
-    
+  
       data.forEach(visit => {
         const dateObj = new Date(visit.timestamp);
         const date = dateObj.toISOString().split('T')[0];
-    
         const monthKey = dateObj.toLocaleString('default', { year: 'numeric', month: 'long' });
-        const monthDate = dateObj.toISOString().slice(0, 7); // YYYY-MM
-    
+        const monthDate = dateObj.toISOString().slice(0, 7);
+  
         if (!usersByMonth[monthKey]) {
           usersByMonth[monthKey] = { days: {}, allVisits: 0, uniqueUsers: new Set(), monthDate };
         }
-    
+  
         usersByMonth[monthKey].allVisits++;
         usersByMonth[monthKey].uniqueUsers.add(visit.telegram_id);
-    
+  
         if (!usersByMonth[monthKey].days[date]) {
           usersByMonth[monthKey].days[date] = new Map();
         }
-    
+  
         const userMap = usersByMonth[monthKey].days[date];
         const id = visit.telegram_id;
-    
+  
         if (!userMap.has(id)) {
           userMap.set(id, {
             username: visit.username,
@@ -83,27 +103,26 @@
           userMap.get(id).visitCount++;
         }
       });
-    
-      // Сортировка месяцев по убыванию (новые сверху)
+  
       const sortedMonths = Object.entries(usersByMonth).sort((a, b) => {
         return b[1].monthDate.localeCompare(a[1].monthDate);
       });
-    
+  
       let openMonthBlock = null;
-    
+  
       sortedMonths.forEach(([month, monthData]) => {
         const monthBlock = document.createElement('div');
         monthBlock.className = "mb-3 border rounded bg-white shadow";
-    
+  
         const monthHeader = document.createElement('div');
         monthHeader.className = "cursor-pointer p-3 font-semibold text-lg bg-gray-100";
         monthHeader.textContent = `${month} - ${monthData.allVisits} IN (${monthData.uniqueUsers.size} уник.)`;
         monthBlock.appendChild(monthHeader);
-    
+  
         const monthContent = document.createElement('div');
         monthContent.className = "accordion-content px-4 pt-2 pb-3 bg-white";
         monthBlock.appendChild(monthContent);
-    
+  
         monthHeader.addEventListener('click', () => {
           if (openMonthBlock && openMonthBlock !== monthContent) {
             openMonthBlock.classList.remove('open');
@@ -111,24 +130,26 @@
           const isOpen = monthContent.classList.toggle('open');
           openMonthBlock = isOpen ? monthContent : null;
         });
-    
+  
         let openDayBlock = null;
-    
-        Object.entries(monthData.days).forEach(([date, userMap]) => {
+  
+        const sortedDays = Object.entries(monthData.days).sort((a, b) => b[0].localeCompare(a[0])); // сортировка по убыванию
+  
+        sortedDays.forEach(([date, userMap]) => {
           const dayBlock = document.createElement('div');
           dayBlock.className = "mb-2";
-    
+  
           const dayHeader = document.createElement('div');
           dayHeader.className = "cursor-pointer font-medium bg-gray-200 px-3 py-1 rounded";
           dayHeader.textContent = `${date} — ${userMap.size} уник.users`;
           dayBlock.appendChild(dayHeader);
-    
+  
           const dayContent = document.createElement('div');
           dayContent.className = "accordion-content ml-4 mt-1 mb-2";
-    
+  
           const ul = document.createElement('ul');
           ul.className = "list-disc list-inside space-y-1 text-sm";
-    
+  
           userMap.forEach(user => {
             const li = document.createElement('li');
             const username = user.username ? user.username : 'unknown';
@@ -138,11 +159,11 @@
             li.innerHTML = `${profileLink} (${user.telegram_id}) — ${user.visitCount} IN`;
             ul.appendChild(li);
           });
-    
+  
           dayContent.appendChild(ul);
           dayBlock.appendChild(dayContent);
           monthContent.appendChild(dayBlock);
-    
+  
           dayHeader.addEventListener('click', () => {
             if (openDayBlock && openDayBlock !== dayContent) {
               openDayBlock.classList.remove('open');
@@ -151,17 +172,34 @@
             openDayBlock = isOpen ? dayContent : null;
           });
         });
-    
+  
         userList.appendChild(monthBlock);
       });
-    
+  
+      // --- Свайп влево на блоке секции ---
+      let touchStartX = 0;
+      let touchEndX = 0;
+  
+      userList.addEventListener('touchstart', e => {
+        touchStartX = e.changedTouches[0].screenX;
+      });
+  
+      userList.addEventListener('touchend', e => {
+        touchEndX = e.changedTouches[0].screenX;
+        handleSwipeGesture();
+      });
+  
+      function handleSwipeGesture() {
+        const threshold = 80;
+        if (touchStartX - touchEndX > threshold) {
+          swipePanel.style.right = '0';
+        } else if (touchEndX - touchStartX > threshold) {
+          swipePanel.style.right = '-100%';
+        }
+      }
     });
-    </script>
+  </script>
+  
 
 </body>
 </html>
-
-
-
-
-
