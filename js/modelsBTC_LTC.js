@@ -144,7 +144,8 @@ function calculateProfit() {
     const currentUsdtPrice = parseFloat(document.getElementById("usdtPrice").value);
     const hashrate = parseFloat(document.getElementById("hashrate").textContent);
     const power = parseFloat(document.getElementById("power").textContent);
-    const electricityCost = parseFloat(document.getElementById("electricityCost").value);
+    const rawInput = document.getElementById('electricityCost').value.replace(',', '.');
+    const electricityCost = parseFloat(rawInput);
     const asicCost = parseFloat(document.getElementById("asicCost").value);
 
     if ([hashrate, power, electricityCost, asicCost].some(isNaN))
