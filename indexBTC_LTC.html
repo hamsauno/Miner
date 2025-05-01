@@ -4,21 +4,27 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <script src="https://telegram.org/js/telegram-web-app.js"></script>    
-    <link rel="stylesheet" href="css/bg.css">
     <link rel="stylesheet" href="css/bar.css">
-    <link rel="stylesheet" href="css/svaip.css"> <!--свайп -->
-    
+        
     <script src="https://cdn.tailwindcss.com"></script>  <!--Подключение Tailwind -->
-   
+    
     
 <title>Калькулятор доходности майнинга</title>
 <meta name="description" content="Удобный Telegram-калькулятор для расчета доходности ASIC-майнеров. Доход, прибыль, ROI, окупаемость — всё в одном месте."> 
-        
+<style>
+  html, body {
+    margin: 0;
+    padding: 0;
+    width: 100vw;
+    overflow-x: hidden;
+  }
+</style> 
+
 </head>
 <body>
-  <div class="w-full bg-[#000000] text-white shadow-xl p-5 mt-0 mb-[3px] space-y-3">
+   <!-- Форма ввода -->
+   <div class="w-screen bg-[#000000] text-white shadow-xl p-5 mt-0 mb-[3px] space-y-3">
     <div class="space-y-2">
-  
       <!-- Алгоритм и Производитель -->
       <div class="flex gap-3">
         <div class="w-1/2">
@@ -37,7 +43,7 @@
           </select>
         </div>
       </div>
-  
+
       <!-- Модель Асика -->
       <div>
         <label for="asicModel" class="block text-sm font-medium mb-1">Модель Асика</label>
@@ -46,23 +52,23 @@
           <!-- Модели будут добавляться динамически -->
         </select>
       </div>
-  
-          <!-- Хэшрейт и Потребление -->
-          <div class="flex gap-3">
-            <div class="w-1/2">
-              <label class="block text-sm font-medium mb-1">Хэшрейт</label>
-              <div class="bg-[#E2E2E2] px-2 py-1 text-sm text-black">
-                <span id="hashrate"></span> <span id="edprice"></span>
-              </div>
-            </div>
-            <div class="w-1/2">
-              <label class="block text-sm font-medium mb-1">Потребление</label>
-              <div class="bg-[#E2E2E2] px-2 py-1 text-sm text-black">
-                <span id="power"></span> Вт
-              </div>
-            </div>
+
+      <!-- Хэшрейт и Потребление -->
+      <div class="flex gap-3">
+        <div class="w-1/2">
+          <label class="block text-sm font-medium mb-1">Хэшрейт</label>
+          <div class="bg-[#E2E2E2] px-2 py-1 text-sm text-black">
+            <span id="hashrate"></span> <span id="edprice"></span>
           </div>
-  
+        </div>
+        <div class="w-1/2">
+          <label class="block text-sm font-medium mb-1">Потребление</label>
+          <div class="bg-[#E2E2E2] px-2 py-1 text-sm text-black">
+            <span id="power"></span> Вт
+          </div>
+        </div>
+      </div>
+
       <!-- Стоимость розетки и Асика -->
       <div class="flex gap-3">
         <div class="w-1/2">
@@ -87,7 +93,7 @@
           </div>
         </div>
       </div>
-  
+
       <!-- Скрытые поля -->
       <input type="hidden" id="btcPrice">
       <input type="hidden" id="usdtPrice">
@@ -98,89 +104,87 @@
       <input type="hidden" id="profitPerLTC">
       <input type="hidden" id="profitPerDOGE">
       <input type="hidden" id="profitPerBELL">
-  
-        <!-- Кнопка -->
-        <div class="pt-2">
-          <button id="calculateBtn"
-            class="w-full text-white font-bold text-base py-2 px-4 transition duration-300 hover:brightness-110 shadow-md"
-            style="background-color: #2511A8;">
-            Рассчитать
-          </button>
-        </div>
-  
+
+      <!-- Кнопка -->
+      <div class="pt-2">
+        <button id="calculateBtn"
+          class="w-full text-white font-bold text-base py-2 px-4 transition duration-300 hover:brightness-110 shadow-md"
+          style="background-color: #2511A8;">
+          Рассчитать
+        </button>
+      </div>
     </div>
   </div>
 
-<!-- Контейнер доходности -->
-<div class="w-screen h-screen p-0 m-0 bg-[#E2E2E2] text-sm space-y-4 shadow-md flex flex-col">
-  
-  <!-- Прогресс-бар и показатели -->
-  <div class="px-3 mt-2">  <!-- Делаем отступы такие же, как у таблицы -->
-    <!-- Прогресс-бар -->
-    <div class="w-full h-5 relative overflow-hidden border" style="border-color: #2511A8;">
-      <div id="dailyProfit" class="absolute top-0 left-0 h-full transition-all duration-500" style="background-color: #2511A8;"></div>
-      <div id="dailyElectricityCost" class="absolute top-0 h-full transition-all duration-500" style="background-color: #E2E2E2;"></div>
+  <!-- Контейнер доходности -->
+  <div class="w-screen h-screen p-0 m-0 bg-[#E2E2E2] text-sm space-y-4 shadow-md flex flex-col">
+    <!-- Прогресс-бар и показатели -->
+    <div class="w-screen px-4 mt-2">
+      <!-- Прогресс-бар -->
+      <div class="w-full h-5 relative overflow-hidden border" style="border-color: #2511A8;">
+        <div id="dailyProfit" class="absolute top-0 left-0 h-full transition-all duration-500" style="background-color: #2511A8;"></div>
+        <div id="dailyElectricityCost" class="absolute top-0 h-full transition-all duration-500" style="background-color: #E2E2E2;"></div>
+      </div>
+
+      <!-- Окупаемость и ROI -->
+      <div class="mt-2 text-black flex justify-between">
+        <div>Окупаемость мес.: <span id="payback">—</span></div>
+        <div>Годовой %: <span id="roi">—</span></div>
+      </div>
     </div>
 
-    <!-- Окупаемость и ROI -->
-    <div class="mt-2 text-black flex justify-between">
-      <div>Окупаемость мес.: <span id="payback">—</span></div>
-      <div>Годовой %: <span id="roi">—</span></div>
-    </div>
-  </div>
-
-  <!-- Таблица -->
-  <div class="scroll-container overflow-x-auto px-3">
-    <table class="result-table w-full text-sm text-center border-collapse">
+    <!-- Таблица -->
+    <div class="scroll-container w-screen overflow-x-auto px-4">
+      <table class="result-table w-full text-sm text-center border-collapse">
         <thead>
-            <tr>
-                <th class="bg-black text-white p-2 w-24">
-                    <button id="toggleCurrency" class="w-full h-full bg-black text-white font-bold text-xs p-2 rounded-none hover:bg-gray-800 transition">
-                        &lt; $ &gt;
-                    </button>
-                </th>
-                <th class="bg-black text-white p-2">День</th>
-                <th class="bg-black text-white p-2">Месяц</th>
-                <th class="bg-black text-white p-2">Год</th>
-            </tr>
+          <tr>
+            <th class="bg-black text-white p-2 w-24">
+              <button id="toggleCurrency" class="w-full h-full bg-black text-white font-bold text-xs p-2 rounded-none hover:bg-gray-800 transition">
+                &lt; $ &gt;
+              </button>
+            </th>
+            <th class="bg-black text-white p-2">День</th>
+            <th class="bg-black text-white p-2">Месяц</th>
+            <th class="bg-black text-white p-2">Год</th>
+          </tr>
         </thead>
         <tbody>
-            <tr>
-                <td class="bg-black text-white p-2 w-24">Доход</td>
-                <td class="bg-[#E2E2E2] text-black p-2">
-                    <span class="text-[#2511A8] font-semibold" id="income">0</span>
-                    <span class="text-[#2511A8] font-semibold hidden" id="income_rub">0</span> 
-                </td>
-                <td class="bg-[#E2E2E2] text-black p-2">
-                    <span class="text-[#2511A8] font-semibold" id="incomeMonth">0</span>
-                    <span class="text-[#2511A8] font-semibold hidden" id="incomeMonth_rub">0</span> 
-                </td>
-                <td class="bg-[#E2E2E2] text-black p-2">
-                    <span class="text-[#2511A8] font-semibold" id="incomeYear">0</span>
-                    <span class="text-[#2511A8] font-semibold hidden" id="incomeYear_rub">0</span> 
-                </td>
-            </tr>
-            <tr>
-                <td class="bg-black text-white p-2 w-24">Прибыль</td>
-                <td class="bg-[#E2E2E2] text-black p-2">
-                    <span class="text-[#2511A8] font-semibold" id="profit">0</span>
-                    <span class="text-[#2511A8] font-semibold hidden" id="profit_rub">0</span> 
-                </td>
-                <td class="bg-[#E2E2E2] text-black p-2">
-                    <span class="text-[#2511A8] font-semibold" id="profitMonth">0</span>
-                    <span class="text-[#2511A8] font-semibold hidden" id="profitMonth_rub">0</span> 
-                </td>
-                <td class="bg-[#E2E2E2] text-black p-2">
-                    <span class="text-[#2511A8] font-semibold" id="profitYear">0</span>
-                    <span class="text-[#2511A8] font-semibold hidden" id="profitYear_rub">0</span> 
-                </td>
-            </tr>
+          <tr>
+            <td class="bg-black text-white p-2 w-24">Доход</td>
+            <td class="bg-[#E2E2E2] text-black p-2">
+              <span class="text-[#2511A8] font-semibold" id="income">0</span>
+              <span class="text-[#2511A8] font-semibold hidden" id="income_rub">0</span> 
+            </td>
+            <td class="bg-[#E2E2E2] text-black p-2">
+              <span class="text-[#2511A8] font-semibold" id="incomeMonth">0</span>
+              <span class="text-[#2511A8] font-semibold hidden" id="incomeMonth_rub">0</span> 
+            </td>
+            <td class="bg-[#E2E2E2] text-black p-2">
+              <span class="text-[#2511A8] font-semibold" id="incomeYear">0</span>
+              <span class="text-[#2511A8] font-semibold hidden" id="incomeYear_rub">0</span> 
+            </td>
+          </tr>
+          <tr>
+            <td class="bg-black text-white p-2 w-24">Прибыль</td>
+            <td class="bg-[#E2E2E2] text-black p-2">
+              <span class="text-[#2511A8] font-semibold" id="profit">0</span>
+              <span class="text-[#2511A8] font-semibold hidden" id="profit_rub">0</span> 
+            </td>
+            <td class="bg-[#E2E2E2] text-black p-2">
+              <span class="text-[#2511A8] font-semibold" id="profitMonth">0</span>
+              <span class="text-[#2511A8] font-semibold hidden" id="profitMonth_rub">0</span> 
+            </td>
+            <td class="bg-[#E2E2E2] text-black p-2">
+              <span class="text-[#2511A8] font-semibold" id="profitYear">0</span>
+              <span class="text-[#2511A8] font-semibold hidden" id="profitYear_rub">0</span> 
+            </td>
+          </tr>
         </tbody>
-    </table>
-</div>
+      </table>
+    </div>
+  </div>
 
 
-   
    
    
 <script src="js/modelsBTC_LTC.js" defer></script><!-- метрика моделей -->
