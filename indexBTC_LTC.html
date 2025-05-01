@@ -9,8 +9,7 @@
     <link rel="stylesheet" href="css/svaip.css"> <!--свайп -->
     
     <script src="https://cdn.tailwindcss.com"></script>  <!--Подключение Tailwind -->
-    <script src="js/fullscr.js" defer></script><!-- открытие во весь экран и зафиксировать -->
-    <script src="js/nozoom.js" defer></script><!-- чтобы не было возможности делать зум -->
+    <script src="js/fullscr.js" defer></script>
     
 <title>Калькулятор доходности майнинга</title>
 <meta name="description" content="Удобный Telegram-калькулятор для расчета доходности ASIC-майнеров. Доход, прибыль, ROI, окупаемость — всё в одном месте."> 
@@ -53,13 +52,13 @@
             <div class="w-1/2">
               <label class="block text-sm font-medium mb-1">Хэшрейт</label>
               <div class="bg-[#E2E2E2] px-2 py-1 text-sm text-black">
-                <span id="hashrate" class="font-semibold"></span> <span id="edprice"></span>
+                <span id="hashrate"></span> <span id="edprice"></span>
               </div>
             </div>
             <div class="w-1/2">
               <label class="block text-sm font-medium mb-1">Потребление</label>
               <div class="bg-[#E2E2E2] px-2 py-1 text-sm text-black">
-                <span id="power" class="font-semibold"></span> Вт
+                <span id="power"></span> Вт
               </div>
             </div>
           </div>
@@ -111,11 +110,11 @@
 <div class="w-screen h-screen p-0 m-0 bg-[#E2E2E2] text-sm space-y-4 shadow-md flex flex-col">
   
   <!-- Прогресс-бар и показатели -->
-  <div class="px-3"> <!-- Делаем отступы такие же, как у таблицы -->
+  <div class="px-3 mt-2">  <!-- Делаем отступы такие же, как у таблицы -->
     <!-- Прогресс-бар -->
-    <div class="w-full bg-gray-300 h-5 relative overflow-hidden">
-      <div id="dailyProfit" class="absolute top-0 left-0 h-full bg-green-500 transition-all duration-500"></div>
-      <div id="dailyElectricityCost" class="absolute top-0 h-full bg-red-500 transition-all duration-500"></div>
+    <div class="w-full h-5 relative overflow-hidden border" style="border-color: #2511A8;">
+      <div id="dailyProfit" class="absolute top-0 left-0 h-full transition-all duration-500" style="background-color: #2511A8;"></div>
+      <div id="dailyElectricityCost" class="absolute top-0 h-full transition-all duration-500" style="background-color: #E2E2E2;"></div>
     </div>
 
     <!-- Окупаемость и ROI -->
@@ -176,6 +175,8 @@
 </div>
 
 
+   
+   
    
 <script src="js/modelsBTC_LTC.js" defer></script><!-- метрика моделей -->
 </body>
