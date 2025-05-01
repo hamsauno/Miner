@@ -7,97 +7,161 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
-    .scroll-snap-x {
-      scroll-snap-type: x mandatory;
+    .accordion-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease;
     }
-    .snap-start {
-      scroll-snap-align: start;
+    .accordion-content.open {
+      max-height: 1000px; /* достаточно большое значение */
     }
   </style>
 </head>
-<body class="bg-[#222222] text-white min-h-screen p-6 overflow-x-hidden">
+<body class="bg-[#E2E2E2] text-black min-h-screen p-6 overflow-x-hidden">
 
   <div class="flex space-x-6 overflow-x-auto scroll-snap-x">
     
-    <!-- 👤 Уникальные пользователи -->
+    <!--  Уникальные пользователи -->
     <section class="min-w-full snap-start">
-      <h2 class="text-xl font-semibold mb-2">👤 Уникальные пользователи</h2>
-      <ul id="userList" class="list-disc list-inside space-y-1 text-sm">Загрузка...</ul>
+      <h2 class="text-xl font-semibold mb-2"> Уникальные пользователи</h2>
+      <div id="userList" class="space-y-2 text-sm">Загрузка...</div>
     </section>
 
-    <!-- 📅 Визиты по дням -->
-    <section class="min-w-full snap-start">
-      <h2 class="text-xl font-semibold mb-2">📅 Количество визитов по дням</h2>
-      <div class="overflow-x-auto">
-        <table class="w-full text-sm text-left border border-gray-600">
-          <thead class="bg-gray-800 text-white">
-            <tr>
-              <th class="p-2 border border-gray-600">Дата</th>
-              <th class="p-2 border border-gray-600">Количество визитов</th>
-            </tr>
-          </thead>
-          <tbody id="calendarTable" class="bg-gray-900"></tbody>
-        </table>
-      </div>
-    </section>
 
   </div>
 
   <!-- Скрипт -->
   <script>
-  document.addEventListener('DOMContentLoaded', async () => {
-    const supabaseUrl = 'https://yiprwrgmyqlkdmhgulmc.supabase.co';
-    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlpcHJ3cmdteXFsa2RtaGd1bG1jIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ2NTI0NjgsImV4cCI6MjA2MDIyODQ2OH0.lfiTfr5ukGDEVuwq-X9U2kWs3nEZrp3N443HT5AkbfI';
-    const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
-
-    const { data, error } = await supabase
-      .from('visits')
-      .select('*')
-      .order('timestamp', { ascending: true });
-
-    if (error) {
-      console.error("Ошибка при запросе данных:", error);
-      return;
-    }
-
-    const uniqueUsers = new Map();
-    data.forEach(visit => {
-      if (!uniqueUsers.has(visit.telegram_id)) {
-        uniqueUsers.set(visit.telegram_id, {
-          username: visit.username,
-          telegram_id: visit.telegram_id
-        });
+    document.addEventListener('DOMContentLoaded', async () => {
+      const supabaseUrl = 'https://yiprwrgmyqlkdmhgulmc.supabase.co';
+      const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlpcHJ3cmdteXFsa2RtaGd1bG1jIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ2NTI0NjgsImV4cCI6MjA2MDIyODQ2OH0.lfiTfr5ukGDEVuwq-X9U2kWs3nEZrp3N443HT5AkbfI';
+      const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+    
+      const { data, error } = await supabase
+        .from('visits')
+        .select('*')
+        .order('timestamp', { ascending: true });
+    
+      if (error) {
+        console.error("Ошибка при запросе данных:", error);
+        return;
       }
+    
+      const userList = document.getElementById('userList');
+      userList.innerHTML = '';
+    
+      const usersByMonth = {};
+    
+      data.forEach(visit => {
+        const dateObj = new Date(visit.timestamp);
+        const date = dateObj.toISOString().split('T')[0];
+    
+        const monthKey = dateObj.toLocaleString('default', { year: 'numeric', month: 'long' });
+        const monthDate = dateObj.toISOString().slice(0, 7); // YYYY-MM
+    
+        if (!usersByMonth[monthKey]) {
+          usersByMonth[monthKey] = { days: {}, allVisits: 0, uniqueUsers: new Set(), monthDate };
+        }
+    
+        usersByMonth[monthKey].allVisits++;
+        usersByMonth[monthKey].uniqueUsers.add(visit.telegram_id);
+    
+        if (!usersByMonth[monthKey].days[date]) {
+          usersByMonth[monthKey].days[date] = new Map();
+        }
+    
+        const userMap = usersByMonth[monthKey].days[date];
+        const id = visit.telegram_id;
+    
+        if (!userMap.has(id)) {
+          userMap.set(id, {
+            username: visit.username,
+            telegram_id: id,
+            visitCount: 1
+          });
+        } else {
+          userMap.get(id).visitCount++;
+        }
+      });
+    
+      // Сортировка месяцев по убыванию (новые сверху)
+      const sortedMonths = Object.entries(usersByMonth).sort((a, b) => {
+        return b[1].monthDate.localeCompare(a[1].monthDate);
+      });
+    
+      let openMonthBlock = null;
+    
+      sortedMonths.forEach(([month, monthData]) => {
+        const monthBlock = document.createElement('div');
+        monthBlock.className = "mb-3 border rounded bg-white shadow";
+    
+        const monthHeader = document.createElement('div');
+        monthHeader.className = "cursor-pointer p-3 font-semibold text-lg bg-gray-100";
+        monthHeader.textContent = `${month} - ${monthData.allVisits} IN (${monthData.uniqueUsers.size} уник.)`;
+        monthBlock.appendChild(monthHeader);
+    
+        const monthContent = document.createElement('div');
+        monthContent.className = "accordion-content px-4 pt-2 pb-3 bg-white";
+        monthBlock.appendChild(monthContent);
+    
+        monthHeader.addEventListener('click', () => {
+          if (openMonthBlock && openMonthBlock !== monthContent) {
+            openMonthBlock.classList.remove('open');
+          }
+          const isOpen = monthContent.classList.toggle('open');
+          openMonthBlock = isOpen ? monthContent : null;
+        });
+    
+        let openDayBlock = null;
+    
+        Object.entries(monthData.days).forEach(([date, userMap]) => {
+          const dayBlock = document.createElement('div');
+          dayBlock.className = "mb-2";
+    
+          const dayHeader = document.createElement('div');
+          dayHeader.className = "cursor-pointer font-medium bg-gray-200 px-3 py-1 rounded";
+          dayHeader.textContent = `${date} — ${userMap.size} уник.users`;
+          dayBlock.appendChild(dayHeader);
+    
+          const dayContent = document.createElement('div');
+          dayContent.className = "accordion-content ml-4 mt-1 mb-2";
+    
+          const ul = document.createElement('ul');
+          ul.className = "list-disc list-inside space-y-1 text-sm";
+    
+          userMap.forEach(user => {
+            const li = document.createElement('li');
+            const username = user.username ? user.username : 'unknown';
+            const profileLink = user.username
+              ? `<a href="https://t.me/${username}" target="_blank" class="text-blue-600 hover:underline">@${username}</a>`
+              : `@${username}`;
+            li.innerHTML = `${profileLink} (${user.telegram_id}) — ${user.visitCount} IN`;
+            ul.appendChild(li);
+          });
+    
+          dayContent.appendChild(ul);
+          dayBlock.appendChild(dayContent);
+          monthContent.appendChild(dayBlock);
+    
+          dayHeader.addEventListener('click', () => {
+            if (openDayBlock && openDayBlock !== dayContent) {
+              openDayBlock.classList.remove('open');
+            }
+            const isOpen = dayContent.classList.toggle('open');
+            openDayBlock = isOpen ? dayContent : null;
+          });
+        });
+    
+        userList.appendChild(monthBlock);
+      });
+    
     });
-
-    const userList = document.getElementById('userList');
-    userList.innerHTML = '';
-    uniqueUsers.forEach(user => {
-      const li = document.createElement('li');
-      li.textContent = `@${user.username || 'unknown'} (${user.telegram_id})`;
-      userList.appendChild(li);
-    });
-
-    const visitsByDate = {};
-    data.forEach(visit => {
-      const date = new Date(visit.timestamp).toISOString().split('T')[0];
-      visitsByDate[date] = (visitsByDate[date] || 0) + 1;
-    });
-
-    const calendarTable = document.getElementById('calendarTable');
-    calendarTable.innerHTML = '';
-    Object.entries(visitsByDate).forEach(([date, count]) => {
-      const row = document.createElement('tr');
-      row.innerHTML = `
-        <td class="p-2 border border-gray-700">${date}</td>
-        <td class="p-2 border border-gray-700">${count}</td>`;
-      calendarTable.appendChild(row);
-    });
-  });
-  </script>
+    </script>
 
 </body>
 </html>
+
+
 
 
 
