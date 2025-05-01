@@ -173,24 +173,24 @@ function calculateProfit() {
     dailyProfitValue = dailyIncome - dailyElectricityCostValue;
     monthlyProfit = dailyProfitValue * 30.5;
     yearlyProfit = dailyProfitValue * 365;
-    const roi = (yearlyProfit / (asicCost / currentUsdtPrice)) * 100;
+    const roi = (yearlyProfit && asicCost) ? (yearlyProfit / (asicCost / currentUsdtPrice)) * 100 : 0;
     const payback = dailyProfitValue > 0 ? ((asicCost / currentUsdtPrice) / dailyProfitValue) / 30.5 : Infinity;
 
     document.getElementById("income").innerText           = "$" + dailyIncome.toLocaleString('ru-RU', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     document.getElementById("income_rub").innerText       = (dailyIncome * currentUsdtPrice).toLocaleString('ru-RU', { maximumFractionDigits: 0 }) + " ₽";
-    
+
     document.getElementById("profit").innerText           = "$" + dailyProfitValue.toLocaleString('ru-RU', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     document.getElementById("profit_rub").innerText       = (dailyProfitValue * currentUsdtPrice).toLocaleString('ru-RU', { maximumFractionDigits: 0 }) + " ₽";
-    
+
     document.getElementById("incomeMonth").innerText      = "$" + (dailyIncome * 30.5).toLocaleString('ru-RU', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     document.getElementById("incomeMonth_rub").innerText  = (dailyIncome * 30.5 * currentUsdtPrice).toLocaleString('ru-RU', { maximumFractionDigits: 0 }) + " ₽";
-    
+
     document.getElementById("incomeYear").innerText       = "$" + (dailyIncome * 365).toLocaleString('ru-RU', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     document.getElementById("incomeYear_rub").innerText   = (dailyIncome * 365 * currentUsdtPrice).toLocaleString('ru-RU', { maximumFractionDigits: 0 }) + " ₽";
-    
+
     document.getElementById("profitMonth").innerText      = "$" + monthlyProfit.toLocaleString('ru-RU', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     document.getElementById("profitMonth_rub").innerText  = (monthlyProfit * currentUsdtPrice).toLocaleString('ru-RU', { maximumFractionDigits: 0 }) + " ₽";
-    
+
     document.getElementById("profitYear").innerText       = "$" + yearlyProfit.toLocaleString('ru-RU', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     document.getElementById("profitYear_rub").innerText   = (yearlyProfit * currentUsdtPrice).toLocaleString('ru-RU', { maximumFractionDigits: 0 }) + " ₽";
 
@@ -206,11 +206,11 @@ function calculateProfit() {
         const electricityPercentage = (dailyElectricityCostValue / dailyIncome) * 100;
 
         incomeBar.style.width = `${profitPercentage}%`;
-        incomeBar.style.backgroundColor = "green"; // Цвет прибыли
+        incomeBar.style.backgroundColor = "#2511A8"; // Цвет прибыли
 
         electricityBar.style.width = `${electricityPercentage}%`;
         electricityBar.style.left = `${profitPercentage}%`;
-        electricityBar.style.backgroundColor = "red"; // Цвет расходов
+        electricityBar.style.backgroundColor = "#E2E2E2"; // Цвет расходов
     } else {
         incomeBar.style.width = "0%";
         electricityBar.style.width = "0%";
@@ -265,3 +265,4 @@ function updateValues() {
     }
     isUSD = !isUSD; // Переключаем состояние
 }
+
