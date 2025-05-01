@@ -191,31 +191,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     calcBtn.addEventListener("click", calculateProfit);
     toggleButton.addEventListener('click', updateValues);
 
-    // --- Логика фиксации/сворачивания хедера ---
-    let isHeaderFixed = false;
-    const scrollThreshold = 20; // Порог прокрутки в пикселях
-    const collapsedHeaderHeight = 70; // Высота хедера в свернутом состоянии (из CSS)
-
-    window.addEventListener("scroll", () => {
-        const scrollY = window.scrollY; // Текущая позиция скролла
-
-        if (scrollY > scrollThreshold && !isHeaderFixed) {
-            // Фиксируем и сворачиваем хедер
-            // console.log("Fixing header");
-            header.classList.add("header-fixed-collapsed");
-            resultsContainer.style.paddingTop = `${collapsedHeaderHeight}px`; // Добавляем отступ контенту
-            isHeaderFixed = true;
-
-        } else if (scrollY === 0 && isHeaderFixed) { // Возвращаем только при скролле на самый верх
-            // Разворачиваем хедер
-            // console.log("Unfixing header");
-            header.classList.remove("header-fixed-collapsed");
-            resultsContainer.style.paddingTop = '0px'; // Убираем отступ у контента
-            isHeaderFixed = false;
-        }
-    }, { passive: true }); // Оптимизация скролла
-    // --- Конец логики хедера ---
-
+    
     // Загрузка данных и начальная инициализация
     try {
        await fetchData(); // Загружаем курс и данные profitPer...
