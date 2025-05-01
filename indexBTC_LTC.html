@@ -21,9 +21,9 @@
 </style> 
 
 </head>
-<body>
+<body class="flex flex-col h-screen">
    <!-- Форма ввода -->
-   <div class="w-screen bg-[#000000] text-white shadow-xl p-5 mt-0 mb-[3px] space-y-3">
+   <div id="headerSection" class="w-screen bg-[#000000] text-white shadow-xl p-5 mt-0 mb-[3px] space-y-3">
     <div class="space-y-2">
       <!-- Алгоритм и Производитель -->
       <div class="flex gap-3">
@@ -117,7 +117,7 @@
   </div>
 
   <!-- Контейнер доходности -->
-  <div class="w-screen h-screen p-0 m-0 bg-[#E2E2E2] text-sm space-y-4 shadow-md flex flex-col">
+  <div class="w-screen flex-1 overflow-y-auto bg-[#E2E2E2] text-sm space-y-4 shadow-md flex flex-col">
     <!-- Прогресс-бар и показатели -->
     <div class="w-screen px-4 mt-2">
       <!-- Прогресс-бар -->
@@ -184,6 +184,27 @@
     </div>
   </div>
 
+  <script>
+    const header = document.getElementById("headerSection");
+    const calcBtn = document.getElementById("calculateBtn");
+  
+    let isCollapsed = false;
+  
+    window.addEventListener("scroll", () => {
+      if (window.scrollY > 20 && !isCollapsed) {
+        header.classList.add("h-[60px]", "overflow-hidden", "transition-all", "duration-500");
+        header.classList.remove("space-y-3", "p-5");
+        calcBtn.classList.add("scale-90");
+        isCollapsed = true;
+      } else if (window.scrollY <= 20 && isCollapsed) {
+        header.classList.remove("h-[60px]", "overflow-hidden");
+        header.classList.add("space-y-3", "p-5");
+        calcBtn.classList.remove("scale-90");
+        isCollapsed = false;
+      }
+    });
+  </script>
+  
 
    
    
