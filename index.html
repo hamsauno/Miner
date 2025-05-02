@@ -47,74 +47,86 @@
 
   <!-- Скрипты -->
   <script>
-    const { createClient } = supabase;
-    const supabaseUrl = "https://yiprwrgmyqlkdmhgulmc.supabase.co";
-    const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlpcHJ3cmdteXFsa2RtaGd1bG1jIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ2NTI0NjgsImV4cCI6MjA2MDIyODQ2OH0.lfiTfr5ukGDEVuwq-X9U2kWs3nEZrp3N443HT5AkbfI";
-    const supabaseClient = createClient(supabaseUrl, supabaseKey);
+  import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
 
-    document.addEventListener("DOMContentLoaded", () => {
-      const tg = window.Telegram.WebApp;
-      tg.ready();
+  const supabaseUrl = "https://yiprwrgmyqlkdmhgulmc.supabase.co";
+  const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlpcHJ3cmdteXFsa2RtaGd1bG1jIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ2NTI0NjgsImV4cCI6MjA2MDIyODQ2OH0.lfiTfr5ukGDEVuwq-X9U2kWs3nEZrp3N443HT5AkbfI";
+  const supabaseClient = createClient(supabaseUrl, supabaseKey);
 
-      const startButton = document.getElementById('startButton');
-      const startScreen = document.getElementById('startScreen');
+  document.addEventListener("DOMContentLoaded", async () => {
+    const tg = window.Telegram?.WebApp;
+    tg?.ready();
 
-      startButton.addEventListener('click', async () => {
-        startButton.disabled = true; // Чтобы пользователь не кликал дважды
+    const user = tg?.initDataUnsafe?.user;
 
-        const telegramId = tg?.initDataUnsafe?.user?.id;
-        const username = tg?.initDataUnsafe?.user?.username || "";
+    if (!user) {
+      alert("❗️ Откройте приложение через Telegram.");
+      return;
+    }
 
-        if (!telegramId) {
-          alert("❗️ Ошибка получения Telegram ID. Пожалуйста, откройте через Telegram WebApp.");
+    const telegramId = user.id.toString();
+    const username = user.username || "";
+
+    // 1. Сохраняем визит
+    const timestamp = new Date().toISOString();
+    const { error: visitError } = await supabaseClient
+      .from("visits")
+      .insert([{ telegram_id: telegramId, username, timestamp }]);
+
+    if (visitError) {
+      console.error("Ошибка при сохранении визита:", visitError.message);
+    } else {
+      console.log("✅ Визит сохранён");
+    }
+
+    // 2. Обработка кнопки старта
+    const startButton = document.getElementById("startButton");
+    const startScreen = document.getElementById("startScreen");
+
+    if (!startButton || !startScreen) return;
+
+    startButton.addEventListener("click", async () => {
+      startButton.disabled = true;
+
+      try {
+        const { data, error } = await supabaseClient
+          .from("users")
+          .select("*")
+          .eq("telegram_id", telegramId);
+
+        if (error) {
+          console.error("Ошибка запроса:", error.message);
+          alert("Ошибка при проверке пользователя.");
           return;
         }
 
-        try {
-          const { data, error } = await supabaseClient
+        if (!data || data.length === 0) {
+          const { error: insertError } = await supabaseClient
             .from("users")
-            .select("*")
-            .eq("telegram_id", telegramId.toString());
+            .insert([{ telegram_id: telegramId, username, bonus: 0 }]);
 
-          if (error) {
-            console.error("❌ Ошибка запроса:", error.message);
-            alert("Ошибка при проверке пользователя.");
+          if (insertError) {
+            console.error("Ошибка регистрации:", insertError.message);
+            alert("Ошибка регистрации.");
             return;
           }
 
-          if (!data || data.length === 0) {
-            // Пользователь не найден, регистрируем
-            const { error: insertError } = await supabaseClient
-              .from("users")
-              .insert([{
-                telegram_id: telegramId.toString(),
-                username: username,
-                bonus: 0
-              }]);
-
-            if (insertError) {
-              console.error("❌ Ошибка регистрации:", insertError.message);
-              alert("Ошибка регистрации пользователя.");
-              return;
-            }
-
-            console.log("🆕 Новый пользователь зарегистрирован!");
-          } else {
-            console.log("✅ Пользователь найден:", data[0]);
-          }
-
-          // Плавное исчезновение контента
-          startScreen.classList.add('opacity-0', 'transition-opacity', 'duration-700');
-          setTimeout(() => {
-            window.location.href = "home.html";
-          }, 800);
-
-        } catch (err) {
-          console.error("❗️ Ошибка:", err);
-          alert("Не удалось выполнить вход.");
+          console.log("🆕 Новый пользователь зарегистрирован");
+        } else {
+          console.log("✅ Пользователь найден:", data[0]);
         }
-      });
+
+        // Переход к главной странице
+        startScreen.classList.add("opacity-0", "transition-opacity", "duration-700");
+        setTimeout(() => {
+          window.location.href = "home.html";
+        }, 800);
+      } catch (err) {
+        console.error("Ошибка входа:", err);
+        alert("Не удалось выполнить вход.");
+      }
     });
+  });
   </script>
 </body>
 </html>
