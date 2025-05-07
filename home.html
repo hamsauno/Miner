@@ -52,60 +52,76 @@
         <iframe src="" id="pageIframe" class="w-full h-[calc(100vh-47px-47px)] border-none hidden"></iframe>
     </div>    
 
-    <!-- Контейнер для закреплённой шапки внизу -->
-    <div class="fixed bottom-0 left-0 w-full h-[47px] bg-[#2511A8] text-white z-50 flex items-center justify-between px-2 font-semibold text-base sm:text-lg" id="panel">
-        <div class="w-full flex justify-between items-center h-full" id="buttonContainer">
-          <button class="panel-button flex-1 mx-1 mt-1 h-[calc(100%-4px)] py-1 text-white transition-all duration-300">#</button>
-          <button class="panel-button flex-1 mx-1 mt-1 h-[calc(100%-4px)] py-1 text-white transition-all duration-300">#</button>
-          <button class="panel-button flex-1 mx-1 mt-1 h-[calc(100%-4px)] py-1 text-white transition-all duration-300">#</button>
-          <button id="kursBtn" class="panel-button flex-1 mx-1 mt-1 h-[calc(100%-4px)] py-1 text-white transition-all duration-300">Курсы</button>
-        </div>
-      </div>
-      
-      <div id="kursFrame" class="fixed bottom-[-140px] left-0 w-full bg-[#E2E2E2] h-[140px] z-40 transition-transform duration-300 ease-in-out">
-        <iframe src="AllKurs.html" class="w-full h-full border-none"></iframe>
-      </div>
-      
-      <script>
-        const buttons = document.querySelectorAll('.panel-button');
-        const kursBtn = document.getElementById('kursBtn');
-        const panel = document.getElementById('panel');
-        const kursFrame = document.getElementById('kursFrame');
-        let activeButton = null;
-      
-        buttons.forEach(button => {
-          button.addEventListener('click', () => {
+   <!-- Контейнер для закреплённой шапки внизу -->
+<div class="fixed bottom-0 left-0 w-full h-[47px] bg-[#2511A8] text-white z-50 flex items-center justify-between px-2 font-semibold text-base sm:text-lg" id="panel">
+    <div class="w-full flex justify-between items-center h-full" id="buttonContainer">
+        <button id="kontaktyBtn" class="panel-button flex-1 mx-1 mt-1 h-[calc(100%-4px)] py-1 text-white transition-all duration-300">Контакты</button>
+        <button class="panel-button flex-1 mx-1 mt-1 h-[calc(100%-4px)] py-1 text-white transition-all duration-300">#</button>
+        <button class="panel-button flex-1 mx-1 mt-1 h-[calc(100%-4px)] py-1 text-white transition-all duration-300">#</button>
+        <button id="kursBtn" class="panel-button flex-1 mx-1 mt-1 h-[calc(100%-4px)] py-1 text-white transition-all duration-300">Курсы</button>
+    </div>
+</div>
+
+<div id="kontaktyFrame" class="fixed bottom-[-140px] left-0 w-full bg-[#E2E2E2] h-[140px] z-40 transition-transform duration-300 ease-in-out">
+    <iframe src="kontakt.html" class="w-full h-full border-none"></iframe>
+</div>
+
+<div id="kursFrame" class="fixed bottom-[-140px] left-0 w-full bg-[#E2E2E2] h-[140px] z-40 transition-transform duration-300 ease-in-out">
+    <iframe src="AllKurs.html" class="w-full h-full border-none"></iframe>
+</div>
+
+<script>
+    const buttons = document.querySelectorAll('.panel-button');
+    const kontaktyBtn = document.getElementById('kontaktyBtn');
+    const kursBtn = document.getElementById('kursBtn');
+    const panel = document.getElementById('panel');
+    const kontaktyFrame = document.getElementById('kontaktyFrame');
+    const kursFrame = document.getElementById('kursFrame');
+    let activeButton = null;
+
+    buttons.forEach(button => {
+        button.addEventListener('click', () => {
             const isSameButton = (activeButton === button);
-      
+
             // Сброс всех кнопок
             buttons.forEach(btn => {
-              btn.style.backgroundColor = "";
-              btn.style.color = "white";
+                btn.style.backgroundColor = "";
+                btn.style.color = "white";
             });
-      
+
             if (isSameButton) {
-              activeButton = null;
-              // Закрываем курс-фрейм, если кликнули снова по Курсам
-              if (button === kursBtn) {
-                panel.style.transform = "translateY(0)";
-                kursFrame.style.bottom = "-140px";
-              }
+                activeButton = null;
+                // Закрываем соответствующие фреймы, если кликнули по уже активной кнопке
+                if (button === kontaktyBtn) {
+                    panel.style.transform = "translateY(0)";
+                    kontaktyFrame.style.bottom = "-140px";
+                } else if (button === kursBtn) {
+                    panel.style.transform = "translateY(0)";
+                    kursFrame.style.bottom = "-140px";
+                }
             } else {
-              button.style.backgroundColor = "#E2E2E2";
-              button.style.color = "black";
-              activeButton = button;
-              
-              if (button === kursBtn) {
-                panel.style.transform = "translateY(-140px)";
-                kursFrame.style.bottom = "0";
-              } else {
-                panel.style.transform = "translateY(0)";
-                kursFrame.style.bottom = "-140px"; // Закрыть курсы, если выбрана другая кнопка
-              }
+                button.style.backgroundColor = "#E2E2E2";
+                button.style.color = "black";
+                activeButton = button;
+                
+                // Открытие/закрытие фреймов в зависимости от кнопки
+                if (button === kontaktyBtn) {
+                    panel.style.transform = "translateY(-140px)";
+                    kontaktyFrame.style.bottom = "0";
+                    kursFrame.style.bottom = "-140px"; // Закрываем курсы
+                } else if (button === kursBtn) {
+                    panel.style.transform = "translateY(-140px)";
+                    kursFrame.style.bottom = "0";
+                    kontaktyFrame.style.bottom = "-140px"; // Закрываем контакты
+                } else {
+                    panel.style.transform = "translateY(0)";
+                    kontaktyFrame.style.bottom = "-140px";
+                    kursFrame.style.bottom = "-140px";
+                }
             }
-          });
         });
-      </script>
+    });
+</script>
       
       <style>
         /* Немного подправим поведение кнопок без hover на мобильных */
