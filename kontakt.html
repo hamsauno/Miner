@@ -14,7 +14,7 @@
     <div class="space-y-2 leading-relaxed">
       
       <div class="grid grid-cols-[auto,1fr] gap-2">
-        <p class="text-right"><strong>Офис:</strong></p>
+        <p class="text-right"><strong>Офис :</strong></p>
         <p>
           <button class="underline hover:text-blue-600 text-left" onclick="openMap('https://yandex.ru/maps/org/waymorr/39016942329/?ll=37.576007%2C55.772289&z=17.12')">
             Электрический переулок, 3/10с1
@@ -23,7 +23,7 @@
       </div>
 
       <div class="grid grid-cols-[auto,1fr] gap-2">
-        <p class="text-right"><strong>Сервисный центр:</strong></p>
+        <p class="text-right"><strong>Сервисный центр :</strong></p>
         <p>
           <button class="underline hover:text-blue-600 text-left" onclick="openMap('https://yandex.ru/maps/213/moscow/house/krasnokazarmennaya_ulitsa_12s38/Z04YcQdgQUUGQFtvfXt0d31hZw==/?ll=37.700801%2C55.756123&z=17.12')">
             Красноказарменная улица, 12с38
@@ -32,18 +32,36 @@
       </div>
 
       <div class="grid grid-cols-[auto,1fr] gap-2">
-        <p class="text-right"><strong>Email:</strong></p>
-        <p><a href="mailto:info@waymorr.ru" class="underline hover:text-blue-600">info@waymorr.ru</a></p>
+        <p class="text-right"><strong>Связь :</strong></p>
+        <p>
+          <a href="tel:+74951297535" class="underline hover:text-blue-600">+7 (495) 129-75-35</a>,
+          <a href="mailto:info@waymorr.ru" class="underline hover:text-blue-600">info@waymorr.ru</a>
+        </p>
       </div>
-
-      <div class="grid grid-cols-[auto,1fr] gap-2">
-        <p class="text-right"><strong>Отдел продаж:</strong></p>
-        <p><a href="tel:+74951297535" class="underline hover:text-blue-600">+7 (495) 129-75-35</a></p>
-      </div>
+      
 
     </div>
   </div>
-
+<!-- Кнопка "Заказать звонок" -->
+<div class="fixed bottom-0 left-0 w-full">
+    <a id="callOrderBtn" 
+       href="#" 
+       class="block text-center bg-[#2511A8] text-white text-base font-semibold py-3 w-full">
+      Заказать звонок
+    </a>
+  </div>
+  
+  <script>
+    document.getElementById("callOrderBtn").addEventListener("click", function (e) {
+      e.preventDefault();
+  
+      const phone = prompt("Введите ваш номер телефона:");
+      if (phone) {
+        const encodedPhone = encodeURIComponent(phone.trim());
+        window.location.href = `https://t.me/WAYMORR_BOT?start=${encodedPhone}`;
+      }
+    });
+  </script>
   <script>
     function openMap(url) {
       if (window.Telegram && Telegram.WebApp) {
