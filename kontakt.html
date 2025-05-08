@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="css/bg.css" />
+  <link rel="stylesheet" href="css/bg.css">
   <script src="js/fullscr.js" defer></script>
   <script src="js/nozoom.js" defer></script>
 </head>
@@ -15,12 +15,20 @@
       
       <div class="grid grid-cols-[auto,1fr] gap-2">
         <p class="text-right"><strong>Офис:</strong></p>
-        <p><a href="https://maps.yandex.ru/?text=Электрический+переулок,+3%2F10с1" target="_blank" class="underline hover:text-blue-600">Открыть карту</a></p>
+        <p>
+          <button class="underline hover:text-blue-600 text-left" onclick="openMap('https://yandex.ru/maps/org/waymorr/39016942329/?ll=37.576007%2C55.772289&z=17.12')">
+            Электрический переулок, 3/10с1
+          </button>
+        </p>
       </div>
 
       <div class="grid grid-cols-[auto,1fr] gap-2">
         <p class="text-right"><strong>Сервисный центр:</strong></p>
-        <p><a href="https://maps.yandex.ru/?text=Красноказарменная+улица,+12с38" target="_blank" class="underline hover:text-blue-600">Открыть карту</a></p>
+        <p>
+          <button class="underline hover:text-blue-600 text-left" onclick="openMap('https://yandex.ru/maps/213/moscow/house/krasnokazarmennaya_ulitsa_12s38/Z04YcQdgQUUGQFtvfXt0d31hZw==/?ll=37.700801%2C55.756123&z=17.12')">
+            Красноказарменная улица, 12с38
+          </button>
+        </p>
       </div>
 
       <div class="grid grid-cols-[auto,1fr] gap-2">
@@ -30,10 +38,20 @@
 
       <div class="grid grid-cols-[auto,1fr] gap-2">
         <p class="text-right"><strong>Отдел продаж:</strong></p>
-        <p><a href="tel:+74951297535" class="underline hover:text-blue-600">+7 (495) 129‑75‑35</a></p>
+        <p><a href="tel:+74951297535" class="underline hover:text-blue-600">+7 (495) 129-75-35</a></p>
       </div>
 
     </div>
   </div>
+
+  <script>
+    function openMap(url) {
+      if (window.Telegram && Telegram.WebApp) {
+        Telegram.WebApp.openLink(url);
+      } else {
+        window.open(url, '_blank');
+      }
+    }
+  </script>
 </body>
 </html>
