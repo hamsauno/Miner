@@ -75,124 +75,82 @@
     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlpcHJ3cmdteXFsa2RtaGd1bG1jIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ2NTI0NjgsImV4cCI6MjA2MDIyODQ2OH0.lfiTfr5ukGDEVuwq-X9U2kWs3nEZrp3N443HT5AkbfI"
   );
 
-  const callOrderBtn = document.getElementById("callOrderBtn");
-  const modalOverlay = document.getElementById("modalOverlay");
-  const cancelBtn = document.getElementById("cancelBtn");
-  const submitBtn = document.getElementById("submitBtn");
-  const userPhoneInput = document.getElementById("userPhone");
+  document.addEventListener("DOMContentLoaded", async () => {
+    const tg = window.Telegram?.WebApp;
+    tg?.ready();
 
-  // Функция проверки и отправки сообщения
-  async function checkAndSend() {
-    const tg = window.Telegram.WebApp;
-    const telegram_id = tg.initDataUnsafe?.user?.id;
-
-    if (!telegram_id) return;
-
-    // Проверяем, есть ли у пользователя сохранённый номер
-    const { data: existing, error: selectError } = await supabase
-      .from("users")
-      .select("nomber_tel") // или "*" если нужно больше данных
-      .eq("telegram_id", telegram_id.toString()) // безопасно даже если это bigint
-      .single();
-
-    if (error && error.code !== 'PGRST116') {
-      console.error("Ошибка при проверке номера:", error);
+    const user = tg?.initDataUnsafe?.user;
+    if (!user) {
+      alert("❗️ Откройте через Telegram.");
       return;
     }
 
-    // Если номер есть, отправляем сообщение в бот
-    if (data && data.nomber_tel) {
-      const encoded = encodeURIComponent(`POZVONI_MNE_${data.nomber_tel.replace(/\D/g, '')}`); // Убираем все нецифровые символы
-      tg.openTelegramLink(`https://t.me/WAYMORR_BOT?start=${encoded}`);
-    } else {
-      // Если номера нет, показываем форму для ввода номера
-      modalOverlay.classList.remove("hidden");
-      userPhoneInput.focus();
-    }
-  }
+    const telegramId = user.id.toString();
+    const username = user.username || "";
 
-  // Обработчик кнопки "Заказать звонок"
-  callOrderBtn.addEventListener("click", (e) => {
-    e.preventDefault();
-    checkAndSend();
-  });
+    const phoneInput = document.getElementById("phone");
+    const saveCheckbox = document.getElementById("savePhone");
+    const orderButton = document.getElementById("orderButton");
 
-  // Обработчик кнопки "Отмена"
-  cancelBtn.addEventListener("click", () => {
-    modalOverlay.classList.add("hidden");
-  });
-
-  // Обработчик кнопки "Отправить"
-  submitBtn.addEventListener("click", async () => {
-    let phone = userPhoneInput.value.trim().replace(/[^0-9]/g, ""); // Оставляем только цифры
-    if (phone.startsWith("7")) phone = phone.slice(1);
-
-    const fullPhone = `7${phone}`; // Номер без плюса
-
-    if (!/^[0-9]{10}$/.test(phone)) {
-      alert("Введите корректный номер телефона");
-      return;
-    }
-
-    const tg = window.Telegram.WebApp;
-    const telegram_id = tg.initDataUnsafe?.user?.id;
-    if (!telegram_id) return;
-
-    // Если пользователь выбрал сохранить номер
-    if (document.getElementById("savePhone").checked) {
-      const { data: existing, error: selectError } = await supabase
+    // Проверяем, есть ли сохранённый номер
+    let savedPhone = "";
+    try {
+      const { data, error } = await supabase
         .from("users")
-        .select("id")
-        .eq("telegram_id", telegram_id)
+        .select("phone")
+        .eq("telegram_id", telegramId)
         .single();
 
-      if (selectError && selectError.code !== 'PGRST116') {
-        console.error("Ошибка при проверке пользователя:", selectError);
-      } else if (existing) {
-        // Если пользователь уже существует, обновляем номер
+      if (error) {
+        console.warn("Пользователь не найден:", error.message);
+      } else if (data?.phone) {
+        savedPhone = data.phone;
+        phoneInput.value = savedPhone;
+        saveCheckbox.checked = true;
+      }
+    } catch (err) {
+      console.error("Ошибка при проверке пользователя:", err);
+    }
+
+    // Обработка кнопки
+    orderButton.addEventListener("click", async () => {
+      let phone = phoneInput.value.trim();
+
+      if (!phone && savedPhone) {
+        phone = savedPhone;
+      }
+
+      if (!phone || !/^\d{10,15}$/.test(phone.replace(/\D/g, ""))) {
+        alert("Введите корректный номер телефона.");
+        return;
+      }
+
+      const normalizedPhone = phone.replace(/\D/g, "");
+
+      if (saveCheckbox.checked) {
         const { error: updateError } = await supabase
           .from("users")
-          .update({ nomber_tel: fullPhone })
-          .eq("telegram_id", telegram_id);
-        if (updateError) console.error("Ошибка при обновлении номера:", updateError);
-      } else {
-        // Если пользователя нет в базе, вставляем новый номер
-        const { error: insertError } = await supabase
-          .from("users")
-          .insert([{ telegram_id, nomber_tel: fullPhone }]);
-        if (insertError) console.error("Ошибка при вставке номера:", insertError);
+          .update({ phone: normalizedPhone })
+          .eq("telegram_id", telegramId);
+
+        if (updateError) {
+          console.error("Ошибка при сохранении телефона:", updateError.message);
+        } else {
+          console.log("Телефон сохранён.");
+        }
       }
-    }
 
-    // Отправляем сообщение в бот с номером без формата
-    const encoded = encodeURIComponent(`POZVONI_MNE_${fullPhone}`);
-    tg.openTelegramLink(`https://t.me/WAYMORR_BOT?start=${encoded}`);
-  });
+      const botUsername = "WAYMORR_BOT";
+      const msg = `POZVONI_MNE_${normalizedPhone}`;
+      const link = `https://t.me/${botUsername}?start=${msg}`;
 
-  // Форматируем номер телефона при вводе
-  userPhoneInput.addEventListener("input", (e) => {
-    const digits = e.target.value.replace(/\D/g, "").slice(0, 10);
-    let formatted = digits;
-    if (digits.length > 6) {
-      formatted = `${digits.slice(0,3)}-${digits.slice(3,6)}-${digits.slice(6,8)}-${digits.slice(8,10)}`;
-    } else if (digits.length > 3) {
-      formatted = `${digits.slice(0,3)}-${digits.slice(3,6)}`;
-    }
-    e.target.value = formatted;
-    submitBtn.disabled = digits.length !== 10;
-  });
-
-  window.addEventListener("DOMContentLoaded", () => {
-    if (window.location.hash === "#call") {
-      callOrderBtn.click();
-    }
+      tg.openTelegramLink(link);
+    });
   });
 </script>
 
 
 
-
-</script>
 
   
   
