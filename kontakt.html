@@ -140,12 +140,14 @@
       if (selectError && selectError.code !== 'PGRST116') {
         console.error("Ошибка при проверке пользователя:", selectError);
       } else if (existing) {
+        // Обновляем номер телефона, если пользователь уже есть
         const { error: updateError } = await supabase
           .from("users")
           .update({ nomber_tel: fullPhone })
           .eq("telegram_id", telegram_id);
         if (updateError) console.error("Ошибка при обновлении:", updateError);
       } else {
+        // Вставляем нового пользователя, если его ещё нет в базе
         const { error: insertError } = await supabase
           .from("users")
           .insert([{ telegram_id, nomber_tel: fullPhone }]);
@@ -161,9 +163,9 @@
     const digits = e.target.value.replace(/\D/g, "").slice(0, 10);
     let formatted = digits;
     if (digits.length > 6) {
-      formatted = `${digits.slice(0,3)}-${digits.slice(3,6)}-${digits.slice(6,8)}-${digits.slice(8,10)}`;
+      formatted = `${digits.slice(0, 3)}-${digits.slice(3, 6)}-${digits.slice(6, 8)}-${digits.slice(8, 10)}`;
     } else if (digits.length > 3) {
-      formatted = `${digits.slice(0,3)}-${digits.slice(3,6)}`;
+      formatted = `${digits.slice(0, 3)}-${digits.slice(3, 6)}`;
     }
     e.target.value = formatted;
     submitBtn.disabled = digits.length !== 10;
@@ -175,6 +177,7 @@
     }
   });
 </script>
+
 
 
 </script>
