@@ -102,7 +102,7 @@
 
     // Если номер есть, отправляем сообщение в бот
     if (data && data.nomber_tel) {
-      const encoded = encodeURIComponent(`POZVONI_MNE_${data.nomber_tel}`);
+      const encoded = encodeURIComponent(`POZVONI_MNE_${data.nomber_tel.replace(/\D/g, '')}`); // Убираем все нецифровые символы
       tg.openTelegramLink(`https://t.me/WAYMORR_BOT?start=${encoded}`);
     } else {
       // Если номера нет, показываем форму для ввода номера
@@ -124,10 +124,10 @@
 
   // Обработчик кнопки "Отправить"
   submitBtn.addEventListener("click", async () => {
-    let phone = userPhoneInput.value.trim().replace(/[^0-9]/g, "");
+    let phone = userPhoneInput.value.trim().replace(/[^0-9]/g, ""); // Оставляем только цифры
     if (phone.startsWith("7")) phone = phone.slice(1);
 
-    const fullPhone = `+7${phone}`;
+    const fullPhone = `7${phone}`; // Номер без плюса
 
     if (!/^[0-9]{10}$/.test(phone)) {
       alert("Введите корректный номер телефона");
@@ -164,7 +164,7 @@
       }
     }
 
-    // Отправляем сообщение в бот
+    // Отправляем сообщение в бот с номером без формата
     const encoded = encodeURIComponent(`POZVONI_MNE_${fullPhone}`);
     tg.openTelegramLink(`https://t.me/WAYMORR_BOT?start=${encoded}`);
   });
@@ -188,6 +188,7 @@
     }
   });
 </script>
+
 
 
 
