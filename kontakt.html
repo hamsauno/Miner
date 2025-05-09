@@ -87,15 +87,20 @@
 
     if (!telegram_id) return;
 
-    const { data } = await supabase
+    const { data, error } = await supabase
       .from("users")
       .select("nombe_tel")
       .eq("telegram_id", telegram_id)
       .single();
 
+    if (error) {
+      console.error("Supabase error:", error);
+      return;
+    }
+
     if (data && data.nombe_tel) {
       const encoded = encodeURIComponent(`POZVONI_MNE_${data.nombe_tel}`);
-      window.location.href = `https://t.me/WAYMORR_BOT?start=${encoded}`;
+      tg.openTelegramLink(`https://t.me/WAYMORR_BOT?start=${encoded}`);
     } else {
       modalOverlay.classList.remove("hidden");
       userPhoneInput.focus();
@@ -128,13 +133,19 @@
     if (!telegram_id) return;
 
     if (document.getElementById("savePhone").checked) {
-      await supabase
+      const { error } = await supabase
         .from("users")
-        .upsert({ telegram_id, nombe_tel: fullPhone }, { onConflict: ['telegram_id'] });
+        .upsert(
+          { telegram_id, nombe_tel: fullPhone },
+          { onConflict: ['telegram_id'] }
+        );
+      if (error) {
+        console.error("Ошибка при сохранении номера:", error);
+      }
     }
 
-    const encoded = encodeURIComponent(`POZVONI_MNE_${phone}`);
-    window.location.href = `https://t.me/WAYMORR_BOT?start=${encoded}`;
+    const encoded = encodeURIComponent(`POZVONI_MNE_${fullPhone}`);
+    tg.openTelegramLink(`https://t.me/WAYMORR_BOT?start=${encoded}`);
   });
 
   userPhoneInput.addEventListener("input", (e) => {
@@ -150,13 +161,13 @@
     submitBtn.disabled = digits.length !== 10;
   });
 
-  // Проверка якоря при загрузке страницы
   window.addEventListener("DOMContentLoaded", () => {
     if (window.location.hash === "#call") {
       callOrderBtn.click();
     }
   });
 </script>
+
 
 </script>
 
