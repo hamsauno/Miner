@@ -10,9 +10,9 @@
   <script src="js/nozoom.js" defer></script>
 </head>
 <body class="bg-white text-black font-[Arial]">
-  <div class="w-full bg-[#E2E2E2] text-black text-xs sm:text-sm px-4 py-2 overflow-y-auto" style="height: 140px;">
+<!-- Блок высотой 140px -->
+<div class="w-full bg-[#E2E2E2] text-black text-xs sm:text-sm px-4 py-2 overflow-y-auto flex flex-col justify-between" style="height: 140px;">
     <div class="space-y-2 leading-relaxed">
-      
       <div class="grid grid-cols-[auto,1fr] gap-2">
         <p class="text-right"><strong>Офис :</strong></p>
         <p>
@@ -21,7 +21,7 @@
           </button>
         </p>
       </div>
-
+  
       <div class="grid grid-cols-[auto,1fr] gap-2">
         <p class="text-right"><strong>Склад :</strong></p>
         <p>
@@ -30,22 +30,19 @@
           </button>
         </p>
       </div>
-
+  
       <div class="grid grid-cols-[auto,1fr] gap-2">
-        <p class="text-right"><strong>Связь :</strong></p>
+        <p class="text-right"><strong>Телефон :</strong></p>
         <p>
-          <a href="tel:+74951297535" class="underline hover:text-blue-600" target="_blank" rel="noopener noreferrer">+7 (495) 129-75-35</a>,
+          <a href="tel:+74951297535" class="underline hover:text-blue-600" target="_blank" rel="noopener noreferrer">+7 (495) 129-75-35</a>
         </p>
       </div>
-      
-
     </div>
-  </div>
-<!-- Кнопка "Заказать звонок" -->
-<div class="fixed bottom-0 left-0 w-full">
+  
+    <!-- Кнопка внизу блока -->
     <a id="callOrderBtn" 
        href="#" 
-       class="block text-center bg-[#2511A8] text-white text-base font-semibold py-3 w-full">
+       class="mt-2 block text-center bg-[#2511A8] text-white text-base font-semibold py-2 w-full">
       Заказать звонок
     </a>
   </div>
@@ -56,11 +53,13 @@
   
       const phone = prompt("Введите ваш номер телефона:");
       if (phone) {
-        const encodedPhone = encodeURIComponent(phone.trim());
-        window.location.href = `https://t.me/WAYMORR_BOT?start=${encodedPhone}`;
+        const cleanPhone = phone.trim();
+        const encodedParam = encodeURIComponent(`POZVONI_MNE_${cleanPhone}`);
+        window.location.href = `https://t.me/WAYMORR_BOT?start=${encodedParam}`;
       }
     });
   </script>
+  
   <script>
     function openMap(url) {
       if (window.Telegram && Telegram.WebApp) {
@@ -72,3 +71,4 @@
   </script>
 </body>
 </html>
+
