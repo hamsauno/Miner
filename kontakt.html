@@ -39,26 +39,106 @@
       </div>
     </div>
   
-    <!-- Кнопка внизу блока -->
-    <a id="callOrderBtn" 
-       href="#" 
+<!-- Кнопка "Заказать звонок" -->
+<div class="w-full text-center">
+    <a id="callOrderBtn"
+       href="#"
        class="mt-2 block text-center bg-[#2511A8] text-white text-base font-semibold py-2 w-full">
       Заказать звонок
     </a>
   </div>
   
-  <script>
-    document.getElementById("callOrderBtn").addEventListener("click", function (e) {
-      e.preventDefault();
+  <!-- Модальное окно -->
+  <div id="modalOverlay" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+    <div class="bg-[#E2E2E2] w-11/12 max-w-md p-4">
+      <h2 class="text-lg font-semibold mb-2">Введите номер телефона</h2>
+      <label class="block mb-2 text-sm">Страна:</label>
+      <select id="countryCode" class="w-full mb-3 px-3 py-2 border">
+        <option value="+7">🇷🇺 +7</option>
+        <option value="+375">🇧🇾 +375</option>
+        <option value="+380">🇺🇦 +380</option>
+        <option value="+996">🇰🇬 +996</option>
+      </select>
   
-      const phone = prompt("Введите ваш номер телефона:");
-      if (phone) {
-        const cleanPhone = phone.trim();
-        const encodedParam = encodeURIComponent(`POZVONI_MNE_${cleanPhone}`);
-        window.location.href = `https://t.me/WAYMORR_BOT?start=${encodedParam}`;
+      <label class="block mb-1 text-sm">Номер (пример: 999-222-55-77):</label>
+      <input type="tel" id="userPhone" class="w-full mb-3 px-3 py-2 border" placeholder="999-222-55-77">
+  
+      <label class="inline-flex items-center mb-4">
+        <input type="checkbox" id="savePhone" class="mr-2">
+        <span class="text-sm">Сохранить номер</span>
+      </label>
+  
+      <div class="flex justify-between">
+        <button id="cancelBtn" class="bg-[#2511A8] text-white px-4 py-2 w-1/2">Отменить</button>
+        <button id="submitBtn" class="bg-[#2511A8] text-white px-4 py-2 w-1/2">Отправить</button>
+      </div>
+    </div>
+  </div>
+  
+  <script type="module">
+    import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
+  
+    const supabase = createClient(
+      "https://yiprwrgmyqlkdmhgulmc.supabase.co",
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlpcHJ3cmdteXFsa2RtaGd1bG1jIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ2NTI0NjgsImV4cCI6MjA2MDIyODQ2OH0.lfiTfr5ukGDEVuwq-X9U2kWs3nEZrp3N443HT5AkbfI"
+    );
+  
+    const callOrderBtn = document.getElementById("callOrderBtn");
+    const modalOverlay = document.getElementById("modalOverlay");
+    const cancelBtn = document.getElementById("cancelBtn");
+    const submitBtn = document.getElementById("submitBtn");
+  
+    async function checkAndSend() {
+      const tg = window.Telegram.WebApp;
+      const telegram_id = tg.initDataUnsafe?.user?.id;
+  
+      if (!telegram_id) return;
+  
+      const { data } = await supabase
+        .from("users")
+        .select("nombe_tel")
+        .eq("telegram_id", telegram_id)
+        .single();
+  
+      if (data && data.nombe_tel) {
+        const encoded = encodeURIComponent(`POZVONI_MNE_${data.nombe_tel}`);
+        window.location.href = `https://t.me/WAYMORR_BOT?start=${encoded}`;
+      } else {
+        modalOverlay.classList.remove("hidden");
       }
+    }
+  
+    callOrderBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      checkAndSend();
+    });
+  
+    cancelBtn.addEventListener("click", () => {
+      modalOverlay.classList.add("hidden");
+    });
+  
+    submitBtn.addEventListener("click", async () => {
+      const phone = document.getElementById("userPhone").value.trim();
+      const code = document.getElementById("countryCode").value;
+      const save = document.getElementById("savePhone").checked;
+      const fullPhone = `${code}${phone}`;
+  
+      const tg = window.Telegram.WebApp;
+      const telegram_id = tg.initDataUnsafe?.user?.id;
+  
+      if (!telegram_id) return;
+  
+      if (save) {
+        await supabase
+          .from("users")
+          .upsert({ telegram_id, nombe_tel: fullPhone }, { onConflict: ['telegram_id'] });
+      }
+  
+      const encoded = encodeURIComponent(`POZVONI_MNE_${fullPhone}`);
+      window.location.href = `https://t.me/WAYMORR_BOT?start=${encoded}`;
     });
   </script>
+  
   
   <script>
     function openMap(url) {
