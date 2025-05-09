@@ -88,11 +88,13 @@
     const telegramId = user.id.toString();
     const username = user.username || "";
 
-    const phoneInput = document.getElementById("phone");
+    const modal = document.getElementById("modalOverlay");
+    const phoneInput = document.getElementById("userPhone");
     const saveCheckbox = document.getElementById("savePhone");
-    const orderButton = document.getElementById("orderButton");
+    const submitBtn = document.getElementById("submitBtn");
+    const cancelBtn = document.getElementById("cancelBtn");
 
-    // Проверяем, есть ли сохранённый номер
+    // Получаем телефон из БД, если он есть
     let savedPhone = "";
     try {
       const { data, error } = await supabase
@@ -103,51 +105,53 @@
 
       if (error) {
         console.warn("Пользователь не найден:", error.message);
+        modal.classList.remove("hidden");
       } else if (data?.phone) {
         savedPhone = data.phone;
-        phoneInput.value = savedPhone;
-        saveCheckbox.checked = true;
+        const msg = `POZVONI_MNE_${savedPhone}`;
+        tg.openTelegramLink(`https://t.me/WAYMORR_BOT?start=${msg}`);
+      } else {
+        modal.classList.remove("hidden");
       }
     } catch (err) {
-      console.error("Ошибка при проверке пользователя:", err);
+      console.error("Ошибка при получении телефона:", err);
+      modal.classList.remove("hidden");
     }
 
-    // Обработка кнопки
-    orderButton.addEventListener("click", async () => {
+    // Отмена — закрывает модалку
+    cancelBtn.addEventListener("click", () => {
+      modal.classList.add("hidden");
+    });
+
+    // Отправка
+    submitBtn.addEventListener("click", async () => {
       let phone = phoneInput.value.trim();
+      const normalizedPhone = phone.replace(/\D/g, "");
 
-      if (!phone && savedPhone) {
-        phone = savedPhone;
-      }
-
-      if (!phone || !/^\d{10,15}$/.test(phone.replace(/\D/g, ""))) {
-        alert("Введите корректный номер телефона.");
+      if (!/^\d{10}$/.test(normalizedPhone)) {
+        alert("Введите корректный номер (10 цифр после +7).");
         return;
       }
 
-      const normalizedPhone = phone.replace(/\D/g, "");
-
       if (saveCheckbox.checked) {
-        const { error: updateError } = await supabase
+        const { error } = await supabase
           .from("users")
           .update({ phone: normalizedPhone })
           .eq("telegram_id", telegramId);
 
-        if (updateError) {
-          console.error("Ошибка при сохранении телефона:", updateError.message);
+        if (error) {
+          console.error("Ошибка при сохранении телефона:", error.message);
         } else {
           console.log("Телефон сохранён.");
         }
       }
 
-      const botUsername = "WAYMORR_BOT";
       const msg = `POZVONI_MNE_${normalizedPhone}`;
-      const link = `https://t.me/${botUsername}?start=${msg}`;
-
-      tg.openTelegramLink(link);
+      tg.openTelegramLink(`https://t.me/WAYMORR_BOT?start=${msg}`);
     });
   });
 </script>
+
 
 
 
