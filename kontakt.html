@@ -98,6 +98,7 @@
       window.location.href = `https://t.me/WAYMORR_BOT?start=${encoded}`;
     } else {
       modalOverlay.classList.remove("hidden");
+      userPhoneInput.focus();
     }
   }
 
@@ -132,7 +133,7 @@
         .upsert({ telegram_id, nombe_tel: fullPhone }, { onConflict: ['telegram_id'] });
     }
 
-    const encoded = encodeURIComponent(`POZVONI_MNE_${phone}`); // Без +7 и без тире
+    const encoded = encodeURIComponent(`POZVONI_MNE_${phone}`);
     window.location.href = `https://t.me/WAYMORR_BOT?start=${encoded}`;
   });
 
@@ -148,6 +149,15 @@
 
     submitBtn.disabled = digits.length !== 10;
   });
+
+  // Проверка якоря при загрузке страницы
+  window.addEventListener("DOMContentLoaded", () => {
+    if (window.location.hash === "#call") {
+      callOrderBtn.click();
+    }
+  });
+</script>
+
 </script>
 
   
