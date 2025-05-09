@@ -89,7 +89,7 @@
 
     const { data, error } = await supabase
       .from("users")
-      .select("nombe_tel")
+      .select("nomber_tel")
       .eq("telegram_id", telegram_id)
       .single();
 
@@ -136,7 +136,7 @@
       const { error } = await supabase
         .from("users")
         .upsert(
-          { telegram_id, nombe_tel: fullPhone },
+          { telegram_id, nomber_tel: fullPhone },
           { onConflict: ['telegram_id'] }
         );
       if (error) {
