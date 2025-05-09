@@ -93,13 +93,13 @@
       .eq("telegram_id", telegram_id)
       .single();
 
-    if (error) {
+    if (error && error.code !== 'PGRST116') {
       console.error("Supabase error:", error);
       return;
     }
 
-    if (data && data.nombe_tel) {
-      const encoded = encodeURIComponent(`POZVONI_MNE_${data.nombe_tel}`);
+    if (data && data.nomber_tel) {
+      const encoded = encodeURIComponent(`POZVONI_MNE_${data.nomber_tel}`);
       tg.openTelegramLink(`https://t.me/WAYMORR_BOT?start=${encoded}`);
     } else {
       modalOverlay.classList.remove("hidden");
@@ -119,7 +119,6 @@
   submitBtn.addEventListener("click", async () => {
     let phone = userPhoneInput.value.trim().replace(/[^0-9]/g, "");
     if (phone.startsWith("7")) phone = phone.slice(1);
-
     const fullPhone = `+7${phone}`;
 
     if (!/^[0-9]{10}$/.test(phone)) {
@@ -129,18 +128,28 @@
 
     const tg = window.Telegram.WebApp;
     const telegram_id = tg.initDataUnsafe?.user?.id;
-
     if (!telegram_id) return;
 
     if (document.getElementById("savePhone").checked) {
-      const { error } = await supabase
+      const { data: existing, error: selectError } = await supabase
         .from("users")
-        .upsert(
-          { telegram_id, nomber_tel: fullPhone },
-          { onConflict: ['telegram_id'] }
-        );
-      if (error) {
-        console.error("Ошибка при сохранении номера:", error);
+        .select("id")
+        .eq("telegram_id", telegram_id)
+        .single();
+
+      if (selectError && selectError.code !== 'PGRST116') {
+        console.error("Ошибка при проверке пользователя:", selectError);
+      } else if (existing) {
+        const { error: updateError } = await supabase
+          .from("users")
+          .update({ nomber_tel: fullPhone })
+          .eq("telegram_id", telegram_id);
+        if (updateError) console.error("Ошибка при обновлении:", updateError);
+      } else {
+        const { error: insertError } = await supabase
+          .from("users")
+          .insert([{ telegram_id, nomber_tel: fullPhone }]);
+        if (insertError) console.error("Ошибка при вставке:", insertError);
       }
     }
 
@@ -157,7 +166,6 @@
       formatted = `${digits.slice(0,3)}-${digits.slice(3,6)}`;
     }
     e.target.value = formatted;
-
     submitBtn.disabled = digits.length !== 10;
   });
 
