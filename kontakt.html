@@ -49,119 +49,102 @@
   </div>
   
 
-  <!-- Модальное окно -->
-  <div id="modalOverlay" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
-    <div class="bg-[#E2E2E2] w-full h-[140px] p-4">
-      <h2 class="text-base font-semibold mb-2">Введите номер телефона</h2>
-      <div class="flex items-center space-x-2 mb-2">
-        <select id="countryCode" class="w-1/4 px-2 py-1 border text-sm">
-          <option value="+7">🇷🇺 +7</option>
-          <option value="+375">🇧🇾 +375</option>
-          <option value="+380">🇺🇦 +380</option>
-          <option value="+996">🇰🇬 +996</option>
-        </select>
-        <input type="tel" id="userPhone" class="w-full mb-3 px-3 py-2 border" placeholder="999-999-99-99" inputmode="numeric" pattern="[0-9]*">
-      </div>
-      <div class="flex items-center mb-2">
-        <input type="checkbox" id="savePhone" class="mr-2">
-        <span class="text-sm">Сохранить номер</span>
-      </div>
-      <div class="flex justify-between space-x-2">
-        <button id="cancelBtn" class="bg-[#2511A8] text-white px-4 py-1 w-1/2 text-sm">Отменить</button>
-        <button id="submitBtn" class="bg-[#2511A8] text-white px-4 py-1 w-1/2 text-sm">Отправить</button>
-      </div>
+<!-- Модальное окно -->
+<div id="modalOverlay" class="fixed top-0 left-0 w-full h-[140px] bg-black bg-opacity-50 z-50 hidden">
+  <div class="bg-[#E2E2E2] w-full h-full p-4 box-border">
+    <h2 class="text-base font-semibold mb-2">Введите номер телефона</h2>
+    <div class="flex items-center space-x-2 mb-2">
+      <span class="text-lg font-bold">+7</span>
+      <input type="tel" id="userPhone" class="w-full px-2 py-1 border text-sm" placeholder="999-222-55-77">
+    </div>
+    <div class="flex items-center mb-2">
+      <input type="checkbox" id="savePhone" class="mr-2">
+      <span class="text-sm">Сохранить номер</span>
+    </div>
+    <div class="flex justify-between space-x-2">
+      <button id="cancelBtn" class="bg-[#2511A8] text-white px-4 py-1 w-1/2 text-sm rounded-none">Отменить</button>
+      <button id="submitBtn" class="bg-[#2511A8] text-white px-4 py-1 w-1/2 text-sm rounded-none">Отправить</button>
     </div>
   </div>
-  
-  <script type="module">
-    import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
-  
-    const supabase = createClient(
-      "https://yiprwrgmyqlkdmhgulmc.supabase.co",
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlpcHJ3cmdteXFsa2RtaGd1bG1jIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ2NTI0NjgsImV4cCI6MjA2MDIyODQ2OH0.lfiTfr5ukGDEVuwq-X9U2kWs3nEZrp3N443HT5AkbfI"
-    );
-  
-    const callOrderBtn = document.getElementById("callOrderBtn");
-    const modalOverlay = document.getElementById("modalOverlay");
-    const cancelBtn = document.getElementById("cancelBtn");
-    const submitBtn = document.getElementById("submitBtn");
-  
-    async function checkAndSend() {
-      const tg = window.Telegram.WebApp;
-      const telegram_id = tg.initDataUnsafe?.user?.id;
-  
-      if (!telegram_id) return;
-  
-      const { data } = await supabase
-        .from("users")
-        .select("nombe_tel")
-        .eq("telegram_id", telegram_id)
-        .single();
-  
-      if (data && data.nombe_tel) {
-        const encoded = encodeURIComponent(`POZVONI_MNE_${data.nombe_tel}`);
-        window.location.href = `https://t.me/WAYMORR_BOT?start=${encoded}`;
-      } else {
-        modalOverlay.classList.remove("hidden");
-      }
-    }
-  
-    callOrderBtn.addEventListener("click", (e) => {
-      e.preventDefault();
-      checkAndSend();
-    });
-  
-    cancelBtn.addEventListener("click", () => {
-      modalOverlay.classList.add("hidden");
-    });
-  
-    submitBtn.addEventListener("click", async () => {
-      const phone = document.getElementById("userPhone").value.trim();
-      const code = document.getElementById("countryCode").value;
-      const save = document.getElementById("savePhone").checked;
-      const fullPhone = `${code}${phone}`;
-  
-      const tg = window.Telegram.WebApp;
-      const telegram_id = tg.initDataUnsafe?.user?.id;
-  
-      if (!telegram_id) return;
-  
-      if (save) {
-        await supabase
-          .from("users")
-          .upsert({ telegram_id, nombe_tel: fullPhone }, { onConflict: ['telegram_id'] });
-      }
-  
-      const encoded = encodeURIComponent(`POZVONI_MNE_${fullPhone}`);
+</div>
+
+<script type="module">
+  import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
+
+  const supabase = createClient(
+    "https://yiprwrgmyqlkdmhgulmc.supabase.co",
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlpcHJ3cmdteXFsa2RtaGd1bG1jIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ2NTI0NjgsImV4cCI6MjA2MDIyODQ2OH0.lfiTfr5ukGDEVuwq-X9U2kWs3nEZrp3N443HT5AkbfI"
+  );
+
+  const callOrderBtn = document.getElementById("callOrderBtn");
+  const modalOverlay = document.getElementById("modalOverlay");
+  const cancelBtn = document.getElementById("cancelBtn");
+  const submitBtn = document.getElementById("submitBtn");
+
+  async function checkAndSend() {
+    const tg = window.Telegram.WebApp;
+    const telegram_id = tg.initDataUnsafe?.user?.id;
+
+    if (!telegram_id) return;
+
+    const { data } = await supabase
+      .from("users")
+      .select("nombe_tel")
+      .eq("telegram_id", telegram_id)
+      .single();
+
+    if (data && data.nombe_tel) {
+      const encoded = encodeURIComponent(`POZVONI_MNE_${data.nombe_tel}`);
       window.location.href = `https://t.me/WAYMORR_BOT?start=${encoded}`;
-    });
+    } else {
+      modalOverlay.classList.remove("hidden");
+    }
+  }
 
-    function formatPhoneInput(input) {
-    const digits = input.replace(/\D/g, "").slice(0, 10); // максимум 10 цифр
-    const parts = [];
+  callOrderBtn.addEventListener("click", (e) => {
+    e.preventDefault();
+    checkAndSend();
+  });
 
-    if (digits.length > 0) parts.push(digits.slice(0, 3));
-    if (digits.length > 3) parts.push(digits.slice(3, 6));
-    if (digits.length > 6) parts.push(digits.slice(6, 8));
-    if (digits.length > 8) parts.push(digits.slice(8, 10));
+  cancelBtn.addEventListener("click", () => {
+    modalOverlay.classList.add("hidden");
+  });
 
-    return parts.join("-");
+  submitBtn.addEventListener("click", async () => {
+    const phone = document.getElementById("userPhone").value.trim();
+    const fullPhone = `+7${phone}`;
+    const save = document.getElementById("savePhone").checked;
+
+    const tg = window.Telegram.WebApp;
+    const telegram_id = tg.initDataUnsafe?.user?.id;
+
+    if (!telegram_id) return;
+
+    if (save) {
+      await supabase
+        .from("users")
+        .upsert({ telegram_id, nombe_tel: fullPhone }, { onConflict: ['telegram_id'] });
     }
 
-    const userPhoneInput = document.getElementById("userPhone");
+    const encoded = encodeURIComponent(`POZVONI_MNE_${fullPhone}`);
+    window.location.href = `https://t.me/WAYMORR_BOT?start=${encoded}`;
+  });
 
-    userPhoneInput.addEventListener("input", (e) => {
-    const cursorPosition = e.target.selectionStart;
-    const rawValue = e.target.value;
-    const formatted = formatPhoneInput(rawValue);
+  // Автоформат номера
+  const userPhoneInput = document.getElementById("userPhone");
 
+  userPhoneInput.addEventListener("input", (e) => {
+    const digits = e.target.value.replace(/\D/g, "").slice(0, 10);
+    let formatted = digits;
+    if (digits.length > 6) {
+      formatted = `${digits.slice(0,3)}-${digits.slice(3,6)}-${digits.slice(6,8)}-${digits.slice(8,10)}`;
+    } else if (digits.length > 3) {
+      formatted = `${digits.slice(0,3)}-${digits.slice(3,6)}`;
+    }
     e.target.value = formatted;
+  });
+</script>
 
-    // Восстановление позиции курсора — необязательно, но улучшает UX
-    const diff = formatted.length - rawValue.length;
-    e.target.setSelectionRange(cursorPosition + diff, cursorPosition + diff);
-    });
-  </script>
   
   
   <script>
