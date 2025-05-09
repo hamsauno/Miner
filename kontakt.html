@@ -89,10 +89,10 @@
     if (!telegram_id) return;
 
     // Проверяем, есть ли у пользователя сохранённый номер
-    const { data, error } = await supabase
+    const { data: existing, error: selectError } = await supabase
       .from("users")
-      .select("nomber_tel")
-      .eq("telegram_id", telegram_id)
+      .select("nomber_tel") // или "*" если нужно больше данных
+      .eq("telegram_id", telegram_id.toString()) // безопасно даже если это bigint
       .single();
 
     if (error && error.code !== 'PGRST116') {
