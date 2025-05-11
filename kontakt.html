@@ -71,68 +71,86 @@
     </div>
   </div>
   
-  <script>
-    const callOrderBtn = document.getElementById('callOrderBtn');
-    const modalOverlay = document.getElementById('modalOverlay');
-    const cancelBtn = document.getElementById('cancelBtn');
-    const submitBtn = document.getElementById('submitBtn');
-    const userPhone = document.getElementById('userPhone');
-  
-    // Показать модальное окно
-    callOrderBtn.addEventListener('click', (e) => {
-      e.preventDefault();
-      modalOverlay.classList.remove('hidden');
-      userPhone.focus();
-      console.log('Модальное окно открыто');
-    });
-  
-    // Закрыть окно
-    cancelBtn.addEventListener('click', () => {
-      modalOverlay.classList.add('hidden');
-      console.log('Модальное окно закрыто пользователем (Отмена)');
-      userPhone.value = '';
-    });
-  
-    // Маска номера
-    userPhone.addEventListener('input', (e) => {
-      let value = e.target.value.replace(/\D/g, '');
-      if (value.length > 10) value = value.slice(0, 10);
-  
-      let formatted = '';
-      if (value.length > 6) {
-        formatted = value.slice(0, 3) + '-' + value.slice(3, 6) + '-' + value.slice(6);
-      } else if (value.length > 3) {
-        formatted = value.slice(0, 3) + '-' + value.slice(3);
-      } else {
-        formatted = value;
+<script>
+  const callOrderBtn = document.getElementById('callOrderBtn');
+  const modalOverlay = document.getElementById('modalOverlay');
+  const cancelBtn = document.getElementById('cancelBtn');
+  const submitBtn = document.getElementById('submitBtn');
+  const userPhone = document.getElementById('userPhone');
+  const manualLink = document.getElementById('manualLink'); // Ссылка для fallback
+
+  // Показать модальное окно
+  callOrderBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    modalOverlay.classList.remove('hidden');
+    userPhone.focus();
+    console.log('Модальное окно открыто');
+  });
+
+  // Закрыть окно
+  cancelBtn.addEventListener('click', () => {
+    modalOverlay.classList.add('hidden');
+    userPhone.value = '';
+    manualLink.classList.add('hidden'); // Скрыть ссылку fallback при отмене
+    console.log('Модальное окно закрыто пользователем (Отмена)');
+  });
+
+  // Маска номера
+  userPhone.addEventListener('input', (e) => {
+    let value = e.target.value.replace(/\D/g, '');
+    if (value.length > 10) value = value.slice(0, 10);
+
+    let formatted = '';
+    if (value.length > 6) {
+      formatted = value.slice(0, 3) + '-' + value.slice(3, 6) + '-' + value.slice(6);
+    } else if (value.length > 3) {
+      formatted = value.slice(0, 3) + '-' + value.slice(3);
+    } else {
+      formatted = value;
+    }
+
+    e.target.value = formatted;
+  });
+
+  // Отправка номера
+  submitBtn.addEventListener('click', () => {
+    const raw = userPhone.value.replace(/\D/g, '');
+    if (raw.length === 10) {
+      const message = `POZVONI_MNE_${raw}`;
+      const url = `https://t.me/WAYMORR_BOT?start=${message}`;
+      console.log('Отправка сообщения:', message);
+      console.log('Переход по ссылке:', url);
+
+      // Попытка открыть через Telegram WebApp API
+      if (window.Telegram && Telegram.WebApp) {
+        Telegram.WebApp.openTelegramLink(url);
+        return;
       }
-  
-      e.target.value = formatted;
-    });
-  
-    // Отправка номера
-    submitBtn.addEventListener('click', () => {
-      const raw = userPhone.value.replace(/\D/g, '');
-      if (raw.length === 10) {
-        const message = `POZVONI_MNE_${raw}`;
-        const url = `https://t.me/WAYMORR_BOT?start=${message}`;
-        console.log('Отправка сообщения:', message);
-        console.log('Переход по ссылке:', url);
-        window.location.href = url;
-      } else {
-        console.warn('Неверный номер телефона. Ожидается 10 цифр.');
-        alert('Введите корректный номер телефона (10 цифр).');
+
+      // Попытка через обычное окно
+      try {
+        const win = window.open(url, '_blank');
+        if (!win || win.closed || typeof win.closed === 'undefined') {
+          throw new Error('Popup заблокирован');
+        }
+      } catch (err) {
+        console.warn('Не удалось открыть ссылку автоматически. Показываем ссылку вручную.');
+        manualLink.href = url;
+        manualLink.classList.remove('hidden');
       }
-    });
-  
-    // Прокрутка, чтобы инпут был над клавиатурой
-    userPhone.addEventListener('focus', () => {
-      setTimeout(() => {
-        userPhone.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        console.log('Фокус на поле ввода телефона');
-      }, 300);
-    });
-  </script>
+    } else {
+      alert('Введите корректный номер телефона (10 цифр).');
+    }
+  });
+
+  // Прокрутка к полю ввода
+  userPhone.addEventListener('focus', () => {
+    setTimeout(() => {
+      userPhone.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      console.log('Фокус на поле ввода телефона');
+    }, 300);
+  });
+</script>
 
 
   
