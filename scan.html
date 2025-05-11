@@ -1,10 +1,330 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-      
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="css/bg.css"> <style>
+    html, body {
+      overscroll-behavior-y: none;
+      touch-action: pan-y;
+    }
+    .model-container {
+      background-color: #000000;
+      overflow: hidden;
+      transition: max-height 0.5s ease, opacity 0.5s ease;
+    }
+    .model-container.hidden {
+      max-height: 0;
+      opacity: 0;
+      padding-top: 0;
+      padding-bottom: 0;
+      margin-top: 0;
+      margin-bottom: 0;
+    }
+    .model-container.visible {
+      max-height: 2500px;
+      opacity: 1;
+    }
+    .item {
+      padding: 10px;
+      color: white;
+    }
+    .conditional-btn { /* Base style for new toggle buttons */
+        font-size: 10px;
+        font-weight: 600;
+        padding: 5px 10px;
+        border-radius: 0.25rem;
+        margin: 2px;
+        border: 1px solid transparent;
+        transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+    }
+  </style>
 </head>
-<body>
+<body class="text-black font-[Arial] h-screen overflow-hidden">
+
+  <div class="fixed top-0 left-0 w-full z-50 bg-[#000000] shadow h-[60px]">
+    <div class="flex h-full" id="type-buttons">
+      <button class="type-btn w-1/4 h-full bg-[#000000] text-white font-semibold text-[11px] flex items-center justify-center uppercase" data-type="Наличие">Наличие</button>
+      <button class="type-btn w-1/4 h-full bg-[#000000] text-white font-semibold text-[11px] flex items-center justify-center uppercase" data-type="В пути">В пути</button>
+      <button class="type-btn w-1/4 h-full bg-[#000000] text-white font-semibold text-[11px] flex items-center justify-center uppercase" data-type="Предзаказ">Предзаказ</button>
+      <button class="type-btn w-1/4 h-full bg-[#000000] text-white font-semibold text-[11px] flex items-center justify-center uppercase" data-type="БУ">Б/У</button>
+    </div>
+  </div>
+
+    <div id="content" class="pt-[60px] max-h-screen overflow-y-auto">
+      <div id="models-container" class="max-w-screen-xl mx-auto px-2 sm:px-3 space-y-2 pt-4 pb-4"> </div>
+    </div>
+
+    <script>
+      const typeButtons = document.querySelectorAll('.type-btn');
+      const modelsContainer = document.getElementById('models-container');
+      let priceUSDT = 0;
+      let allData = {};
+      let openManufacturer = null;
+      let currentType = '';
+
+      // --- Button Style Definitions ---
+      const commonActiveClasses = ['bg-[#E2E2E2]', 'text-black', 'border-gray-400'];
+      const commonInactiveBaseClasses = ['text-white'];
+
+      // For NDS and TD buttons (now identical inactive styles)
+      const ndsAndTdButtonInactiveClasses = ['bg-[#2511A8]', ...commonInactiveBaseClasses];
 
 
+      fetch('https://hamsauno.github.io/Miner/kursBTC.txt')
+        .then(res => res.text())
+        .then(text => {
+          const lines = text.split('\n');
+          if (lines.length > 1 && lines[1].trim() !== "") {
+            priceUSDT = parseFloat(lines[1].trim());
+          } else {
+            priceUSDT = 1; // Fallback
+            console.warn("kursBTC.txt: USDT price not found or invalid, using fallback 1.");
+          }
+          loadAllData();
+        })
+        .catch(error => {
+            console.error("Error fetching kursBTC.txt:", error);
+            priceUSDT = 1; // Fallback
+            loadAllData();
+        });
+
+      function loadAllData() {
+        fetch('https://hamsauno.github.io/Miner/json/data.json')
+          .then(res => res.json())
+          .then(data => {
+            allData = data;
+            // NO auto-click on load, page starts empty
+            // if (typeButtons.length > 0) {
+            //     typeButtons[0].click();
+            // }
+          })
+          .catch(error => console.error("Error fetching data.json:", error));
+      }
+
+      typeButtons.forEach(button => {
+        button.addEventListener('click', () => {
+          typeButtons.forEach(btn => {
+            btn.classList.remove('bg-[#FFFFFF]', 'text-black');
+            btn.classList.add('bg-[#000000]', 'text-white');
+          });
+          button.classList.remove('bg-[#000000]', 'text-white');
+          button.classList.add('bg-[#FFFFFF]', 'text-black');
+
+          modelsContainer.innerHTML = '';
+          openManufacturer = null;
+          currentType = button.dataset.type;
+          showManufacturers(currentType);
+        });
+      });
+
+      function applyButtonStyles(button, isActive, activeClasses, inactiveClasses) {
+        const classesToRemove = isActive ? inactiveClasses : activeClasses;
+        const classesToAdd = isActive ? activeClasses : inactiveClasses;
+        
+        classesToRemove.forEach(c => button.classList.remove(c));
+        classesToAdd.forEach(c => button.classList.add(c));
+        button.dataset.active = isActive ? "true" : "false";
+      }
+
+      function createToggleButton(text, groupName, value, isDefaultActive, activeClasses, inactiveClasses, clickCallback) {
+          const btn = document.createElement('button');
+          btn.textContent = text;
+          btn.className = "conditional-btn"; // Base class
+          btn.dataset.group = groupName;
+          btn.dataset.value = value;
+          applyButtonStyles(btn, isDefaultActive, activeClasses, inactiveClasses);
+          btn.addEventListener('click', (event) => {
+              const currentButton = event.target;
+              const manufacturerBlock = currentButton.closest('.manufacturer-block');
+              if (!manufacturerBlock) return;
+
+              manufacturerBlock.querySelectorAll(`button[data-group="${groupName}"]`).forEach(b => {
+                  if (b !== currentButton) {
+                      applyButtonStyles(b, false, activeClasses, inactiveClasses);
+                  }
+              });
+              applyButtonStyles(currentButton, true, activeClasses, inactiveClasses);
+              
+              if (clickCallback) clickCallback(manufacturerBlock);
+          });
+          return btn;
+      }
+      
+      function getPriceForModel(item, itemCurrentType, sNdsIsActive, tdIsActiveRF, currentPriceUSDT) {
+          let basePriceBeforeUSDT;
+          let sourceField = "Цена";
+
+          if (itemCurrentType === "Предзаказ") {
+              if (tdIsActiveRF) {
+                  sourceField = sNdsIsActive ? "Цена с ГТД РФ и НДС" : "Цена ГТД РФ";
+                  basePriceBeforeUSDT = parseFloat(item[sourceField]);
+              } else {
+                  sourceField = "Цена";
+                  basePriceBeforeUSDT = parseFloat(item[sourceField]);
+                  if (sNdsIsActive) {
+                      basePriceBeforeUSDT *= 1.2;
+                  }
+              }
+          } else {
+              sourceField = "Цена";
+              basePriceBeforeUSDT = parseFloat(item[sourceField]);
+              if (sNdsIsActive) {
+                  basePriceBeforeUSDT *= 1.2;
+              }
+          }
+
+          if (isNaN(basePriceBeforeUSDT)) {
+              console.warn(`Price not a number for item ${item["Модель"]} using field ${sourceField}. Value: ${item[sourceField]}`);
+              if (item["Цена"] && !isNaN(parseFloat(item["Цена"]))) return `${parseFloat(item["Цена"]).toLocaleString('ru-RU')} (исходная, ошибка)`;
+              return "Цена не указана";
+          }
+          if (currentPriceUSDT <= 0 || isNaN(currentPriceUSDT)) {
+               console.warn(`Invalid priceUSDT: ${currentPriceUSDT}. Displaying price before USDT conversion.`);
+               return `${basePriceBeforeUSDT.toLocaleString('ru-RU')} (без USDT)`;
+          }
+
+          const finalPriceInRUB = Math.ceil((basePriceBeforeUSDT * currentPriceUSDT) / 100) * 100;
+          return `${finalPriceInRUB.toLocaleString('ru-RU')} ₽`;
+      }
+
+      function updateAllModelPricesInBlock(manufacturerBlockElement, itemsData, itemCurrentType, currentPriceUSDTVal) {
+          const ndsActiveButton = manufacturerBlockElement.querySelector('button[data-group="nds"][data-active="true"]');
+          const sNdsActive = ndsActiveButton && ndsActiveButton.dataset.value === 's_nds';
+
+          let tdRfActive = false;
+          if (itemCurrentType === "Предзаказ") {
+              const tdActiveButton = manufacturerBlockElement.querySelector('button[data-group="td"][data-active="true"]');
+              tdRfActive = tdActiveButton && tdActiveButton.dataset.value === 'rf';
+          }
+
+          const modelWrappers = manufacturerBlockElement.querySelectorAll('.model-item-row');
+          modelWrappers.forEach(modelWrapper => {
+              const itemIndex = parseInt(modelWrapper.dataset.itemIndex, 10);
+              if (itemIndex >= 0 && itemIndex < itemsData.length) {
+                  const item = itemsData[itemIndex];
+                  const priceDiv = modelWrapper.querySelector('.model-price');
+                  if (item && priceDiv) {
+                      const newPriceText = getPriceForModel(item, itemCurrentType, sNdsActive, tdRfActive, currentPriceUSDTVal);
+                      priceDiv.textContent = newPriceText;
+                  }
+              }
+          });
+      }
+
+      function showManufacturers(type) {
+        modelsContainer.innerHTML = '';
+        const dataForType = allData[type];
+        if (!dataForType) return;
+
+        const manufacturers = ["Antminer", "Whatsminer", "Elphapex", "Avalon"];
+
+        manufacturers.forEach(manufacturerName => {
+          const manufacturerData = dataForType.filter(item => item["Производитель"] === manufacturerName);
+
+          const block = document.createElement('div');
+          block.className = "manufacturer-block";
+
+          const manufacturerButton = document.createElement('button');
+          manufacturerButton.className = "bg-[#2511A8] text-white font-bold py-2 px-4 w-full text-left hover:opacity-90";
+          manufacturerButton.textContent = manufacturerName;
+          block.appendChild(manufacturerButton);
+
+          const modelsDiv = document.createElement('div');
+          modelsDiv.className = "model-container hidden";
+          
+          const conditionalButtonsRow = document.createElement('div');
+          conditionalButtonsRow.className = "flex justify-between items-center p-2 flex-wrap";
+
+          const leftButtonContainer = document.createElement('div');
+          leftButtonContainer.className = "flex flex-wrap gap-1 items-center";
+
+          const rightButtonContainer = document.createElement('div');
+          rightButtonContainer.className = "flex flex-wrap gap-1 items-center";
+
+          const onNdsTdChange = (mBlock) => updateAllModelPricesInBlock(mBlock, manufacturerData, type, priceUSDT);
+
+          // NDS Buttons (use common active and ndsAndTdButtonInactiveClasses)
+          const btnBezNds = createToggleButton("Без НДС", "nds", "bez_nds", true, commonActiveClasses, ndsAndTdButtonInactiveClasses, onNdsTdChange);
+          const btnSNds = createToggleButton("С НДС", "nds", "s_nds", false, commonActiveClasses, ndsAndTdButtonInactiveClasses, onNdsTdChange);
+          leftButtonContainer.appendChild(btnBezNds);
+          leftButtonContainer.appendChild(btnSNds);
+          
+          conditionalButtonsRow.appendChild(leftButtonContainer);
+
+          if (type === "Предзаказ") {
+            // TD Buttons (use common active and ndsAndTdButtonInactiveClasses for identical styling)
+            const btnTdRb = createToggleButton("ТД РБ", "td", "rb", true, commonActiveClasses, ndsAndTdButtonInactiveClasses, onNdsTdChange);
+            const btnTdRf = createToggleButton("ТД РФ", "td", "rf", false, commonActiveClasses, ndsAndTdButtonInactiveClasses, onNdsTdChange);
+            rightButtonContainer.appendChild(btnTdRb);
+            rightButtonContainer.appendChild(btnTdRf);
+            conditionalButtonsRow.appendChild(rightButtonContainer);
+          }
+          
+          if (leftButtonContainer.hasChildNodes() || rightButtonContainer.hasChildNodes()) {
+            modelsDiv.appendChild(conditionalButtonsRow);
+          }
+
+          manufacturerData.forEach((item, index) => {
+            const modelWrapper = document.createElement('div');
+            modelWrapper.className = "model-item-row flex justify-between items-center px-4 py-2";
+            modelWrapper.style.backgroundColor = index % 2 === 0 ? "#000000" : "#151719";
+            modelWrapper.dataset.itemIndex = index;
+
+            const modelText = document.createElement('div');
+            modelText.className = "text-white text-left truncate pr-2";
+            modelText.textContent = `${item["Модель"] || "Неизвестно"} ${item["Хешрейт"] || ""} ${item["Ед. изм."] || ""}`;
+
+            const priceDiv = document.createElement('div');
+            priceDiv.className = "model-price text-white text-right whitespace-nowrap";
+            
+            const initialSNdsActive = false; // Default "Без НДС"
+            let initialTdRfActive = false; // Default "ТД РБ" for Предзаказ
+            priceDiv.textContent = getPriceForModel(item, type, initialSNdsActive, initialTdRfActive, priceUSDT);
+
+            const buyButton = document.createElement('button');
+            buyButton.className = "ml-2 flex-shrink-0";
+            buyButton.innerHTML = `<img src="img/buy.png" alt="Купить" class="w-6 h-6">`;
+            buyButton.addEventListener('click', (e) => {
+              e.stopPropagation();
+              const modelName = `${item["Модель"] || "Неизвестно"} ${item["Хешрейт"] || ""}`;
+              const safeMessage = modelName.replace(/[^\w\s]/gi, '').replace(/\s+/g, '_');
+              const telegramLink = `https://t.me/WAYMORR_BOT?start=${safeMessage}`;
+              window.open(telegramLink, '_blank');
+            });
+
+            const rightSection = document.createElement('div');
+            rightSection.className = "flex items-center gap-2";
+            rightSection.appendChild(priceDiv);
+            rightSection.appendChild(buyButton);
+
+            modelWrapper.appendChild(modelText);
+            modelWrapper.appendChild(rightSection);
+            modelsDiv.appendChild(modelWrapper);
+          });
+          
+          block.appendChild(modelsDiv);
+
+          manufacturerButton.addEventListener('click', () => {
+            if (openManufacturer === modelsDiv) {
+              modelsDiv.classList.toggle('visible');
+              modelsDiv.classList.toggle('hidden');
+              openManufacturer = modelsDiv.classList.contains('visible') ? modelsDiv : null;
+            } else {
+              if (openManufacturer) {
+                openManufacturer.classList.remove('visible');
+                openManufacturer.classList.add('hidden');
+              }
+              modelsDiv.classList.remove('hidden');
+              modelsDiv.classList.add('visible');
+              openManufacturer = modelsDiv;
+            }
+          });
+          modelsContainer.appendChild(block);
+        });
+      }
+    </script>
 </body>
 </html>
