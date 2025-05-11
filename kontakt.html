@@ -41,129 +41,98 @@
   
 <!-- Кнопка "Заказать звонок" -->
 <div class="w-full text-center">
-  <a id="callOrderBtn"
-     href="#"
-     class="mt-2 block text-center bg-[#2511A8] text-white text-base font-semibold py-2 w-full">
-    Заказать звонок
-  </a>
-</div>
-
-<!-- Модальное окно -->
-<div id="modalOverlay" class="fixed top-0 left-0 w-full h-[140px] bg-black bg-opacity-50 z-50 hidden">
-  <div class="bg-[#E2E2E2] w-full h-full px-4 pt-2 box-border">
-    <h2 class="text-sm font-semibold mb-1">Введите номер телефона</h2>
-    <div class="flex items-center space-x-2 mb-1">
-      <span class="text-lg font-bold">+7</span>
-      <input type="tel" id="userPhone" class="w-full px-2 py-1 border text-sm" placeholder="999-222-55-77">
-    </div>
-    <div class="flex items-center mb-1">
-      <input type="checkbox" id="savePhone" class="mr-2">
-      <span class="text-sm">Сохранить номер</span>
-    </div>
-    <div class="flex justify-between space-x-2">
-      <button id="cancelBtn" class="bg-[#2511A8] text-white px-4 py-1 w-1/2 text-sm rounded-none">Отменить</button>
-      <button id="submitBtn" class="bg-[#2511A8] text-white px-4 py-1 w-1/2 text-sm rounded-none" disabled>Отправить</button>
+    <a id="callOrderBtn"
+       href="#"
+       class="mt-2 block text-center bg-[#2511A8] text-white text-base font-semibold py-2 w-full">
+      Заказать звонок
+    </a>
+  </div>
+  
+  <!-- Модальное окно -->
+  <div id="modalOverlay" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden">
+    <div class="absolute bottom-0 left-0 w-full bg-[#E2E2E2] p-4 box-border rounded-t-lg">
+      <h2 class="text-base font-semibold mb-2">Введите номер телефона</h2>
+      <div class="flex items-center space-x-2 mb-2">
+        <span class="text-lg font-bold">+7</span>
+        <input type="tel"
+               inputmode="numeric"
+               id="userPhone"
+               class="w-full px-2 py-1 border text-sm rounded"
+               placeholder="999-222-55-77"
+               pattern="[0-9\-]*"
+               maxlength="13"
+               autocomplete="tel"
+               required />
+      </div>
+      <div class="flex justify-between space-x-2">
+        <button id="cancelBtn" class="bg-[#2511A8] text-white px-4 py-1 w-1/2 text-sm rounded">Отменить</button>
+        <button id="submitBtn" class="bg-[#2511A8] text-white px-4 py-1 w-1/2 text-sm rounded">Отправить</button>
+      </div>
     </div>
   </div>
-</div>
-
-<script type="module">
-import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
-
-const supabase = createClient(
-  "https://yiprwrgmyqlkdmhgulmc.supabase.co",
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlpcHJ3cmdteXFsa2RtaGd1bG1jIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ2NTI0NjgsImV4cCI6MjA2MDIyODQ2OH0.lfiTfr5ukGDEVuwq-X9U2kWs3nEZrp3N443HT5AkbfI"
-);
-
-document.addEventListener("DOMContentLoaded", async () => {
-  const tg = window.Telegram?.WebApp;
-  tg?.ready();
-
-  const user = tg?.initDataUnsafe?.user;
-  if (!user) {
-    alert("❗️ Откройте через Telegram.");
-    return;
-  }
-
-  const telegramId = user.id.toString();
-  const username = user.username || "";
-
-  const modal = document.getElementById("modalOverlay");
-  const phoneInput = document.getElementById("userPhone");
-  const saveCheckbox = document.getElementById("savePhone");
-  const submitBtn = document.getElementById("submitBtn");
-  const cancelBtn = document.getElementById("cancelBtn");
-
-  // Кнопка "Заказать звонок"
-  document.getElementById("callOrderBtn").addEventListener("click", (e) => {
-    e.preventDefault();
-    modal.classList.remove("hidden");
-  });
-
-  // Автоактивация кнопки "Отправить"
-  phoneInput.addEventListener("input", () => {
-    const digits = phoneInput.value.replace(/\D/g, "");
-    submitBtn.disabled = digits.length !== 10;
-  });
-
-  // Получаем телефон из БД, если есть
-  let savedPhone = "";
-  try {
-    const { data, error } = await supabase
-      .from("users")
-      .select("phone")
-      .eq("telegram_id", telegramId)
-      .single();
-
-    if (error) {
-      console.warn("Пользователь не найден:", error.message);
-      modal.classList.remove("hidden");
-    } else if (data?.phone) {
-      savedPhone = data.phone;
-      const msg = `POZVONI_MNE_${savedPhone}`;
-      tg.openTelegramLink(`https://t.me/WAYMORR_BOT?start=${msg}`);
-    } else {
-      modal.classList.remove("hidden");
-    }
-  } catch (err) {
-    console.error("Ошибка при получении телефона:", err);
-    modal.classList.remove("hidden");
-  }
-
-  cancelBtn.addEventListener("click", () => {
-    modal.classList.add("hidden");
-  });
-
-  submitBtn.addEventListener("click", async () => {
-    let phone = phoneInput.value.trim();
-    const normalizedPhone = phone.replace(/\D/g, "");
-
-    if (!/^\d{10}$/.test(normalizedPhone)) {
-      alert("Введите корректный номер (10 цифр после +7).");
-      return;
-    }
-
-    if (saveCheckbox.checked) {
-      const { error } = await supabase
-        .from("users")
-        .upsert({ telegram_id: telegramId, username, phone: normalizedPhone }, { onConflict: ['telegram_id'] });
-
-      if (error) {
-        console.error("Ошибка при сохранении телефона:", error.message);
+  
+  <script>
+    const callOrderBtn = document.getElementById('callOrderBtn');
+    const modalOverlay = document.getElementById('modalOverlay');
+    const cancelBtn = document.getElementById('cancelBtn');
+    const submitBtn = document.getElementById('submitBtn');
+    const userPhone = document.getElementById('userPhone');
+  
+    // Показать модальное окно
+    callOrderBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      modalOverlay.classList.remove('hidden');
+      userPhone.focus();
+      console.log('Модальное окно открыто');
+    });
+  
+    // Закрыть окно
+    cancelBtn.addEventListener('click', () => {
+      modalOverlay.classList.add('hidden');
+      console.log('Модальное окно закрыто пользователем (Отмена)');
+      userPhone.value = '';
+    });
+  
+    // Маска номера
+    userPhone.addEventListener('input', (e) => {
+      let value = e.target.value.replace(/\D/g, '');
+      if (value.length > 10) value = value.slice(0, 10);
+  
+      let formatted = '';
+      if (value.length > 6) {
+        formatted = value.slice(0, 3) + '-' + value.slice(3, 6) + '-' + value.slice(6);
+      } else if (value.length > 3) {
+        formatted = value.slice(0, 3) + '-' + value.slice(3);
       } else {
-        console.log("Телефон сохранён.");
+        formatted = value;
       }
-    }
-
-    const msg = `POZVONI_MNE_${normalizedPhone}`;
-    tg.openTelegramLink(`https://t.me/WAYMORR_BOT?start=${msg}`);
-  });
-});
-
-</script>
-
-
-
+  
+      e.target.value = formatted;
+    });
+  
+    // Отправка номера
+    submitBtn.addEventListener('click', () => {
+      const raw = userPhone.value.replace(/\D/g, '');
+      if (raw.length === 10) {
+        const message = `POZVONI_MNE_${raw}`;
+        const url = `https://t.me/WAYMORR_BOT?start=${message}`;
+        console.log('Отправка сообщения:', message);
+        console.log('Переход по ссылке:', url);
+        window.location.href = url;
+      } else {
+        console.warn('Неверный номер телефона. Ожидается 10 цифр.');
+        alert('Введите корректный номер телефона (10 цифр).');
+      }
+    });
+  
+    // Прокрутка, чтобы инпут был над клавиатурой
+    userPhone.addEventListener('focus', () => {
+      setTimeout(() => {
+        userPhone.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        console.log('Фокус на поле ввода телефона');
+      }, 300);
+    });
+  </script>
 
 
   
