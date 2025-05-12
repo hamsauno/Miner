@@ -8,22 +8,59 @@
 
 <title>Калькулятор доходности майнинга</title>
 <meta name="description" content="Удобный Telegram-калькулятор для расчета доходности ASIC-майнеров. Доход, прибыль, ROI, окупаемость — всё в одном месте.">
-
 <style>
   html, body {
-  overscroll-behavior-y: none; /* запрещает "отпружинивание" на iOS и Android */
-  touch-action: pan-y; /* безопасно включает вертикальный и горизонтальный скролл */
-}
+    overscroll-behavior-y: none; /* запрещает "отпружинивание" на iOS и Android */
+    touch-action: pan-y; /* безопасно включает вертикальный и горизонтальный скролл */
+  }
+  /* Ensure no rounded corners */
+  input, select {
+    border-radius: 0 !important;
+    -webkit-appearance: none; /* Remove default iOS styling */
+    -moz-appearance: none; /* Remove default Firefox styling */
+    appearance: none; /* Remove default styling */
+  }
+  /* Style for currency buttons */
+  .currency-btn {
+    border: none;
+    padding: 0.5rem; /* Adjust padding as needed */
+    margin: 0;
+    font-size: 0.75rem; /* text-xs */
+    font-weight: bold;
+    transition: background-color 0.3s, color 0.3s;
+    width: 50%; /* Make buttons take half the cell width */
+    line-height: 1; /* Adjust line height if needed */
+    height: 100%; /* Make buttons fill cell height */
+  }
+  .currency-btn.active {
+    background-color: #E2E2E2;
+    color: black;
+  }
+  .currency-btn.inactive {
+    background-color: #2511A8;
+    color: white;
+  }
+  .currency-btn:hover {
+    filter: brightness(110%);
+  }
+  /* Remove spinner buttons from number inputs */
+  input[type=number]::-webkit-inner-spin-button,
+  input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
 </style>
 
 </head>
-<body> <div id="headerSection" class="w-full bg-[#000000] text-white shadow-xl p-5 mb-[3px]">
+<body>
+   <div id="headerSection" class="w-full bg-[#000000] text-white shadow-xl p-5 mb-[3px]">
       <div class="form-content space-y-2">
          <div class="flex gap-3">
            <div class="w-1/2">
              <label for="algorithmSelect" class="block text-sm font-medium mb-1">Алгоритм</label>
              <select id="algorithmSelect"
-               class="bg-[#E2E2E2] w-full px-2 py-1 border border-gray-400 text-black text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400">
+               class="bg-[#E2E2E2] w-full px-2 py-1 border border-gray-400 text-black text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400 rounded-none">
                <option value="SHA-256">SHA-256</option>
                <option value="Scrypt">SCRYPT</option>
              </select>
@@ -31,7 +68,7 @@
            <div class="w-1/2">
              <label for="manufacturerSelect" class="block text-sm font-medium mb-1">Производитель</label>
              <select id="manufacturerSelect"
-               class="bg-[#E2E2E2] w-full px-2 py-1 border border-gray-400 text-black text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400">
+               class="bg-[#E2E2E2] w-full px-2 py-1 border border-gray-400 text-black text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400 rounded-none">
                </select>
            </div>
          </div>
@@ -39,25 +76,25 @@
          <div>
            <label for="asicModel" class="block text-sm font-medium mb-1">Модель Оборудования</label>
            <select id="asicModel"
-             class="bg-[#E2E2E2] w-full px-2 py-1 border border-gray-400 text-black text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400">
+             class="bg-[#E2E2E2] w-full px-2 py-1 border border-gray-400 text-black text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400 rounded-none">
              </select>
          </div>
 
          <div class="flex gap-3">
            <div class="w-1/2">
              <label class="block text-sm font-medium mb-1">Хэшрейт</label>
-             <div class="bg-[#E2E2E2] px-2 py-1 text-sm text-black min-h-[28px]"> <span id="hashrate"></span> <span id="edprice"></span>
+             <div class="bg-[#E2E2E2] px-2 py-1 text-sm text-black min-h-[28px] rounded-none"> <span id="hashrate"></span> <span id="edprice"></span>
              </div>
            </div>
            <div class="w-1/2">
              <label class="block text-sm font-medium mb-1">Потребление</label>
-             <div class="bg-[#E2E2E2] px-2 py-1 text-sm text-black min-h-[28px]"> <span id="power"></span><span id="power_unit"></span> </div>
+             <div class="bg-[#E2E2E2] px-2 py-1 text-sm text-black min-h-[28px] rounded-none"> <span id="power"></span><span id="power_unit"></span> </div>
            </div>
          </div>
 
          <div class="flex gap-3">
            <div class="w-1/2">
-             <label for="electricityCost" class="block text-sm font-medium mb-1">Стоимость Электроэнергии</label>
+             <label for="electricityCost" class="block text-sm font-medium mb-1">Стоимость <br> Электроэнергии</label>
              <div class="relative">
                <input
                  type="number"
@@ -65,15 +102,15 @@
                  value="5"
                  inputmode="decimal"
                  step="any"
-                 class="bg-[#E2E2E2] w-full px-2 py-1 pr-6 border border-gray-400 text-black text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400">
+                 class="bg-[#E2E2E2] w-full px-2 py-1 pr-6 border border-gray-400 text-black text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400 rounded-none">
                <span class="absolute right-2 top-1/2 -translate-y-1/2 text-black text-xs">₽</span>
              </div>
            </div>
            <div class="w-1/2">
-             <label for="asicCost" class="block text-sm font-medium mb-1">Стоимость Оборудования</label>
+             <label for="asicCost" class="block text-sm font-medium mb-1">Стоимость <br> Оборудования</label>
              <div class="relative">
                <input type="number" id="asicCost" inputmode="numeric"
-                 class="bg-[#E2E2E2] w-full px-2 py-1 pr-6 border border-gray-400 text-black text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400"
+                 class="bg-[#E2E2E2] w-full px-2 py-1 pr-6 border border-gray-400 text-black text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400 rounded-none"
                  placeholder="Авто/Ручной ввод"> <span class="absolute right-2 top-1/2 -translate-y-1/2 text-black text-xs">₽</span>
              </div>
            </div>
@@ -88,82 +125,92 @@
          <input type="hidden" id="profitPerLTC">
          <input type="hidden" id="profitPerDOGE">
          <input type="hidden" id="profitPerBELL">
-      </div> <div class="button-container pt-2">
+      </div>
+      <div class="button-container pt-2">
         <button id="calculateBtn"
-          class="w-full text-white font-bold text-base py-2 px-4 transition duration-300 hover:brightness-110 shadow-md"
+          class="w-full text-white font-bold text-base py-2 px-4 transition duration-300 hover:brightness-110 shadow-md rounded-none"
           style="background-color: #2511A8;">
           Рассчитать
         </button>
+        <div id="notification" class="mt-2 p-2 text-center text-white bg-black hidden rounded-none">
+          Расчёт произведён
+        </div>
       </div>
-   </div> <div id="resultsContainer" class="w-full bg-[#E2E2E2] text-sm space-y-4 shadow-md px-4 pb-4 pt-4">
-    <div>
-      <div class="w-full h-5 relative overflow-hidden border" style="border-color: #2511A8;">
-        <div id="dailyProfit" class="absolute top-0 left-0 h-full transition-all duration-500" style="background-color: #2511A8;"></div>
-        <div id="dailyElectricityCost" class="absolute top-0 h-full transition-all duration-500" style="background-color: #E2E2E2;"></div>
-      </div>
+   </div>
 
-      <div class="mt-2 text-black flex justify-between">
+   <div id="resultsContainer" class="w-full bg-[#E2E2E2] text-sm space-y-4 shadow-md px-4 pb-4 pt-4 rounded-none">
+     <div>
+
+       <div class="w-full h-5 relative overflow-hidden border rounded-none" style="border-color: #2511A8;">
+         <div id="dailyProfitBar" class="absolute top-0 left-0 h-full transition-all duration-500" style="background-color: #2511A8;"></div>
+         <div id="dailyElectricityCostBar" class="absolute top-0 h-full transition-all duration-500" style="background-color: #CCCCCC;"></div> 
+       </div>
+       <div class="mt-1 text-xs text-black flex justify-between">
+         <div id="profitPercentageLabel">Прибыль: --%</div>
+         <div id="costPercentageLabel">Затраты: --%</div>
+       </div>
+     </div>
+
+     <div class="scroll-container w-full overflow-x-auto">
+       <table class="result-table w-full text-sm text-center border-collapse">
+         <thead>
+           <tr>
+             <th class="bg-black text-white p-0 w-24 align-middle"> 
+               <div class="flex justify-center items-center h-full"> 
+                 <button id="currencyUSD" class="currency-btn w-7 h-7 active">$</button>
+                 <button id="currencyRUB" class="currency-btn w-7 h-7 inactive">₽</button>
+               </div>
+             </th>
+             <th class="bg-black text-white p-2">День</th>
+             <th class="bg-black text-white p-2">Месяц</th>
+             <th class="bg-black text-white p-2">Год</th>
+           </tr>
+         </thead>
+         <tbody>
+           <tr>
+             <td class="bg-black text-white p-2 w-24">Доход</td>
+             <td class="bg-[#E2E2E2] text-black p-2">
+               <span class="text-[#2511A8] font-semibold" id="income">$ --.--</span>
+               <span class="text-[#2511A8] font-semibold hidden" id="income_rub">-- ₽</span>
+             </td>
+             <td class="bg-[#E2E2E2] text-black p-2">
+               <span class="text-[#2511A8] font-semibold" id="incomeMonth">$ --.--</span>
+               <span class="text-[#2511A8] font-semibold hidden" id="incomeMonth_rub">-- ₽</span>
+             </td>
+             <td class="bg-[#E2E2E2] text-black p-2">
+               <span class="text-[#2511A8] font-semibold" id="incomeYear">$ --.--</span>
+               <span class="text-[#2511A8] font-semibold hidden" id="incomeYear_rub">-- ₽</span>
+             </td>
+           </tr>
+           <tr>
+             <td class="bg-black text-white p-2 w-24">Прибыль</td>
+             <td class="bg-[#E2E2E2] text-black p-2">
+               <span class="text-[#2511A8] font-semibold" id="profit">$ --.--</span>
+               <span class="text-[#2511A8] font-semibold hidden" id="profit_rub">-- ₽</span>
+             </td>
+             <td class="bg-[#E2E2E2] text-black p-2">
+               <span class="text-[#2511A8] font-semibold" id="profitMonth">$ --.--</span>
+               <span class="text-[#2511A8] font-semibold hidden" id="profitMonth_rub">-- ₽</span>
+             </td>
+             <td class="bg-[#E2E2E2] text-black p-2">
+               <span class="text-[#2511A8] font-semibold" id="profitYear">$ --.--</span>
+               <span class="text-[#2511A8] font-semibold hidden" id="profitYear_rub">-- ₽</span>
+             </td>
+           </tr>
+         </tbody>
+       </table>
+     </div>
+     <div class="mt-4 text-black flex justify-between">
         <div>Окупаемость мес.: <span id="payback">—</span></div>
         <div>Годовой %: <span id="roi">—</span></div>
       </div>
-    </div>
-
-    <div class="scroll-container w-full overflow-x-auto">
-      <table class="result-table w-full text-sm text-center border-collapse">
-        <thead>
-          <tr>
-            <th class="bg-black text-white p-2 w-24">
-              <button id="toggleCurrency" class="w-full h-full bg-black text-white font-bold text-xs p-2 rounded-none hover:bg-gray-800 transition">
-                &lt; $ &gt;
-              </button>
-            </th>
-            <th class="bg-black text-white p-2">День</th>
-            <th class="bg-black text-white p-2">Месяц</th>
-            <th class="bg-black text-white p-2">Год</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td class="bg-black text-white p-2 w-24">Доход</td>
-            <td class="bg-[#E2E2E2] text-black p-2">
-              <span class="text-[#2511A8] font-semibold" id="income">$ --.--</span>
-              <span class="text-[#2511A8] font-semibold hidden" id="income_rub">-- ₽</span>
-            </td>
-            <td class="bg-[#E2E2E2] text-black p-2">
-              <span class="text-[#2511A8] font-semibold" id="incomeMonth">$ --.--</span>
-              <span class="text-[#2511A8] font-semibold hidden" id="incomeMonth_rub">-- ₽</span>
-            </td>
-            <td class="bg-[#E2E2E2] text-black p-2">
-              <span class="text-[#2511A8] font-semibold" id="incomeYear">$ --.--</span>
-              <span class="text-[#2511A8] font-semibold hidden" id="incomeYear_rub">-- ₽</span>
-            </td>
-          </tr>
-          <tr>
-            <td class="bg-black text-white p-2 w-24">Прибыль</td>
-            <td class="bg-[#E2E2E2] text-black p-2">
-              <span class="text-[#2511A8] font-semibold" id="profit">$ --.--</span>
-              <span class="text-[#2511A8] font-semibold hidden" id="profit_rub">-- ₽</span>
-            </td>
-            <td class="bg-[#E2E2E2] text-black p-2">
-              <span class="text-[#2511A8] font-semibold" id="profitMonth">$ --.--</span>
-              <span class="text-[#2511A8] font-semibold hidden" id="profitMonth_rub">-- ₽</span>
-            </td>
-            <td class="bg-[#E2E2E2] text-black p-2">
-              <span class="text-[#2511A8] font-semibold" id="profitYear">$ --.--</span>
-              <span class="text-[#2511A8] font-semibold hidden" id="profitYear_rub">-- ₽</span>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-      <div style="height: 1000px; background: #f0f0f0; margin-top: 20px; padding: 10px; border: 1px solid #ccc;">
-        Просто блок для увеличения высоты страницы и теста скролла.
-      </div>
-  </div> <script>
+   </div>
+  <script>
 let jsonData = [];
 let currentAlgorithm = "SHA-256";
 let dailyIncome = 0;
 let dailyProfitValue = 0;
+let dailyElectricityCostValue = 0; // Store electricity cost in USD
 let monthlyProfit = 0;
 let yearlyProfit = 0;
 let usdtPrice = 0; // Храним актуальный курс USDT
@@ -177,12 +224,13 @@ document.addEventListener("DOMContentLoaded", async () => {
     const manufacturerSelect = document.getElementById("manufacturerSelect");
     const asicModel = document.getElementById("asicModel");
     const calcBtn = document.getElementById("calculateBtn");
-    const toggleButton = document.getElementById('toggleCurrency');
+    const currencyUSD_Btn = document.getElementById('currencyUSD'); // New USD button
+    const currencyRUB_Btn = document.getElementById('currencyRUB'); // New RUB button
     const header = document.getElementById("headerSection");
     const resultsContainer = document.getElementById("resultsContainer"); // Контейнер с результатами
 
     // Проверка на существование критичных элементов
-    if (!algorithmSelect || !manufacturerSelect || !asicModel || !calcBtn || !toggleButton || !header || !resultsContainer) {
+    if (!algorithmSelect || !manufacturerSelect || !asicModel || !calcBtn || !currencyUSD_Btn || !currencyRUB_Btn || !header || !resultsContainer) {
         console.error("❌ Один или несколько критичных элементов DOM не найдены!");
         alert("Ошибка инициализации страницы. Некоторые элементы отсутствуют.");
         return; // Прерываем выполнение, если чего-то не хватает
@@ -195,9 +243,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     manufacturerSelect.addEventListener("change", updateModelList);
     asicModel.addEventListener("change", updateAsicSpecs);
     calcBtn.addEventListener("click", calculateProfit);
-    toggleButton.addEventListener('click', updateValues);
+    currencyUSD_Btn.addEventListener('click', () => setCurrency(true)); // Set to USD
+    currencyRUB_Btn.addEventListener('click', () => setCurrency(false)); // Set to RUB
 
-    
+
     // Загрузка данных и начальная инициализация
     try {
        await fetchData(); // Загружаем курс и данные profitPer...
@@ -456,6 +505,17 @@ function updateAsicSpecs() {
     }
 }
 
+function showNotification() {
+    const notification = document.getElementById('notification');
+    if (notification) {
+        notification.classList.remove('hidden');
+        // Optional: Hide after a few seconds
+        setTimeout(() => {
+            notification.classList.add('hidden');
+        }, 3000); // Hide after 3 seconds
+    }
+}
+
 
 function calculateProfit() {
     console.log("Начало расчета...");
@@ -488,8 +548,10 @@ function calculateProfit() {
         profitYearRubEl: document.getElementById("profitYear_rub"),
         roiEl: document.getElementById("roi"),
         paybackEl: document.getElementById("payback"),
-        incomeBar: document.getElementById("dailyProfit"),
-        electricityBar: document.getElementById("dailyElectricityCost")
+        profitBar: document.getElementById("dailyProfitBar"), // Updated ID
+        electricityBar: document.getElementById("dailyElectricityCostBar"), // Updated ID
+        profitPercentageLabel: document.getElementById("profitPercentageLabel"),
+        costPercentageLabel: document.getElementById("costPercentageLabel")
     };
 
     for (const key in elements) {
@@ -562,12 +624,12 @@ function calculateProfit() {
     // Расчет стоимости электричества в $
     // (Мощность_кВт * Стоимость_Руб_кВтч * 24 часа) / Курс_Руб_$
     const dailyElectricityCostRub = (values.power / 1000) * values.electricityCost * 24;
-    const dailyElectricityCostValue = dailyElectricityCostRub / values.currentUsdtPrice;
+    dailyElectricityCostValue = dailyElectricityCostRub / values.currentUsdtPrice; // Update global variable
     console.log(`Дневные расходы на электричество ($): ${dailyElectricityCostValue}`);
 
 
     // Расчет прибыли
-    dailyProfitValue = dailyIncome - dailyElectricityCostValue;
+    dailyProfitValue = dailyIncome - dailyElectricityCostValue; // Update global variable
     monthlyProfit = dailyProfitValue * 30.5; // Среднее кол-во дней в месяце
     yearlyProfit = dailyProfitValue * 365;
     console.log(`Дневная прибыль ($): ${dailyProfitValue}`);
@@ -581,107 +643,140 @@ function calculateProfit() {
 
 
     // --- Обновление интерфейса ---
-    const formatCurrency = (value, currency = "$", fractionDigits = 2) => {
-        if (isNaN(value) || !isFinite(value)) return currency === "$" ? "$ --.--" : "-- ₽";
-        // Округление до указанного числа знаков перед форматированием
-        const multiplier = Math.pow(10, fractionDigits);
-        const roundedValue = Math.round(value * multiplier) / multiplier;
-        return currency + roundedValue.toLocaleString('ru-RU', { minimumFractionDigits: fractionDigits, maximumFractionDigits: fractionDigits });
-    };
-     const formatCurrencyRub = (value, fractionDigits = 0) => {
-        if (isNaN(value) || !isFinite(value) || isNaN(values.currentUsdtPrice) || values.currentUsdtPrice <= 0) return "-- ₽";
-        const rubValue = value * values.currentUsdtPrice;
-         const multiplier = Math.pow(10, fractionDigits);
-        const roundedValue = Math.round(rubValue * multiplier) / multiplier;
-        return roundedValue.toLocaleString('ru-RU', { maximumFractionDigits: fractionDigits }) + " ₽";
-    };
-
-    // Обновление таблицы
-    elements.incomeEl.innerText           = formatCurrency(dailyIncome);
-    elements.incomeRubEl.innerText       = formatCurrencyRub(dailyIncome);
-    elements.profitEl.innerText           = formatCurrency(dailyProfitValue);
-    elements.profitRubEl.innerText       = formatCurrencyRub(dailyProfitValue);
-    elements.incomeMonthEl.innerText      = formatCurrency(dailyIncome * 30.5);
-    elements.incomeMonthRubEl.innerText  = formatCurrencyRub(dailyIncome * 30.5);
-    elements.incomeYearEl.innerText       = formatCurrency(dailyIncome * 365);
-    elements.incomeYearRubEl.innerText   = formatCurrencyRub(dailyIncome * 365);
-    elements.profitMonthEl.innerText      = formatCurrency(monthlyProfit);
-    elements.profitMonthRubEl.innerText  = formatCurrencyRub(monthlyProfit);
-    elements.profitYearEl.innerText       = formatCurrency(yearlyProfit);
-    elements.profitYearRubEl.innerText   = formatCurrencyRub(yearlyProfit);
+    updateTableValues(); // Call function to update table based on current currency
+    updateProgressBarAndLabels(elements); // Update progress bar and its labels
 
     // Обновление ROI и окупаемости
     elements.roiEl.innerText = isFinite(roi) ? roi.toFixed(1) : "∞"; // Оставим 1 знак после запятой
     elements.paybackEl.innerText = isFinite(payback) ? payback.toFixed(1) : "∞"; // Оставим 1 знак
 
-    // Обновление прогресс-бара
-    const incomeBar = elements.incomeBar;
-    const electricityBar = elements.electricityBar;
+    showNotification(); // Show the "Calculation complete" notification
 
-    if (dailyIncome > 0 && isFinite(dailyIncome) && isFinite(dailyElectricityCostValue)) {
-        let profitPercentage = Math.max(0, (dailyProfitValue / dailyIncome) * 100);
-        let electricityPercentage = Math.max(0, (dailyElectricityCostValue / dailyIncome) * 100);
-
-        // Корректировка, чтобы сумма не превышала 100% и обрабатываем убытки
-        if (dailyProfitValue <= 0) {
-            profitPercentage = 0;
-            electricityPercentage = 100; // Если прибыли нет, все расходы
-        } else {
-            // Убедимся, что сумма не больше 100
-             if (profitPercentage + electricityPercentage > 100.1) { // Небольшой допуск на погрешность
-                electricityPercentage = 100 - profitPercentage;
-             }
-        }
-         // Ограничиваем значения 0-100%
-        profitPercentage = Math.min(100, Math.max(0, profitPercentage));
-        electricityPercentage = Math.min(100, Math.max(0, electricityPercentage));
-
-
-        incomeBar.style.width = `${profitPercentage}%`;
-        incomeBar.style.backgroundColor = "#2511A8";
-
-        electricityBar.style.width = `${electricityPercentage}%`;
-        electricityBar.style.left = `${profitPercentage}%`;
-        electricityBar.style.backgroundColor = "#E2E2E2";
-    } else {
-        incomeBar.style.width = "0%";
-        electricityBar.style.width = "0%";
-        electricityBar.style.left = "0%";
-    }
-     console.log("Расчет завершен, интерфейс обновлен.");
+    console.log("Расчет завершен, интерфейс обновлен.");
 }
 
+function formatCurrency(value, currency = "$", fractionDigits = 2) {
+    if (isNaN(value) || !isFinite(value)) return currency === "$" ? "$ --.--" : "-- ₽";
+    const multiplier = Math.pow(10, fractionDigits);
+    const roundedValue = Math.round(value * multiplier) / multiplier;
+    return currency + roundedValue.toLocaleString('ru-RU', { minimumFractionDigits: fractionDigits, maximumFractionDigits: fractionDigits });
+};
+ function formatCurrencyRub(value, fractionDigits = 0) {
+    if (isNaN(value) || !isFinite(value) || isNaN(usdtPrice) || usdtPrice <= 0) return "-- ₽";
+    const rubValue = value * usdtPrice;
+     const multiplier = Math.pow(10, fractionDigits);
+    const roundedValue = Math.round(rubValue * multiplier) / multiplier;
+    return roundedValue.toLocaleString('ru-RU', { maximumFractionDigits: fractionDigits }) + " ₽";
+};
 
-function updateValues() {
-    // Переключение отображения валюты $ / ₽
+
+function updateTableValues() {
+    // Updates the table values based on the current currency (isUSD)
     const elementsToToggle = [
         "income", "incomeMonth", "incomeYear",
         "profit", "profitMonth", "profitYear"
     ];
-    const toggleButton = document.getElementById('toggleCurrency');
-    if (!toggleButton) return;
 
     elementsToToggle.forEach(id => {
         const usdEl = document.getElementById(id);
         const rubEl = document.getElementById(`${id}_rub`);
         if (usdEl && rubEl) {
-            if (isUSD) { // Если сейчас USD, переключаем на RUB
-                usdEl.classList.add("hidden");
-                rubEl.classList.remove("hidden");
-            } else { // Если сейчас RUB, переключаем на USD
+            // Update text content first (calculation might happen before toggle)
+            let valueUSD = 0;
+            if (id.startsWith("incomeMonth")) valueUSD = dailyIncome * 30.5;
+            else if (id.startsWith("incomeYear")) valueUSD = dailyIncome * 365;
+            else if (id.startsWith("income")) valueUSD = dailyIncome;
+            else if (id.startsWith("profitMonth")) valueUSD = monthlyProfit;
+            else if (id.startsWith("profitYear")) valueUSD = yearlyProfit;
+            else if (id.startsWith("profit")) valueUSD = dailyProfitValue;
+
+            usdEl.innerText = formatCurrency(valueUSD);
+            rubEl.innerText = formatCurrencyRub(valueUSD);
+
+            // Then toggle visibility
+            if (isUSD) {
                 usdEl.classList.remove("hidden");
                 rubEl.classList.add("hidden");
+            } else {
+                usdEl.classList.add("hidden");
+                rubEl.classList.remove("hidden");
             }
         } else {
             console.warn(`Элементы для переключения валюты ${id} / ${id}_rub не найдены.`);
         }
     });
+}
 
-    // Обновляем текст кнопки и состояние
-    isUSD = !isUSD; // Инвертируем состояние
-    toggleButton.innerHTML = isUSD ? "&lt; $ &gt;" : "&lt; ₽ &gt;";
+function setCurrency(setToUSD) {
+    // Sets the currency and updates buttons and table
+    if (isUSD === setToUSD) return; // No change needed
+
+    isUSD = setToUSD;
+    const usdBtn = document.getElementById('currencyUSD');
+    const rubBtn = document.getElementById('currencyRUB');
+
+    if (isUSD) {
+        usdBtn.classList.remove('inactive');
+        usdBtn.classList.add('active');
+        rubBtn.classList.remove('active');
+        rubBtn.classList.add('inactive');
+    } else {
+        usdBtn.classList.remove('active');
+        usdBtn.classList.add('inactive');
+        rubBtn.classList.remove('inactive');
+        rubBtn.classList.add('active');
+    }
+
+    updateTableValues(); // Update the table display
     console.log(`Валюта переключена на: ${isUSD ? 'USD' : 'RUB'}`);
 }
+
+function updateProgressBarAndLabels(elements) {
+    const profitBar = elements.profitBar;
+    const electricityBar = elements.electricityBar;
+    const profitLabel = elements.profitPercentageLabel;
+    const costLabel = elements.costPercentageLabel;
+
+    let profitPercentage = 0;
+    let electricityPercentage = 0;
+
+    if (dailyIncome > 0 && isFinite(dailyIncome) && isFinite(dailyElectricityCostValue)) {
+        profitPercentage = Math.max(0, (dailyProfitValue / dailyIncome) * 100);
+        electricityPercentage = Math.max(0, (dailyElectricityCostValue / dailyIncome) * 100);
+
+        // Correction logic
+        if (dailyProfitValue <= 0) {
+            profitPercentage = 0;
+            electricityPercentage = 100;
+        } else if (profitPercentage + electricityPercentage > 100.1) {
+             electricityPercentage = 100 - profitPercentage;
+        }
+
+        // Clamp values 0-100%
+        profitPercentage = Math.min(100, Math.max(0, profitPercentage));
+        electricityPercentage = Math.min(100, Math.max(0, electricityPercentage));
+
+        profitBar.style.width = `${profitPercentage.toFixed(1)}%`;
+        profitBar.style.backgroundColor = "#2511A8"; // Ensure correct color
+
+        electricityBar.style.width = `${electricityPercentage.toFixed(1)}%`;
+        electricityBar.style.left = `${profitPercentage.toFixed(1)}%`;
+        electricityBar.style.backgroundColor = "#FFFFFF"; // Ensure correct color
+
+        // Update percentage labels
+        profitLabel.textContent = `Прибыль: ${profitPercentage.toFixed(1)}%`;
+        costLabel.textContent = `Затраты: ${electricityPercentage.toFixed(1)}%`;
+
+    } else {
+        // Reset if income is zero or invalid
+        profitBar.style.width = "0%";
+        electricityBar.style.width = "0%";
+        electricityBar.style.left = "0%";
+        profitLabel.textContent = `Прибыль: --%`;
+        costLabel.textContent = `Затраты: --%`;
+    }
+}
+
 
   </script>
 </body>
