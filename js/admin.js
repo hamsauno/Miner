@@ -6,7 +6,7 @@
   const tg = window.Telegram.WebApp;
   const userId = tg.initDataUnsafe?.user?.id;
 
-  const admins = [1197645759, 626583205]; // замени на свой настоящий Telegram ID
+  const admins = [1197645759, 626583205, 437559267]; // замени на свой настоящий Telegram ID
   const isAdmin = admins.includes(userId);
 
   if (!isAdmin) {
