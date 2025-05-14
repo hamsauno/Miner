@@ -48,7 +48,7 @@
     </a>
   </div>
   
-  <!-- Модальное окно -->
+  <!--  окно -->
   <div id="modalOverlay" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden">
     <div class="absolute bottom-0 left-0 w-full bg-[#E2E2E2] p-4 box-border rounded-t-lg">
       <h2 class="text-base font-semibold mb-2">Введите номер телефона</h2>
@@ -78,9 +78,9 @@
   const cancelBtn = document.getElementById('cancelBtn');
   const submitBtn = document.getElementById('submitBtn');
   const userPhone = document.getElementById('userPhone');
-  const manualLink = document.getElementById('manualLink'); // Ссылка для fallback
+  const manualLink = document.getElementById('manualLink'); 
 
-  // Показать модальное окно
+  // Показат окно
   callOrderBtn.addEventListener('click', (e) => {
     e.preventDefault();
     modalOverlay.classList.remove('hidden');
@@ -122,7 +122,7 @@
       console.log('Отправка сообщения:', message);
       console.log('Переход по ссылке:', url);
 
-      // Попытка открыть через Telegram WebApp API
+    
       if (window.Telegram && Telegram.WebApp) {
         Telegram.WebApp.openTelegramLink(url);
         return;
