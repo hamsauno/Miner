@@ -31,7 +31,7 @@
       padding: 10px;
       color: white;
     }
-    .conditional-btn { /* Base style for new toggle buttons */
+    .conditional-btn {
         font-size: 10px;
         font-weight: 600;
         padding: 5px 10px;
@@ -65,11 +65,11 @@
       let openManufacturer = null;
       let currentType = '';
 
-      // --- Button Style Definitions ---
+    
       const commonActiveClasses = ['bg-[#E2E2E2]', 'text-black', 'border-gray-400'];
       const commonInactiveBaseClasses = ['text-white'];
 
-      // For NDS and TD buttons (now identical inactive styles)
+    
       const ndsAndTdButtonInactiveClasses = ['bg-[#2511A8]', ...commonInactiveBaseClasses];
 
 
@@ -80,14 +80,14 @@
           if (lines.length > 1 && lines[1].trim() !== "") {
             priceUSDT = parseFloat(lines[1].trim());
           } else {
-            priceUSDT = 1; // Fallback
+            priceUSDT = 1; 
             console.warn("kursBTC.txt: USDT price not found or invalid, using fallback 1.");
           }
           loadAllData();
         })
         .catch(error => {
             console.error("Error fetching kursBTC.txt:", error);
-            priceUSDT = 1; // Fallback
+            priceUSDT = 1; 
             loadAllData();
         });
 
@@ -96,10 +96,7 @@
           .then(res => res.json())
           .then(data => {
             allData = data;
-            // NO auto-click on load, page starts empty
-            // if (typeButtons.length > 0) {
-            //     typeButtons[0].click();
-            // }
+
           })
           .catch(error => console.error("Error fetching data.json:", error));
       }
@@ -132,7 +129,7 @@
       function createToggleButton(text, groupName, value, isDefaultActive, activeClasses, inactiveClasses, clickCallback) {
           const btn = document.createElement('button');
           btn.textContent = text;
-          btn.className = "conditional-btn"; // Base class
+          btn.className = "conditional-btn"; 
           btn.dataset.group = groupName;
           btn.dataset.value = value;
           applyButtonStyles(btn, isDefaultActive, activeClasses, inactiveClasses);
@@ -246,7 +243,7 @@
 
           const onNdsTdChange = (mBlock) => updateAllModelPricesInBlock(mBlock, manufacturerData, type, priceUSDT);
 
-          // NDS Buttons (use common active and ndsAndTdButtonInactiveClasses)
+
           const btnBezNds = createToggleButton("Без НДС", "nds", "bez_nds", true, commonActiveClasses, ndsAndTdButtonInactiveClasses, onNdsTdChange);
           const btnSNds = createToggleButton("С НДС", "nds", "s_nds", false, commonActiveClasses, ndsAndTdButtonInactiveClasses, onNdsTdChange);
           leftButtonContainer.appendChild(btnBezNds);
@@ -255,7 +252,7 @@
           conditionalButtonsRow.appendChild(leftButtonContainer);
 
           if (type === "Предзаказ") {
-            // TD Buttons (use common active and ndsAndTdButtonInactiveClasses for identical styling)
+       
             const btnTdRb = createToggleButton("ТД РБ", "td", "rb", true, commonActiveClasses, ndsAndTdButtonInactiveClasses, onNdsTdChange);
             const btnTdRf = createToggleButton("ТД РФ", "td", "rf", false, commonActiveClasses, ndsAndTdButtonInactiveClasses, onNdsTdChange);
             rightButtonContainer.appendChild(btnTdRb);
@@ -281,7 +278,7 @@
             priceDiv.className = "model-price text-white text-right whitespace-nowrap";
             
             const initialSNdsActive = false; // Default "Без НДС"
-            let initialTdRfActive = false; // Default "ТД РБ" for Предзаказ
+            let initialTdRfActive = false; 
             priceDiv.textContent = getPriceForModel(item, type, initialSNdsActive, initialTdRfActive, priceUSDT);
 
             const buyButton = document.createElement('button');
