@@ -16,21 +16,21 @@
   /* Ensure no rounded corners */
   input, select {
     border-radius: 0 !important;
-    -webkit-appearance: none; /* Remove default iOS styling */
-    -moz-appearance: none; /* Remove default Firefox styling */
-    appearance: none; /* Remove default styling */
+    -webkit-appearance: none; 
+    -moz-appearance: none; 
+    appearance: none; 
   }
-  /* Style for currency buttons */
+
   .currency-btn {
     border: none;
-    padding: 0.5rem; /* Adjust padding as needed */
+    padding: 0.5rem; 
     margin: 0;
-    font-size: 0.75rem; /* text-xs */
+    font-size: 0.75rem; 
     font-weight: bold;
     transition: background-color 0.3s, color 0.3s;
-    width: 50%; /* Make buttons take half the cell width */
-    line-height: 1; /* Adjust line height if needed */
-    height: 100%; /* Make buttons fill cell height */
+    width: 50%; 
+    line-height: 1;
+    height: 100%; 
   }
   .currency-btn.active {
     background-color: #E2E2E2;
@@ -43,7 +43,7 @@
   .currency-btn:hover {
     filter: brightness(110%);
   }
-  /* Remove spinner buttons from number inputs */
+
   input[type=number]::-webkit-inner-spin-button,
   input[type=number]::-webkit-outer-spin-button {
     -webkit-appearance: none;
@@ -210,50 +210,50 @@ let jsonData = [];
 let currentAlgorithm = "SHA-256";
 let dailyIncome = 0;
 let dailyProfitValue = 0;
-let dailyElectricityCostValue = 0; // Store electricity cost in USD
+let dailyElectricityCostValue = 0; 
 let monthlyProfit = 0;
 let yearlyProfit = 0;
-let usdtPrice = 0; // Храним актуальный курс USDT
-let isUSD = true; // По умолчанию показываем доллары
+let usdtPrice = 0; 
+let isUSD = true; 
 
 document.addEventListener("DOMContentLoaded", async () => {
     console.log("Загрузка страницы...");
 
-    // Получение элементов DOM
+   
     const algorithmSelect = document.getElementById("algorithmSelect");
     const manufacturerSelect = document.getElementById("manufacturerSelect");
     const asicModel = document.getElementById("asicModel");
     const calcBtn = document.getElementById("calculateBtn");
-    const currencyUSD_Btn = document.getElementById('currencyUSD'); // New USD button
-    const currencyRUB_Btn = document.getElementById('currencyRUB'); // New RUB button
+    const currencyUSD_Btn = document.getElementById('currencyUSD'); 
+    const currencyRUB_Btn = document.getElementById('currencyRUB'); 
     const header = document.getElementById("headerSection");
-    const resultsContainer = document.getElementById("resultsContainer"); // Контейнер с результатами
+    const resultsContainer = document.getElementById("resultsContainer");
 
-    // Проверка на существование критичных элементов
+
     if (!algorithmSelect || !manufacturerSelect || !asicModel || !calcBtn || !currencyUSD_Btn || !currencyRUB_Btn || !header || !resultsContainer) {
-        console.error("❌ Один или несколько критичных элементов DOM не найдены!");
+        console.error(" Один или несколько критичных элементов DOM не найдены!");
         alert("Ошибка инициализации страницы. Некоторые элементы отсутствуют.");
-        return; // Прерываем выполнение, если чего-то не хватает
+        return; 
     } else {
-         console.log("✅ Все основные элементы найдены.");
+         console.log(" Все основные элементы найдены.");
     }
 
-    // Привязка обработчиков событий
+  
     algorithmSelect.addEventListener("change", onAlgorithmChange);
     manufacturerSelect.addEventListener("change", updateModelList);
     asicModel.addEventListener("change", updateAsicSpecs);
     calcBtn.addEventListener("click", calculateProfit);
-    currencyUSD_Btn.addEventListener('click', () => setCurrency(true)); // Set to USD
-    currencyRUB_Btn.addEventListener('click', () => setCurrency(false)); // Set to RUB
+    currencyUSD_Btn.addEventListener('click', () => setCurrency(true)); 
+    currencyRUB_Btn.addEventListener('click', () => setCurrency(false)); 
 
 
     // Загрузка данных и начальная инициализация
     try {
-       await fetchData(); // Загружаем курс и данные profitPer...
-       await onAlgorithmChange(); // Загружаем JSON и заполняем селекты
-       // Не вызываем calculateProfit здесь, чтобы не было расчета до выбора пользователя
+       await fetchData(); 
+       await onAlgorithmChange(); 
+       
     } catch (error) {
-        console.error("❌ Ошибка при начальной загрузке данных:", error);
+        console.error(" Ошибка при начальной загрузке данных:", error);
         alert("Ошибка загрузки начальных данных. Проверьте консоль.");
     }
 
@@ -274,7 +274,7 @@ async function fetchData() {
         if (data.length >= 9) {
             const values = {
                 btcPrice: parseFloat(data[0]),
-                usdtPrice: parseFloat(data[1]), // Обновляем глобальный usdtPrice
+                usdtPrice: parseFloat(data[1]), 
                 profitPerTH: parseFloat(data[2]),
                 ltcPrice: parseFloat(data[3]),
                 dogePrice: parseFloat(data[4]),
@@ -287,7 +287,7 @@ async function fetchData() {
             let dataValid = true;
             Object.entries(values).forEach(([key, val]) => {
                 if (isNaN(val)) {
-                    console.warn(`⚠️ Некорректное значение для ${key} из TXT:`, data[Object.keys(values).indexOf(key)]);
+                    console.warn(` Некорректное значение для ${key} из TXT:`, data[Object.keys(values).indexOf(key)]);
                     dataValid = false;
                 }
                 const el = document.getElementById(key);
@@ -298,7 +298,7 @@ async function fetchData() {
                         console.log(`Курс USDT обновлен: ${usdtPrice}`);
                     }
                 } else if (!el) {
-                     console.warn(`⚠️ Элемент с ID ${key} не найден для установки значения из TXT.`);
+                     console.warn(` Элемент с ID ${key} не найден для установки значения из TXT.`);
                 }
             });
 
@@ -332,12 +332,12 @@ async function fetchJsonData() {
         const data = await response.json();
         // Фильтруем данные сразу при получении
         jsonData = data["Расчёты"] ? data["Расчёты"].filter(item => item["Алгоритм"] === currentAlgorithm) : [];
-        console.log(`✅ Загружено ${jsonData.length} моделей для ${currentAlgorithm}`);
+        console.log(` Загружено ${jsonData.length} моделей для ${currentAlgorithm}`);
         if (jsonData.length === 0) {
-             console.warn(`⚠️ Модели для алгоритма ${currentAlgorithm} не найдены в calc.json`);
+             console.warn(` Модели для алгоритма ${currentAlgorithm} не найдены в calc.json`);
         }
     } catch (e) {
-        console.error(`❌ Ошибка загрузки или парсинга calc.json:`, e);
+        console.error(` Ошибка загрузки или парсинга calc.json:`, e);
         jsonData = []; // Очищаем данные в случае ошибки
         alert(`Ошибка загрузки данных моделей (${e.message}). Выбор модели невозможен.`);
         // Очищаем списки, чтобы пользователь видел проблему
@@ -355,18 +355,17 @@ async function onAlgorithmChange() {
     currentAlgorithm = algorithmSelect.value;
     console.log(`Алгоритм изменен на: ${currentAlgorithm}`);
 
-    await fetchJsonData(); // Перезагружаем JSON для нового алгоритма
+    await fetchJsonData();
 
-    // Обновляем список производителей
+
     const manufacturerSelect = document.getElementById("manufacturerSelect");
     if (!manufacturerSelect) return;
 
-    // Получаем уникальных производителей (приводим к нижнему регистру для надежности)
     const uniqueManufacturers = [...new Set(jsonData.map(item => item["Производитель"]?.toLowerCase() || 'unknown'))]
                                 .filter(m => m !== 'unknown') // Убираем возможные пустые
                                 .sort(); // Сортируем для порядка
 
-    manufacturerSelect.innerHTML = ""; // Очищаем старые опции
+    manufacturerSelect.innerHTML = "";
 
     if (uniqueManufacturers.length > 0) {
         uniqueManufacturers.forEach(m => {
@@ -388,7 +387,7 @@ async function onAlgorithmChange() {
              modelSelect.innerHTML = '<option>Нет данных</option>';
              modelSelect.disabled = true;
          }
-         // Очищаем поля характеристик
+
          updateAsicSpecs(); // Вызываем для очистки полей
          console.warn(`Производители для ${currentAlgorithm} не найдены.`);
     }
@@ -401,11 +400,11 @@ function updateModelList() {
     const modelSelect = document.getElementById("asicModel");
     if (!manufacturerSelect || !modelSelect) return;
 
-    const selectedManufacturer = manufacturerSelect.value?.toLowerCase(); // Нижний регистр для сравнения
+    const selectedManufacturer = manufacturerSelect.value?.toLowerCase(); 
     console.log(`Выбран производитель: ${selectedManufacturer}`);
     modelSelect.innerHTML = ""; // Очищаем старые модели
 
-    // Фильтруем модели по выбранному производителю
+
     const models = jsonData.filter(item => item["Производитель"]?.toLowerCase() === selectedManufacturer);
 
     if (models.length > 0) {
@@ -429,13 +428,13 @@ function updateModelList() {
 
 
 function updateAsicSpecs() {
-    // Обновляет Хешрейт, Потребление и Стоимость Асика при смене модели
+   
     const modelSelect = document.getElementById("asicModel");
     const asicCostInput = document.getElementById("asicCost");
     const hashrateEl = document.getElementById("hashrate");
     const edpriceEl = document.getElementById("edprice");
     const powerEl = document.getElementById("power");
-    const powerUnitEl = document.getElementById("power_unit"); // Элемент для "Вт"
+    const powerUnitEl = document.getElementById("power_unit");
 
     if (!modelSelect || !asicCostInput || !hashrateEl || !edpriceEl || !powerEl || !powerUnitEl) {
         console.error("Один из элементов для обновления характеристик ASIC не найден.");
@@ -450,7 +449,7 @@ function updateAsicSpecs() {
     asicCostInput.value = ''; // Очищаем стоимость
 
     const selectedValue = modelSelect.value;
-    // Проверяем, есть ли выбранная модель (не "Нет моделей" или "Ошибка загрузки")
+ 
     if (!selectedValue || modelSelect.selectedOptions.length === 0 || modelSelect.selectedOptions[0].disabled) {
         console.log("Нет выбранной модели для обновления характеристик.");
         return; // Выходим, если модель не выбрана или выбрана "заглушка"
@@ -465,7 +464,7 @@ function updateAsicSpecs() {
     const modelName = modelData[0];
     const modelHashrate = modelData[1];
 
-    // Ищем соответствующий элемент в загруженных данных JSON
+
     const item = jsonData.find(i => i["Модель"] === modelName && i["Хешрейт"] === modelHashrate);
 
     if (item) {
@@ -474,23 +473,23 @@ function updateAsicSpecs() {
         hashrateEl.textContent = item["Хешрейт"] || '';
         edpriceEl.textContent = item["Ед. изм."] || '';
 
-        // Обновляем потребление
+ 
         const powerValue = parseFloat(item["Потребление"]);
         if (!isNaN(powerValue)) {
             powerEl.textContent = Math.round(powerValue);
-            powerUnitEl.textContent = ' Вт'; // Добавляем "Вт" только если есть значение
+            powerUnitEl.textContent = ' Вт'; 
         } else {
              console.warn("Некорректное значение потребления:", item["Потребление"]);
         }
 
 
-        // --- Расчет стоимости асика ---
+    
         const itemPriceUSD = parseFloat(item["Цена"]);
 
-        if (!isNaN(itemPriceUSD) && usdtPrice > 0) { // Проверяем цену и курс USDT
-            // Рассчитываем стоимость в рублях
+        if (!isNaN(itemPriceUSD) && usdtPrice > 0) { 
+          
             const calculatedCostRUB = itemPriceUSD * usdtPrice;
-            // Округляем ВВЕРХ до ближайших 100 рублей
+           
             asicCostInput.value = Math.ceil(calculatedCostRUB / 100) * 100;
             console.log(`Стоимость асика рассчитана: ${asicCostInput.value} ₽ (Цена: $${itemPriceUSD}, Курс: ${usdtPrice} ₽/$)`);
         } else {
@@ -509,17 +508,17 @@ function showNotification() {
     const notification = document.getElementById('notification');
     if (notification) {
         notification.classList.remove('hidden');
-        // Optional: Hide after a few seconds
+      
         setTimeout(() => {
             notification.classList.add('hidden');
-        }, 1000); // Hide after 1 seconds
+        }, 1000); 
     }
 }
 
 
 function calculateProfit() {
     console.log("Начало расчета...");
-    // Получение и проверка всех необходимых элементов DOM
+    
     const elements = {
         usdtPriceInput: document.getElementById("usdtPrice"),
         hashrateEl: document.getElementById("hashrate"),
@@ -556,7 +555,7 @@ function calculateProfit() {
 
     for (const key in elements) {
         if (!elements[key]) {
-            console.error(`❌ Ошибка: Элемент ${key} не найден! Расчет прерван.`);
+            console.error(` Ошибка: Элемент ${key} не найден! Расчет прерван.`);
             alert(`Критическая ошибка: элемент ${key} отсутствует на странице.`);
             return;
         }
@@ -566,8 +565,8 @@ function calculateProfit() {
     // Получение и парсинг значений
     const values = {
         currentUsdtPrice: parseFloat(elements.usdtPriceInput.value),
-        hashrate: parseFloat(elements.hashrateEl.textContent), // Берем из textContent
-        power: parseFloat(elements.powerEl.textContent),       // Берем из textContent
+        hashrate: parseFloat(elements.hashrateEl.textContent), 
+        power: parseFloat(elements.powerEl.textContent),     
         electricityCost: parseFloat(elements.electricityCostInput.value.replace(',', '.')),
         asicCost: parseFloat(elements.asicCostInput.value) // Стоимость асика в рублях
     };
@@ -575,21 +574,20 @@ function calculateProfit() {
     // Проверка базовых значений на валидность
      const baseValuesValid = !isNaN(values.currentUsdtPrice) && values.currentUsdtPrice > 0 &&
                             !isNaN(values.hashrate) && values.hashrate > 0 &&
-                            !isNaN(values.power) && values.power >= 0 && // Потребление может быть 0?
+                            !isNaN(values.power) && values.power >= 0 && 
                             !isNaN(values.electricityCost) && values.electricityCost >= 0 &&
-                            !isNaN(values.asicCost) && values.asicCost >= 0; // Стоимость может быть 0
+                            !isNaN(values.asicCost) && values.asicCost >= 0;
 
     if (!baseValuesValid) {
-         console.error("❌ Ошибка: Некорректные базовые значения для расчета.", values);
+         console.error(" Ошибка: Некорректные базовые значения для расчета.", values);
          alert("Пожалуйста, проверьте введенные данные (хэшрейт, потребление, стоимость розетки, стоимость асика). Они должны быть корректными числами.");
-         // Можно подсветить некорректные поля или сбросить результаты
-         // resetCalculationResults(elements); // Функция для сброса полей
+
          return;
     }
      console.log("Базовые значения для расчета:", values);
 
 
-    // Расчет дохода в $
+
     dailyIncome = 0;
     if (currentAlgorithm === "SHA-256") {
         const btcPrice = parseFloat(elements.btcPriceInput.value);
@@ -597,7 +595,7 @@ function calculateProfit() {
         if (!isNaN(btcPrice) && !isNaN(profitPerTH)) {
             dailyIncome = values.hashrate * profitPerTH * btcPrice;
         } else {
-             console.error("❌ Ошибка: Некорректные данные BTC или ProfitPerTH.");
+             console.error(" Ошибка: Некорректные данные BTC или ProfitPerTH.");
              alert("Ошибка данных для расчета SHA-256."); return;
         }
     } else if (currentAlgorithm === "Scrypt") {
@@ -615,22 +613,21 @@ function calculateProfit() {
             const incomeBELL = values.hashrate * profitPerBELL * bellPrice;
             dailyIncome = incomeLTC + incomeDOGE + incomeBELL;
          } else {
-              console.error("❌ Ошибка: Некорректные данные для расчета Scrypt.");
+              console.error(" Ошибка: Некорректные данные для расчета Scrypt.");
               alert("Ошибка данных для расчета Scrypt."); return;
          }
     }
      console.log(`Дневной доход ($): ${dailyIncome}`);
 
-    // Расчет стоимости электричества в $
-    // (Мощность_кВт * Стоимость_Руб_кВтч * 24 часа) / Курс_Руб_$
+
     const dailyElectricityCostRub = (values.power / 1000) * values.electricityCost * 24;
-    dailyElectricityCostValue = dailyElectricityCostRub / values.currentUsdtPrice; // Update global variable
+    dailyElectricityCostValue = dailyElectricityCostRub / values.currentUsdtPrice; 
     console.log(`Дневные расходы на электричество ($): ${dailyElectricityCostValue}`);
 
 
     // Расчет прибыли
-    dailyProfitValue = dailyIncome - dailyElectricityCostValue; // Update global variable
-    monthlyProfit = dailyProfitValue * 30.5; // Среднее кол-во дней в месяце
+    dailyProfitValue = dailyIncome - dailyElectricityCostValue; 
+    monthlyProfit = dailyProfitValue * 30.5;
     yearlyProfit = dailyProfitValue * 365;
     console.log(`Дневная прибыль ($): ${dailyProfitValue}`);
 
@@ -643,14 +640,14 @@ function calculateProfit() {
 
 
     // --- Обновление интерфейса ---
-    updateTableValues(); // Call function to update table based on current currency
-    updateProgressBarAndLabels(elements); // Update progress bar and its labels
+    updateTableValues(); 
+    updateProgressBarAndLabels(elements);
 
-    // Обновление ROI и окупаемости
-    elements.roiEl.innerText = isFinite(roi) ? roi.toFixed(1) : "∞"; // Оставим 1 знак после запятой
-    elements.paybackEl.innerText = isFinite(payback) ? payback.toFixed(1) : "∞"; // Оставим 1 знак
+    
+    elements.roiEl.innerText = isFinite(roi) ? roi.toFixed(1) : "∞";
+    elements.paybackEl.innerText = isFinite(payback) ? payback.toFixed(1) : "∞";
 
-    showNotification(); // Show the "Calculation complete" notification
+    showNotification(); 
 
     console.log("Расчет завершен, интерфейс обновлен.");
 }
@@ -671,7 +668,7 @@ function formatCurrency(value, currency = "$", fractionDigits = 2) {
 
 
 function updateTableValues() {
-    // Updates the table values based on the current currency (isUSD)
+   
     const elementsToToggle = [
         "income", "incomeMonth", "incomeYear",
         "profit", "profitMonth", "profitYear"
@@ -681,7 +678,7 @@ function updateTableValues() {
         const usdEl = document.getElementById(id);
         const rubEl = document.getElementById(`${id}_rub`);
         if (usdEl && rubEl) {
-            // Update text content first (calculation might happen before toggle)
+           
             let valueUSD = 0;
             if (id.startsWith("incomeMonth")) valueUSD = dailyIncome * 30.5;
             else if (id.startsWith("incomeYear")) valueUSD = dailyIncome * 365;
@@ -693,7 +690,7 @@ function updateTableValues() {
             usdEl.innerText = formatCurrency(valueUSD);
             rubEl.innerText = formatCurrencyRub(valueUSD);
 
-            // Then toggle visibility
+       
             if (isUSD) {
                 usdEl.classList.remove("hidden");
                 rubEl.classList.add("hidden");
@@ -708,8 +705,8 @@ function updateTableValues() {
 }
 
 function setCurrency(setToUSD) {
-    // Sets the currency and updates buttons and table
-    if (isUSD === setToUSD) return; // No change needed
+  
+    if (isUSD === setToUSD) return; 
 
     isUSD = setToUSD;
     const usdBtn = document.getElementById('currencyUSD');
@@ -727,7 +724,7 @@ function setCurrency(setToUSD) {
         rubBtn.classList.add('active');
     }
 
-    updateTableValues(); // Update the table display
+    updateTableValues(); 
     console.log(`Валюта переключена на: ${isUSD ? 'USD' : 'RUB'}`);
 }
 
@@ -744,7 +741,7 @@ function updateProgressBarAndLabels(elements) {
         profitPercentage = Math.max(0, (dailyProfitValue / dailyIncome) * 100);
         electricityPercentage = Math.max(0, (dailyElectricityCostValue / dailyIncome) * 100);
 
-        // Correction logic
+    
         if (dailyProfitValue <= 0) {
             profitPercentage = 0;
             electricityPercentage = 100;
@@ -752,23 +749,23 @@ function updateProgressBarAndLabels(elements) {
              electricityPercentage = 100 - profitPercentage;
         }
 
-        // Clamp values 0-100%
+  
         profitPercentage = Math.min(100, Math.max(0, profitPercentage));
         electricityPercentage = Math.min(100, Math.max(0, electricityPercentage));
 
         profitBar.style.width = `${profitPercentage.toFixed(1)}%`;
-        profitBar.style.backgroundColor = "#2511A8"; // Ensure correct color
+        profitBar.style.backgroundColor = "#2511A8"; 
 
         electricityBar.style.width = `${electricityPercentage.toFixed(1)}%`;
         electricityBar.style.left = `${profitPercentage.toFixed(1)}%`;
-        electricityBar.style.backgroundColor = "#FFFFFF"; // Ensure correct color
+        electricityBar.style.backgroundColor = "#FFFFFF"; 
 
-        // Update percentage labels
+   
         profitLabel.textContent = `Прибыль: ${profitPercentage.toFixed(1)}%`;
         costLabel.textContent = `Затраты: ${electricityPercentage.toFixed(1)}%`;
 
     } else {
-        // Reset if income is zero or invalid
+   
         profitBar.style.width = "0%";
         electricityBar.style.width = "0%";
         electricityBar.style.left = "0%";
