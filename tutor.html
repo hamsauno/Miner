@@ -1,0 +1,1043 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<title>Калькулятор доходности майнинга</title>
+<meta name="description" content="Удобный Telegram-калькулятор для расчета доходности ASIC-майнеров. Доход, прибыль, ROI, окупаемость — всё в одном месте.">
+<style>
+  html, body {
+    overscroll-behavior-y: none; /* запрещает "отпружинивание" на iOS и Android */
+    touch-action: pan-y; /* безопасно включает вертикальный и горизонтальный скролл */
+  }
+  /* Ensure no rounded corners */
+  input, select {
+    border-radius: 0 !important;
+    -webkit-appearance: none; /* Remove default iOS styling */
+    -moz-appearance: none; /* Remove default Firefox styling */
+    appearance: none; /* Remove default styling */
+  }
+  /* Style for currency buttons */
+  .currency-btn {
+    border: none;
+    padding: 0.5rem; /* Adjust padding as needed */
+    margin: 0;
+    font-size: 0.75rem; /* text-xs */
+    font-weight: bold;
+    transition: background-color 0.3s, color 0.3s;
+    width: 50%; /* Make buttons take half the cell width */
+    line-height: 1; /* Adjust line height if needed */
+    height: 100%; /* Make buttons fill cell height */
+  }
+  .currency-btn.active {
+    background-color: #E2E2E2;
+    color: black;
+  }
+  .currency-btn.inactive {
+    background-color: #2511A8;
+    color: white;
+  }
+  .currency-btn:hover {
+    filter: brightness(110%);
+  }
+  /* Remove spinner buttons from number inputs */
+  input[type=number]::-webkit-inner-spin-button,
+  input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  /* Стили для модального окна обучения */
+  .tutorial-modal-overlay {
+      display: none; /* Скрыто по умолчанию */
+      position: fixed;
+      z-index: 9998; /* Чуть ниже самого модального окна */
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.6); /* Полупрозрачный фон */
+  }
+
+  .tutorial-modal {
+      display: none; /* Скрыто по умолчанию */
+      position: fixed;
+      z-index: 9999;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      background-color: #1F2937; /* Темный фон для модалки (Tailwind gray-800) */
+      color: #F3F4F6; /* Светлый текст (Tailwind gray-100) */
+      padding: 20px;
+      border: 1px solid #4B5563; /* Tailwind gray-600 */
+      width: 90%;
+      max-width: 450px;
+      border-radius: 8px; /* Не используем Tailwind rounded-none здесь */
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      text-align: center;
+  }
+  .tutorial-modal h3 {
+      margin-top: 0;
+      margin-bottom: 15px;
+      font-size: 1.25rem; /* text-xl */
+      font-weight: 600; /* font-semibold */
+  }
+  .tutorial-modal p {
+      margin-bottom: 20px;
+      font-size: 0.875rem; /* text-sm */
+      line-height: 1.5;
+  }
+  .tutorial-modal button {
+      padding: 10px 15px;
+      font-size: 0.875rem; /* text-sm */
+      font-weight: 500; /* font-medium */
+      cursor: pointer;
+      border: none;
+      border-radius: 6px; /* Не используем Tailwind rounded-none здесь */
+      transition: background-color 0.2s;
+  }
+  .tutorial-modal-next-btn {
+      background-color: #2563EB; /* Tailwind blue-600 */
+      color: white;
+  }
+  .tutorial-modal-next-btn:hover {
+      background-color: #1D4ED8; /* Tailwind blue-700 */
+  }
+  .tutorial-modal-skip-btn {
+      background-color: #4B5563; /* Tailwind gray-600 */
+      color: #F3F4F6; /* Tailwind gray-100 */
+      margin-left: 10px;
+  }
+  .tutorial-modal-skip-btn:hover {
+      background-color: #374151; /* Tailwind gray-700 */
+  }
+
+  /* Стиль для подсветки элемента */
+  .tutorial-highlight {
+      box-shadow: 0 0 0 3px #FBBF24, 0 0 15px 3px #FBBF24; /* Tailwind amber-400 */
+      border-radius: 4px !important; /* Добавляем небольшое скругление для подсветки */
+      transition: box-shadow 0.3s ease-in-out;
+      position: relative; /* Для позиционирования подсказки */
+      z-index: 1; /* Чтобы было над другими элементами */
+  }
+</style>
+
+</head>
+<body class="bg-black"> <div id="headerSection" class="w-full bg-[#000000] text-white shadow-xl p-5 mb-[3px]">
+      <div class="form-content space-y-2">
+         <div class="flex gap-3">
+           <div class="w-1/2">
+             <label for="algorithmSelect" class="block text-sm font-medium mb-1">Алгоритм</label>
+             <select id="algorithmSelect"
+               class="bg-[#E2E2E2] w-full px-2 py-1 border border-gray-400 text-black text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400 rounded-none">
+               <option value="SHA-256">SHA-256</option>
+               <option value="Scrypt">SCRYPT</option>
+             </select>
+           </div>
+           <div class="w-1/2">
+             <label for="manufacturerSelect" class="block text-sm font-medium mb-1">Производитель</label>
+             <select id="manufacturerSelect"
+               class="bg-[#E2E2E2] w-full px-2 py-1 border border-gray-400 text-black text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400 rounded-none">
+               </select>
+           </div>
+         </div>
+
+         <div>
+           <label for="asicModel" class="block text-sm font-medium mb-1">Модель Оборудования</label>
+           <select id="asicModel"
+             class="bg-[#E2E2E2] w-full px-2 py-1 border border-gray-400 text-black text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400 rounded-none">
+             </select>
+         </div>
+
+         <div class="flex gap-3">
+           <div class="w-1/2">
+             <label class="block text-sm font-medium mb-1">Хэшрейт</label>
+             <div id="hashrateContainer" class="bg-[#E2E2E2] px-2 py-1 text-sm text-black min-h-[28px] rounded-none"> <span id="hashrate"></span> <span id="edprice"></span>
+             </div>
+           </div>
+           <div class="w-1/2">
+             <label class="block text-sm font-medium mb-1">Потребление</label>
+             <div id="powerContainer" class="bg-[#E2E2E2] px-2 py-1 text-sm text-black min-h-[28px] rounded-none"> <span id="power"></span><span id="power_unit"></span> </div>
+           </div>
+         </div>
+
+         <div class="flex gap-3">
+           <div class="w-1/2">
+             <label for="electricityCost" class="block text-sm font-medium mb-1">Стоимость <br> Электроэнергии</label>
+             <div class="relative">
+               <input
+                 type="number"
+                 id="electricityCost"
+                 value="5"
+                 inputmode="decimal"
+                 step="any"
+                 class="bg-[#E2E2E2] w-full px-2 py-1 pr-6 border border-gray-400 text-black text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400 rounded-none">
+               <span class="absolute right-2 top-1/2 -translate-y-1/2 text-black text-xs">₽</span>
+             </div>
+           </div>
+           <div class="w-1/2">
+             <label for="asicCost" class="block text-sm font-medium mb-1">Стоимость <br> Оборудования</label>
+             <div class="relative">
+               <input type="number" id="asicCost" inputmode="numeric"
+                 class="bg-[#E2E2E2] w-full px-2 py-1 pr-6 border border-gray-400 text-black text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400 rounded-none"
+                 placeholder="Авто/Ручной ввод"> <span class="absolute right-2 top-1/2 -translate-y-1/2 text-black text-xs">₽</span>
+             </div>
+           </div>
+         </div>
+
+         <input type="hidden" id="btcPrice">
+         <input type="hidden" id="usdtPrice">
+         <input type="hidden" id="profitPerTH">
+         <input type="hidden" id="ltcPrice">
+         <input type="hidden" id="dogePrice">
+         <input type="hidden" id="bellPrice">
+         <input type="hidden" id="profitPerLTC">
+         <input type="hidden" id="profitPerDOGE">
+         <input type="hidden" id="profitPerBELL">
+      </div>
+      <div class="button-container pt-2">
+        <button id="calculateBtn"
+          class="w-full text-white font-bold text-base py-2 px-4 transition duration-300 hover:brightness-110 shadow-md rounded-none"
+          style="background-color: #2511A8;">
+          Рассчитать
+        </button>
+        <div id="notification" class="mt-2 p-2 text-center text-white bg-black hidden rounded-none">
+          Расчёт произведён
+        </div>
+      </div>
+   </div>
+
+   <div id="resultsContainer" class="w-full bg-[#E2E2E2] text-sm space-y-4 shadow-md px-4 pb-4 pt-4 rounded-none">
+     <div>
+
+       <div id="progressBarContainer" class="w-full h-5 relative overflow-hidden border rounded-none" style="border-color: #2511A8;">
+         <div id="dailyProfitBar" class="absolute top-0 left-0 h-full transition-all duration-500" style="background-color: #2511A8;"></div>
+         <div id="dailyElectricityCostBar" class="absolute top-0 h-full transition-all duration-500" style="background-color: #CCCCCC;"></div>
+       </div>
+       <div class="mt-1 text-xs text-black flex justify-between">
+         <div id="profitPercentageLabel">Прибыль: --%</div>
+         <div id="costPercentageLabel">Затраты: --%</div>
+       </div>
+     </div>
+
+     <div class="scroll-container w-full overflow-x-auto">
+       <table id="resultsTable" class="result-table w-full text-sm text-center border-collapse">
+         <thead>
+           <tr>
+             <th class="bg-black text-white p-0 w-24 align-middle">
+               <div id="currencyButtonsContainer" class="flex justify-center items-center h-full">
+                 <button id="currencyUSD" class="currency-btn w-7 h-7 active">$</button>
+                 <button id="currencyRUB" class="currency-btn w-7 h-7 inactive">₽</button>
+               </div>
+             </th>
+             <th class="bg-black text-white p-2">День</th>
+             <th class="bg-black text-white p-2">Месяц</th>
+             <th class="bg-black text-white p-2">Год</th>
+           </tr>
+         </thead>
+         <tbody>
+           <tr>
+             <td class="bg-black text-white p-2 w-24">Доход</td>
+             <td class="bg-[#E2E2E2] text-black p-2">
+               <span class="text-[#2511A8] font-semibold" id="income">$ --.--</span>
+               <span class="text-[#2511A8] font-semibold hidden" id="income_rub">-- ₽</span>
+             </td>
+             <td class="bg-[#E2E2E2] text-black p-2">
+               <span class="text-[#2511A8] font-semibold" id="incomeMonth">$ --.--</span>
+               <span class="text-[#2511A8] font-semibold hidden" id="incomeMonth_rub">-- ₽</span>
+             </td>
+             <td class="bg-[#E2E2E2] text-black p-2">
+               <span class="text-[#2511A8] font-semibold" id="incomeYear">$ --.--</span>
+               <span class="text-[#2511A8] font-semibold hidden" id="incomeYear_rub">-- ₽</span>
+             </td>
+           </tr>
+           <tr>
+             <td class="bg-black text-white p-2 w-24">Прибыль</td>
+             <td class="bg-[#E2E2E2] text-black p-2">
+               <span class="text-[#2511A8] font-semibold" id="profit">$ --.--</span>
+               <span class="text-[#2511A8] font-semibold hidden" id="profit_rub">-- ₽</span>
+             </td>
+             <td class="bg-[#E2E2E2] text-black p-2">
+               <span class="text-[#2511A8] font-semibold" id="profitMonth">$ --.--</span>
+               <span class="text-[#2511A8] font-semibold hidden" id="profitMonth_rub">-- ₽</span>
+             </td>
+             <td class="bg-[#E2E2E2] text-black p-2">
+               <span class="text-[#2511A8] font-semibold" id="profitYear">$ --.--</span>
+               <span class="text-[#2511A8] font-semibold hidden" id="profitYear_rub">-- ₽</span>
+             </td>
+           </tr>
+         </tbody>
+       </table>
+     </div>
+     <div id="paybackRoiContainer" class="mt-4 text-black flex justify-between">
+        <div>Окупаемость мес.: <span id="payback">—</span></div>
+        <div>Годовой %: <span id="roi">—</span></div>
+      </div>
+   </div>
+
+   <div id="tutorialModalOverlay" class="tutorial-modal-overlay"></div>
+   <div id="tutorialModal" class="tutorial-modal">
+       <h3 id="tutorialTitle">Добро пожаловать!</h3>
+       <p id="tutorialText">Это краткое обучение поможет вам освоиться с калькулятором.</p>
+       <button id="tutorialNextBtn" class="tutorial-modal-next-btn">Далее</button>
+       <button id="tutorialSkipBtn" class="tutorial-modal-skip-btn">Пропустить</button>
+   </div>
+
+  <script>
+// --- НАЧАЛО БЛОКА ОБУЧЕНИЯ ---
+const SUPABASE_URL = 'https://yiprwrgmyqlkdmhgulmc.supabase.co'; // ВАШ URL
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlpcHJ3cmdteXFsa2RtaGd1bG1jIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ2NTI0NjgsImV4cCI6MjA2MDIyODQ2OH0.lfiTfr5ukGDEVuwq-X9U2kWs3nEZrp3N443HT5AkbfI'; // ВАШ ANON KEY
+
+let supabaseClient;
+try {
+    supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+} catch (e) {
+    console.error("Ошибка инициализации Supabase:", e);
+}
+
+let currentTutorialStep = 0;
+let tutorialSteps = [];
+let telegramUser = null;
+
+const tutorialModalOverlay = document.getElementById('tutorialModalOverlay');
+const tutorialModal = document.getElementById('tutorialModal');
+const tutorialTitle = document.getElementById('tutorialTitle');
+const tutorialText = document.getElementById('tutorialText');
+const tutorialNextBtn = document.getElementById('tutorialNextBtn');
+const tutorialSkipBtn = document.getElementById('tutorialSkipBtn');
+let highlightedElement = null; // Для отслеживания подсвеченного элемента
+
+async function initAppAndTutorial() {
+    console.log("DOM fully loaded and parsed");
+    Telegram.WebApp.ready();
+    console.log("Telegram WebApp is ready.");
+
+    // Сначала основные инициализации приложения
+    try {
+        await fetchData();
+        await onAlgorithmChange();
+    } catch (error) {
+        console.error("❌ Ошибка при начальной загрузке данных приложения:", error);
+    }
+
+    // Затем инициализация обучения
+    if (Telegram.WebApp.initDataUnsafe && Telegram.WebApp.initDataUnsafe.user) {
+        telegramUser = Telegram.WebApp.initDataUnsafe.user;
+        if (telegramUser.id) {
+            console.log("Telegram User ID:", telegramUser.id);
+            await checkTutorialStatus();
+        } else {
+            console.warn("Telegram User ID не найден. Обучение не будет запущено.");
+        }
+    } else {
+        console.warn("Telegram WebApp данные пользователя не найдены. Обучение не будет запущено.");
+    }
+}
+
+async function checkTutorialStatus() {
+    if (!supabaseClient) {
+        console.error("Supabase не инициализирован. Обучение не будет запущено.");
+        return;
+    }
+    console.log("Проверка статуса обучения для пользователя:", telegramUser.id);
+    try {
+        let { data: user, error } = await supabaseClient
+            .from('users')
+            .select('telegram_id, tutor')
+            .eq('telegram_id', telegramUser.id.toString())
+            .single();
+
+        if (error && error.code !== 'PGRST116') { // PGRST116 - "single row not found"
+            console.error("Ошибка получения данных пользователя из Supabase:", error);
+            return;
+        }
+
+        if (user && user.tutor === true) {
+            console.log("Пользователь уже прошел обучение.");
+        } else {
+            if (!user) {
+                console.log("Новый пользователь или не проходил обучение, запускаем.");
+            } else {
+                console.log("Пользователь не прошел обучение (tutor=false), запускаем.");
+            }
+            setupTutorialStepsDefinition();
+            startTutorialFlow();
+        }
+    } catch (e) {
+        console.error("Исключение при проверке статуса обучения:", e);
+    }
+}
+
+function setupTutorialStepsDefinition() {
+    tutorialSteps = [
+        {
+            title: "Шаг 1: Алгоритм",
+            text: "Добро пожаловать! Начните с выбора <b>Алгоритма</b> майнинга. Доступны SHA-256 (для Bitcoin) и Scrypt (для других монет).",
+            elementId: "algorithmSelect",
+        },
+        {
+            title: "Шаг 2: Производитель",
+            text: "Отлично! Теперь выберите <b>Производителя</b> вашего ASIC-майнера из списка.",
+            elementId: "manufacturerSelect",
+        },
+        {
+            title: "Шаг 3: Модель",
+            text: "Затем выберите конкретную <b>Модель Оборудования</b>. Характеристики (Хэшрейт и Потребление) подставятся автоматически.",
+            elementId: "asicModel",
+        },
+        {
+            title: "Шаг 4: Характеристики",
+            text: "Обратите внимание на автоматически определенные <b>Хэшрейт</b> и <b>Потребление</b> для выбранной модели.",
+            elementId: "hashrateContainer", // Подсвечиваем контейнер с хэшрейтом
+            alsoHighlight: "powerContainer" // И контейнер с потреблением
+        },
+        {
+            title: "Шаг 5: Стоимость",
+            text: "Укажите <b>Стоимость Электроэнергии</b> за 1 кВт⋅ч и проверьте/введите <b>Стоимость Оборудования</b> в рублях.",
+            elementId: "electricityCost",
+            alsoHighlight: "asicCost"
+        },
+        {
+            title: "Шаг 6: Расчет",
+            text: "Когда все данные введены, нажмите кнопку <b>Рассчитать</b>, чтобы увидеть результаты.",
+            elementId: "calculateBtn",
+        },
+        {
+            title: "Шаг 7: Результаты",
+            text: "Здесь вы видите <b>шкалу доходности</b>, а ниже таблицу с <b>Доходом</b> и <b>Прибылью</b>. Вы можете переключать валюту ($/₽).",
+            elementId: "progressBarContainer", // Шкала
+            alsoHighlight: "resultsTable" // Таблица результатов (добавьте ID, если его нет)
+        },
+        {
+            title: "Шаг 8: Окупаемость",
+            text: "В самом низу отображаются показатели <b>Окупаемости</b> и <b>Годовой процент</b> доходности (ROI).",
+            elementId: "paybackRoiContainer", // Контейнер с окупаемостью и ROI
+        },
+        {
+            title: "Обучение завершено!",
+            text: "Вы успешно ознакомились с основами работы калькулятора. Удачных расчетов!",
+            elementId: null, // Нет элемента для подсветки на последнем шаге
+        }
+    ];
+}
+
+function startTutorialFlow() {
+    currentTutorialStep = 0;
+    tutorialModalOverlay.style.display = 'block';
+    tutorialModal.style.display = 'block';
+    Telegram.WebApp.expand(); // Раскрываем WebApp на весь экран для лучшего отображения
+    displayCurrentTutorialStep();
+}
+
+function removeHighlight() {
+    if (highlightedElement) {
+        highlightedElement.classList.remove('tutorial-highlight');
+        highlightedElement = null;
+    }
+    document.querySelectorAll('.tutorial-highlight').forEach(el => el.classList.remove('tutorial-highlight'));
+}
+
+function displayCurrentTutorialStep() {
+    removeHighlight();
+
+    if (currentTutorialStep >= tutorialSteps.length) {
+        completeTutorialProcess();
+        return;
+    }
+
+    const step = tutorialSteps[currentTutorialStep];
+    tutorialTitle.textContent = step.title;
+    tutorialText.innerHTML = step.text; // Используем innerHTML для тега <b>
+
+    if (step.elementId) {
+        const targetElement = document.getElementById(step.elementId);
+        if (targetElement) {
+            highlightedElement = targetElement;
+            highlightedElement.classList.add('tutorial-highlight');
+            // Плавная прокрутка к элементу
+            targetElement.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' });
+        } else {
+            console.warn(`Элемент для обучения с ID "${step.elementId}" не найден.`);
+        }
+        if (step.alsoHighlight) {
+            const alsoElement = document.getElementById(step.alsoHighlight);
+            if (alsoElement) {
+                alsoElement.classList.add('tutorial-highlight');
+            }
+        }
+    }
+
+    if (currentTutorialStep === tutorialSteps.length - 1) {
+        tutorialNextBtn.textContent = "Завершить";
+    } else {
+        tutorialNextBtn.textContent = "Далее";
+    }
+}
+
+tutorialNextBtn.addEventListener('click', () => {
+    currentTutorialStep++;
+    displayCurrentTutorialStep();
+});
+
+tutorialSkipBtn.addEventListener('click', () => {
+    completeTutorialProcess(true); // true означает, что пользователь пропустил
+});
+
+async function completeTutorialProcess(skipped = false) {
+    tutorialModalOverlay.style.display = 'none';
+    tutorialModal.style.display = 'none';
+    removeHighlight();
+    console.log(skipped ? "Обучение пропущено." : "Обучение завершено.");
+
+    if (!telegramUser || !telegramUser.id || !supabaseClient) {
+        console.warn("Не удалось сохранить статус обучения: нет пользователя или Supabase клиента.");
+        return;
+    }
+
+    try {
+        const { data, error } = await supabaseClient
+            .from('users')
+            .upsert(
+                {
+                    telegram_id: telegramUser.id.toString(),
+                    tutor: true,
+                    // Предполагается, что created_at устанавливается по умолчанию в БД
+                    // updated_at можно обновлять триггером в БД или здесь:
+                    updated_at: new Date().toISOString()
+                },
+                {
+                    onConflict: 'telegram_id', // Поле, по которому проверяется конфликт
+                    // ignoreDuplicates: false // по умолчанию false, т.е. будет UPDATE
+                }
+            )
+            .select(); // Чтобы получить обновленную/вставленную запись
+
+        if (error) {
+            console.error("Ошибка сохранения статуса обучения в Supabase:", error);
+            // Можно показать пользователю некритичное сообщение об ошибке
+        } else {
+            console.log("Статус обучения успешно сохранен в Supabase:", data);
+        }
+    } catch (e) {
+        console.error("Исключение при сохранении статуса обучения:", e);
+    }
+}
+
+// --- КОНЕЦ БЛОКА ОБУЧЕНИЯ ---
+
+
+// Ваш существующий код далее:
+let jsonData = [];
+let currentAlgorithm = "SHA-256";
+let dailyIncome = 0;
+let dailyProfitValue = 0; // Используется в calculateProfit, но не dailyProfitValue из обучения
+let dailyElectricityCostValue = 0; // Store electricity cost in USD
+let monthlyProfit = 0;
+let yearlyProfit = 0;
+let usdtPrice = 0; // Храним актуальный курс USDT
+let isUSD = true; // По умолчанию показываем доллары
+
+document.addEventListener("DOMContentLoaded", initAppAndTutorial); // Запускаем общую инициализацию
+
+async function fetchData() {
+    console.log("Загрузка kursBTC.txt...");
+    try {
+        const response = await fetch("https://hamsauno.github.io/Miner/kursBTC.txt");
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const text = await response.text();
+        const data = text.trim().split("\n");
+        console.log("✅ Строки из kursBTC.txt:", data);
+
+        if (data.length >= 9) {
+            const values = {
+                btcPrice: parseFloat(data[0]),
+                usdtPrice: parseFloat(data[1]), // Обновляем глобальный usdtPrice
+                profitPerTH: parseFloat(data[2]),
+                ltcPrice: parseFloat(data[3]),
+                dogePrice: parseFloat(data[4]),
+                bellPrice: parseFloat(data[5]),
+                profitPerLTC: parseFloat(data[6]),
+                profitPerDOGE: parseFloat(data[7]),
+                profitPerBELL: parseFloat(data[8]),
+            };
+
+            let dataValid = true;
+            Object.entries(values).forEach(([key, val]) => {
+                if (isNaN(val)) {
+                    console.warn(`⚠️ Некорректное значение для ${key} из TXT:`, data[Object.keys(values).indexOf(key)]);
+                    dataValid = false;
+                }
+                const el = document.getElementById(key);
+                if (el && !isNaN(val)) {
+                    el.value = val.toFixed(key.startsWith("profit") ? 8 : 2); // Форматируем для скрытых полей
+                    if (key === "usdtPrice") {
+                        usdtPrice = val; // Сохраняем в глобальную переменную
+                        console.log(`Курс USDT обновлен: ${usdtPrice}`);
+                    }
+                } else if (!el) {
+                     console.warn(`⚠️ Элемент с ID ${key} не найден для установки значения из TXT.`);
+                }
+            });
+
+            if (!dataValid) {
+                // alert("Внимание: Некоторые данные из kursBTC.txt не удалось прочитать корректно. Расчеты могут быть неверны.");
+                console.warn("Внимание: Некоторые данные из kursBTC.txt не удалось прочитать корректно.");
+            } else {
+                console.log("📥 Значения из TXT успешно загружены и установлены.");
+            }
+        } else {
+            console.warn("❗ Недостаточно строк в kursBTC.txt. Ожидалось 9 или больше.");
+            // alert("Ошибка: Не удалось загрузить все необходимые данные из kursBTC.txt.");
+        }
+    } catch (e) {
+        console.error("❌ Критическая ошибка загрузки kursBTC.txt:", e);
+        // alert(`Критическая ошибка при загрузке данных курса (${e.message}). Расчеты невозможны.`);
+        const calcBtn = document.getElementById('calculateBtn');
+        if(calcBtn) calcBtn.disabled = true;
+    }
+}
+
+
+async function fetchJsonData() {
+    console.log(`Загрузка calc.json для алгоритма: ${currentAlgorithm}...`);
+    try {
+        const response = await fetch("https://hamsauno.github.io/Miner/json/calc.json");
+         if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        jsonData = data["Расчёты"] ? data["Расчёты"].filter(item => item["Алгоритм"] === currentAlgorithm) : [];
+        console.log(`✅ Загружено ${jsonData.length} моделей для ${currentAlgorithm}`);
+        if (jsonData.length === 0) {
+             console.warn(`⚠️ Модели для алгоритма ${currentAlgorithm} не найдены в calc.json`);
+        }
+    } catch (e) {
+        console.error(`❌ Ошибка загрузки или парсинга calc.json:`, e);
+        jsonData = [];
+        // alert(`Ошибка загрузки данных моделей (${e.message}). Выбор модели невозможен.`);
+        const manufacturerSelect = document.getElementById("manufacturerSelect");
+        const modelSelect = document.getElementById("asicModel");
+        if (manufacturerSelect) manufacturerSelect.innerHTML = '<option>Ошибка загрузки</option>';
+        if (modelSelect) modelSelect.innerHTML = '<option>Ошибка загрузки</option>';
+    }
+}
+
+async function onAlgorithmChange() {
+    const algorithmSelect = document.getElementById("algorithmSelect");
+    if (!algorithmSelect) return;
+    currentAlgorithm = algorithmSelect.value;
+    console.log(`Алгоритм изменен на: ${currentAlgorithm}`);
+
+    await fetchJsonData();
+
+    const manufacturerSelect = document.getElementById("manufacturerSelect");
+    if (!manufacturerSelect) return;
+
+    const uniqueManufacturers = [...new Set(jsonData.map(item => item["Производитель"]?.toLowerCase() || 'unknown'))]
+                                .filter(m => m !== 'unknown')
+                                .sort();
+
+    manufacturerSelect.innerHTML = "";
+
+    if (uniqueManufacturers.length > 0) {
+        uniqueManufacturers.forEach(m => {
+            const opt = document.createElement("option");
+            opt.value = m;
+            opt.textContent = m.charAt(0).toUpperCase() + m.slice(1);
+            manufacturerSelect.appendChild(opt);
+        });
+        manufacturerSelect.disabled = false;
+         console.log(`Производители для ${currentAlgorithm} обновлены.`);
+        updateModelList();
+    } else {
+        manufacturerSelect.innerHTML = '<option>Нет данных</option>';
+        manufacturerSelect.disabled = true;
+        const modelSelect = document.getElementById("asicModel");
+         if (modelSelect) {
+             modelSelect.innerHTML = '<option>Нет данных</option>';
+             modelSelect.disabled = true;
+         }
+         updateAsicSpecs();
+         console.warn(`Производители для ${currentAlgorithm} не найдены.`);
+    }
+}
+
+
+function updateModelList() {
+    const manufacturerSelect = document.getElementById("manufacturerSelect");
+    const modelSelect = document.getElementById("asicModel");
+    if (!manufacturerSelect || !modelSelect) return;
+
+    const selectedManufacturer = manufacturerSelect.value?.toLowerCase();
+    console.log(`Выбран производитель: ${selectedManufacturer}`);
+    modelSelect.innerHTML = "";
+
+    const models = jsonData.filter(item => item["Производитель"]?.toLowerCase() === selectedManufacturer);
+
+    if (models.length > 0) {
+        models.forEach(item => {
+            const opt = document.createElement("option");
+            opt.value = `${item["Модель"]}|${item["Хешрейт"]}`;
+            opt.textContent = `${item["Модель"]} (${item["Хешрейт"]} ${item["Ед. изм."]})`;
+            modelSelect.appendChild(opt);
+        });
+        modelSelect.disabled = false;
+        console.log(`Модели для ${selectedManufacturer} обновлены.`);
+        updateAsicSpecs();
+    } else {
+        modelSelect.innerHTML = '<option>Нет моделей</option>';
+        modelSelect.disabled = true;
+        updateAsicSpecs();
+        console.warn(`Модели для ${selectedManufacturer} не найдены.`);
+    }
+}
+
+
+function updateAsicSpecs() {
+    const modelSelect = document.getElementById("asicModel");
+    const asicCostInput = document.getElementById("asicCost");
+    const hashrateEl = document.getElementById("hashrate");
+    const edpriceEl = document.getElementById("edprice");
+    const powerEl = document.getElementById("power");
+    const powerUnitEl = document.getElementById("power_unit");
+
+    if (!modelSelect || !asicCostInput || !hashrateEl || !edpriceEl || !powerEl || !powerUnitEl) {
+        console.error("Один из элементов для обновления характеристик ASIC не найден.");
+        return;
+    }
+
+    hashrateEl.textContent = '';
+    edpriceEl.textContent = '';
+    powerEl.textContent = '';
+    powerUnitEl.textContent = '';
+    asicCostInput.value = '';
+
+    const selectedValue = modelSelect.value;
+    if (!selectedValue || modelSelect.selectedOptions.length === 0 || modelSelect.selectedOptions[0].disabled || modelSelect.selectedOptions[0].textContent === "Нет моделей" || modelSelect.selectedOptions[0].textContent === "Нет данных" || modelSelect.selectedOptions[0].textContent === "Ошибка загрузки" ) {
+        console.log("Нет выбранной модели или выбрана заглушка для обновления характеристик.");
+        asicCostInput.placeholder = selectedValue ? 'Данные не найдены' : 'Выберите модель';
+        return;
+    }
+
+
+    const modelData = selectedValue.split("|");
+    if (modelData.length < 2) {
+        console.warn("Некорректное значение в modelSelect:", selectedValue);
+        return;
+    }
+    const modelName = modelData[0];
+    const modelHashrate = modelData[1];
+
+    const item = jsonData.find(i => i["Модель"] === modelName && i["Хешрейт"] === modelHashrate);
+
+    if (item) {
+        console.log("Найдена модель:", item);
+        hashrateEl.textContent = item["Хешрейт"] || '';
+        edpriceEl.textContent = item["Ед. изм."] || '';
+
+        const powerValue = parseFloat(item["Потребление"]);
+        if (!isNaN(powerValue)) {
+            powerEl.textContent = Math.round(powerValue);
+            powerUnitEl.textContent = ' Вт';
+        } else {
+             console.warn("Некорректное значение потребления:", item["Потребление"]);
+        }
+
+        const itemPriceUSD = parseFloat(item["Цена"]);
+        if (!isNaN(itemPriceUSD) && usdtPrice > 0) {
+            const calculatedCostRUB = itemPriceUSD * usdtPrice;
+            asicCostInput.value = Math.ceil(calculatedCostRUB / 100) * 100;
+            console.log(`Стоимость асика рассчитана: ${asicCostInput.value} ₽ (Цена: $${itemPriceUSD}, Курс: ${usdtPrice} ₽/$)`);
+        } else {
+            asicCostInput.placeholder = 'Цена не найдена';
+            console.warn(`Не удалось рассчитать стоимость ASIC. Цена: ${item["Цена"]}, Курс USDT: ${usdtPrice}`);
+        }
+    } else {
+        console.warn(`Данные для модели ${modelName} (${modelHashrate}) не найдены в jsonData.`);
+        asicCostInput.placeholder = 'Данные не найдены';
+    }
+}
+
+function showNotification() {
+    const notification = document.getElementById('notification');
+    if (notification) {
+        notification.classList.remove('hidden');
+        setTimeout(() => {
+            notification.classList.add('hidden');
+        }, 1000);
+    }
+}
+
+
+function calculateProfit() {
+    console.log("Начало расчета...");
+    const elements = {
+        usdtPriceInput: document.getElementById("usdtPrice"),
+        hashrateEl: document.getElementById("hashrate"),
+        powerEl: document.getElementById("power"),
+        electricityCostInput: document.getElementById('electricityCost'),
+        asicCostInput: document.getElementById("asicCost"),
+        btcPriceInput: document.getElementById("btcPrice"),
+        profitPerTHInput: document.getElementById("profitPerTH"),
+        ltcPriceInput: document.getElementById("ltcPrice"),
+        dogePriceInput: document.getElementById("dogePrice"),
+        bellPriceInput: document.getElementById("bellPrice"),
+        profitPerLTCInput: document.getElementById("profitPerLTC"),
+        profitPerDOGEInput: document.getElementById("profitPerDOGE"),
+        profitPerBELLInput: document.getElementById("profitPerBELL"),
+        incomeEl: document.getElementById("income"),
+        incomeRubEl: document.getElementById("income_rub"),
+        profitEl: document.getElementById("profit"),
+        profitRubEl: document.getElementById("profit_rub"),
+        incomeMonthEl: document.getElementById("incomeMonth"),
+        incomeMonthRubEl: document.getElementById("incomeMonth_rub"),
+        incomeYearEl: document.getElementById("incomeYear"),
+        incomeYearRubEl: document.getElementById("incomeYear_rub"),
+        profitMonthEl: document.getElementById("profitMonth"),
+        profitMonthRubEl: document.getElementById("profitMonth_rub"),
+        profitYearEl: document.getElementById("profitYear"),
+        profitYearRubEl: document.getElementById("profitYear_rub"),
+        roiEl: document.getElementById("roi"),
+        paybackEl: document.getElementById("payback"),
+        profitBar: document.getElementById("dailyProfitBar"),
+        electricityBar: document.getElementById("dailyElectricityCostBar"),
+        profitPercentageLabel: document.getElementById("profitPercentageLabel"),
+        costPercentageLabel: document.getElementById("costPercentageLabel")
+    };
+
+    for (const key in elements) {
+        if (!elements[key]) {
+            console.error(`❌ Ошибка: Элемент ${key} не найден! Расчет прерван.`);
+            // alert(`Критическая ошибка: элемент ${key} отсутствует на странице.`);
+            return;
+        }
+    }
+     console.log("Все элементы для расчета найдены.");
+
+    const values = {
+        currentUsdtPrice: parseFloat(elements.usdtPriceInput.value),
+        hashrate: parseFloat(elements.hashrateEl.textContent),
+        power: parseFloat(elements.powerEl.textContent),
+        electricityCost: parseFloat(elements.electricityCostInput.value.replace(',', '.')),
+        asicCost: parseFloat(elements.asicCostInput.value)
+    };
+
+     const baseValuesValid = !isNaN(values.currentUsdtPrice) && values.currentUsdtPrice > 0 &&
+                            !isNaN(values.hashrate) && values.hashrate > 0 &&
+                            !isNaN(values.power) && values.power >= 0 &&
+                            !isNaN(values.electricityCost) && values.electricityCost >= 0 &&
+                            !isNaN(values.asicCost) && values.asicCost >= 0;
+
+    if (!baseValuesValid) {
+         console.error("❌ Ошибка: Некорректные базовые значения для расчета.", values);
+        //  alert("Пожалуйста, проверьте введенные данные (хэшрейт, потребление, стоимость розетки, стоимость асика). Они должны быть корректными числами.");
+         return;
+    }
+     console.log("Базовые значения для расчета:", values);
+
+    dailyIncome = 0; // Глобальная переменная
+    if (currentAlgorithm === "SHA-256") {
+        const btcPrice = parseFloat(elements.btcPriceInput.value);
+        const profitPerTH = parseFloat(elements.profitPerTHInput.value);
+        if (!isNaN(btcPrice) && !isNaN(profitPerTH)) {
+            dailyIncome = values.hashrate * profitPerTH * btcPrice;
+        } else {
+             console.error("❌ Ошибка: Некорректные данные BTC или ProfitPerTH.");
+            //  alert("Ошибка данных для расчета SHA-256.");
+             return;
+        }
+    } else if (currentAlgorithm === "Scrypt") {
+        const ltcPrice = parseFloat(elements.ltcPriceInput.value);
+        const dogePrice = parseFloat(elements.dogePriceInput.value);
+        const bellPrice = parseFloat(elements.bellPriceInput.value);
+        const profitPerLTC = parseFloat(elements.profitPerLTCInput.value);
+        const profitPerDOGE = parseFloat(elements.profitPerDOGEInput.value);
+        const profitPerBELL = parseFloat(elements.profitPerBELLInput.value);
+         if (!isNaN(ltcPrice) && !isNaN(dogePrice) && !isNaN(bellPrice) &&
+            !isNaN(profitPerLTC) && !isNaN(profitPerDOGE) && !isNaN(profitPerBELL))
+         {
+            const incomeLTC = values.hashrate * profitPerLTC * ltcPrice;
+            const incomeDOGE = values.hashrate * profitPerDOGE * dogePrice;
+            const incomeBELL = values.hashrate * profitPerBELL * bellPrice;
+            dailyIncome = incomeLTC + incomeDOGE + incomeBELL;
+         } else {
+              console.error("❌ Ошибка: Некорректные данные для расчета Scrypt.");
+            //   alert("Ошибка данных для расчета Scrypt.");
+              return;
+         }
+    }
+     console.log(`Дневной доход ($): ${dailyIncome}`);
+
+    const dailyElectricityCostRub = (values.power / 1000) * values.electricityCost * 24;
+    dailyElectricityCostValue = values.currentUsdtPrice > 0 ? dailyElectricityCostRub / values.currentUsdtPrice : 0; // Глобальная
+    console.log(`Дневные расходы на электричество ($): ${dailyElectricityCostValue}`);
+
+    // Обновляем глобальную dailyProfitValue (используемую в updateProgressBarAndLabels)
+    // Эта переменная отличается от dailyProfitValue, которая была в коде обучения, поэтому можно переименовать, если нужно.
+    // Я оставлю как есть, т.к. она используется в updateProgressBarAndLabels
+    window.dailyProfitValue = dailyIncome - dailyElectricityCostValue; // Используем window.dailyProfitValue чтобы не конфликтовать с локальной если она есть
+
+    monthlyProfit = window.dailyProfitValue * 30.5; // Глобальная
+    yearlyProfit = window.dailyProfitValue * 365;   // Глобальная
+    console.log(`Дневная прибыль ($): ${window.dailyProfitValue}`);
+
+    const asicCostInUSD = values.currentUsdtPrice > 0 ? values.asicCost / values.currentUsdtPrice : Infinity;
+    const roi = (yearlyProfit && asicCostInUSD > 0 && isFinite(asicCostInUSD)) ? (yearlyProfit / asicCostInUSD) * 100 : 0;
+    const payback = (window.dailyProfitValue > 0 && asicCostInUSD > 0 && isFinite(asicCostInUSD)) ? (asicCostInUSD / window.dailyProfitValue) / 30.5 : Infinity;
+    console.log(`Стоимость асика ($): ${asicCostInUSD}, Годовой ROI: ${roi}%, Окупаемость (мес): ${payback}`);
+
+    updateTableValues();
+    updateProgressBarAndLabels(elements);
+
+    elements.roiEl.innerText = isFinite(roi) ? roi.toFixed(1) : "—";
+    elements.paybackEl.innerText = isFinite(payback) ? payback.toFixed(1) : "—";
+
+    showNotification();
+
+    console.log("Расчет завершен, интерфейс обновлен.");
+}
+
+function formatCurrency(value, currency = "$", fractionDigits = 2) {
+    if (isNaN(value) || !isFinite(value)) return currency === "$" ? "$ --.--" : "--.-- ₽";
+    const multiplier = Math.pow(10, fractionDigits);
+    const roundedValue = Math.round(value * multiplier) / multiplier;
+    return currency + roundedValue.toLocaleString('ru-RU', { minimumFractionDigits: fractionDigits, maximumFractionDigits: fractionDigits });
+};
+ function formatCurrencyRub(value, fractionDigits = 0) {
+    if (isNaN(value) || !isFinite(value) || isNaN(usdtPrice) || usdtPrice <= 0) return "-- ₽";
+    const rubValue = value * usdtPrice;
+     const multiplier = Math.pow(10, fractionDigits);
+    const roundedValue = Math.round(rubValue * multiplier) / multiplier;
+    return roundedValue.toLocaleString('ru-RU', { maximumFractionDigits: fractionDigits }) + " ₽";
+};
+
+
+function updateTableValues() {
+    const elementsToToggle = [
+        "income", "incomeMonth", "incomeYear",
+        "profit", "profitMonth", "profitYear"
+    ];
+
+    elementsToToggle.forEach(id => {
+        const usdEl = document.getElementById(id);
+        const rubEl = document.getElementById(`${id}_rub`);
+        if (usdEl && rubEl) {
+            let valueUSD = 0;
+            // Используем глобальные переменные, обновленные в calculateProfit
+            if (id.startsWith("incomeMonth")) valueUSD = dailyIncome * 30.5;
+            else if (id.startsWith("incomeYear")) valueUSD = dailyIncome * 365;
+            else if (id.startsWith("income")) valueUSD = dailyIncome;
+            else if (id.startsWith("profitMonth")) valueUSD = monthlyProfit; // global monthlyProfit
+            else if (id.startsWith("profitYear")) valueUSD = yearlyProfit;  // global yearlyProfit
+            else if (id.startsWith("profit")) valueUSD = window.dailyProfitValue; // global dailyProfitValue
+
+            usdEl.innerText = formatCurrency(valueUSD);
+            rubEl.innerText = formatCurrencyRub(valueUSD);
+
+            if (isUSD) {
+                usdEl.classList.remove("hidden");
+                rubEl.classList.add("hidden");
+            } else {
+                usdEl.classList.add("hidden");
+                rubEl.classList.remove("hidden");
+            }
+        } else {
+            console.warn(`Элементы для переключения валюты ${id} / ${id}_rub не найдены.`);
+        }
+    });
+}
+
+function setCurrency(setToUSD) {
+    if (isUSD === setToUSD) return;
+
+    isUSD = setToUSD;
+    const usdBtn = document.getElementById('currencyUSD');
+    const rubBtn = document.getElementById('currencyRUB');
+
+    if (usdBtn && rubBtn) {
+        if (isUSD) {
+            usdBtn.classList.remove('inactive');
+            usdBtn.classList.add('active');
+            rubBtn.classList.remove('active');
+            rubBtn.classList.add('inactive');
+        } else {
+            usdBtn.classList.remove('active');
+            usdBtn.classList.add('inactive');
+            rubBtn.classList.remove('inactive');
+            rubBtn.classList.add('active');
+        }
+        updateTableValues();
+        console.log(`Валюта переключена на: ${isUSD ? 'USD' : 'RUB'}`);
+    } else {
+        console.warn("Кнопки валют не найдены.");
+    }
+}
+
+function updateProgressBarAndLabels(elements) {
+    const profitBar = elements.profitBar;
+    const electricityBar = elements.electricityBar;
+    const profitLabel = elements.profitPercentageLabel;
+    const costLabel = elements.costPercentageLabel;
+
+    let profitPercentage = 0;
+    let electricityPercentage = 0;
+
+    // Используем глобальные dailyIncome и dailyElectricityCostValue
+    if (dailyIncome > 0 && isFinite(dailyIncome) && isFinite(dailyElectricityCostValue)) {
+        // Используем глобальную window.dailyProfitValue (обновленную в calculateProfit)
+        profitPercentage = Math.max(0, (window.dailyProfitValue / dailyIncome) * 100);
+        electricityPercentage = Math.max(0, (dailyElectricityCostValue / dailyIncome) * 100);
+
+        if (window.dailyProfitValue <= 0) { // Проверяем прибыль
+            profitPercentage = 0;
+            electricityPercentage = 100; // Если нет прибыли, все затраты
+        } else if (profitPercentage + electricityPercentage > 100.1) { // Коррекция, если сумма > 100%
+             electricityPercentage = 100 - profitPercentage;
+        }
+
+        profitPercentage = Math.min(100, Math.max(0, profitPercentage));
+        electricityPercentage = Math.min(100, Math.max(0, electricityPercentage));
+
+        profitBar.style.width = `${profitPercentage.toFixed(1)}%`;
+        electricityBar.style.width = `${electricityPercentage.toFixed(1)}%`;
+        electricityBar.style.left = `${profitPercentage.toFixed(1)}%`;
+        // Цвета уже заданы в HTML, но можно и здесь для уверенности
+        // profitBar.style.backgroundColor = "#2511A8";
+        // electricityBar.style.backgroundColor = "#CCCCCC"; // Ваш исходный цвет был #FFFFFF, но в разметке #CCCCCC
+
+        profitLabel.textContent = `Прибыль: ${profitPercentage.toFixed(1)}%`;
+        costLabel.textContent = `Затраты: ${electricityPercentage.toFixed(1)}%`;
+
+    } else {
+        profitBar.style.width = "0%";
+        electricityBar.style.width = "0%";
+        electricityBar.style.left = "0%";
+        profitLabel.textContent = `Прибыль: --%`;
+        costLabel.textContent = `Затраты: --%`;
+    }
+}
+
+// Привязка существующих обработчиков событий
+const algorithmSelect = document.getElementById("algorithmSelect");
+const manufacturerSelect = document.getElementById("manufacturerSelect");
+const asicModelSelect = document.getElementById("asicModel"); // Переименовал для единообразия
+const calculateBtn = document.getElementById("calculateBtn"); // Переименовал
+const currencyUSD_Btn = document.getElementById('currencyUSD');
+const currencyRUB_Btn = document.getElementById('currencyRUB');
+
+if (algorithmSelect) algorithmSelect.addEventListener("change", onAlgorithmChange);
+if (manufacturerSelect) manufacturerSelect.addEventListener("change", updateModelList);
+if (asicModelSelect) asicModelSelect.addEventListener("change", updateAsicSpecs); // Используем asicModelSelect
+if (calculateBtn) calculateBtn.addEventListener("click", calculateProfit);     // Используем calculateBtn
+if (currencyUSD_Btn) currencyUSD_Btn.addEventListener('click', () => setCurrency(true));
+if (currencyRUB_Btn) currencyRUB_Btn.addEventListener('click', () => setCurrency(false));
+
+  </script>
+</body>
+</html>
