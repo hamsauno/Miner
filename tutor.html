@@ -60,44 +60,45 @@
       top: 0;
       width: 100%;
       height: 100%;
-      background-color: rgba(0,0,0,0.6); /* Полупрозрачный фон */
+      background-color: rgba(0,0,0,0.8); /* Затемняющий фон, можно сделать темнее */
+      pointer-events: auto; /* Чтобы перехватывать клики */
   }
 
   .tutorial-modal {
       display: none; /* Скрыто по умолчанию */
       position: fixed;
-      z-index: 9999;
+      z-index: 10000; /* Выше оверлея и подсвеченного элемента */
       left: 50%;
       top: 50%;
       transform: translate(-50%, -50%);
       background-color: #1F2937; /* Темный фон для модалки (Tailwind gray-800) */
       color: #F3F4F6; /* Светлый текст (Tailwind gray-100) */
-      padding: 20px;
+      padding: 15px; /* Уменьшенный padding */
       border: 1px solid #4B5563; /* Tailwind gray-600 */
-      width: 90%;
-      max-width: 450px;
-      border-radius: 8px; /* Не используем Tailwind rounded-none здесь */
+      width: 80%; /* Уменьшенная ширина */
+      max-width: 350px; /* Максимальная уменьшенная ширина */
+      border-radius: 0; /* Убраны скругления */
       box-shadow: 0 4px 6px rgba(0,0,0,0.1);
       text-align: center;
   }
   .tutorial-modal h3 {
       margin-top: 0;
-      margin-bottom: 15px;
-      font-size: 1.25rem; /* text-xl */
+      margin-bottom: 10px; /* Уменьшен отступ */
+      font-size: 1.1rem; /* Уменьшен размер шрифта */
       font-weight: 600; /* font-semibold */
   }
   .tutorial-modal p {
-      margin-bottom: 20px;
-      font-size: 0.875rem; /* text-sm */
-      line-height: 1.5;
+      margin-bottom: 15px; /* Уменьшен отступ */
+      font-size: 0.8rem; /* Уменьшен размер шрифта */
+      line-height: 1.4;
   }
   .tutorial-modal button {
-      padding: 10px 15px;
-      font-size: 0.875rem; /* text-sm */
+      padding: 8px 12px; /* Уменьшен padding кнопок */
+      font-size: 0.8rem; /* Уменьшен размер шрифта кнопок */
       font-weight: 500; /* font-medium */
       cursor: pointer;
       border: none;
-      border-radius: 6px; /* Не используем Tailwind rounded-none здесь */
+      border-radius: 0; /* Убраны скругления у кнопок */
       transition: background-color 0.2s;
   }
   .tutorial-modal-next-btn {
@@ -110,7 +111,7 @@
   .tutorial-modal-skip-btn {
       background-color: #4B5563; /* Tailwind gray-600 */
       color: #F3F4F6; /* Tailwind gray-100 */
-      margin-left: 10px;
+      margin-left: 8px; /* Уменьшен отступ */
   }
   .tutorial-modal-skip-btn:hover {
       background-color: #374151; /* Tailwind gray-700 */
@@ -119,11 +120,35 @@
   /* Стиль для подсветки элемента */
   .tutorial-highlight {
       box-shadow: 0 0 0 3px #FBBF24, 0 0 15px 3px #FBBF24; /* Tailwind amber-400 */
-      border-radius: 4px !important; /* Добавляем небольшое скругление для подсветки */
+      border-radius: 0 !important; /* Убраны скругления для подсветки */
       transition: box-shadow 0.3s ease-in-out;
       position: relative; /* Для позиционирования подсказки */
-      z-index: 1; /* Чтобы было над другими элементами */
+      z-index: 9999; /* Чтобы было над оверлеем, но под модальным окном */
+      pointer-events: auto; /* Разрешаем взаимодействие с подсвеченным элементом */
   }
+
+  /* Дополнительный стиль, чтобы заблокировать остальные элементы */
+  body.tutorial-active > *:not(.tutorial-modal-overlay):not(.tutorial-modal):not(.tutorial-highlighted-ancestor) {
+      pointer-events: none !important;
+      /* filter: blur(2px); опционально для размытия фона */
+  }
+  /* Если подсвечиваемый элемент вложен, его родителям нужно разрешить события */
+  .tutorial-highlighted-ancestor {
+      pointer-events: auto !important;
+  }
+  #hashrateContainer select { /* Стиль для селекта хешрейта, если он создается */
+    background-color: #E2E2E2;
+    width: 100%;
+    padding: 0.1rem 0.5rem; /* py-1 px-2 equivalent */
+    border: 1px solid #9CA3AF; /* border-gray-400 */
+    color: black;
+    font-size: 0.875rem; /* text-sm */
+    border-radius: 0 !important; /* Ensure no rounded corners */
+    -webkit-appearance: menulist; /* Restore some default select appearance if needed */
+    -moz-appearance: menulist;
+    appearance: menulist;
+  }
+
 </style>
 
 </head>
@@ -156,12 +181,13 @@
          <div class="flex gap-3">
            <div class="w-1/2">
              <label class="block text-sm font-medium mb-1">Хэшрейт</label>
-             <div id="hashrateContainer" class="bg-[#E2E2E2] px-2 py-1 text-sm text-black min-h-[28px] rounded-none"> <span id="hashrate"></span> <span id="edprice"></span>
+             <div id="hashrateContainer" class="bg-[#E2E2E2] px-2 py-1 text-sm text-black min-h-[28px] rounded-none flex items-center">
+                <span id="hashrate"></span>&nbsp;<span id="edprice"></span>
              </div>
            </div>
            <div class="w-1/2">
              <label class="block text-sm font-medium mb-1">Потребление</label>
-             <div id="powerContainer" class="bg-[#E2E2E2] px-2 py-1 text-sm text-black min-h-[28px] rounded-none"> <span id="power"></span><span id="power_unit"></span> </div>
+             <div id="powerContainer" class="bg-[#E2E2E2] px-2 py-1 text-sm text-black min-h-[28px] rounded-none flex items-center"> <span id="power"></span><span id="power_unit"></span> </div>
            </div>
          </div>
 
@@ -309,22 +335,21 @@ const tutorialTitle = document.getElementById('tutorialTitle');
 const tutorialText = document.getElementById('tutorialText');
 const tutorialNextBtn = document.getElementById('tutorialNextBtn');
 const tutorialSkipBtn = document.getElementById('tutorialSkipBtn');
-let highlightedElement = null; // Для отслеживания подсвеченного элемента
+let highlightedElement = null; 
+let highlightedAncestors = []; 
 
 async function initAppAndTutorial() {
     console.log("DOM fully loaded and parsed");
     Telegram.WebApp.ready();
     console.log("Telegram WebApp is ready.");
 
-    // Сначала основные инициализации приложения
     try {
-        await fetchData();
-        await onAlgorithmChange();
+        await fetchData(); // Fetch currency data first
+        await onAlgorithmChange(); // Then initialize algorithm dependent data
     } catch (error) {
         console.error("❌ Ошибка при начальной загрузке данных приложения:", error);
     }
 
-    // Затем инициализация обучения
     if (Telegram.WebApp.initDataUnsafe && Telegram.WebApp.initDataUnsafe.user) {
         telegramUser = Telegram.WebApp.initDataUnsafe.user;
         if (telegramUser.id) {
@@ -335,6 +360,9 @@ async function initAppAndTutorial() {
         }
     } else {
         console.warn("Telegram WebApp данные пользователя не найдены. Обучение не будет запущено.");
+        // Optionally, start tutorial anyway for non-Telegram environments or testing
+        // setupTutorialStepsDefinition();
+        // startTutorialFlow();
     }
 }
 
@@ -351,7 +379,7 @@ async function checkTutorialStatus() {
             .eq('telegram_id', telegramUser.id.toString())
             .single();
 
-        if (error && error.code !== 'PGRST116') { // PGRST116 - "single row not found"
+        if (error && error.code !== 'PGRST116') { 
             console.error("Ошибка получения данных пользователя из Supabase:", error);
             return;
         }
@@ -376,51 +404,53 @@ function setupTutorialStepsDefinition() {
     tutorialSteps = [
         {
             title: "Шаг 1: Алгоритм",
-            text: "Добро пожаловать! Начните с выбора <b>Алгоритма</b> майнинга. Доступны SHA-256 (для Bitcoin) и Scrypt (для LTC+DOGE).",
+            text: "Начните с выбора Алгоритма. Доступны SHA-256 (BTC) и Scrypt (LTC+DOGE).",
             elementId: "algorithmSelect",
         },
         {
             title: "Шаг 2: Производитель",
-            text: "Отлично! Теперь выберите <b>Производителя</b> вашего оборудование из списка.",
+            text: "Отлично! Теперь выберите Производителя из списка.",
             elementId: "manufacturerSelect",
         },
         {
             title: "Шаг 3: Модель",
-            text: "Затем выберите конкретную <b>Модель Оборудования</b>. Характеристики (Хэшрейт и Потребление) подставятся автоматически.",
+            text: "Выберите Модель. Характеристики (Хэшрейт и Потребление) подставятся автоматически.",
             elementId: "asicModel",
         },
         {
-            title: "Шаг 4: Характеристики",
-            text: "Обратите внимание на автоматически определенные <b>Хэшрейт</b> и <b>Потребление</b> для выбранной модели.",
-            elementId: "hashrateContainer", // Подсвечиваем контейнер с хэшрейтом
-            alsoHighlight: "powerContainer" // И контейнер с потреблением
+            title: "Шаг 4: Стоимость Электроэнергии",
+            text: "Укажите Стоимость Электроэнергии за 1 кВт/ч.",
+            elementId: "electricityCost",
         },
         {
-            title: "Шаг 5: Стоимость",
-            text: "Укажите <b>Стоимость Электроэнергии</b> за 1 кВт⋅ч и проверьте/введите <b>Стоимость Оборудования</b> в рублях.",
-            elementId: "electricityCost",
-            alsoHighlight: "asicCost"
+            title: "Шаг 5: Стоимость Оборудования",
+            text: "Стоимость оборудования автоматически подтягивается из нашего прайса. Можно указать свою цену.",
+            elementId: "asicCost",
         },
         {
             title: "Шаг 6: Расчет",
-            text: "Когда все данные введены, нажмите кнопку <b>Рассчитать</b>, чтобы увидеть результаты.",
+            text: "Нажмите кнопку Рассчитать, чтобы увидеть результаты.",
             elementId: "calculateBtn",
         },
         {
-            title: "Шаг 7: Результаты",
-            text: "Здесь вы видите <b>шкалу доходности</b>, а ниже таблицу с <b>Доходом</b> и <b>Прибылью</b>. Вы можете переключать валюту ($/₽).",
-            elementId: "progressBarContainer", // Шкала
-            alsoHighlight: "resultsTable" // Таблица результатов (добавьте ID, если его нет)
+            title: "Шаг 7: Шкала Прибыль-Затраты",
+            text: "Здесь вы видите шкалу Прибыль-Затраты в общем Доходе.",
+            elementId: "progressBarContainer",
         },
         {
-            title: "Шаг 8: Окупаемость",
-            text: "В самом низу отображаются показатели <b>Окупаемости</b> и <b>Годовой процент</b> доходности (ROI).",
-            elementId: "paybackRoiContainer", // Контейнер с окупаемостью и ROI
+            title: "Шаг 8: Таблица Доход/Прибыль",
+            text: "В таблице с Доходом и Прибылью вы можете переключать валюту ($/₽).",
+            elementId: "resultsTable", 
+        },
+        {
+            title: "Шаг 9: Окупаемость и ROI",
+            text: "И, конечно, показатели Окупаемости и Годовой возврат инвестиций (ROI).",
+            elementId: "paybackRoiContainer",
         },
         {
             title: "Обучение завершено!",
-            text: "Вы успешно ознакомились с основами работы калькулятора. Удачных расчетов!",
-            elementId: null, // Нет элемента для подсветки на последнем шаге
+            text: "Удачных расчетов!",
+            elementId: null,
         }
     ];
 }
@@ -429,20 +459,26 @@ function startTutorialFlow() {
     currentTutorialStep = 0;
     tutorialModalOverlay.style.display = 'block';
     tutorialModal.style.display = 'block';
-    Telegram.WebApp.expand(); // Раскрываем WebApp на весь экран для лучшего отображения
+    document.body.classList.add('tutorial-active'); 
+    Telegram.WebApp.expand(); 
     displayCurrentTutorialStep();
 }
 
 function removeHighlight() {
     if (highlightedElement) {
         highlightedElement.classList.remove('tutorial-highlight');
+        highlightedElement.classList.remove('tutorial-highlighted-ancestor'); 
         highlightedElement = null;
     }
+    highlightedAncestors.forEach(ancestor => ancestor.classList.remove('tutorial-highlighted-ancestor'));
+    highlightedAncestors = [];
+
     document.querySelectorAll('.tutorial-highlight').forEach(el => el.classList.remove('tutorial-highlight'));
+    document.querySelectorAll('.tutorial-highlighted-ancestor').forEach(el => el.classList.remove('tutorial-highlighted-ancestor'));
 }
 
 function displayCurrentTutorialStep() {
-    removeHighlight();
+    removeHighlight(); 
 
     if (currentTutorialStep >= tutorialSteps.length) {
         completeTutorialProcess();
@@ -451,22 +487,39 @@ function displayCurrentTutorialStep() {
 
     const step = tutorialSteps[currentTutorialStep];
     tutorialTitle.textContent = step.title;
-    tutorialText.innerHTML = step.text; // Используем innerHTML для тега <b>
+    tutorialText.innerHTML = step.text; 
 
     if (step.elementId) {
         const targetElement = document.getElementById(step.elementId);
         if (targetElement) {
             highlightedElement = targetElement;
             highlightedElement.classList.add('tutorial-highlight');
-            // Плавная прокрутка к элементу
+            highlightedElement.classList.add('tutorial-highlighted-ancestor'); 
+
+            let parent = targetElement.parentElement;
+            while (parent && parent !== document.body) {
+                parent.classList.add('tutorial-highlighted-ancestor');
+                highlightedAncestors.push(parent);
+                parent = parent.parentElement;
+            }
+
             targetElement.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' });
         } else {
             console.warn(`Элемент для обучения с ID "${step.elementId}" не найден.`);
         }
-        if (step.alsoHighlight) {
+        if (step.alsoHighlight) { // Note: alsoHighlight was in a previous version, ensure tutorialSteps is updated if used
             const alsoElement = document.getElementById(step.alsoHighlight);
             if (alsoElement) {
                 alsoElement.classList.add('tutorial-highlight');
+                alsoElement.classList.add('tutorial-highlighted-ancestor'); 
+                 let parentAlso = alsoElement.parentElement;
+                 while (parentAlso && parentAlso !== document.body) {
+                    if (!highlightedAncestors.includes(parentAlso)) { 
+                        parentAlso.classList.add('tutorial-highlighted-ancestor');
+                        highlightedAncestors.push(parentAlso);
+                    }
+                    parentAlso = parentAlso.parentElement;
+                }
             }
         }
     }
@@ -484,12 +537,13 @@ tutorialNextBtn.addEventListener('click', () => {
 });
 
 tutorialSkipBtn.addEventListener('click', () => {
-    completeTutorialProcess(true); // true означает, что пользователь пропустил
+    completeTutorialProcess(true); 
 });
 
 async function completeTutorialProcess(skipped = false) {
     tutorialModalOverlay.style.display = 'none';
     tutorialModal.style.display = 'none';
+    document.body.classList.remove('tutorial-active'); 
     removeHighlight();
     console.log(skipped ? "Обучение пропущено." : "Обучение завершено.");
 
@@ -505,20 +559,16 @@ async function completeTutorialProcess(skipped = false) {
                 {
                     telegram_id: telegramUser.id.toString(),
                     tutor: true,
-                    // Предполагается, что created_at устанавливается по умолчанию в БД
-                    // updated_at можно обновлять триггером в БД или здесь:
                     updated_at: new Date().toISOString()
                 },
                 {
-                    onConflict: 'telegram_id', // Поле, по которому проверяется конфликт
-                    // ignoreDuplicates: false // по умолчанию false, т.е. будет UPDATE
+                    onConflict: 'telegram_id', 
                 }
             )
-            .select(); // Чтобы получить обновленную/вставленную запись
+            .select(); 
 
         if (error) {
             console.error("Ошибка сохранения статуса обучения в Supabase:", error);
-            // Можно показать пользователю некритичное сообщение об ошибке
         } else {
             console.log("Статус обучения успешно сохранен в Supabase:", data);
         }
@@ -534,14 +584,16 @@ async function completeTutorialProcess(skipped = false) {
 let jsonData = [];
 let currentAlgorithm = "SHA-256";
 let dailyIncome = 0;
-let dailyProfitValue = 0; // Используется в calculateProfit, но не dailyProfitValue из обучения
-let dailyElectricityCostValue = 0; // Store electricity cost in USD
+let dailyProfitValue = 0; 
+let dailyElectricityCostValue = 0; 
 let monthlyProfit = 0;
 let yearlyProfit = 0;
-let usdtPrice = 0; // Храним актуальный курс USDT
-let isUSD = true; // По умолчанию показываем доллары
+let usdtPrice = 0; 
+let isUSD = true; 
 
-document.addEventListener("DOMContentLoaded", initAppAndTutorial); // Запускаем общую инициализацию
+let currentModelVariants = []; // For storing variants of the currently selected model
+
+document.addEventListener("DOMContentLoaded", initAppAndTutorial); 
 
 async function fetchData() {
     console.log("Загрузка kursBTC.txt...");
@@ -557,7 +609,7 @@ async function fetchData() {
         if (data.length >= 9) {
             const values = {
                 btcPrice: parseFloat(data[0]),
-                usdtPrice: parseFloat(data[1]), // Обновляем глобальный usdtPrice
+                usdtPrice: parseFloat(data[1]), 
                 profitPerTH: parseFloat(data[2]),
                 ltcPrice: parseFloat(data[3]),
                 dogePrice: parseFloat(data[4]),
@@ -575,9 +627,9 @@ async function fetchData() {
                 }
                 const el = document.getElementById(key);
                 if (el && !isNaN(val)) {
-                    el.value = val.toFixed(key.startsWith("profit") ? 8 : 2); // Форматируем для скрытых полей
+                    el.value = val.toFixed(key.startsWith("profit") ? 8 : 2); 
                     if (key === "usdtPrice") {
-                        usdtPrice = val; // Сохраняем в глобальную переменную
+                        usdtPrice = val; 
                         console.log(`Курс USDT обновлен: ${usdtPrice}`);
                     }
                 } else if (!el) {
@@ -586,18 +638,15 @@ async function fetchData() {
             });
 
             if (!dataValid) {
-                // alert("Внимание: Некоторые данные из kursBTC.txt не удалось прочитать корректно. Расчеты могут быть неверны.");
                 console.warn("Внимание: Некоторые данные из kursBTC.txt не удалось прочитать корректно.");
             } else {
                 console.log("📥 Значения из TXT успешно загружены и установлены.");
             }
         } else {
             console.warn("❗ Недостаточно строк в kursBTC.txt. Ожидалось 9 или больше.");
-            // alert("Ошибка: Не удалось загрузить все необходимые данные из kursBTC.txt.");
         }
     } catch (e) {
         console.error("❌ Критическая ошибка загрузки kursBTC.txt:", e);
-        // alert(`Критическая ошибка при загрузке данных курса (${e.message}). Расчеты невозможны.`);
         const calcBtn = document.getElementById('calculateBtn');
         if(calcBtn) calcBtn.disabled = true;
     }
@@ -612,15 +661,15 @@ async function fetchJsonData() {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
         const data = await response.json();
-        jsonData = data["Расчёты"] ? data["Расчёты"].filter(item => item["Алгоритм"] === currentAlgorithm) : [];
-        console.log(`✅ Загружено ${jsonData.length} моделей для ${currentAlgorithm}`);
+        // Filter by algorithm immediately after fetching
+        jsonData = data["Расчёты"] ? data["Расчёты"] : [];
+        console.log(`✅ Загружено ${jsonData.length} всего моделей, будет отфильтровано по алгоритму.`);
         if (jsonData.length === 0) {
-             console.warn(`⚠️ Модели для алгоритма ${currentAlgorithm} не найдены в calc.json`);
+             console.warn(`⚠️ Модели не найдены в calc.json`);
         }
     } catch (e) {
         console.error(`❌ Ошибка загрузки или парсинга calc.json:`, e);
         jsonData = [];
-        // alert(`Ошибка загрузки данных моделей (${e.message}). Выбор модели невозможен.`);
         const manufacturerSelect = document.getElementById("manufacturerSelect");
         const modelSelect = document.getElementById("asicModel");
         if (manufacturerSelect) manufacturerSelect.innerHTML = '<option>Ошибка загрузки</option>';
@@ -634,14 +683,19 @@ async function onAlgorithmChange() {
     currentAlgorithm = algorithmSelect.value;
     console.log(`Алгоритм изменен на: ${currentAlgorithm}`);
 
-    await fetchJsonData();
+    // Fetch data if not already fetched, or if you want to re-fetch (though current setup fetches once)
+    if (jsonData.length === 0) { // Only fetch if jsonData is empty, assuming it's algorithm-agnostic initially
+        await fetchJsonData();
+    }
 
     const manufacturerSelect = document.getElementById("manufacturerSelect");
     if (!manufacturerSelect) return;
+// Filter jsonData by the current algorithm for manufacturer population
+const modelsForCurrentAlgorithm = jsonData.filter(item => item["Алгоритм"] === currentAlgorithm);
 
-    const uniqueManufacturers = [...new Set(jsonData.map(item => item["Производитель"]?.toLowerCase() || 'unknown'))]
-                                .filter(m => m !== 'unknown')
-                                .sort();
+const uniqueManufacturers = [...new Set(modelsForCurrentAlgorithm.map(item => item["Производитель"]?.toLowerCase() || 'unknown'))]
+    .filter(m => m !== 'unknown')
+    .sort();
 
     manufacturerSelect.innerHTML = "";
 
@@ -654,7 +708,7 @@ async function onAlgorithmChange() {
         });
         manufacturerSelect.disabled = false;
          console.log(`Производители для ${currentAlgorithm} обновлены.`);
-        updateModelList();
+        updateModelList(); // This will further filter by manufacturer AND algorithm
     } else {
         manufacturerSelect.innerHTML = '<option>Нет данных</option>';
         manufacturerSelect.disabled = true;
@@ -663,7 +717,7 @@ async function onAlgorithmChange() {
              modelSelect.innerHTML = '<option>Нет данных</option>';
              modelSelect.disabled = true;
          }
-         updateAsicSpecs();
+         updateAsicSpecs(); // Clear specs
          console.warn(`Производители для ${currentAlgorithm} не найдены.`);
     }
 }
@@ -678,91 +732,133 @@ function updateModelList() {
     console.log(`Выбран производитель: ${selectedManufacturer}`);
     modelSelect.innerHTML = "";
 
-    const models = jsonData.filter(item => item["Производитель"]?.toLowerCase() === selectedManufacturer);
+    // Filter by currentAlgorithm AND selectedManufacturer
+    const modelsForManufacturerAndAlgorithm = jsonData.filter(item => 
+        item["Алгоритм"] === currentAlgorithm &&
+        item["Производитель"]?.toLowerCase() === selectedManufacturer
+    );
 
-    if (models.length > 0) {
-        models.forEach(item => {
+    const uniqueModels = [...new Set(
+        modelsForManufacturerAndAlgorithm.map(item => item["Модель"])
+    )].sort();
+
+    if (uniqueModels.length > 0) {
+        uniqueModels.forEach(modelName => {
             const opt = document.createElement("option");
-            opt.value = `${item["Модель"]}|${item["Хешрейт"]}`;
-            opt.textContent = `${item["Модель"]} (${item["Хешрейт"]} ${item["Ед. изм."]})`;
+            opt.value = modelName; 
+            opt.textContent = modelName;
             modelSelect.appendChild(opt);
         });
         modelSelect.disabled = false;
-        console.log(`Модели для ${selectedManufacturer} обновлены.`);
-        updateAsicSpecs();
+        console.log(`Модели для ${selectedManufacturer} (${currentAlgorithm}) обновлены.`);
     } else {
         modelSelect.innerHTML = '<option>Нет моделей</option>';
         modelSelect.disabled = true;
-        updateAsicSpecs();
-        console.warn(`Модели для ${selectedManufacturer} не найдены.`);
+        console.warn(`Модели для ${selectedManufacturer} (${currentAlgorithm}) не найдены.`);
     }
+    updateAsicSpecs(); 
 }
 
 
 function updateAsicSpecs() {
     const modelSelect = document.getElementById("asicModel");
     const asicCostInput = document.getElementById("asicCost");
-    const hashrateEl = document.getElementById("hashrate");
-    const edpriceEl = document.getElementById("edprice");
+    const hashrateContainer = document.getElementById("hashrateContainer");
     const powerEl = document.getElementById("power");
     const powerUnitEl = document.getElementById("power_unit");
 
-    if (!modelSelect || !asicCostInput || !hashrateEl || !edpriceEl || !powerEl || !powerUnitEl) {
+    if (!modelSelect || !asicCostInput || !hashrateContainer || !powerEl || !powerUnitEl) {
         console.error("Один из элементов для обновления характеристик ASIC не найден.");
         return;
     }
 
-    hashrateEl.textContent = '';
-    edpriceEl.textContent = '';
+    hashrateContainer.innerHTML = '<span id="hashrate"></span>&nbsp;<span id="edprice"></span>'; // Reset to spans
+    document.getElementById("hashrate").textContent = '';
+    document.getElementById("edprice").textContent = '';
     powerEl.textContent = '';
     powerUnitEl.textContent = '';
     asicCostInput.value = '';
+    asicCostInput.placeholder = 'Выберите модель';
+    currentModelVariants = []; // Reset variants
 
-    const selectedValue = modelSelect.value;
-    if (!selectedValue || modelSelect.selectedOptions.length === 0 || modelSelect.selectedOptions[0].disabled || modelSelect.selectedOptions[0].textContent === "Нет моделей" || modelSelect.selectedOptions[0].textContent === "Нет данных" || modelSelect.selectedOptions[0].textContent === "Ошибка загрузки" ) {
-        console.log("Нет выбранной модели или выбрана заглушка для обновления характеристик.");
-        asicCostInput.placeholder = selectedValue ? 'Данные не найдены' : 'Выберите модель';
+    const selectedModelName = modelSelect.value;
+    if (!selectedModelName || modelSelect.selectedOptions.length === 0 || modelSelect.selectedOptions[0].disabled || modelSelect.selectedOptions[0].textContent === "Нет моделей" || modelSelect.selectedOptions[0].textContent === "Нет данных" || modelSelect.selectedOptions[0].textContent === "Ошибка загрузки" ) {
+        console.log("Нет выбранной модели или выбрана заглушка.");
         return;
     }
 
+    currentModelVariants = jsonData.filter(i => 
+        i["Модель"] === selectedModelName && 
+        i["Алгоритм"] === currentAlgorithm // Ensure correct algorithm
+    );
 
-    const modelData = selectedValue.split("|");
-    if (modelData.length < 2) {
-        console.warn("Некорректное значение в modelSelect:", selectedValue);
-        return;
-    }
-    const modelName = modelData[0];
-    const modelHashrate = modelData[1];
-
-    const item = jsonData.find(i => i["Модель"] === modelName && i["Хешрейт"] === modelHashrate);
-
-    if (item) {
-        console.log("Найдена модель:", item);
-        hashrateEl.textContent = item["Хешрейт"] || '';
-        edpriceEl.textContent = item["Ед. изм."] || '';
-
-        const powerValue = parseFloat(item["Потребление"]);
-        if (!isNaN(powerValue)) {
-            powerEl.textContent = Math.round(powerValue);
-            powerUnitEl.textContent = ' Вт';
+    if (currentModelVariants.length > 0) {
+        if (currentModelVariants.length === 1) {
+            const item = currentModelVariants[0];
+            // Explicitly ensure the span structure is there before populating
+            hashrateContainer.innerHTML = `<span id="hashrate"></span>&nbsp;<span id="edprice"></span>`;
+            document.getElementById("hashrate").textContent = item["Хешрейт"] || '';
+            document.getElementById("edprice").textContent = item["Ед. изм."] || '';
+            populateSpecsForVariant(item);
         } else {
-             console.warn("Некорректное значение потребления:", item["Потребление"]);
-        }
+            // Sort variants by hashrate (assuming hashrate is numeric or can be parsed to numeric)
+            currentModelVariants.sort((a, b) => parseFloat(a["Хешрейт"]) - parseFloat(b["Хешрейт"]));
 
-        const itemPriceUSD = parseFloat(item["Цена"]);
-        if (!isNaN(itemPriceUSD) && usdtPrice > 0) {
-            const calculatedCostRUB = itemPriceUSD * usdtPrice;
-            asicCostInput.value = Math.ceil(calculatedCostRUB / 100) * 100;
-            console.log(`Стоимость асика рассчитана: ${asicCostInput.value} ₽ (Цена: $${itemPriceUSD}, Курс: ${usdtPrice} ₽/$)`);
-        } else {
-            asicCostInput.placeholder = 'Цена не найдена';
-            console.warn(`Не удалось рассчитать стоимость ASIC. Цена: ${item["Цена"]}, Курс USDT: ${usdtPrice}`);
+            let selectHTML = '<select id="hashrateSelect" class="bg-[#E2E2E2] w-full px-1 py-0 border border-gray-400 text-black text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400 rounded-none appearance-menulist">';
+            currentModelVariants.forEach((variant, index) => {
+                selectHTML += `<option value="${index}">${variant["Хешрейт"]} ${variant["Ед. изм."]}</option>`;
+            });
+            selectHTML += '</select>';
+            hashrateContainer.innerHTML = selectHTML;
+
+            const hashrateSelect = document.getElementById("hashrateSelect");
+            hashrateSelect.addEventListener('change', function() {
+                populateSpecsForVariant(currentModelVariants[this.value]);
+            });
+            populateSpecsForVariant(currentModelVariants[0]); // Populate with the first variant initially
         }
     } else {
-        console.warn(`Данные для модели ${modelName} (${modelHashrate}) не найдены в jsonData.`);
+        console.warn(`Данные для модели ${selectedModelName} (${currentAlgorithm}) не найдены.`);
         asicCostInput.placeholder = 'Данные не найдены';
     }
 }
+
+function populateSpecsForVariant(item) {
+    if (!item) {
+        // Clear fields if no item
+        document.getElementById("power").textContent = '';
+        document.getElementById("power_unit").textContent = '';
+        document.getElementById("asicCost").value = '';
+        document.getElementById("asicCost").placeholder = 'Данные не найдены';
+        return;
+    }
+    
+    const powerEl = document.getElementById("power");
+    const powerUnitEl = document.getElementById("power_unit");
+    const asicCostInput = document.getElementById("asicCost");
+
+    const powerValue = parseFloat(item["Потребление"]);
+    if (!isNaN(powerValue)) {
+        powerEl.textContent = Math.round(powerValue);
+        powerUnitEl.textContent = ' Вт';
+    } else {
+        powerEl.textContent = '';
+        powerUnitEl.textContent = '';
+        console.warn("Некорректное значение потребления:", item["Потребление"]);
+    }
+
+    const itemPriceUSD = parseFloat(item["Цена"]);
+    if (!isNaN(itemPriceUSD) && usdtPrice > 0) {
+        const calculatedCostRUB = itemPriceUSD * usdtPrice;
+        asicCostInput.value = Math.ceil(calculatedCostRUB / 100) * 100; // Округление до ближайших 100 рублей вверх
+    } else {
+        asicCostInput.value = '';
+        asicCostInput.placeholder = (usdtPrice <= 0 && !isNaN(itemPriceUSD)) ? 'Курс USDT ?' : 'Цена не найдена';
+        console.warn(`Не удалось рассчитать стоимость ASIC. Цена: ${item["Цена"]}, Курс USDT: ${usdtPrice}`);
+    }
+    console.log("Характеристики обновлены для варианта:", item);
+}
+
 
 function showNotification() {
     const notification = document.getElementById('notification');
@@ -779,7 +875,7 @@ function calculateProfit() {
     console.log("Начало расчета...");
     const elements = {
         usdtPriceInput: document.getElementById("usdtPrice"),
-        hashrateEl: document.getElementById("hashrate"),
+        // hashrateEl will be handled dynamically
         powerEl: document.getElementById("power"),
         electricityCostInput: document.getElementById('electricityCost'),
         asicCostInput: document.getElementById("asicCost"),
@@ -814,15 +910,52 @@ function calculateProfit() {
     for (const key in elements) {
         if (!elements[key]) {
             console.error(`❌ Ошибка: Элемент ${key} не найден! Расчет прерван.`);
-            // alert(`Критическая ошибка: элемент ${key} отсутствует на странице.`);
             return;
         }
     }
      console.log("Все элементы для расчета найдены.");
 
+    let actualHashrate;
+    let selectedVariantHashrateUnit = ''; // To store "TH/s", "MH/s", etc.
+    const hashrateSelect = document.getElementById("hashrateSelect");
+
+    if (hashrateSelect && currentModelVariants.length > 0 && hashrateSelect.value !== "") {
+        const selectedVariant = currentModelVariants[hashrateSelect.value];
+        if (selectedVariant) {
+            actualHashrate = parseFloat(selectedVariant["Хешрейт"]);
+            selectedVariantHashrateUnit = selectedVariant["Ед. изм."]; // e.g., "TH/s"
+        } else {
+            console.error("❌ Ошибка: Выбранный вариант хешрейта не найден."); return;
+        }
+    } else {
+        const hashrateSpan = document.getElementById("hashrate"); // The static span
+        if (hashrateSpan) {
+            actualHashrate = parseFloat(hashrateSpan.textContent);
+            const edpriceSpan = document.getElementById("edprice"); // The unit span
+            if (edpriceSpan) selectedVariantHashrateUnit = edpriceSpan.textContent;
+        } else {
+            console.error("❌ Ошибка: Элемент хешрейта не найден."); return;
+        }
+    }
+
+    // Convert hashrate to base unit if necessary (e.g. TH/s for SHA-256, MH/s for Scrypt)
+    // For SHA-256, profitPerTH is usually per TH.
+    // For Scrypt, profitPerLTC/DOGE/BELL might be per MH. Adjust this logic based on your profitPer... units.
+    // This example assumes profitPerTH is for TH/s and Scrypt profit rates are for MH/s
+    let calculationHashrate = actualHashrate;
+    if (currentAlgorithm === "SHA-256") {
+        if (selectedVariantHashrateUnit.toUpperCase().includes("GH")) calculationHashrate /= 1000;
+        if (selectedVariantHashrateUnit.toUpperCase().includes("MH")) calculationHashrate /= 1000000;
+    } else if (currentAlgorithm === "Scrypt") {
+        if (selectedVariantHashrateUnit.toUpperCase().includes("TH")) calculationHashrate *= 1000000;
+        if (selectedVariantHashrateUnit.toUpperCase().includes("GH")) calculationHashrate *= 1000;
+        // if it's MH/s, it's already the base for profitPer... values (assumption)
+    }
+
+
     const values = {
         currentUsdtPrice: parseFloat(elements.usdtPriceInput.value),
-        hashrate: parseFloat(elements.hashrateEl.textContent),
+        hashrate: calculationHashrate, // Use the potentially converted hashrate for calculation
         power: parseFloat(elements.powerEl.textContent),
         electricityCost: parseFloat(elements.electricityCostInput.value.replace(',', '.')),
         asicCost: parseFloat(elements.asicCostInput.value)
@@ -836,20 +969,18 @@ function calculateProfit() {
 
     if (!baseValuesValid) {
          console.error("❌ Ошибка: Некорректные базовые значения для расчета.", values);
-        //  alert("Пожалуйста, проверьте введенные данные (хэшрейт, потребление, стоимость розетки, стоимость асика). Они должны быть корректными числами.");
          return;
     }
      console.log("Базовые значения для расчета:", values);
 
-    dailyIncome = 0; // Глобальная переменная
+    dailyIncome = 0; 
     if (currentAlgorithm === "SHA-256") {
         const btcPrice = parseFloat(elements.btcPriceInput.value);
         const profitPerTH = parseFloat(elements.profitPerTHInput.value);
         if (!isNaN(btcPrice) && !isNaN(profitPerTH)) {
-            dailyIncome = values.hashrate * profitPerTH * btcPrice;
+            dailyIncome = values.hashrate * profitPerTH * btcPrice; // Assuming values.hashrate is in TH/s
         } else {
              console.error("❌ Ошибка: Некорректные данные BTC или ProfitPerTH.");
-            //  alert("Ошибка данных для расчета SHA-256.");
              return;
         }
     } else if (currentAlgorithm === "Scrypt") {
@@ -862,29 +993,26 @@ function calculateProfit() {
          if (!isNaN(ltcPrice) && !isNaN(dogePrice) && !isNaN(bellPrice) &&
             !isNaN(profitPerLTC) && !isNaN(profitPerDOGE) && !isNaN(profitPerBELL))
          {
-            const incomeLTC = values.hashrate * profitPerLTC * ltcPrice;
+            // Assuming values.hashrate is in MH/s for Scrypt calculations and profitPer... are per MH/s
+            const incomeLTC = values.hashrate * profitPerLTC * ltcPrice; 
             const incomeDOGE = values.hashrate * profitPerDOGE * dogePrice;
             const incomeBELL = values.hashrate * profitPerBELL * bellPrice;
             dailyIncome = incomeLTC + incomeDOGE + incomeBELL;
          } else {
               console.error("❌ Ошибка: Некорректные данные для расчета Scrypt.");
-            //   alert("Ошибка данных для расчета Scrypt.");
               return;
          }
     }
      console.log(`Дневной доход ($): ${dailyIncome}`);
 
     const dailyElectricityCostRub = (values.power / 1000) * values.electricityCost * 24;
-    dailyElectricityCostValue = values.currentUsdtPrice > 0 ? dailyElectricityCostRub / values.currentUsdtPrice : 0; // Глобальная
+    dailyElectricityCostValue = values.currentUsdtPrice > 0 ? dailyElectricityCostRub / values.currentUsdtPrice : 0; 
     console.log(`Дневные расходы на электричество ($): ${dailyElectricityCostValue}`);
 
-    // Обновляем глобальную dailyProfitValue (используемую в updateProgressBarAndLabels)
-    // Эта переменная отличается от dailyProfitValue, которая была в коде обучения, поэтому можно переименовать, если нужно.
-    // Я оставлю как есть, т.к. она используется в updateProgressBarAndLabels
-    window.dailyProfitValue = dailyIncome - dailyElectricityCostValue; // Используем window.dailyProfitValue чтобы не конфликтовать с локальной если она есть
+    window.dailyProfitValue = dailyIncome - dailyElectricityCostValue; 
 
-    monthlyProfit = window.dailyProfitValue * 30.5; // Глобальная
-    yearlyProfit = window.dailyProfitValue * 365;   // Глобальная
+    monthlyProfit = window.dailyProfitValue * 30.5; 
+    yearlyProfit = window.dailyProfitValue * 365;   
     console.log(`Дневная прибыль ($): ${window.dailyProfitValue}`);
 
     const asicCostInUSD = values.currentUsdtPrice > 0 ? values.asicCost / values.currentUsdtPrice : Infinity;
@@ -929,13 +1057,12 @@ function updateTableValues() {
         const rubEl = document.getElementById(`${id}_rub`);
         if (usdEl && rubEl) {
             let valueUSD = 0;
-            // Используем глобальные переменные, обновленные в calculateProfit
             if (id.startsWith("incomeMonth")) valueUSD = dailyIncome * 30.5;
             else if (id.startsWith("incomeYear")) valueUSD = dailyIncome * 365;
             else if (id.startsWith("income")) valueUSD = dailyIncome;
-            else if (id.startsWith("profitMonth")) valueUSD = monthlyProfit; // global monthlyProfit
-            else if (id.startsWith("profitYear")) valueUSD = yearlyProfit;  // global yearlyProfit
-            else if (id.startsWith("profit")) valueUSD = window.dailyProfitValue; // global dailyProfitValue
+            else if (id.startsWith("profitMonth")) valueUSD = monthlyProfit; 
+            else if (id.startsWith("profitYear")) valueUSD = yearlyProfit;  
+            else if (id.startsWith("profit")) valueUSD = window.dailyProfitValue; 
 
             usdEl.innerText = formatCurrency(valueUSD);
             rubEl.innerText = formatCurrencyRub(valueUSD);
@@ -988,16 +1115,14 @@ function updateProgressBarAndLabels(elements) {
     let profitPercentage = 0;
     let electricityPercentage = 0;
 
-    // Используем глобальные dailyIncome и dailyElectricityCostValue
     if (dailyIncome > 0 && isFinite(dailyIncome) && isFinite(dailyElectricityCostValue)) {
-        // Используем глобальную window.dailyProfitValue (обновленную в calculateProfit)
         profitPercentage = Math.max(0, (window.dailyProfitValue / dailyIncome) * 100);
         electricityPercentage = Math.max(0, (dailyElectricityCostValue / dailyIncome) * 100);
 
-        if (window.dailyProfitValue <= 0) { // Проверяем прибыль
+        if (window.dailyProfitValue <= 0) { 
             profitPercentage = 0;
-            electricityPercentage = 100; // Если нет прибыли, все затраты
-        } else if (profitPercentage + electricityPercentage > 100.1) { // Коррекция, если сумма > 100%
+            electricityPercentage = 100; 
+        } else if (profitPercentage + electricityPercentage > 100.1) { 
              electricityPercentage = 100 - profitPercentage;
         }
 
@@ -1007,9 +1132,6 @@ function updateProgressBarAndLabels(elements) {
         profitBar.style.width = `${profitPercentage.toFixed(1)}%`;
         electricityBar.style.width = `${electricityPercentage.toFixed(1)}%`;
         electricityBar.style.left = `${profitPercentage.toFixed(1)}%`;
-        // Цвета уже заданы в HTML, но можно и здесь для уверенности
-        // profitBar.style.backgroundColor = "#2511A8";
-        // electricityBar.style.backgroundColor = "#CCCCCC"; // Ваш исходный цвет был #FFFFFF, но в разметке #CCCCCC
 
         profitLabel.textContent = `Прибыль: ${profitPercentage.toFixed(1)}%`;
         costLabel.textContent = `Затраты: ${electricityPercentage.toFixed(1)}%`;
@@ -1023,18 +1145,17 @@ function updateProgressBarAndLabels(elements) {
     }
 }
 
-// Привязка существующих обработчиков событий
 const algorithmSelect = document.getElementById("algorithmSelect");
 const manufacturerSelect = document.getElementById("manufacturerSelect");
-const asicModelSelect = document.getElementById("asicModel"); // Переименовал для единообразия
-const calculateBtn = document.getElementById("calculateBtn"); // Переименовал
+const asicModelSelect = document.getElementById("asicModel"); 
+const calculateBtn = document.getElementById("calculateBtn"); 
 const currencyUSD_Btn = document.getElementById('currencyUSD');
 const currencyRUB_Btn = document.getElementById('currencyRUB');
 
 if (algorithmSelect) algorithmSelect.addEventListener("change", onAlgorithmChange);
 if (manufacturerSelect) manufacturerSelect.addEventListener("change", updateModelList);
-if (asicModelSelect) asicModelSelect.addEventListener("change", updateAsicSpecs); // Используем asicModelSelect
-if (calculateBtn) calculateBtn.addEventListener("click", calculateProfit);     // Используем calculateBtn
+if (asicModelSelect) asicModelSelect.addEventListener("change", updateAsicSpecs); 
+if (calculateBtn) calculateBtn.addEventListener("click", calculateProfit);     
 if (currencyUSD_Btn) currencyUSD_Btn.addEventListener('click', () => setCurrency(true));
 if (currencyRUB_Btn) currencyRUB_Btn.addEventListener('click', () => setCurrency(false));
 
