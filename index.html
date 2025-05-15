@@ -75,7 +75,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   const { error: visitError } = await supabaseClient
     .from("visits")
-    .insert([{ telegram_id: telegramId, username, timestamp }]);
+    .insert([{ telegram_id: telegramId, username, bonus: 0, tutor: false  }]);
 
   if (visitError) {
     console.error("Ошибка при сохранении визита:", visitError.message);
