@@ -133,33 +133,77 @@
     });
     </script>
     <script>
-      const slogans = [
+startButton.addEventListener("click", async () => {
+  startButton.disabled = true;
+
+  try {
+    const { data, error } = await supabaseClient
+      .from("users")
+      .select("*")
+      .eq("telegram_id", telegramId);
+
+    if (error) {
+      console.error("Ошибка запроса:", error.message);
+      alert("Ошибка при проверке пользователя.");
+      return;
+    }
+
+    let sloganIndex = 0;
+
+    if (!data || data.length === 0) {
+      // Новый пользователь
+      const { error: insertError } = await supabaseClient
+        .from("users")
+        .insert([{ telegram_id: telegramId, username, bonus: 0, tutor: false, slogan_index: 1 }]);
+
+      if (insertError) {
+        console.error("Ошибка регистрации:", insertError.message);
+        alert("Ошибка регистрации.");
+        return;
+      }
+
+      sloganIndex = 0; // Покажем первый лозунг
+      console.log("🆕 Новый пользователь зарегистрирован");
+    } else {
+      // Существующий пользователь
+      sloganIndex = data[0].slogan_index || 0;
+
+      const nextIndex = (sloganIndex + 1) % 3;
+
+      const { error: updateError } = await supabaseClient
+        .from("users")
+        .update({ slogan_index: nextIndex })
+        .eq("telegram_id", telegramId);
+
+      if (updateError) {
+        console.warn("Не удалось обновить индекс лозунга:", updateError.message);
+      }
+
+      console.log("✅ Пользователь найден:", data[0]);
+    }
+
+    const slogans = [
       "Успешный майнинг начинается с сильной математики",
       "Для тех, кто выбирает считать, а не надеяться",
       "Майнинг под ключ для тех, кто доверяет цифрам"
-      ];
+    ];
 
-      let sloganIndex = 0;
-      const sloganElement = document.getElementById("slogan");
+    const sloganElement = document.getElementById("slogan");
+    if (sloganElement) {
+      sloganElement.textContent = slogans[sloganIndex];
+      sloganElement.classList.add("opacity-100");
+    }
 
-      function showNextSlogan() {
-      if (!sloganElement) return;
+    startScreen.classList.add("opacity-0", "transition-opacity", "duration-700");
+    setTimeout(() => {
+      window.location.href = "home.html";
+    }, 800);
+  } catch (err) {
+    console.error("Ошибка входа:", err);
+    alert("Не удалось выполнить вход.");
+  }
+});
 
-      sloganElement.classList.remove("opacity-100");
-      sloganElement.classList.add("opacity-0");
-
-      setTimeout(() => {
-        sloganElement.textContent = slogans[sloganIndex];
-        sloganElement.classList.remove("opacity-0");
-        sloganElement.classList.add("opacity-100");
-        
-        sloganIndex = (sloganIndex + 1) % slogans.length;
-      }, 500);
-      }
-
-      // Запускаем цикл отображения лозунгов каждые 4 секунды
-      showNextSlogan();
-      setInterval(showNextSlogan, 4000);
     </script>
     
 </body>
