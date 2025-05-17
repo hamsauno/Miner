@@ -12,7 +12,7 @@
   <script src="js/nozoom.js" defer></script>
 
   <link rel="stylesheet" href="css/bg.css">
-
+  
   <style>
     /* Анимация фона */
     @keyframes fadeToBlue {
@@ -40,6 +40,8 @@
 <!-- Центрированный контент -->
 <div id="startScreen" class="flex flex-col items-center justify-center w-full h-full relative">
   <img src="img/WAYMORR.png" alt="WAYMORR" class="w-[80%] max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg mb-8 transition-all duration-700" />
+  <p id="slogan" class="text-center text-lg sm:text-xl mt-4 px-4 opacity-0 transition-opacity duration-1000"></p>
+
   <button id="startButton" class="text-2xl sm:text-3xl font-bold animate-pulse px-12 py-4" style="animation: pulse 2s infinite;">
     НАЧАТЬ
   </button>
@@ -52,85 +54,113 @@
 
   <!-- Скрипты -->
   <script type="module">
-import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
-
-const supabaseUrl = "https://yiprwrgmyqlkdmhgulmc.supabase.co";
-const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlpcHJ3cmdteXFsa2RtaGd1bG1jIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ2NTI0NjgsImV4cCI6MjA2MDIyODQ2OH0.lfiTfr5ukGDEVuwq-X9U2kWs3nEZrp3N443HT5AkbfI"; // ваш ключ
-const supabaseClient = createClient(supabaseUrl, supabaseKey);
-
-document.addEventListener("DOMContentLoaded", async () => {
-  const tg = window.Telegram?.WebApp;
-  tg?.ready();
-
-  const user = tg?.initDataUnsafe?.user;
-
-  if (!user) {
-    alert("❗️ Откройте приложение через Telegram.");
-    return;
-  }
-
-  const telegramId = user.id.toString();
-  const username = user.username || "";
-  const timestamp = new Date().toISOString();
-
-  const { error: visitError } = await supabaseClient
-    .from("visits")
-    .insert([{ telegram_id: telegramId, username, bonus: 0, tutor: false  }]);
-
-  if (visitError) {
-    console.error("Ошибка при сохранении визита:", visitError.message);
-  } else {
-    console.log("✅ Визит сохранён");
-  }
-
-  const startButton = document.getElementById("startButton");
-  const startScreen = document.getElementById("startScreen");
-
-  if (!startButton || !startScreen) return;
-
-  startButton.addEventListener("click", async () => {
-    startButton.disabled = true;
-
-    try {
-      const { data, error } = await supabaseClient
-        .from("users")
-        .select("*")
-        .eq("telegram_id", telegramId);
-
-      if (error) {
-        console.error("Ошибка запроса:", error.message);
-        alert("Ошибка при проверке пользователя.");
+    import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
+    
+    const supabaseUrl = "https://yiprwrgmyqlkdmhgulmc.supabase.co";
+    const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlpcHJ3cmdteXFsa2RtaGd1bG1jIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ2NTI0NjgsImV4cCI6MjA2MDIyODQ2OH0.lfiTfr5ukGDEVuwq-X9U2kWs3nEZrp3N443HT5AkbfI"; // ваш ключ
+    const supabaseClient = createClient(supabaseUrl, supabaseKey);
+    
+    document.addEventListener("DOMContentLoaded", async () => {
+      const tg = window.Telegram?.WebApp;
+      tg?.ready();
+    
+      const user = tg?.initDataUnsafe?.user;
+    
+      if (!user) {
+        alert("❗️ Откройте приложение через Telegram.");
         return;
       }
-
-      if (!data || data.length === 0) {
-        const { error: insertError } = await supabaseClient
-          .from("users")
-          .insert([{ telegram_id: telegramId, username, bonus: 0 }]);
-
-        if (insertError) {
-          console.error("Ошибка регистрации:", insertError.message);
-          alert("Ошибка регистрации.");
-          return;
-        }
-
-        console.log("🆕 Новый пользователь зарегистрирован");
+    
+      const telegramId = user.id.toString();
+      const username = user.username || "";
+      const timestamp = new Date().toISOString();
+    
+      const { error: visitError } = await supabaseClient
+        .from("visits")
+        .insert([{ telegram_id: telegramId, username, timestamp }]);
+    
+      if (visitError) {
+        console.error("Ошибка при сохранении визита:", visitError.message);
       } else {
-        console.log("✅ Пользователь найден:", data[0]);
+        console.log("✅ Визит сохранён");
+      }
+    
+      const startButton = document.getElementById("startButton");
+      const startScreen = document.getElementById("startScreen");
+    
+      if (!startButton || !startScreen) return;
+    
+      startButton.addEventListener("click", async () => {
+        startButton.disabled = true;
+    
+        try {
+          const { data, error } = await supabaseClient
+            .from("users")
+            .select("*")
+            .eq("telegram_id", telegramId);
+    
+          if (error) {
+            console.error("Ошибка запроса:", error.message);
+            alert("Ошибка при проверке пользователя.");
+            return;
+          }
+    
+          if (!data || data.length === 0) {
+            const { error: insertError } = await supabaseClient
+              .from("users")
+              .insert([{ telegram_id: telegramId, username, bonus: 0, tutor: false  }]);
+    
+            if (insertError) {
+              console.error("Ошибка регистрации:", insertError.message);
+              alert("Ошибка регистрации.");
+              return;
+            }
+    
+            console.log("🆕 Новый пользователь зарегистрирован");
+          } else {
+            console.log("✅ Пользователь найден:", data[0]);
+          }
+    
+          startScreen.classList.add("opacity-0", "transition-opacity", "duration-700");
+          setTimeout(() => {
+            window.location.href = "home.html";
+          }, 800);
+        } catch (err) {
+          console.error("Ошибка входа:", err);
+          alert("Не удалось выполнить вход.");
+        }
+      });
+    });
+    </script>
+    <script>
+      const slogans = [
+      "Успешный майнинг начинается с сильной математики",
+      "Для тех, кто выбирает считать, а не надеяться",
+      "Майнинг под ключ для тех, кто доверяет цифрам"
+      ];
+
+      let sloganIndex = 0;
+      const sloganElement = document.getElementById("slogan");
+
+      function showNextSlogan() {
+      if (!sloganElement) return;
+
+      sloganElement.classList.remove("opacity-100");
+      sloganElement.classList.add("opacity-0");
+
+      setTimeout(() => {
+        sloganElement.textContent = slogans[sloganIndex];
+        sloganElement.classList.remove("opacity-0");
+        sloganElement.classList.add("opacity-100");
+        
+        sloganIndex = (sloganIndex + 1) % slogans.length;
+      }, 500);
       }
 
-      startScreen.classList.add("opacity-0", "transition-opacity", "duration-700");
-      setTimeout(() => {
-        window.location.href = "home.html";
-      }, 800);
-    } catch (err) {
-      console.error("Ошибка входа:", err);
-      alert("Не удалось выполнить вход.");
-    }
-  });
-});
-</script>
-
+      // Запускаем цикл отображения лозунгов каждые 4 секунды
+      showNextSlogan();
+      setInterval(showNextSlogan, 4000);
+    </script>
+    
 </body>
 </html>
-
