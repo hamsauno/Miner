@@ -96,7 +96,8 @@
       const { data, error } = await supabaseClient
         .from("users")
         .select("*")
-        .eq("telegram_id", telegramId);
+        .eq("telegram_id", parseInt(telegramId))
+
 
       const slogans = [
         "Успешный майнинг начинается с сильной математики",
@@ -123,7 +124,8 @@
         await supabaseClient
           .from("users")
           .update({ slogan_index: nextIndex })
-          .eq("telegram_id", telegramId);
+          .eq("telegram_id", parseInt(telegramId))
+
       }
 
       // Показать соответствующий лозунг
