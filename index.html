@@ -38,13 +38,14 @@
 <body class="flex flex-col items-center justify-center text-white">
 
 <!-- Центрированный контент -->
-<div id="startScreen" class="flex flex-col items-center justify-center w-full h-full relative">
-  <img src="img/WAYMORR.png" alt="WAYMORR" class="w-[80%] max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg mb-8 transition-all duration-700" />
-  <p id="slogan" class="text-center text-lg sm:text-xl mt-4 px-4 opacity-0 transition-opacity duration-1000"></p>
+<img src="img/WAYMORR.png" alt="WAYMORR" class="w-[80%] max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg mb-8 transition-all duration-700" />
 
-  <button id="startButton" class="text-2xl sm:text-3xl font-bold animate-pulse px-12 py-4" style="animation: pulse 2s infinite;">
-    НАЧАТЬ
-  </button>
+<!-- Добавляем элемент для лозунга -->
+<div id="slogan" class="mb-8 text-center text-lg sm:text-xl font-semibold opacity-0 transition-opacity duration-500"></div>
+
+<button id="startButton" class="text-2xl sm:text-3xl font-bold animate-pulse px-12 py-4" style="animation: pulse 2s infinite;">
+  НАЧАТЬ
+</button>
 
   <!-- Дисклеймер внизу -->
   <div class="absolute bottom-4 text-xs text-center px-4 text-white opacity-60">
@@ -54,13 +55,13 @@
 
   <!-- Скрипты -->
   <script type="module">
-  import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
-
-  const supabaseUrl = "https://yiprwrgmyqlkdmhgulmc.supabase.co";
-  const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlpcHJ3cmdteXFsa2RtaGd1bG1jIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ2NTI0NjgsImV4cCI6MjA2MDIyODQ2OH0.lfiTfr5ukGDEVuwq-X9U2kWs3nEZrp3N443HT5AkbfI"; // твой ключ
-  const supabaseClient = createClient(supabaseUrl, supabaseKey);
-
-  document.addEventListener("DOMContentLoaded", async () => {
+    import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
+    
+    const supabaseUrl = "https://yiprwrgmyqlkdmhgulmc.supabase.co";
+    const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlpcHJ3cmdteXFsa2RtaGd1bG1jIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ2NTI0NjgsImV4cCI6MjA2MDIyODQ2OH0.lfiTfr5ukGDEVuwq-X9U2kWs3nEZrp3N443HT5AkbfI"; // ваш ключ
+    const supabaseClient = createClient(supabaseUrl, supabaseKey);
+    
+    document.addEventListener("DOMContentLoaded", async () => {
     const tg = window.Telegram?.WebApp;
     tg?.ready();
 
@@ -82,74 +83,79 @@
 
     if (visitError) {
       console.error("Ошибка при сохранении визита:", visitError.message);
+    } else {
+      console.log("✅ Визит сохранён");
     }
 
-    // Получаем кнопку и элементы
     const startButton = document.getElementById("startButton");
-    const sloganElement = document.getElementById("slogan");
     const startScreen = document.getElementById("startScreen");
+    const sloganElement = document.getElementById("slogan");
 
-    let sloganIndex = 0;
+    // Лозунги
+    const slogans = [
+      "Успешный майнинг начинается с сильной математики",
+      "Для тех, кто выбирает считать, а не надеяться",
+      "Майнинг под ключ для тех, кто доверяет цифрам"
+    ];
 
-    try {
-      // Получаем пользователя
-      const { data, error } = await supabaseClient
-        .from("users")
-        .select("*")
-        .eq("telegram_id", parseInt(telegramId))
+    // Выбираем случайный лозунг
+    const randomIndex = Math.floor(Math.random() * slogans.length);
+    const selectedSlogan = slogans[randomIndex];
 
-
-      const slogans = [
-        "Успешный майнинг начинается с сильной математики",
-        "Для тех, кто выбирает считать, а не надеяться",
-        "Майнинг под ключ для тех, кто доверяет цифрам"
-      ];
-
-      if (error) {
-        console.error("Ошибка запроса:", error.message);
-        return;
-      }
-
-      if (!data || data.length === 0) {
-        // Новый пользователь — показываем первый лозунг
-        sloganIndex = 0;
-        await supabaseClient
-          .from("users")
-          .insert([{ telegram_id: telegramId, username, bonus: 0, tutor: false, slogan_index: 1 }]);
-      } else {
-        // Существующий пользователь
-        sloganIndex = data[0].slogan_index || 0;
-        const nextIndex = (sloganIndex + 1) % slogans.length;
-
-        await supabaseClient
-          .from("users")
-          .update({ slogan_index: nextIndex })
-          .eq("telegram_id", parseInt(telegramId))
-
-      }
-
-      // Показать соответствующий лозунг
-      if (sloganElement) {
-        sloganElement.textContent = slogans[sloganIndex];
+    // Отображаем лозунг с плавным появлением
+    if (sloganElement) {
+      sloganElement.textContent = selectedSlogan;
+      // Немного задержим появление для плавности (если нужно)
+      setTimeout(() => {
         sloganElement.classList.add("opacity-100");
-      }
-
-    } catch (err) {
-      console.error("Ошибка при загрузке лозунга:", err);
+      }, 100);
     }
 
-    // Обработчик кнопки НАЧАТЬ
-    startButton?.addEventListener("click", () => {
-      startButton.disabled = true;
-      startScreen.classList.add("opacity-0", "transition-opacity", "duration-700");
+    if (!startButton || !startScreen) return;
 
-      setTimeout(() => {
-        window.location.href = "home.html";
-      }, 800);
+    startButton.addEventListener("click", async () => {
+      startButton.disabled = true;
+
+      try {
+        const { data, error } = await supabaseClient
+          .from("users")
+          .select("*")
+          .eq("telegram_id", telegramId);
+
+        if (error) {
+          console.error("Ошибка запроса:", error.message);
+          alert("Ошибка при проверке пользователя.");
+          return;
+        }
+
+        if (!data || data.length === 0) {
+          const { error: insertError } = await supabaseClient
+            .from("users")
+            .insert([{ telegram_id: telegramId, username, bonus: 0, tutor: false }]);
+
+          if (insertError) {
+            console.error("Ошибка регистрации:", insertError.message);
+            alert("Ошибка регистрации.");
+            return;
+          }
+
+          console.log("🆕 Новый пользователь зарегистрирован");
+        } else {
+          console.log("✅ Пользователь найден:", data[0]);
+        }
+
+        startScreen.classList.add("opacity-0", "transition-opacity", "duration-700");
+        setTimeout(() => {
+          window.location.href = "home.html";
+        }, 800);
+      } catch (err) {
+        console.error("Ошибка входа:", err);
+        alert("Не удалось выполнить вход.");
+      }
     });
   });
-</script>
 
+    </script>
     
 </body>
 </html>
