@@ -717,7 +717,7 @@ function updateAsicSpecs() {
     }
 
     currentModelVariants = jsonData.filter(i => i["Модель"] === selectedModelName && i["Алгоритм"] === currentAlgorithm);
-    currentModelVariants.sort((a, b) => parseFloat(a["Хешрейт"]) - parseFloat(b["Хешрейт"])); // Sort by hashrate
+    currentModelVariants.sort((a, b) => parseFloat(b["Хешрейт"]) - parseFloat(a["Хешрейт"])); // сортировка по убыванию
 
     if (currentModelVariants.length > 0) {
         if (currentModelVariants.length === 1) {
