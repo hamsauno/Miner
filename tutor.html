@@ -64,36 +64,33 @@
       pointer-events: auto;
   }
 
-  /* MODIFIED: Smaller modal size and padding */
   .tutorial-modal {
       display: none;
       position: fixed; /* Will be adjusted by JS */
       z-index: 10000;
       background-color: #1F2937;
       color: #F3F4F6;
-      padding: 10px; /* Reduced padding */
+      padding: 15px;
       border: 1px solid #4B5563;
-      width: 90%; /* Use a percentage for better responsiveness */
-      max-width: 280px; /* Reduced max-width */
+      width: 80%;
+      max-width: 350px;
       border-radius: 0;
       box-shadow: 0 4px 6px rgba(0,0,0,0.1);
       text-align: center;
-      font-size: 0.9rem; /* Slightly smaller text */
   }
   .tutorial-modal h3 {
       margin-top: 0;
-      margin-bottom: 8px; /* Adjusted margin */
-      font-size: 1rem; /* Adjusted font size */
+      margin-bottom: 10px;
+      font-size: 1.1rem;
       font-weight: 600;
   }
   .tutorial-modal p {
-      margin-bottom: 10px; /* Adjusted margin */
-      font-size: 0.85rem; /* Adjusted font size */
-      line-height: 1.3; /* Adjusted line height */
+      margin-bottom: 15px;
+      font-size: 0.8rem;
+      line-height: 1.4;
   }
-  /* Adjust button padding if needed */
   .tutorial-modal button {
-      padding: 6px 10px;
+      padding: 8px 12px;
       font-size: 0.8rem;
       font-weight: 500;
       cursor: pointer;
@@ -117,9 +114,9 @@
       background-color: #374151;
   }
 
-  /* MODIFIED: Style for white highlight */
+  /* Стиль для подсветки элемента */
   .tutorial-highlight {
-      box-shadow: 0 0 0 3px #FFFFFF, 0 0 15px 3px #FFFFFF; /* White highlight */
+      box-shadow: 0 0 0 3px #FBBF24, 0 0 15px 3px #FBBF24;
       border-radius: 0 !important;
       transition: box-shadow 0.3s ease-in-out;
       position: relative;
@@ -334,7 +331,8 @@
 
    <div id="tutorialModalOverlay" class="tutorial-modal-overlay"></div>
    <div id="tutorialModal" class="tutorial-modal">
-       <h3 id="tutorialTitle"></h3> <p id="tutorialText">Это краткое обучение поможет вам освоиться с калькулятором.</p>
+       <h3 id="tutorialTitle">Добро пожаловать!</h3>
+       <p id="tutorialText">Это краткое обучение поможет вам освоиться с калькулятором.</p>
        <button id="tutorialNextBtn" class="tutorial-modal-next-btn">Далее</button>
        <button id="tutorialSkipBtn" class="tutorial-modal-skip-btn">Пропустить</button>
    </div>
@@ -429,22 +427,18 @@ async function checkTutorialStatus() {
     }
 }
 
-// MODIFIED: Removed titles, added steps for Hashrate and Power
 function setupTutorialStepsDefinition() {
     tutorialSteps = [
-        { text: "Начните с выбора Алгоритма. Доступны SHA-256 (BTC) и Scrypt (LTC+DOGE).", elementId: "algorithmSelect" },
-        { text: "Теперь выберите Производителя из списка.", elementId: "manufacturerSelect" },
-        { text: "Выберите Модель. Характеристики подставятся автоматически.", elementId: "asicModel" },
-        // Added steps for Hashrate and Power Consumption
-        { text: "Здесь отображается Хешрейт выбранной модели.", elementId: "hashrateContainer" },
-        { text: "Здесь отображается Потребление выбранной модели в Ваттах.", elementId: "powerContainer" },
-        { text: "Укажите Стоимость Электроэнергии за 1 кВт/ч.", elementId: "electricityCost" },
-        { text: "Стоимость оборудования автоматически подтягивается или введите свою.", elementId: "asicCost" },
-        { text: "Нажмите кнопку Рассчитать, чтобы увидеть результаты.", elementId: "calculateBtn" },
-        { text: "Эта шкала показывает соотношение Прибыли и Затрат в общем Доходе.", elementId: "progressBarContainer" },
-        { text: "В таблице с Доходом и Прибылью вы можете переключать валюту ($/₽).", elementId: "resultsTable" },
-        { text: "Здесь вы найдете показатели Окупаемости в месяцах и Годовой возврат инвестиций (ROI) в процентах.", elementId: "paybackRoiContainer" },
-        { text: "Удачных расчетов! Обучение завершено.", elementId: null }
+        {  text: "Начните с выбора Алгоритма. Доступны SHA-256 (BTC) и Scrypt (LTC+DOGE).", elementId: "algorithmSelect" },
+        { text: "Отлично! Теперь выберите Производителя из списка.", elementId: "manufacturerSelect" },
+        {  text: "Выберите Модель. Характеристики (Хэшрейт и Потребление) подставятся автоматически.", elementId: "asicModel" },
+        {  text: "Укажите Стоимость Электроэнергии за 1 кВт/ч.", elementId: "electricityCost" },
+        {  text: "Стоимость оборудования автоматически подтягивается из нашего прайса. Можно указать свою цену.", elementId: "asicCost" },
+        {  text: "Нажмите кнопку Рассчитать, чтобы увидеть результаты.", elementId: "calculateBtn" },
+        {  text: "Здесь вы видите шкалу Прибыль-Затраты в общем Доходе.", elementId: "progressBarContainer" },
+        { title: "Шаг 8: Таблица Доход/Прибыль", text: "В таблице с Доходом и Прибылью вы можете переключать валюту ($/₽).", elementId: "resultsTable" },
+        { title: "Шаг 9: Окупаемость и ROI", text: "И, конечно, показатели Окупаемости и Годовой возврат инвестиций (ROI).", elementId: "paybackRoiContainer" },
+        { title: "Обучение завершено!", text: "Удачных расчетов!", elementId: null }
     ];
 }
 
@@ -460,7 +454,7 @@ function startTutorialFlow() {
 function removeHighlight() {
     if (highlightedElement) {
         highlightedElement.classList.remove('tutorial-highlight');
-        // highlightedElement.classList.remove('tutorial-highlighted-ancestor'); // This line seems redundant here
+        highlightedElement.classList.remove('tutorial-highlighted-ancestor');
         highlightedElement = null;
     }
     highlightedAncestors.forEach(ancestor => ancestor.classList.remove('tutorial-highlighted-ancestor'));
@@ -469,7 +463,6 @@ function removeHighlight() {
     document.querySelectorAll('.tutorial-highlighted-ancestor').forEach(el => el.classList.remove('tutorial-highlighted-ancestor'));
 }
 
-// MODIFIED: Clear title text and adjust modal positioning logic
 function displayCurrentTutorialStep() {
     removeHighlight();
 
@@ -479,9 +472,8 @@ function displayCurrentTutorialStep() {
     }
 
     const step = tutorialSteps[currentTutorialStep];
-    tutorialTitle.textContent = ""; // Clear the title text
-    tutorialText.innerHTML = step.text; // Use only the text content
-
+    tutorialTitle.textContent = step.title;
+    tutorialText.innerHTML = step.text;
     // Reset modal to default centered position first
     tutorialModal.style.top = '50%';
     tutorialModal.style.left = '50%';
@@ -492,7 +484,8 @@ function displayCurrentTutorialStep() {
         if (targetElement) {
             highlightedElement = targetElement;
             highlightedElement.classList.add('tutorial-highlight');
-             // Add tutorial-highlighted-ancestor to parent elements
+            highlightedElement.classList.add('tutorial-highlighted-ancestor');
+
             let parent = targetElement.parentElement;
             while (parent && parent !== document.body) {
                 parent.classList.add('tutorial-highlighted-ancestor');
@@ -503,7 +496,7 @@ function displayCurrentTutorialStep() {
 
             // Position modal near the element after a short delay for scrollIntoView
             setTimeout(() => {
-                 const targetRect = targetElement.getBoundingClientRect();
+                const targetRect = targetElement.getBoundingClientRect();
                 const modalRect = tutorialModal.getBoundingClientRect(); // Get modal size
                 const viewportWidth = window.innerWidth;
                 const viewportHeight = window.innerHeight;
@@ -545,7 +538,6 @@ function displayCurrentTutorialStep() {
         tutorialModal.style.left = '50%';
         tutorialModal.style.transform = 'translate(-50%, -50%)';
     }
-
 
     if (currentTutorialStep === tutorialSteps.length - 1) {
         tutorialNextBtn.textContent = "Завершить";
@@ -716,7 +708,7 @@ function updateAsicSpecs() {
     document.getElementById("hashrate").textContent = '';
     document.getElementById("edprice").textContent = '';
     powerEl.textContent = ''; powerUnitEl.textContent = '';
-    asicCostInput.value = ''; asicCostInput.placeholder = 'Авто/Ручной ввод'; // Changed placeholder back
+    asicCostInput.value = ''; asicCostInput.placeholder = 'Выберите модель';
     currentModelVariants = [];
 
     const selectedModelName = modelSelect.value;
