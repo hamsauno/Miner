@@ -569,7 +569,7 @@ async function completeTutorialProcess(skipped = false) {
     try {
         const { data, error } = await supabaseClient
             .from('users')
-            .upsert({ telegram_id: telegramUser.id.toString(), tutor: true, updated_at: new Date().toISOString() }, { onConflict: 'telegram_id' })
+            .upsert({ telegram_id: telegramUser.id.toString(), tutor: true, }, { onConflict: 'telegram_id' })
             .select();
         if (error) console.error("Ошибка сохранения статуса обучения в Supabase:", error);
         else console.log("Статус обучения успешно сохранен в Supabase:", data);
