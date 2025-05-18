@@ -115,7 +115,7 @@
     const confirmationMsg = document.createElement('div');
     confirmationMsg.id = 'confirmationMsg';
     confirmationMsg.className = 'text-center text-green-700 font-medium text-sm mt-3';
-    confirmationMsg.textContent = '✅ Ваша заявка принята. Ожидайте звонка. Повторная заявка через 30 сек.';
+    confirmationMsg.textContent = 'Ваша заявка принята. Ожидайте звонка. Повторная заявка через 30 сек.';
 
     const timerSpan = document.createElement('span');
     timerSpan.id = 'timerSpan';
@@ -125,11 +125,11 @@
     modalOverlay.querySelector('.absolute').appendChild(confirmationMsg);
 
     let seconds = 30;
-    timerSpan.textContent = `⏳ Подождите ${seconds} сек.`;
+    timerSpan.textContent = ` Подождите ${seconds} сек.`;
 
     const interval = setInterval(() => {
       seconds--;
-      timerSpan.textContent = `⏳ Подождите ${seconds} сек.`;
+      timerSpan.textContent = ` Подождите ${seconds} сек.`;
       if (seconds <= 0) {
         clearInterval(interval);
         submitBtn.disabled = false;
