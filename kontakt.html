@@ -5,102 +5,66 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="css/bg.css">
-  <script src="js/fullscr.js" defer></script>
-  <script src="js/nozoom.js" defer></script>
 </head>
 <body class="bg-white text-black font-[Arial]">
-<!-- Блок высотой 140px -->
-<div class="w-full bg-[#E2E2E2] text-black text-xs sm:text-sm px-4 py-2 overflow-y-auto flex flex-col justify-between" style="height: 140px;">
-    <div class="space-y-2 leading-relaxed">
-      <div class="grid grid-cols-[auto,1fr] gap-2">
-        <p class="text-right"><strong>Офис :</strong></p>
-        <p>
-          <button class="underline hover:text-blue-600 text-left" onclick="openMap('https://yandex.ru/maps/org/waymorr/39016942329/?ll=37.576007%2C55.772289&z=17.12')">
-            Электрический переулок, 3/10с1
-          </button>
-        </p>
-      </div>
-  
-      <div class="grid grid-cols-[auto,1fr] gap-2">
-        <p class="text-right"><strong>Склад :</strong></p>
-        <p>
-          <button class="underline hover:text-blue-600 text-left" onclick="openMap('https://yandex.ru/maps/213/moscow/house/krasnokazarmennaya_ulitsa_12s38/Z04YcQdgQUUGQFtvfXt0d31hZw==/?ll=37.700801%2C55.756123&z=17.12')">
-            Красноказарменная улица, 12с38
-          </button>
-        </p>
-      </div>
-  
-      <div class="grid grid-cols-[auto,1fr] gap-2">
-        <p class="text-right"><strong>Телефон :</strong></p>
-        <p>
-          <a href="tel:+74951297535" class="underline hover:text-blue-600" target="_blank" rel="noopener noreferrer">+7 495 154-53-03</a>
-        </p>
-      </div>
+<!-- Контактная информация и кнопка -->
+<div class="w-full bg-[#E2E2E2] text-black text-xs sm:text-sm px-4 py-2 flex flex-col justify-between" style="height: 140px;">
+  <div class="space-y-2">
+    <div class="grid grid-cols-[auto,1fr] gap-2">
+      <p class="text-right font-semibold">Офис :</p>
+      <p><button class="underline hover:text-blue-600 text-left" onclick="openMap('https://yandex.ru/maps/org/waymorr/39016942329/?ll=37.576007%2C55.772289&z=17.12')">Электрический переулок, 3/10с1</button></p>
     </div>
-  
-<!-- Кнопка "Заказать звонок" -->
-<div class="w-full text-center">
-    <a id="callOrderBtn"
-       href="#"
-       class="mt-2 block text-center bg-[#2511A8] text-white text-base font-semibold py-2 w-full">
-      Заказать звонок
-    </a>
-  </div>
-  
-  <!--  окно -->
-  <div id="modalOverlay" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden">
-    <div class="absolute bottom-0 left-0 w-full bg-[#E2E2E2] p-4 box-border rounded-t-lg">
-      <h2 class="text-base font-semibold mb-2">Введите номер телефона</h2>
-      <div class="flex items-center space-x-2 mb-2">
-        <span class="text-lg font-bold">+7</span>
-        <input type="tel"
-               inputmode="numeric"
-               id="userPhone"
-               class="w-full px-2 py-1 border text-sm rounded"
-               placeholder="999-222-55-77"
-               pattern="[0-9\-]*"
-               maxlength="13"
-               autocomplete="tel"
-               required />
-      </div>
-      <div class="flex justify-between space-x-2">
-        <button id="cancelBtn" class="bg-[#2511A8] text-white px-4 py-1 w-1/2 text-sm rounded">Отменить</button>
-        <button id="submitBtn" class="bg-[#2511A8] text-white px-4 py-1 w-1/2 text-sm rounded">Отправить</button>
-      </div>
-      <a id="manualLink" href="#" class="hidden underline mt-4 block text-center text-sm text-blue-600 hover:text-blue-800" target="_blank" rel="noopener noreferrer">Не удалось открыть автоматически? Нажмите сюда.</a>
+    <div class="grid grid-cols-[auto,1fr] gap-2">
+      <p class="text-right font-semibold">Склад :</p>
+      <p><button class="underline hover:text-blue-600 text-left" onclick="openMap('https://yandex.ru/maps/213/moscow/house/krasnokazarmennaya_ulitsa_12s38/Z04YcQdgQUUGQFtvfXt0d31hZw==/?ll=37.700801%2C55.756123&z=17.12')">Красноказарменная улица, 12с38</button></p>
+    </div>
+    <div class="grid grid-cols-[auto,1fr] gap-2">
+      <p class="text-right font-semibold">Телефон :</p>
+      <p><a href="tel:+74951297535" class="underline hover:text-blue-600">+7 495 154-53-03</a></p>
     </div>
   </div>
-  
+  <a id="callOrderBtn" href="#" class="mt-2 bg-[#2511A8] text-white text-base font-semibold py-2 text-center">Заказать звонок</a>
+</div>
+
+<!-- Модальное окно -->
+<div id="modalOverlay" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden">
+  <div class="absolute bottom-0 left-0 w-full bg-[#E2E2E2] p-4 rounded-t-lg">
+    <h2 class="text-base font-semibold mb-2">Введите номер телефона</h2>
+    <div class="flex items-center space-x-2 mb-2">
+      <span class="text-lg font-bold">+7</span>
+      <input type="tel" id="userPhone" class="w-full px-2 py-1 border text-sm rounded" placeholder="999-222-55-77" maxlength="13" pattern="[0-9\-]*" inputmode="numeric" required>
+    </div>
+    <div class="flex justify-between space-x-2">
+      <button id="cancelBtn" class="bg-[#2511A8] text-white px-4 py-1 w-1/2 text-sm rounded">Отменить</button>
+      <button id="submitBtn" class="bg-[#2511A8] text-white px-4 py-1 w-1/2 text-sm rounded">Отправить</button>
+    </div>
+    <a id="manualLink" href="#" class="hidden underline mt-4 block text-center text-sm text-blue-600 hover:text-blue-800" target="_blank" rel="noopener noreferrer">Не удалось открыть автоматически? Нажмите сюда.</a>
+  </div>
+</div>
+
 <script>
   const callOrderBtn = document.getElementById('callOrderBtn');
   const modalOverlay = document.getElementById('modalOverlay');
   const cancelBtn = document.getElementById('cancelBtn');
   const submitBtn = document.getElementById('submitBtn');
   const userPhone = document.getElementById('userPhone');
-  const manualLink = document.getElementById('manualLink'); 
+  const manualLink = document.getElementById('manualLink');
 
-  // Показат окно
   callOrderBtn.addEventListener('click', (e) => {
     e.preventDefault();
     modalOverlay.classList.remove('hidden');
     userPhone.focus();
-    console.log('Модальное окно открыто');
   });
 
-  // Закрыть окно
   cancelBtn.addEventListener('click', () => {
     modalOverlay.classList.add('hidden');
     userPhone.value = '';
-    manualLink.classList.add('hidden'); // Скрыть ссылку fallback при отмене
-    console.log('Модальное окно закрыто пользователем (Отмена)');
+    manualLink.classList.add('hidden');
   });
 
-  // Маска номера
   userPhone.addEventListener('input', (e) => {
     let value = e.target.value.replace(/\D/g, '');
     if (value.length > 10) value = value.slice(0, 10);
-
     let formatted = '';
     if (value.length > 6) {
       formatted = value.slice(0, 3) + '-' + value.slice(3, 6) + '-' + value.slice(6);
@@ -109,62 +73,82 @@
     } else {
       formatted = value;
     }
-
     e.target.value = formatted;
   });
 
-  // Отправка номера
   submitBtn.addEventListener('click', () => {
     const raw = userPhone.value.replace(/\D/g, '');
     if (raw.length === 10) {
       const message = `POZVONI_MNE_${raw}`;
       const url = `https://t.me/WAYMORR_BOT?start=${message}`;
-      console.log('Отправка сообщения:', message);
-      console.log('Переход по ссылке:', url);
 
-    
+      submitBtn.disabled = true;
+      userPhone.disabled = true;
+      cancelBtn.disabled = true;
+      showConfirmationAndStartTimer();
+
       if (window.Telegram && Telegram.WebApp) {
         Telegram.WebApp.openTelegramLink(url);
-        return;
-      }
-
-      // Попытка через обычное окно
-      try {
-        const win = window.open(url, '_blank');
-        if (!win || win.closed || typeof win.closed === 'undefined') {
-          throw new Error('Popup заблокирован');
+      } else {
+        try {
+          const win = window.open(url, '_blank');
+          if (!win || win.closed || typeof win.closed === 'undefined') {
+            throw new Error('Popup заблокирован');
+          }
+        } catch (err) {
+          manualLink.href = url;
+          manualLink.classList.remove('hidden');
         }
-      } catch (err) {
-        console.warn('Не удалось открыть ссылку автоматически. Показываем ссылку вручную.');
-        manualLink.href = url;
-        manualLink.classList.remove('hidden');
       }
     } else {
       alert('Введите корректный номер телефона (10 цифр).');
     }
   });
 
-  // Прокрутка к полю ввода
   userPhone.addEventListener('focus', () => {
     setTimeout(() => {
       userPhone.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      console.log('Фокус на поле ввода телефона');
     }, 300);
   });
-</script>
 
+  function showConfirmationAndStartTimer() {
+    const confirmationMsg = document.createElement('div');
+    confirmationMsg.id = 'confirmationMsg';
+    confirmationMsg.className = 'text-center text-green-700 font-medium text-sm mt-3';
+    confirmationMsg.textContent = '✅ Ваша заявка принята. Ожидайте звонка. Повторная заявка через 30 сек.';
 
-  
-  
-  <script>
-    function openMap(url) {
-      if (window.Telegram && Telegram.WebApp) {
-        Telegram.WebApp.openLink(url);
-      } else {
-        window.open(url, '_blank');
+    const timerSpan = document.createElement('span');
+    timerSpan.id = 'timerSpan';
+    timerSpan.className = 'block mt-1 text-gray-600';
+    confirmationMsg.appendChild(timerSpan);
+
+    modalOverlay.querySelector('.absolute').appendChild(confirmationMsg);
+
+    let seconds = 30;
+    timerSpan.textContent = `⏳ Подождите ${seconds} сек.`;
+
+    const interval = setInterval(() => {
+      seconds--;
+      timerSpan.textContent = `⏳ Подождите ${seconds} сек.`;
+      if (seconds <= 0) {
+        clearInterval(interval);
+        submitBtn.disabled = false;
+        userPhone.disabled = false;
+        cancelBtn.disabled = false;
+        confirmationMsg.remove();
+        userPhone.value = '';
+        modalOverlay.classList.add('hidden');
       }
+    }, 1000);
+  }
+
+  function openMap(url) {
+    if (window.Telegram && Telegram.WebApp) {
+      Telegram.WebApp.openLink(url);
+    } else {
+      window.open(url, '_blank');
     }
-  </script>
+  }
+</script>
 </body>
 </html>
-
