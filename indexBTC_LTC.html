@@ -10,196 +10,108 @@
 <title>Калькулятор доходности майнинга</title>
 <meta name="description" content="Удобный Telegram-калькулятор для расчета доходности ASIC-майнеров. Доход, прибыль, ROI, окупаемость — всё в одном месте.">
 <style>
+  /* Базовые стили */
   html, body {
-    overscroll-behavior-y: none; /* запрещает "отпружинивание" на iOS и Android */
-    touch-action: pan-y; /* безопасно включает вертикальный и горизонтальный скролл */
-  }
-  /* Ensure no rounded corners */
-  input, select {
-    border-radius: 0 !important;
-    -webkit-appearance: none; /* Remove default iOS styling */
-    -moz-appearance: none; /* Remove default Firefox styling */
-    appearance: none; /* Remove default styling */
-  }
-  /* Style for currency buttons */
-  .currency-btn {
-    border: none;
-    padding: 0.5rem;
-    margin: 0;
-    font-size: 0.75rem;
-    font-weight: bold;
-    transition: background-color 0.3s, color 0.3s;
-    width: 50%;
-    line-height: 1;
-    height: 100%;
-  }
-  .currency-btn.active {
-    background-color: #E2E2E2;
-    color: black;
-  }
-  .currency-btn.inactive {
-    background-color: #2511A8;
-    color: white;
-  }
-  .currency-btn:hover {
-    filter: brightness(110%);
-  }
-  /* Remove spinner buttons from number inputs */
-  input[type=number]::-webkit-inner-spin-button,
-  input[type=number]::-webkit-outer-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
+    overscroll-behavior-y: none;
+    touch-action: pan-y;
   }
 
-  /* Стили для модального окна обучения */
-  .tutorial-modal-overlay {
-      display: none;
-      position: fixed;
-      z-index: 9998; /* Overlay z-index */
-      left: 0;
-      top: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0,0,0,0.8);
-      pointer-events: auto;
-  }
-
-  .tutorial-modal {
-      display: none;
-      position: fixed; /* Will be adjusted by JS */
-      z-index: 10000; /* Modal z-index (highest) */
-      background-color: #1F2937;
-      color: #F3F4F6;
-      padding: 15px;
-      border: 1px solid #4B5563;
-      width: 80%;
-      max-width: 350px;
-      border-radius: 0;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-      text-align: center;
-  }
-  .tutorial-modal h3 {
-      margin-top: 0;
-      margin-bottom: 10px;
-      font-size: 1.1rem;
-      font-weight: 600;
-  }
-  .tutorial-modal p {
-      margin-bottom: 15px;
-      font-size: 0.8rem;
-      line-height: 1.4;
-  }
-  .tutorial-modal button {
-      padding: 8px 12px;
-      font-size: 0.8rem;
-      font-weight: 500;
-      cursor: pointer;
-      border: none;
-      border-radius: 0;
-      transition: background-color 0.2s;
-  }
-  .tutorial-modal-next-btn {
-      background-color: #2563EB;
-      color: white;
-  }
-  .tutorial-modal-next-btn:hover {
-      background-color: #1D4ED8;
-  }
-  .tutorial-modal-skip-btn {
-      background-color: #4B5563;
-      color: #F3F4F6;
-      margin-left: 8px;
-  }
-  .tutorial-modal-skip-btn:hover {
-      background-color: #374151;
-  }
-
-  /* Стиль для подсветки элемента */
+  /* Убираем жирность и обводку у выделения */
   .tutorial-highlight {
-      box-shadow: 0 0 0 3px #FBBF24, 0 0 15px 3px #FBBF24;
-      border-radius: 0 !important;
-      transition: box-shadow 0.3s ease-in-out;
-      position: relative;
-      z-index: 9999; /* Highlighted element z-index (above overlay) */
-      pointer-events: auto;
-      /* MODIFICATION START: Make text within highlight more visible */
-      font-weight: bold !important; /* Make text bolder */
-      /* Add a 1px white outline to the text for better separation and visibility */
-      text-shadow: -1px -1px 0 #FFF, 1px -1px 0 #FFF, -1px 1px 0 #FFF, 1px 1px 0 #FFF;
-      /* MODIFICATION END */
+    box-shadow: none !important;
+    font-weight: normal !important;
+    text-shadow: none !important;
+    position: relative;
+    z-index: 10001; /* Над оверлеем */
   }
 
-body.tutorial-active > *:not(.tutorial-modal-overlay):not(.tutorial-modal):not(.tutorial-highlighted-ancestor) {
-    pointer-events: none !important;
-    opacity: 0.3; /* затемнение остальных */
+  /* Затемняющий оверлей с прозрачной дыркой */
+  .tutorial-modal-overlay {
+    display: none;
+    position: fixed;
+    z-index: 10000; /* Ниже, чем .tutorial-highlight */
+    left: 0;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.8);
+    pointer-events: none; /* Чтобы не мешать кликам по выделенной зоне */
+  }
+
+  /* При активном обучении - затемняем и блокируем всё кроме выделенного */
+  body.tutorial-active > *:not(.tutorial-modal-overlay):not(.tutorial-highlight) {
+    pointer-events: none;
     user-select: none;
-}
+    opacity: 0.3;
+  }
 
-.tutorial-highlight,
-.tutorial-highlight * {
-    opacity: 1 !important;
+  /* Разрешаем клики и выделение для выделенного элемента */
+  body.tutorial-active .tutorial-highlight,
+  body.tutorial-active .tutorial-highlight * {
     pointer-events: auto !important;
-    z-index: 9999 !important;
-}
-
-.tutorial-highlighted-ancestor,
-.tutorial-highlighted-ancestor * {
+    user-select: text !important;
     opacity: 1 !important;
-    pointer-events: auto !important;
-    z-index: 9999 !important;
-}
-
-  /* Ensure specific elements are not dimmed by overlay and are interactive */
-  body.tutorial-active #profitPercentageLabel,
-  body.tutorial-active #costPercentageLabel,
-  body.tutorial-active #paybackLabelContainer,
-  body.tutorial-active #roiLabelContainer {
-      position: relative; /* Required for z-index to take effect if not already positioned */
-      z-index: 9999; /* Same level as a highlighted element, above the overlay */
-      pointer-events: auto !important; /* Ensures they are interactive */
   }
-
-
-  /* Consistent height and styling for input-like display areas */
-  #hashrateContainer, #powerContainer {
-    height: 30px; /* Consistent height */
-    display: flex;
-    align-items: center;
-    background-color: #E2E2E2; /* Match other inputs */
-    padding-left: 0.5rem; /* px-2 */
-    padding-right: 0.5rem; /* px-2 */
-    box-sizing: border-box;
-    border: 1px solid #9CA3AF; /* Optional: add border like other inputs */
-    color: black; /* Text color */
-    font-size: 0.875rem; /* text-sm */
-  }
-
-  #hashrateContainer select#hashrateSelect {
-    height: 100%;
-    width: 100%; /* Make select take full width of its container if needed */
-    padding-top: 0.1rem;
-    padding-bottom: 0.1rem;
-    padding-left: 0.25rem;
-    padding-right: 0.25rem;
-    background-color: #E2E2E2; /* Ensure consistent bg */
-    border: none; /* Remove default select border if container has one */
-    color: black;
-    font-size: 0.875rem;
-    border-radius: 0 !important;
-    -webkit-appearance: menulist;
-    -moz-appearance: menulist;
-    appearance: menulist;
-    box-sizing: border-box;
-  }
-
-  #hashrateContainer span, #powerContainer span {
-    display: inline-block;
-    line-height: normal; /* Adjust if needed */
-  }
-   #hashrateContainer > span#edprice {
-       margin-left: 0.25rem; /* Add some space */
-   }
 </style>
+
+<script>
+  function updateOverlayMask() {
+    const highlight = document.querySelector('.tutorial-highlight');
+    const overlay = document.querySelector('.tutorial-modal-overlay');
+    if (!highlight || !overlay) return;
+
+    const rect = highlight.getBoundingClientRect();
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
+    const radius = Math.max(rect.width, rect.height) / 2 + 10; // +10px отступ вокруг
+
+    // Создаём CSS маску с прозрачным кругом по центру выделенного элемента
+    const maskValue = `radial-gradient(circle at ${centerX}px ${centerY}px, transparent ${radius}px, black ${radius + 1}px)`;
+
+    overlay.style.maskImage = maskValue;
+    overlay.style.webkitMaskImage = maskValue;
+
+    overlay.style.display = 'block';
+  }
+
+  // Запуск функции при активации обучения
+  function startTutorial() {
+    document.body.classList.add('tutorial-active');
+    updateOverlayMask();
+  }
+
+  // Остановка обучения
+  function stopTutorial() {
+    document.body.classList.remove('tutorial-active');
+    const overlay = document.querySelector('.tutorial-modal-overlay');
+    if (overlay) overlay.style.display = 'none';
+  }
+
+  // Обновление при ресайзе
+  window.addEventListener('resize', () => {
+    if (document.body.classList.contains('tutorial-active')) {
+      updateOverlayMask();
+    }
+  });
+
+  // Для демонстрации сразу запустим обучение через 1 сек
+  window.addEventListener('DOMContentLoaded', () => {
+    setTimeout(startTutorial, 1000);
+  });
+</script>
+
+<!-- Затемняющий оверлей -->
+<div class="tutorial-modal-overlay"></div>
+
+<!-- Пример выделяемого элемента -->
+<div style="margin: 100px; padding: 20px; background: #eee;">
+  <p>Нормальный текст</p>
+  <button class="tutorial-highlight" style="padding: 10px 20px; background: #2511A8; color: white; border:none;">
+    Элемент выделения для обучения
+  </button>
+  <p>Ещё текст</p>
+</div>
+
 </head>
 <body class="bg-black">
     <div id="headerSection" class="w-full bg-[#000000] text-white shadow-xl p-5 mb-[3px]">
@@ -364,14 +276,15 @@ body.tutorial-active > *:not(.tutorial-modal-overlay):not(.tutorial-modal):not(.
 
 <script>
 // --- НАЧАЛО БЛОКА ОБУЧЕНИЯ ---
-const SUPABASE_URL = 'https://yiprwrgmyqlkdmhgulmc.supabase.co'; // ВАШ URL
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlpcHJ3cmdteXFsa2RtaGd1bG1jIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ2NTI0NjgsImV4cCI6MjA2MDIyODQ2OH0.lfiTfr5ukGDEVuwq-X9U2kWs3nEZrp3N443HT5AkbfI'; // ВАШ ANON KEY
+
+const SUPABASE_URL = 'https://yiprwrgmyqlkdmhgulmc.supabase.co'; // Ваш URL Supabase
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlpcHJ3cmdteXFsa2RtaGd1bG1jIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ2NTI0NjgsImV4cCI6MjA2MDIyODQ2OH0.lfiTfr5ukGDEVuwq-X9U2kWs3nEZrp3N443HT5AkbfI'; // Ваш ANON KEY
 
 let supabaseClient;
 try {
-    supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 } catch (e) {
-    console.error("Ошибка инициализации Supabase:", e);
+  console.error("Ошибка инициализации Supabase:", e);
 }
 
 let currentTutorialStep = 0;
@@ -384,214 +297,223 @@ const tutorialTitle = document.getElementById('tutorialTitle');
 const tutorialText = document.getElementById('tutorialText');
 const tutorialNextBtn = document.getElementById('tutorialNextBtn');
 const tutorialSkipBtn = document.getElementById('tutorialSkipBtn');
+
 let highlightedElement = null;
 let highlightedAncestors = [];
 
+// Инициализация приложения и запуска обучения
 async function initAppAndTutorial() {
-    console.log("DOM fully loaded and parsed");
-    Telegram.WebApp.ready();
-    console.log("Telegram WebApp is ready.");
+  console.log("DOM загружен");
+  Telegram.WebApp.ready();
+  console.log("Telegram WebApp готов");
 
-    try {
-        await fetchData();
-        await onAlgorithmChange();
-    } catch (error) {
-        console.error("❌ Ошибка при начальной загрузке данных приложения:", error);
-    }
+  try {
+    await fetchData();
+    await onAlgorithmChange();
+  } catch (error) {
+    console.error("Ошибка загрузки данных приложения:", error);
+  }
 
-    if (Telegram.WebApp.initDataUnsafe && Telegram.WebApp.initDataUnsafe.user) {
-        telegramUser = Telegram.WebApp.initDataUnsafe.user;
-        if (telegramUser.id) {
-            console.log("Telegram User ID:", telegramUser.id);
-            await checkTutorialStatus();
-        } else {
-            console.warn("Telegram User ID не найден. Обучение не будет запущено.");
-        }
+  if (Telegram.WebApp.initDataUnsafe?.user) {
+    telegramUser = Telegram.WebApp.initDataUnsafe.user;
+    if (telegramUser.id) {
+      console.log("Telegram User ID:", telegramUser.id);
+      await checkTutorialStatus();
     } else {
-        console.warn("Telegram WebApp данные пользователя не найдены. Обучение не будет запущено.");
+      console.warn("Telegram User ID не найден. Обучение не будет запущено.");
     }
+  } else {
+    console.warn("Данные пользователя Telegram WebApp отсутствуют. Обучение не будет запущено.");
+  }
 }
 
+// Проверка статуса обучения в базе
 async function checkTutorialStatus() {
-    if (!supabaseClient || !telegramUser || !telegramUser.id) {
-        console.error("Supabase или Telegram User не инициализирован. Обучение не будет запущено.");
-        return;
+  if (!supabaseClient || !telegramUser?.id) {
+    console.error("Supabase или Telegram User не инициализированы. Обучение не запущено.");
+    return;
+  }
+
+  console.log("Проверка статуса обучения для пользователя:", telegramUser.id);
+
+  try {
+    const { data: user, error } = await supabaseClient
+      .from('users')
+      .select('telegram_id, tutor')
+      .eq('telegram_id', telegramUser.id.toString())
+      .single();
+
+    if (error && error.code !== 'PGRST116') {
+      console.error("Ошибка получения данных пользователя:", error);
+      return;
     }
-    console.log("Проверка статуса обучения для пользователя:", telegramUser.id);
-    try {
-        let { data: user, error } = await supabaseClient
-            .from('users')
-            .select('telegram_id, tutor')
-            .eq('telegram_id', telegramUser.id.toString())
-            .single();
 
-        if (error && error.code !== 'PGRST116') {
-            console.error("Ошибка получения данных пользователя из Supabase:", error);
-            return;
-        }
-
-        if (user && user.tutor === true) {
-            console.log("Пользователь уже прошел обучение.");
-        } else {
-            if (!user) {
-                console.log("Новый пользователь или не проходил обучение, запускаем.");
-            } else {
-                console.log("Пользователь не прошел обучение (tutor=false), запускаем.");
-            }
-            setupTutorialStepsDefinition();
-            startTutorialFlow();
-        }
-    } catch (e) {
-        console.error("Исключение при проверке статуса обучения:", e);
+    if (user?.tutor === true) {
+      console.log("Пользователь уже прошел обучение.");
+    } else {
+      console.log(user ? "Пользователь не прошел обучение (tutor=false), запускаем." : "Новый пользователь, запускаем обучение.");
+      setupTutorialSteps();
+      startTutorial();
     }
+  } catch (e) {
+    console.error("Исключение при проверке статуса обучения:", e);
+  }
 }
 
-function setupTutorialStepsDefinition() {
-    tutorialSteps = [
-        { text: "Начните с выбора Алгоритма. Доступны SHA-256 (для BTC) и Scrypt (для LTC+DOGE).", elementId: "algorithmSelect" },
-        { text: "Отлично! Теперь выберите Производителя вашего ASIC-майнера из списка.", elementId: "manufacturerSelect" },
-        { text: "Выберите интересующую вас Модель оборудования.", elementId: "asicModel" },
-        { text: "Укажите Стоимость Электроэнергии в вашей локации за 1 кВт/ч.", elementId: "electricityCost" },
-        { text: "Стоимость оборудования обычно подтягивается автоматически из нашего прайса. При необходимости, вы можете указать свою цену.", elementId: "asicCost" },
-        { text: "Нажмите кнопку Рассчитать, чтобы увидеть подробные результаты доходности.", elementId: "calculateBtn" },
-        { text: "Это прогресс-бар (Бар), который визуально отображает соотношение чистой Прибыли и Затрат на электроэнергию в общем дневном Доходе.", elementId: "progressBarContainer" },
-        { text: "Здесь указан процент дневной Прибыли от общего Дохода. Это та часть дохода, которая остается после вычета затрат.", elementId: "profitPercentageLabel" },
-        { text: "А здесь - процент дневных Затрат на электроэнергию от общего Дохода. Это доля дохода, уходящая на оплату электричества.", elementId: "costPercentageLabel" },
-        { text: "В таблице с Доходом и Прибылью вы можете переключать отображаемую валюту между долларами ($) и рублями (₽).", elementId: "resultsTable" },
-        { text: "Это ваш предполагаемый срок Окупаемости оборудования в месяцах. Показывает, через сколько месяцев ваши инвестиции вернутся.", elementId: "paybackLabelContainer" },
-        { text: "А это Годовой процент возврата инвестиций (ROI). Он показывает, какую прибыль вы получите за год относительно стоимости оборудования.", elementId: "roiLabelContainer" },
-        { title: "Обучение завершено!", text: "Поздравляем! Теперь вы знаете все основные функции калькулятора. Удачных расчетов!", elementId: null }
-    ];
+// Определение шагов обучения
+function setupTutorialSteps() {
+  tutorialSteps = [
+    { text: "Выберите Алгоритм: SHA-256 (BTC) или Scrypt (LTC, DOGE).", elementId: "algorithmSelect" },
+    { text: "Выберите Производителя ASIC-майнера из списка.", elementId: "manufacturerSelect" },
+    { text: "Выберите Модель вашего оборудования.", elementId: "asicModel" },
+    { text: "Укажите Стоимость Электроэнергии за 1 кВт/ч.", elementId: "electricityCost" },
+    { text: "Стоимость оборудования подтягивается автоматически, но вы можете указать свою цену.", elementId: "asicCost" },
+    { text: "Нажмите Рассчитать для получения результатов доходности.", elementId: "calculateBtn" },
+    { text: "Прогресс-бар отображает соотношение Прибыли и Затрат на электроэнергию.", elementId: "progressBarContainer" },
+    { text: "Процент дневной Прибыли после вычета затрат.", elementId: "profitPercentageLabel" },
+    { text: "Процент дневных Затрат на электроэнергию.", elementId: "costPercentageLabel" },
+    { text: "В таблице можно переключать валюту между $ и ₽.", elementId: "resultsTable" },
+    { text: "Предполагаемый срок Окупаемости оборудования в месяцах.", elementId: "paybackLabelContainer" },
+    { text: "Годовой ROI — прибыль за год относительно стоимости оборудования.", elementId: "roiLabelContainer" },
+    { title: "Обучение завершено!", text: "Поздравляем! Теперь вы знаете основные функции калькулятора.", elementId: null }
+  ];
 }
 
-function startTutorialFlow() {
-    currentTutorialStep = 0;
-    tutorialModalOverlay.style.display = 'block';
-    tutorialModal.style.display = 'block';
-    document.body.classList.add('tutorial-active');
-    Telegram.WebApp.expand();
-    displayCurrentTutorialStep();
+// Запуск обучения
+function startTutorial() {
+  currentTutorialStep = 0;
+  tutorialModalOverlay.style.display = 'block';
+  tutorialModal.style.display = 'block';
+  document.body.classList.add('tutorial-active');
+  Telegram.WebApp.expand();
+  showTutorialStep();
 }
 
+// Удаление подсветки
 function removeHighlight() {
-    if (highlightedElement) {
-        highlightedElement.classList.remove('tutorial-highlight');
-        highlightedElement = null;
-    }
-    highlightedAncestors.forEach(ancestor => ancestor.classList.remove('tutorial-highlighted-ancestor'));
-    highlightedAncestors = [];
-    document.querySelectorAll('.tutorial-highlight').forEach(el => el.classList.remove('tutorial-highlight'));
-    document.querySelectorAll('.tutorial-highlighted-ancestor').forEach(el => el.classList.remove('tutorial-highlighted-ancestor'));
+  if (highlightedElement) {
+    highlightedElement.classList.remove('tutorial-highlight');
+    highlightedElement = null;
+  }
+  highlightedAncestors.forEach(el => el.classList.remove('tutorial-highlighted-ancestor'));
+  highlightedAncestors = [];
+  document.querySelectorAll('.tutorial-highlight').forEach(el => el.classList.remove('tutorial-highlight'));
+  document.querySelectorAll('.tutorial-highlighted-ancestor').forEach(el => el.classList.remove('tutorial-highlighted-ancestor'));
 }
 
-function displayCurrentTutorialStep() {
-    removeHighlight();
+// Отображение текущего шага обучения
+function showTutorialStep() {
+  removeHighlight();
 
-    if (currentTutorialStep >= tutorialSteps.length) {
-        completeTutorialProcess();
-        return;
-    }
+  if (currentTutorialStep >= tutorialSteps.length) {
+    finishTutorial();
+    return;
+  }
 
-    const step = tutorialSteps[currentTutorialStep];
-    tutorialTitle.textContent = step.title || "Подсказка"; 
-    tutorialText.innerHTML = step.text;
+  const step = tutorialSteps[currentTutorialStep];
+  tutorialTitle.textContent = step.title || "Подсказка";
+  tutorialText.innerHTML = step.text;
 
-    tutorialModal.style.top = '50%';
-    tutorialModal.style.left = '50%';
-    tutorialModal.style.transform = 'translate(-50%, -50%)';
+  // Центрирование модального окна по умолчанию
+  tutorialModal.style.top = '50%';
+  tutorialModal.style.left = '50%';
+  tutorialModal.style.transform = 'translate(-50%, -50%)';
 
-    if (step.elementId) {
-        const targetElement = document.getElementById(step.elementId);
-        if (targetElement) {
-            highlightedElement = targetElement;
-            highlightedElement.classList.add('tutorial-highlight');
+  if (step.elementId) {
+    const target = document.getElementById(step.elementId);
+    if (target) {
+      highlightedElement = target;
+      highlightedElement.classList.add('tutorial-highlight');
 
-            let parent = targetElement.parentElement;
-            while (parent && parent !== document.body) {
-                parent.classList.add('tutorial-highlighted-ancestor');
-                highlightedAncestors.push(parent);
-                parent = parent.parentElement;
-            }
-            targetElement.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' });
+      // Подсвечиваем родителей для визуального эффекта
+      let parent = target.parentElement;
+      while (parent && parent !== document.body) {
+        parent.classList.add('tutorial-highlighted-ancestor');
+        highlightedAncestors.push(parent);
+        parent = parent.parentElement;
+      }
 
-            setTimeout(() => {
-                const targetRect = targetElement.getBoundingClientRect();
-                const modalRect = tutorialModal.getBoundingClientRect();
-                const viewportWidth = window.innerWidth;
-                const viewportHeight = window.innerHeight;
+      target.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' });
 
-                let modalTop = targetRect.bottom + 15;
-                let modalLeft = targetRect.left + (targetRect.width / 2) - (modalRect.width / 2);
+      setTimeout(() => {
+        positionModalNearElement(target);
+      }, 100);
 
-                if (modalTop + modalRect.height > viewportHeight - 10) {
-                    modalTop = targetRect.top - modalRect.height - 15;
-                }
-                if (modalTop < 10) {
-                    modalTop = 10;
-                }
-                if (modalLeft + modalRect.width > viewportWidth - 10) {
-                    modalLeft = viewportWidth - modalRect.width - 10;
-                }
-                if (modalLeft < 10) {
-                    modalLeft = 10;
-                }
-
-                tutorialModal.style.top = `${modalTop}px`;
-                tutorialModal.style.left = `${modalLeft}px`;
-                tutorialModal.style.transform = 'translate(0, 0)';
-            }, 100);
-
-        } else {
-            console.warn(`Элемент для обучения с ID "${step.elementId}" не найден.`);
-            tutorialModal.style.top = '50%';
-            tutorialModal.style.left = '50%';
-            tutorialModal.style.transform = 'translate(-50%, -50%)';
-        }
     } else {
-        tutorialModal.style.top = '50%';
-        tutorialModal.style.left = '50%';
-        tutorialModal.style.transform = 'translate(-50%, -50%)';
+      console.warn(`Элемент с ID "${step.elementId}" не найден.`);
     }
+  }
 
-    if (currentTutorialStep === tutorialSteps.length - 1) {
-        tutorialNextBtn.textContent = "Завершить";
-    } else {
-        tutorialNextBtn.textContent = "Далее";
-    }
+  tutorialNextBtn.textContent = (currentTutorialStep === tutorialSteps.length - 1) ? "Завершить" : "Далее";
 }
 
+// Позиционирование модального окна рядом с элементом
+function positionModalNearElement(element) {
+  const targetRect = element.getBoundingClientRect();
+  const modalRect = tutorialModal.getBoundingClientRect();
+  const viewportWidth = window.innerWidth;
+  const viewportHeight = window.innerHeight;
+
+  let top = targetRect.bottom + 15;
+  let left = targetRect.left + (targetRect.width / 2) - (modalRect.width / 2);
+
+  if (top + modalRect.height > viewportHeight - 10) {
+    top = targetRect.top - modalRect.height - 15;
+  }
+  if (top < 10) top = 10;
+
+  if (left + modalRect.width > viewportWidth - 10) {
+    left = viewportWidth - modalRect.width - 10;
+  }
+  if (left < 10) left = 10;
+
+  tutorialModal.style.top = `${top}px`;
+  tutorialModal.style.left = `${left}px`;
+  tutorialModal.style.transform = 'translate(0, 0)';
+}
+
+// Обработка кнопок Далее и Пропустить
 tutorialNextBtn.addEventListener('click', () => {
-    currentTutorialStep++;
-    displayCurrentTutorialStep();
+  currentTutorialStep++;
+  showTutorialStep();
 });
 
 tutorialSkipBtn.addEventListener('click', () => {
-    completeTutorialProcess(true);
+  finishTutorial(true);
 });
 
-async function completeTutorialProcess(skipped = false) {
-    tutorialModalOverlay.style.display = 'none';
-    tutorialModal.style.display = 'none';
-    document.body.classList.remove('tutorial-active');
-    removeHighlight(); 
-    console.log(skipped ? "Обучение пропущено." : "Обучение завершено.");
+// Завершение обучения
+async function finishTutorial(skipped = false) {
+  tutorialModalOverlay.style.display = 'none';
+  tutorialModal.style.display = 'none';
+  document.body.classList.remove('tutorial-active');
+  removeHighlight();
 
-    if (!telegramUser || !telegramUser.id || !supabaseClient) {
-        console.warn("Не удалось сохранить статус обучения: нет пользователя или Supabase клиента.");
-        return;
+  console.log(skipped ? "Обучение пропущено." : "Обучение завершено.");
+
+  if (!telegramUser?.id || !supabaseClient) {
+    console.warn("Не удалось сохранить статус обучения: отсутствуют данные пользователя или клиент Supabase.");
+    return;
+  }
+
+  try {
+    const { data, error } = await supabaseClient
+      .from('users')
+      .upsert({ telegram_id: telegramUser.id.toString(), tutor: true }, { onConflict: 'telegram_id' })
+      .select();
+
+    if (error) {
+      console.error("Ошибка сохранения статуса обучения в Supabase:", error);
+    } else {
+      console.log("Статус обучения успешно сохранён:", data);
     }
-    try {
-        const { data, error } = await supabaseClient
-            .from('users')
-            .upsert({ telegram_id: telegramUser.id.toString(), tutor: true, }, { onConflict: 'telegram_id' })
-            .select();
-        if (error) console.error("Ошибка сохранения статуса обучения в Supabase:", error);
-        else console.log("Статус обучения успешно сохранен в Supabase:", data);
-    } catch (e) {
-        console.error("Исключение при сохранении статуса обучения:", e);
-    }
+  } catch (e) {
+    console.error("Исключение при сохранении статуса обучения:", e);
+  }
 }
+
 // --- КОНЕЦ БЛОКА ОБУЧЕНИЯ ---
+
 
 // ... (rest of the script remains the same) ...
 let jsonData = [];
