@@ -173,6 +173,25 @@
        margin-left: 0.25rem; /* Add some space */
    }
 
+/* ✅ Убираем затемнение и блокировку взаимодействия внутри подсвеченных элементов */
+.tutorial-highlight,
+.tutorial-highlight * {
+    opacity: 1 !important;
+    pointer-events: auto !important;
+    z-index: 9999 !important;
+}
+
+/* ✅ То же самое для предков подсвеченного элемента */
+.tutorial-highlighted-ancestor,
+.tutorial-highlighted-ancestor * {
+    opacity: 1 !important;
+    pointer-events: auto !important;
+    z-index: 9999 !important;
+}
+#hashrateContainer > span#edprice {
+    margin-left: 0.25rem; /* Add some space */
+}
+
 
 </style>
 </head>
