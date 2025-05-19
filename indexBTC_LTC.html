@@ -55,7 +55,7 @@
   .tutorial-modal-overlay {
       display: none;
       position: fixed;
-      z-index: 9998;
+      z-index: 9998; /* Overlay z-index */
       left: 0;
       top: 0;
       width: 100%;
@@ -67,7 +67,7 @@
   .tutorial-modal {
       display: none;
       position: fixed; /* Will be adjusted by JS */
-      z-index: 10000;
+      z-index: 10000; /* Modal z-index (highest) */
       background-color: #1F2937;
       color: #F3F4F6;
       padding: 15px;
@@ -120,16 +120,28 @@
       border-radius: 0 !important;
       transition: box-shadow 0.3s ease-in-out;
       position: relative;
-      z-index: 9999;
+      z-index: 9999; /* Highlighted element z-index (above overlay) */
       pointer-events: auto;
   }
 
-  body.tutorial-active > *:not(.tutorial-modal-overlay):not(.tutorial-modal):not(.tutorial-highlighted-ancestor) {
+  body.tutorial-active > *:not(.tutorial-modal-overlay):not(.tutorial-modal):not(.tutorial-highlighted-ancestor):not(#profitPercentageLabel):not(#costPercentageLabel):not(#paybackLabelContainer):not(#roiLabelContainer) {
       pointer-events: none !important;
   }
   .tutorial-highlighted-ancestor {
       pointer-events: auto !important;
   }
+
+  /* MODIFICATION START: Ensure specific elements are not dimmed by overlay and are interactive */
+  body.tutorial-active #profitPercentageLabel,
+  body.tutorial-active #costPercentageLabel,
+  body.tutorial-active #paybackLabelContainer,
+  body.tutorial-active #roiLabelContainer {
+      position: relative; /* Required for z-index to take effect if not already positioned */
+      z-index: 9999; /* Same level as a highlighted element, above the overlay */
+      pointer-events: auto !important; /* Ensures they are interactive */
+  }
+  /* MODIFICATION END */
+
 
   /* Consistent height and styling for input-like display areas */
   #hashrateContainer, #powerContainer {
@@ -154,7 +166,6 @@
     padding-right: 0.25rem;
     background-color: #E2E2E2; /* Ensure consistent bg */
     border: none; /* Remove default select border if container has one */
-    /* border: 1px solid #9CA3AF; */ /* Or keep its own border */
     color: black;
     font-size: 0.875rem;
     border-radius: 0 !important;
@@ -168,12 +179,9 @@
     display: inline-block;
     line-height: normal; /* Adjust if needed */
   }
-  /* Ensure the edprice span is visible and styled if select isn't present */
    #hashrateContainer > span#edprice {
        margin-left: 0.25rem; /* Add some space */
    }
-
-
 </style>
 </head>
 <body class="bg-black">
@@ -327,7 +335,7 @@
         <div id="paybackLabelContainer">Окупаемость мес.: <span id="payback">—</span></div>
         <div id="roiLabelContainer">Годовой %: <span id="roi">—</span></div>
       </div>
-      </div>
+   </div>
 
    <div id="tutorialModalOverlay" class="tutorial-modal-overlay"></div>
    <div id="tutorialModal" class="tutorial-modal">
@@ -391,11 +399,8 @@ async function initAppAndTutorial() {
 }
 
 async function checkTutorialStatus() {
-    if (!supabaseClient || !telegramUser || !telegramUser.id) { // Added checks for telegramUser
+    if (!supabaseClient || !telegramUser || !telegramUser.id) {
         console.error("Supabase или Telegram User не инициализирован. Обучение не будет запущено.");
-        // Optionally, for testing outside Telegram if user is null:
-        // setupTutorialStepsDefinition();
-        // startTutorialFlow();
         return;
     }
     console.log("Проверка статуса обучения для пользователя:", telegramUser.id);
@@ -428,20 +433,20 @@ async function checkTutorialStatus() {
 }
 
 function setupTutorialStepsDefinition() {
-    // MODIFICATION START: Updated tutorial steps
+    // MODIFICATION START: Removed title property from steps, except the last one
     tutorialSteps = [
-        {  title: "Шаг 1: Алгоритм", text: "Начните с выбора Алгоритма. Доступны SHA-256 (для BTC) и Scrypt (для LTC+DOGE).", elementId: "algorithmSelect" },
-        {  title: "Шаг 2: Производитель", text: "Отлично! Теперь выберите Производителя вашего ASIC-майнера из списка.", elementId: "manufacturerSelect" },
-        {  title: "Шаг 3: Модель", text: "Выберите интересующую вас Модель оборудования.", elementId: "asicModel" },
-        {  title: "Шаг 4: Стоимость Э/Э", text: "Укажите Стоимость Электроэнергии в вашей локации за 1 кВт/ч.", elementId: "electricityCost" },
-        {  title: "Шаг 5: Стоимость ASIC", text: "Стоимость оборудования обычно подтягивается автоматически из нашего прайса. При необходимости, вы можете указать свою цену.", elementId: "asicCost" },
-        {  title: "Шаг 6: Расчет", text: "Нажмите кнопку Рассчитать, чтобы увидеть подробные результаты доходности.", elementId: "calculateBtn" },
-        {  title: "Шаг 7: Шкала Доходности", text: "Это прогресс-бар (Бар), который визуально отображает соотношение чистой Прибыли и Затрат на электроэнергию в общем дневном Доходе.", elementId: "progressBarContainer" },
-        {  title: "Шаг 8: Процент Прибыли", text: "Здесь указан процент дневной Прибыли от общего Дохода. Это та часть дохода, которая остается после вычета затрат.", elementId: "profitPercentageLabel" },
-        {  title: "Шаг 9: Процент Затрат", text: "А здесь - процент дневных Затрат на электроэнергию от общего Дохода. Это доля дохода, уходящая на оплату электричества.", elementId: "costPercentageLabel" },
-        {  title: "Шаг 10: Таблица Результатов", text: "В таблице с Доходом и Прибылью вы можете переключать отображаемую валюту между долларами ($) и рублями (₽).", elementId: "resultsTable" },
-        {  title: "Шаг 11: Окупаемость", text: "Это ваш предполагаемый срок Окупаемости оборудования в месяцах. Показывает, через сколько месяцев ваши инвестиции вернутся.", elementId: "paybackLabelContainer" },
-        {  title: "Шаг 12: Годовой ROI", text: "А это Годовой процент возврата инвестиций (ROI). Он показывает, какую прибыль вы получите за год относительно стоимости оборудования.", elementId: "roiLabelContainer" },
+        { text: "Начните с выбора Алгоритма. Доступны SHA-256 (для BTC) и Scrypt (для LTC+DOGE).", elementId: "algorithmSelect" },
+        { text: "Отлично! Теперь выберите Производителя вашего ASIC-майнера из списка.", elementId: "manufacturerSelect" },
+        { text: "Выберите интересующую вас Модель оборудования.", elementId: "asicModel" },
+        { text: "Укажите Стоимость Электроэнергии в вашей локации за 1 кВт/ч.", elementId: "electricityCost" },
+        { text: "Стоимость оборудования обычно подтягивается автоматически из нашего прайса. При необходимости, вы можете указать свою цену.", elementId: "asicCost" },
+        { text: "Нажмите кнопку Рассчитать, чтобы увидеть подробные результаты доходности.", elementId: "calculateBtn" },
+        { text: "Это прогресс-бар (Бар), который визуально отображает соотношение чистой Прибыли и Затрат на электроэнергию в общем дневном Доходе.", elementId: "progressBarContainer" },
+        { text: "Здесь указан процент дневной Прибыли от общего Дохода. Это та часть дохода, которая остается после вычета затрат.", elementId: "profitPercentageLabel" },
+        { text: "А здесь - процент дневных Затрат на электроэнергию от общего Дохода. Это доля дохода, уходящая на оплату электричества.", elementId: "costPercentageLabel" },
+        { text: "В таблице с Доходом и Прибылью вы можете переключать отображаемую валюту между долларами ($) и рублями (₽).", elementId: "resultsTable" },
+        { text: "Это ваш предполагаемый срок Окупаемости оборудования в месяцах. Показывает, через сколько месяцев ваши инвестиции вернутся.", elementId: "paybackLabelContainer" },
+        { text: "А это Годовой процент возврата инвестиций (ROI). Он показывает, какую прибыль вы получите за год относительно стоимости оборудования.", elementId: "roiLabelContainer" },
         { title: "Обучение завершено!", text: "Поздравляем! Теперь вы знаете все основные функции калькулятора. Удачных расчетов!", elementId: null }
     ];
     // MODIFICATION END
@@ -459,11 +464,13 @@ function startTutorialFlow() {
 function removeHighlight() {
     if (highlightedElement) {
         highlightedElement.classList.remove('tutorial-highlight');
-        highlightedElement.classList.remove('tutorial-highlighted-ancestor');
+        highlightedElement.classList.remove('tutorial-highlighted-ancestor'); // Should be fine, but good to be explicit
         highlightedElement = null;
     }
     highlightedAncestors.forEach(ancestor => ancestor.classList.remove('tutorial-highlighted-ancestor'));
     highlightedAncestors = [];
+
+    // Clean up any residual classes, though specific removal above should handle it.
     document.querySelectorAll('.tutorial-highlight').forEach(el => el.classList.remove('tutorial-highlight'));
     document.querySelectorAll('.tutorial-highlighted-ancestor').forEach(el => el.classList.remove('tutorial-highlighted-ancestor'));
 }
@@ -477,9 +484,9 @@ function displayCurrentTutorialStep() {
     }
 
     const step = tutorialSteps[currentTutorialStep];
-    tutorialTitle.textContent = step.title || "Подсказка"; // Default title if not provided
+    tutorialTitle.textContent = step.title || "Подсказка"; // Fallback to "Подсказка" if title is not set
     tutorialText.innerHTML = step.text;
-    // Reset modal to default centered position first
+
     tutorialModal.style.top = '50%';
     tutorialModal.style.left = '50%';
     tutorialModal.style.transform = 'translate(-50%, -50%)';
@@ -489,7 +496,11 @@ function displayCurrentTutorialStep() {
         if (targetElement) {
             highlightedElement = targetElement;
             highlightedElement.classList.add('tutorial-highlight');
-            highlightedElement.classList.add('tutorial-highlighted-ancestor');
+            // Add 'tutorial-highlighted-ancestor' to the element itself to simplify pointer-events logic if needed,
+            // or rely on the specific CSS for the four elements.
+            // For now, keeping original logic for ancestors, the new CSS will handle the four specific elements.
+            // highlightedElement.classList.add('tutorial-highlighted-ancestor');
+
 
             let parent = targetElement.parentElement;
             while (parent && parent !== document.body) {
@@ -499,46 +510,40 @@ function displayCurrentTutorialStep() {
             }
             targetElement.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' });
 
-            // Position modal near the element after a short delay for scrollIntoView
             setTimeout(() => {
                 const targetRect = targetElement.getBoundingClientRect();
-                const modalRect = tutorialModal.getBoundingClientRect(); // Get modal size
+                const modalRect = tutorialModal.getBoundingClientRect();
                 const viewportWidth = window.innerWidth;
                 const viewportHeight = window.innerHeight;
 
-                let modalTop = targetRect.bottom + 15; // Position below
+                let modalTop = targetRect.bottom + 15;
                 let modalLeft = targetRect.left + (targetRect.width / 2) - (modalRect.width / 2);
 
-                // Adjust if off-screen vertically (bottom)
-                if (modalTop + modalRect.height > viewportHeight - 10) { // 10px buffer from edge
-                    modalTop = targetRect.top - modalRect.height - 15; // Try above
+                if (modalTop + modalRect.height > viewportHeight - 10) {
+                    modalTop = targetRect.top - modalRect.height - 15;
                 }
-                // Adjust if off-screen vertically (top)
                 if (modalTop < 10) {
                     modalTop = 10;
                 }
-                 // Adjust if off-screen horizontally (right)
                 if (modalLeft + modalRect.width > viewportWidth - 10) {
                     modalLeft = viewportWidth - modalRect.width - 10;
                 }
-                // Adjust if off-screen horizontally (left)
                 if (modalLeft < 10) {
                     modalLeft = 10;
                 }
 
                 tutorialModal.style.top = `${modalTop}px`;
                 tutorialModal.style.left = `${modalLeft}px`;
-                tutorialModal.style.transform = 'translate(0, 0)'; // Remove centering
-            }, 100); // Small delay for scroll and layout
+                tutorialModal.style.transform = 'translate(0, 0)';
+            }, 100);
 
         } else {
             console.warn(`Элемент для обучения с ID "${step.elementId}" не найден.`);
-            // Fallback to centered if element not found
             tutorialModal.style.top = '50%';
             tutorialModal.style.left = '50%';
             tutorialModal.style.transform = 'translate(-50%, -50%)';
         }
-    } else { // For steps without a specific element, center the modal
+    } else {
         tutorialModal.style.top = '50%';
         tutorialModal.style.left = '50%';
         tutorialModal.style.transform = 'translate(-50%, -50%)';
@@ -564,7 +569,7 @@ async function completeTutorialProcess(skipped = false) {
     tutorialModalOverlay.style.display = 'none';
     tutorialModal.style.display = 'none';
     document.body.classList.remove('tutorial-active');
-    removeHighlight();
+    removeHighlight(); // Ensure cleanup
     console.log(skipped ? "Обучение пропущено." : "Обучение завершено.");
 
     if (!telegramUser || !telegramUser.id || !supabaseClient) {
@@ -631,7 +636,7 @@ async function fetchData() {
 }
 
 async function fetchJsonData() {
-    console.log(`Загрузка calc.json...`); // Removed algorithm from log as it's fetched once
+    console.log(`Загрузка calc.json...`);
     try {
         const response = await fetch("https://hamsauno.github.io/Miner/json/calc.json");
         if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
@@ -653,7 +658,7 @@ async function onAlgorithmChange() {
     currentAlgorithm = algorithmSelect.value;
     console.log(`Алгоритм изменен на: ${currentAlgorithm}`);
 
-    if (jsonData.length === 0) await fetchJsonData(); // Fetch only if not already fetched
+    if (jsonData.length === 0) await fetchJsonData();
 
     const manufacturerSelect = document.getElementById("manufacturerSelect");
     if (!manufacturerSelect) return;
@@ -709,7 +714,7 @@ function updateAsicSpecs() {
     const powerEl = document.getElementById("power");
     const powerUnitEl = document.getElementById("power_unit");
 
-    hashrateContainer.innerHTML = '<span id="hashrate"></span><span id="edprice"></span>'; // Reset to spans
+    hashrateContainer.innerHTML = '<span id="hashrate"></span><span id="edprice"></span>';
     document.getElementById("hashrate").textContent = '';
     document.getElementById("edprice").textContent = '';
     powerEl.textContent = ''; powerUnitEl.textContent = '';
@@ -722,7 +727,7 @@ function updateAsicSpecs() {
     }
 
     currentModelVariants = jsonData.filter(i => i["Модель"] === selectedModelName && i["Алгоритм"] === currentAlgorithm);
-    currentModelVariants.sort((a, b) => parseFloat(b["Хешрейт"]) - parseFloat(a["Хешрейт"])); // сортировка по убыванию
+    currentModelVariants.sort((a, b) => parseFloat(b["Хешрейт"]) - parseFloat(a["Хешрейт"]));
 
     if (currentModelVariants.length > 0) {
         if (currentModelVariants.length === 1) {
@@ -731,7 +736,7 @@ function updateAsicSpecs() {
             document.getElementById("edprice").textContent = item["Ед. изм."] || '';
             populateSpecsForVariant(item);
         } else {
-            let selectHTML = '<select id="hashrateSelect">'; // Removed Tailwind classes, will be handled by specific CSS
+            let selectHTML = '<select id="hashrateSelect">';
             currentModelVariants.forEach((variant, index) => {
                 selectHTML += `<option value="${index}">${variant["Хешрейт"]} ${variant["Ед. изм."]}</option>`;
             });
@@ -806,14 +811,12 @@ function calculateProfit() {
         if (edp) selectedVariantHashrateUnit = edp.textContent;
     }
 
-    let calculationHashrate = actualHashrate; // Assume this is the value to use for calculation after unit check
-    // Basic unit conversion - Refine based on actual profitPer... units
-    // Example: if profitPerTH is strictly for TH/s
+    let calculationHashrate = actualHashrate;
     if (currentAlgorithm === "SHA-256" && selectedVariantHashrateUnit) {
         if (selectedVariantHashrateUnit.toUpperCase().includes("PH")) calculationHashrate *= 1000;
         else if (selectedVariantHashrateUnit.toUpperCase().includes("GH")) calculationHashrate /= 1000;
         else if (selectedVariantHashrateUnit.toUpperCase().includes("MH")) calculationHashrate /= 1000000;
-    } // Add similar for Scrypt if its profitPer... are for MH/s and hashrate could be TH/s, GH/s
+    }
 
     const values = {
         currentUsdtPrice: parseFloat(elements.usdtPriceInput.value), hashrate: calculationHashrate,
@@ -830,7 +833,7 @@ function calculateProfit() {
         const ltcP = parseFloat(elements.ltcPriceInput.value), dogeP = parseFloat(elements.dogePriceInput.value), bellP = parseFloat(elements.bellPriceInput.value);
         const pPLTC = parseFloat(elements.profitPerLTCInput.value), pPDOGE = parseFloat(elements.profitPerDOGEInput.value), pPBELL = parseFloat(elements.profitPerBELLInput.value);
         if (![ltcP, dogeP, bellP, pPLTC, pPDOGE, pPBELL].some(isNaN)) {
-            dailyIncome = values.hashrate * (pPLTC * ltcP + pPDOGE * dogeP + pPBELL * bellP); // Assuming values.hashrate is in correct unit for Scrypt profit (e.g. MH/s)
+            dailyIncome = values.hashrate * (pPLTC * ltcP + pPDOGE * dogeP + pPBELL * bellP);
         } else { console.error("❌ Scrypt calc error"); return;}
     }
 
