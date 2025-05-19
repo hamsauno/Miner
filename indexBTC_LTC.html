@@ -263,7 +263,7 @@
    </div>
 
    <div id="resultsContainer" class="w-full bg-[#E2E2E2] text-sm space-y-4 shadow-md px-4 pb-4 pt-4">
-     <div>
+     <div id="profitprogressBar">
        <div id="progressBarContainer" class="w-full h-5 relative overflow-hidden border" style="border-color: #2511A8;">
          <div id="dailyProfitBar" class="absolute top-0 left-0 h-full transition-all duration-500" style="background-color: #2511A8;"></div>
          <div id="dailyElectricityCostBar" class="absolute top-0 h-full transition-all duration-500" style="background-color: #CCCCCC;"></div>
@@ -435,7 +435,7 @@ function setupTutorialStepsDefinition() {
         {  text: "Укажите Стоимость Электроэнергии </br> за 1 кВт/ч.", elementId: "electricityCost" },
         {  text: "Стоимость оборудования автоматически подтягивается из нашего прайса. Можно указать свою цену.", elementId: "asicCost" },
         {  text: "Нажмите кнопку Рассчитать, чтобы увидеть результаты.", elementId: "calculateBtn" },
-        {  text: "Здесь вы видите шкалу Прибыль-Затраты в общем Доходе.", elementId: "progressBarContainer" },
+        {  text: "Здесь вы видите шкалу Прибыль-Затраты в общем Доходе.", elementId: "profitprogressBar" },
         {  text: "В таблице с Доходом и Прибылью вы можете переключать валюту ($/₽).", elementId: "resultsTable" },
         {  text: "И, конечно, показатели Окупаемости и Годовой возврат инвестиций (ROI).", elementId: "paybackRoiContainer" },
         { title: "Обучение завершено!", text: "Удачных расчетов!", elementId: null }
