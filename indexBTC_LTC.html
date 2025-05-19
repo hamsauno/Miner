@@ -55,7 +55,7 @@
   .tutorial-modal-overlay {
       display: none;
       position: fixed;
-      z-index: 9998; /* Overlay z-index */
+      z-index: 9998;
       left: 0;
       top: 0;
       width: 100%;
@@ -67,7 +67,7 @@
   .tutorial-modal {
       display: none;
       position: fixed; /* Will be adjusted by JS */
-      z-index: 10000; /* Modal z-index (highest) */
+      z-index: 10000;
       background-color: #1F2937;
       color: #F3F4F6;
       padding: 15px;
@@ -120,32 +120,16 @@
       border-radius: 0 !important;
       transition: box-shadow 0.3s ease-in-out;
       position: relative;
-      z-index: 9999; /* Highlighted element z-index (above overlay) */
+      z-index: 9999;
       pointer-events: auto;
-      /* MODIFICATION START: Make text within highlight more visible */
-      font-weight: bold !important; /* Make text bolder */
-      /* Add a 1px white outline to the text for better separation and visibility */
-      text-shadow: -1px -1px 0 #FFF, 1px -1px 0 #FFF, -1px 1px 0 #FFF, 1px 1px 0 #FFF;
-      /* MODIFICATION END */
   }
 
-  body.tutorial-active > *:not(.tutorial-modal-overlay):not(.tutorial-modal):not(.tutorial-highlighted-ancestor):not(#profitPercentageLabel):not(#costPercentageLabel):not(#paybackLabelContainer):not(#roiLabelContainer) {
+  body.tutorial-active > *:not(.tutorial-modal-overlay):not(.tutorial-modal):not(.tutorial-highlighted-ancestor) {
       pointer-events: none !important;
   }
   .tutorial-highlighted-ancestor {
       pointer-events: auto !important;
-
-
-  /* Ensure specific elements are not dimmed by overlay and are interactive */
-  body.tutorial-active #profitPercentageLabel,
-  body.tutorial-active #costPercentageLabel,
-  body.tutorial-active #paybackLabelContainer,
-  body.tutorial-active #roiLabelContainer {
-      position: relative; /* Required for z-index to take effect if not already positioned */
-      z-index: 9999; /* Same level as a highlighted element, above the overlay */
-      pointer-events: auto !important; /* Ensures they are interactive */
   }
-
 
   /* Consistent height and styling for input-like display areas */
   #hashrateContainer, #powerContainer {
@@ -170,6 +154,7 @@
     padding-right: 0.25rem;
     background-color: #E2E2E2; /* Ensure consistent bg */
     border: none; /* Remove default select border if container has one */
+    /* border: 1px solid #9CA3AF; */ /* Or keep its own border */
     color: black;
     font-size: 0.875rem;
     border-radius: 0 !important;
@@ -183,10 +168,33 @@
     display: inline-block;
     line-height: normal; /* Adjust if needed */
   }
+  /* Ensure the edprice span is visible and styled if select isn't present */
    #hashrateContainer > span#edprice {
        margin-left: 0.25rem; /* Add some space */
    }
+
+/* ✅ Убираем затемнение и блокировку взаимодействия внутри подсвеченных элементов */
+.tutorial-highlight,
+.tutorial-highlight * {
+    opacity: 1 !important;
+    pointer-events: auto !important;
+    z-index: 9999 !important;
+}
+
+/* ✅ То же самое для предков подсвеченного элемента */
+.tutorial-highlighted-ancestor,
+.tutorial-highlighted-ancestor * {
+    opacity: 1 !important;
+    pointer-events: auto !important;
+    z-index: 9999 !important;
+}
+#hashrateContainer > span#edprice {
+    margin-left: 0.25rem; /* Add some space */
+}
+
+
 </style>
+
 </head>
 <body class="bg-black">
     <div id="headerSection" class="w-full bg-[#000000] text-white shadow-xl p-5 mb-[3px]">
