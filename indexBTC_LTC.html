@@ -129,12 +129,25 @@
       /* MODIFICATION END */
   }
 
-  body.tutorial-active > *:not(.tutorial-modal-overlay):not(.tutorial-modal):not(.tutorial-highlighted-ancestor):not(#profitPercentageLabel):not(#costPercentageLabel):not(#paybackLabelContainer):not(#roiLabelContainer) {
-      pointer-events: none !important;
-  }
-  .tutorial-highlighted-ancestor {
-      pointer-events: auto !important;
-  }
+body.tutorial-active > *:not(.tutorial-modal-overlay):not(.tutorial-modal):not(.tutorial-highlighted-ancestor) {
+    pointer-events: none !important;
+    opacity: 0.3; /* затемнение остальных */
+    user-select: none;
+}
+
+.tutorial-highlight,
+.tutorial-highlight * {
+    opacity: 1 !important;
+    pointer-events: auto !important;
+    z-index: 9999 !important;
+}
+
+.tutorial-highlighted-ancestor,
+.tutorial-highlighted-ancestor * {
+    opacity: 1 !important;
+    pointer-events: auto !important;
+    z-index: 9999 !important;
+}
 
   /* Ensure specific elements are not dimmed by overlay and are interactive */
   body.tutorial-active #profitPercentageLabel,
