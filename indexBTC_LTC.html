@@ -122,6 +122,11 @@
       position: relative;
       z-index: 9999; /* Highlighted element z-index (above overlay) */
       pointer-events: auto;
+      /* MODIFICATION START: Make text within highlight more visible */
+      font-weight: bold !important; /* Make text bolder */
+      /* Add a 1px white outline to the text for better separation and visibility */
+      text-shadow: -1px -1px 0 #FFF, 1px -1px 0 #FFF, -1px 1px 0 #FFF, 1px 1px 0 #FFF;
+      /* MODIFICATION END */
   }
 
   body.tutorial-active > *:not(.tutorial-modal-overlay):not(.tutorial-modal):not(.tutorial-highlighted-ancestor):not(#profitPercentageLabel):not(#costPercentageLabel):not(#paybackLabelContainer):not(#roiLabelContainer) {
@@ -131,7 +136,7 @@
       pointer-events: auto !important;
   }
 
-  /* MODIFICATION START: Ensure specific elements are not dimmed by overlay and are interactive */
+  /* Ensure specific elements are not dimmed by overlay and are interactive */
   body.tutorial-active #profitPercentageLabel,
   body.tutorial-active #costPercentageLabel,
   body.tutorial-active #paybackLabelContainer,
@@ -140,7 +145,6 @@
       z-index: 9999; /* Same level as a highlighted element, above the overlay */
       pointer-events: auto !important; /* Ensures they are interactive */
   }
-  /* MODIFICATION END */
 
 
   /* Consistent height and styling for input-like display areas */
@@ -392,9 +396,6 @@ async function initAppAndTutorial() {
         }
     } else {
         console.warn("Telegram WebApp данные пользователя не найдены. Обучение не будет запущено.");
-        // Fallback for testing outside Telegram if needed:
-        // setupTutorialStepsDefinition();
-        // startTutorialFlow();
     }
 }
 
@@ -433,7 +434,6 @@ async function checkTutorialStatus() {
 }
 
 function setupTutorialStepsDefinition() {
-    // MODIFICATION START: Removed title property from steps, except the last one
     tutorialSteps = [
         { text: "Начните с выбора Алгоритма. Доступны SHA-256 (для BTC) и Scrypt (для LTC+DOGE).", elementId: "algorithmSelect" },
         { text: "Отлично! Теперь выберите Производителя вашего ASIC-майнера из списка.", elementId: "manufacturerSelect" },
@@ -449,7 +449,6 @@ function setupTutorialStepsDefinition() {
         { text: "А это Годовой процент возврата инвестиций (ROI). Он показывает, какую прибыль вы получите за год относительно стоимости оборудования.", elementId: "roiLabelContainer" },
         { title: "Обучение завершено!", text: "Поздравляем! Теперь вы знаете все основные функции калькулятора. Удачных расчетов!", elementId: null }
     ];
-    // MODIFICATION END
 }
 
 function startTutorialFlow() {
@@ -464,13 +463,10 @@ function startTutorialFlow() {
 function removeHighlight() {
     if (highlightedElement) {
         highlightedElement.classList.remove('tutorial-highlight');
-        highlightedElement.classList.remove('tutorial-highlighted-ancestor'); // Should be fine, but good to be explicit
         highlightedElement = null;
     }
     highlightedAncestors.forEach(ancestor => ancestor.classList.remove('tutorial-highlighted-ancestor'));
     highlightedAncestors = [];
-
-    // Clean up any residual classes, though specific removal above should handle it.
     document.querySelectorAll('.tutorial-highlight').forEach(el => el.classList.remove('tutorial-highlight'));
     document.querySelectorAll('.tutorial-highlighted-ancestor').forEach(el => el.classList.remove('tutorial-highlighted-ancestor'));
 }
@@ -484,7 +480,7 @@ function displayCurrentTutorialStep() {
     }
 
     const step = tutorialSteps[currentTutorialStep];
-    tutorialTitle.textContent = step.title || "Подсказка"; // Fallback to "Подсказка" if title is not set
+    tutorialTitle.textContent = step.title || "Подсказка"; 
     tutorialText.innerHTML = step.text;
 
     tutorialModal.style.top = '50%';
@@ -496,11 +492,6 @@ function displayCurrentTutorialStep() {
         if (targetElement) {
             highlightedElement = targetElement;
             highlightedElement.classList.add('tutorial-highlight');
-            // Add 'tutorial-highlighted-ancestor' to the element itself to simplify pointer-events logic if needed,
-            // or rely on the specific CSS for the four elements.
-            // For now, keeping original logic for ancestors, the new CSS will handle the four specific elements.
-            // highlightedElement.classList.add('tutorial-highlighted-ancestor');
-
 
             let parent = targetElement.parentElement;
             while (parent && parent !== document.body) {
@@ -569,7 +560,7 @@ async function completeTutorialProcess(skipped = false) {
     tutorialModalOverlay.style.display = 'none';
     tutorialModal.style.display = 'none';
     document.body.classList.remove('tutorial-active');
-    removeHighlight(); // Ensure cleanup
+    removeHighlight(); 
     console.log(skipped ? "Обучение пропущено." : "Обучение завершено.");
 
     if (!telegramUser || !telegramUser.id || !supabaseClient) {
@@ -589,6 +580,7 @@ async function completeTutorialProcess(skipped = false) {
 }
 // --- КОНЕЦ БЛОКА ОБУЧЕНИЯ ---
 
+// ... (rest of the script remains the same) ...
 let jsonData = [];
 let currentAlgorithm = "SHA-256";
 let dailyIncome = 0;
