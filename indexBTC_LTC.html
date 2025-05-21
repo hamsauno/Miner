@@ -476,7 +476,7 @@ function displayCurrentTutorialStep() {
     }
 
     const step = tutorialSteps[currentTutorialStep];
-    tutorialTitle.textContent = step.title || "Подсказка";
+    tutorialTitle.textContent = step.title;
     tutorialText.innerHTML = step.text;
 
     tutorialModal.style.top = '50%';
