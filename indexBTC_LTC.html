@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -122,6 +123,11 @@
       position: relative;
       z-index: 9999;
       pointer-events: auto;
+  }
+
+  /* Style for white text during tutorial highlight */
+  .tutorial-text-white {
+      color: white !important;
   }
 
   body.tutorial-active > *:not(.tutorial-modal-overlay):not(.tutorial-modal):not(.tutorial-highlighted-ancestor) {
@@ -262,13 +268,13 @@
       </div>
    </div>
 
-   <div id="resultsContainer" class="w-full bg-[#E2E2E2] text-sm space-y-4 shadow-md px-4 pb-4 pt-4">
+   <div id="resultsContainer" class="w-full bg-[#E2E2E2] text-sm space-y-4 shadow-md px-4 pb-4 pt-4 text-black">
      <div>
        <div id="progressBarContainer" class="w-full h-5 relative overflow-hidden border" style="border-color: #2511A8;">
          <div id="dailyProfitBar" class="absolute top-0 left-0 h-full transition-all duration-500" style="background-color: #2511A8;"></div>
          <div id="dailyElectricityCostBar" class="absolute top-0 h-full transition-all duration-500" style="background-color: #CCCCCC;"></div>
        </div>
-       <div class="mt-1 text-xs text-black flex justify-between overflow-hidden border">
+       <div class="mt-1 text-xs flex justify-between overflow-hidden border">
          <div id="profitPercentageLabel">Прибыль: --%</div>
          <div id="costPercentageLabel">Затраты: --%</div>
        </div>
@@ -323,7 +329,7 @@
          </tbody>
        </table>
      </div>
-     <div id="paybackRoiContainer" class="mt-4 text-black flex justify-between">
+     <div id="paybackRoiContainer" class="mt-4 flex justify-between">
         <div id="paybackLabelContainer">Окупаемость мес.: <span id="payback">—</span></div>
         <div id="roiLabelContainer">Годовой %: <span id="roi">—</span></div>
       </div>
@@ -451,12 +457,14 @@ function startTutorialFlow() {
 function removeHighlight() {
     if (highlightedElement) {
         highlightedElement.classList.remove('tutorial-highlight');
+        highlightedElement.classList.remove('tutorial-text-white'); // Remove the white text class
         highlightedElement = null;
     }
     highlightedAncestors.forEach(ancestor => ancestor.classList.remove('tutorial-highlighted-ancestor'));
     highlightedAncestors = [];
     document.querySelectorAll('.tutorial-highlight').forEach(el => el.classList.remove('tutorial-highlight'));
     document.querySelectorAll('.tutorial-highlighted-ancestor').forEach(el => el.classList.remove('tutorial-highlighted-ancestor'));
+    document.querySelectorAll('.tutorial-text-white').forEach(el => el.classList.remove('tutorial-text-white')); // Ensure any lingering classes are removed
 }
 
 function displayCurrentTutorialStep() {
@@ -468,7 +476,7 @@ function displayCurrentTutorialStep() {
     }
 
     const step = tutorialSteps[currentTutorialStep];
-    tutorialTitle.textContent = step.title; 
+    tutorialTitle.textContent = step.title || "Подсказка";
     tutorialText.innerHTML = step.text;
 
     tutorialModal.style.top = '50%';
@@ -480,6 +488,18 @@ function displayCurrentTutorialStep() {
         if (targetElement) {
             highlightedElement = targetElement;
             highlightedElement.classList.add('tutorial-highlight');
+
+            // IDs of elements that need white text when highlighted
+            const elementsToChangeColor = [
+                "profitPercentageLabel",
+                "costPercentageLabel",
+                "paybackLabelContainer",
+                "roiLabelContainer"
+            ];
+
+            if (elementsToChangeColor.includes(step.elementId)) {
+                highlightedElement.classList.add('tutorial-text-white');
+            }
 
             let parent = targetElement.parentElement;
             while (parent && parent !== document.body) {
@@ -548,7 +568,7 @@ async function completeTutorialProcess(skipped = false) {
     tutorialModalOverlay.style.display = 'none';
     tutorialModal.style.display = 'none';
     document.body.classList.remove('tutorial-active');
-    removeHighlight(); 
+    removeHighlight();
     console.log(skipped ? "Обучение пропущено." : "Обучение завершено.");
 
     if (!telegramUser || !telegramUser.id || !supabaseClient) {
@@ -876,13 +896,13 @@ function updateProgressBarAndLabels(elements) {
         profitPerc = Math.max(0, (window.dailyProfitValue / dailyIncome) * 100);
         electricityPerc = Math.max(0, (dailyElectricityCostValue / dailyIncome) * 100);
         if (window.dailyProfitValue <= 0) { profitPerc = 0; electricityPerc = 100; }
-        else if (profitPerc + electricityPerc > 100.1) electricityPerc = 100 - profitPerc;
+        else if (profitPerc + electricityPerc > 100.1) electricityPerc = 100 - profitPerc; // Adjusted to 100.1 for float precision
         profitPerc = Math.min(100, Math.max(0, profitPerc));
         electricityPerc = Math.min(100, Math.max(0, electricityPerc));
     }
     profitBar.style.width = `${profitPerc.toFixed(1)}%`;
     electricityBar.style.width = `${electricityPerc.toFixed(1)}%`;
-    electricityBar.style.left = `${profitPerc.toFixed(1)}%`;
+    electricityBar.style.left = `${profitPerc.toFixed(1)}%`; // Ensure electricity bar starts after profit bar
     profitPercentageLabel.textContent = `Прибыль: ${profitPerc.toFixed(1)}%`;
     costPercentageLabel.textContent = `Затраты: ${electricityPerc.toFixed(1)}%`;
 }
