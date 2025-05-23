@@ -125,9 +125,11 @@
   }
 
   /* Style for white text during tutorial highlight */
-  .tutorial-text-white {
+  .tutorial-text-white,
+  .tutorial-highlight .tutorial-text-white { /* Ensure specificity if needed */
       color: white !important;
   }
+
 
   body.tutorial-active > *:not(.tutorial-modal-overlay):not(.tutorial-modal):not(.tutorial-highlighted-ancestor) {
       pointer-events: none !important;
@@ -238,7 +240,8 @@
            <div class="w-1/2">
              <label for="asicCost" class="block text-sm font-medium mb-1">Стоимость <br> Оборудования</label>
              <div class="relative">
-               <input type="text" id="asicCost" inputmode="numeric" class="bg-[#E2E2E2] w-full px-2 py-1 pr-6 border border-gray-400 text-black text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400"
+               <input type="text" id="asicCost" inputmode="numeric" 
+                 class="bg-[#E2E2E2] w-full px-2 py-1 pr-6 border border-gray-400 text-black text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400"
                  placeholder="Авто/Ручной ввод"> <span class="absolute right-2 top-1/2 -translate-y-1/2 text-black text-xs">₽</span>
              </div>
            </div>
@@ -267,7 +270,8 @@
    </div>
 
    <div id="resultsContainer" class="w-full bg-[#E2E2E2] text-sm space-y-4 shadow-md px-4 pb-4 pt-4 text-black">
-     <div id="dailyMetricsContainer"> <div id="progressBarContainer" class="w-full h-5 relative overflow-hidden border" style="border-color: #2511A8;">
+     <div id="dailyMetricsContainer"> 
+       <div id="progressBarContainer" class="w-full h-5 relative overflow-hidden border" style="border-color: #2511A8;">
          <div id="dailyProfitBar" class="absolute top-0 left-0 h-full transition-all duration-500" style="background-color: #2511A8;"></div>
          <div id="dailyElectricityCostBar" class="absolute top-0 h-full transition-all duration-500" style="background-color: #CCCCCC;"></div>
        </div>
@@ -326,7 +330,8 @@
          </tbody>
        </table>
      </div>
-     <div id="paybackRoiContainer" class="mt-4 flex justify-between"> <div id="paybackLabelContainer">Окупаемость мес.: <span id="payback">—</span></div>
+     <div id="paybackRoiContainer" class="mt-4 flex justify-between"> 
+        <div id="paybackLabelContainer">Окупаемость мес.: <span id="payback">—</span></div>
         <div id="roiLabelContainer">Годовой %: <span id="roi">—</span></div>
       </div>
    </div>
@@ -341,8 +346,8 @@
 
 <script>
 // --- НАЧАЛО БЛОКА ОБУЧЕНИЯ ---
-const SUPABASE_URL = 'https://yiprwrgmyqlkdmhgulmc.supabase.co'; // ВАШ URL
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlpcHJ3cmdteXFsa2RtaGd1bG1jIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ2NTI0NjgsImV4cCI6MjA2MDIyODQ2OH0.lfiTfr5ukGDEVuwq-X9U2kWs3nEZrp3N443HT5AkbfI'; // ВАШ ANON KEY
+const SUPABASE_URL = 'https://yiprwrgmyqlkdmhgulmc.supabase.co'; 
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlpcHJ3cmdteXFsa2RtaGd1bG1jIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ2NTI0NjgsImV4cCI6MjA2MDIyODQ2OH0.lfiTfr5ukGDEVuwq-X9U2kWs3nEZrp3N443HT5AkbfI'; 
 
 let supabaseClient;
 try {
@@ -371,11 +376,11 @@ async function initAppAndTutorial() {
 
     try {
         await fetchData();
-        await onAlgorithmChange(); // This will also call fetchJsonData if needed
+        await onAlgorithmChange(); 
     } catch (error) {
         console.error("❌ Ошибка при начальной загрузке данных приложения:", error);
     }
-     // ADDED: Event listener for asicCost formatting
+    
     const asicCostInput = document.getElementById("asicCost");
     if (asicCostInput) {
         asicCostInput.addEventListener('input', handleAsicCostInputFormatting);
@@ -408,7 +413,7 @@ async function checkTutorialStatus() {
             .eq('telegram_id', telegramUser.id.toString())
             .single();
 
-        if (error && error.code !== 'PGRST116') { // PGRST116: no rows found, which is fine for a new user
+        if (error && error.code !== 'PGRST116') { 
             console.error("Ошибка получения данных пользователя из Supabase:", error);
             return;
         }
@@ -421,8 +426,8 @@ async function checkTutorialStatus() {
             } else {
                 console.log("Пользователь не прошел обучение (tutor=false), запускаем.");
             }
-            setupTutorialStepsDefinition(); // Define steps
-            startTutorialFlow(); // Start tutorial
+            setupTutorialStepsDefinition(); 
+            startTutorialFlow(); 
         }
     } catch (e) {
         console.error("Исключение при проверке статуса обучения:", e);
@@ -434,13 +439,13 @@ function setupTutorialStepsDefinition() {
         { text: "Начните с выбора Алгоритма. Доступны SHA-256 (BTC) и Scrypt (LTC+DOGE).", elementId: "algorithmSelect" },
         { text: "Отлично! Теперь выберите Производителя из списка.", elementId: "manufacturerSelect" },
         { text: "Выберите интересующую вас Модель оборудования.", elementId: "asicModel" },
-        { text: "Здесь отображается Хешрейт выбранной модели. Если модель имеет несколько вариантов хешрейта, вы сможете выбрать нужный из списка. Потребление подставится автоматически.", elementId: "hashrateContainer" }, // MODIFIED/NEW
+        { text: "Здесь отображается Хешрейт выбранной модели. Если модель имеет несколько вариантов хешрейта, вы сможете выбрать нужный из списка. Потребление подставится автоматически.", elementId: "hashrateContainer" }, 
         { text: "Укажите Стоимость Электроэнергии </br> за 1 кВт/ч.", elementId: "electricityCost" },
         { text: "Стоимость оборудования автоматически подтягивается из нашего прайса. Можно указать свою цену (в рублях).", elementId: "asicCost" },
         { text: "Нажмите кнопку Рассчитать, чтобы увидеть результаты.", elementId: "calculateBtn" },
-        { text: "Это прогресс-бар и процентные показатели. Бар визуально отображает соотношение чистой Прибыли (синий) и Затрат на электроэнергию (серый). Ниже указаны их процентные доли от общего дневного Дохода.", elementId: "dailyMetricsContainer" }, // MODIFIED/COMBINED
+        { text: "Это прогресс-бар и процентные показатели. Бар визуально отображает соотношение чистой Прибыли (синий) и Затрат на электроэнергию (серый). Ниже указаны их процентные доли от общего дневного Дохода.", elementId: "dailyMetricsContainer" }, 
         { text: "В таблице с Доходом и Прибылью вы можете переключать отображаемую валюту между долларами ($) и рублями (₽).", elementId: "resultsTable" },
-        { text: "Здесь отображаются Окупаемость оборудования в месяцах и Годовой процент возврата инвестиций (ROI).", elementId: "paybackRoiContainer" }, // MODIFIED/COMBINED
+        { text: "Здесь отображаются Окупаемость оборудования в месяцах и Годовой процент возврата инвестиций (ROI).", elementId: "paybackRoiContainer" }, 
         { title: "Обучение завершено!", text: "Поздравляем! Теперь вы знаете все основные функции калькулятора. Удачных расчетов!", elementId: null }
     ];
 }
@@ -451,27 +456,38 @@ function startTutorialFlow() {
     tutorialModalOverlay.style.display = 'block';
     tutorialModal.style.display = 'block';
     document.body.classList.add('tutorial-active');
-    Telegram.WebApp.expand(); // Expand the Web App view
+    Telegram.WebApp.expand(); 
     displayCurrentTutorialStep();
 }
 
 function removeHighlight() {
     if (highlightedElement) {
         highlightedElement.classList.remove('tutorial-highlight');
-        highlightedElement.classList.remove('tutorial-text-white'); // Remove the white text class
+        // Explicitly remove text color changes from specific children if they were targeted
+        if (highlightedElement.id === "dailyMetricsContainer") {
+            const profitLabel = document.getElementById("profitPercentageLabel");
+            const costLabel = document.getElementById("costPercentageLabel");
+            if (profitLabel) profitLabel.classList.remove('tutorial-text-white');
+            if (costLabel) costLabel.classList.remove('tutorial-text-white');
+        } else if (highlightedElement.id === "paybackRoiContainer") {
+            const paybackLabel = document.getElementById("paybackLabelContainer");
+            const roiLabel = document.getElementById("roiLabelContainer");
+            if (paybackLabel) paybackLabel.classList.remove('tutorial-text-white');
+            if (roiLabel) roiLabel.classList.remove('tutorial-text-white');
+        }
         highlightedElement = null;
     }
     highlightedAncestors.forEach(ancestor => ancestor.classList.remove('tutorial-highlighted-ancestor'));
     highlightedAncestors = [];
-    // Cleanup any stragglers, though should not be necessary with proper management
+    
     document.querySelectorAll('.tutorial-highlight').forEach(el => el.classList.remove('tutorial-highlight'));
     document.querySelectorAll('.tutorial-highlighted-ancestor').forEach(el => el.classList.remove('tutorial-highlighted-ancestor'));
-    document.querySelectorAll('.tutorial-text-white').forEach(el => el.classList.remove('tutorial-text-white')); // Ensure any lingering classes are removed
+    document.querySelectorAll('.tutorial-text-white').forEach(el => el.classList.remove('tutorial-text-white')); 
 }
 
 
 function displayCurrentTutorialStep() {
-    removeHighlight(); // Clear previous highlight
+    removeHighlight(); 
 
     if (currentTutorialStep >= tutorialSteps.length) {
         completeTutorialProcess();
@@ -479,10 +495,9 @@ function displayCurrentTutorialStep() {
     }
 
     const step = tutorialSteps[currentTutorialStep];
-    tutorialTitle.textContent = step.title || "Подсказка"; // Default title if not specified
-    tutorialText.innerHTML = step.text; // Use innerHTML to allow <br> tags
+    tutorialTitle.textContent = step.title || "Подсказка"; 
+    tutorialText.innerHTML = step.text; 
 
-    // Default modal position (centered)
     tutorialModal.style.top = '50%';
     tutorialModal.style.left = '50%';
     tutorialModal.style.transform = 'translate(-50%, -50%)';
@@ -493,78 +508,74 @@ function displayCurrentTutorialStep() {
             highlightedElement = targetElement;
             highlightedElement.classList.add('tutorial-highlight');
 
-            // Specific elements that might need white text when their background is also highlighted or dark
-             const elementsToChangeColor = [
-                // "profitPercentageLabel", // These are now part of dailyMetricsContainer
-                // "costPercentageLabel",
-                // "paybackLabelContainer", // Part of paybackRoiContainer
-                // "roiLabelContainer"
-                // Add IDs here if direct children of highlighted element need text color change
-            ];
-
-            if (elementsToChangeColor.includes(step.elementId)) {
-                highlightedElement.classList.add('tutorial-text-white');
+            // MODIFIED: Add white text to specific children for certain highlighted elements
+            if (step.elementId === "dailyMetricsContainer") {
+                const profitLabel = document.getElementById("profitPercentageLabel");
+                const costLabel = document.getElementById("costPercentageLabel");
+                if (profitLabel) profitLabel.classList.add('tutorial-text-white');
+                if (costLabel) costLabel.classList.add('tutorial-text-white');
+            } else if (step.elementId === "paybackRoiContainer") {
+                const paybackLabel = document.getElementById("paybackLabelContainer");
+                const roiLabel = document.getElementById("roiLabelContainer");
+                if (paybackLabel) paybackLabel.classList.add('tutorial-text-white');
+                if (roiLabel) roiLabel.classList.add('tutorial-text-white');
             }
 
-
-            // Make ancestors clickable
             let parent = targetElement.parentElement;
             while (parent && parent !== document.body) {
                 parent.classList.add('tutorial-highlighted-ancestor');
                 highlightedAncestors.push(parent);
                 parent = parent.parentElement;
             }
-            // Scroll to the element and position modal nearby
+            
             targetElement.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' });
 
-            // Delay modal repositioning until scroll is likely complete
             setTimeout(() => {
                 const targetRect = targetElement.getBoundingClientRect();
                 const modalRect = tutorialModal.getBoundingClientRect();
                 const viewportWidth = window.innerWidth;
                 const viewportHeight = window.innerHeight;
 
-                let modalTop = targetRect.bottom + 15; // Default below element
-                let modalLeft = targetRect.left + (targetRect.width / 2) - (modalRect.width / 2); // Centered horizontally
+                let modalTop = targetRect.bottom + 15; 
+                let modalLeft = targetRect.left + (targetRect.width / 2) - (modalRect.width / 2); 
 
-                // Adjust if modal goes off-screen
-                if (modalTop + modalRect.height > viewportHeight - 10) { // If too low, position above
+                if (modalTop + modalRect.height > viewportHeight - 10) { 
                     modalTop = targetRect.top - modalRect.height - 15;
                 }
-                if (modalTop < 10) { // If too high (e.g., element at top, modal above goes off-screen)
+                if (modalTop < 10) { 
                     modalTop = 10;
                 }
-                if (modalLeft + modalRect.width > viewportWidth - 10) { // If too far right
+                if (modalLeft + modalRect.width > viewportWidth - 10) { 
                     modalLeft = viewportWidth - modalRect.width - 10;
                 }
-                if (modalLeft < 10) { // If too far left
+                if (modalLeft < 10) { 
                     modalLeft = 10;
                 }
 
                 tutorialModal.style.top = `${modalTop}px`;
                 tutorialModal.style.left = `${modalLeft}px`;
-                tutorialModal.style.transform = 'translate(0, 0)'; // Reset transform if we manually set top/left
-            }, 300); // Increased timeout slightly for smoother scroll then position
+                tutorialModal.style.transform = 'translate(0, 0)'; 
+            }, 300); 
 
         } else {
             console.warn(`Элемент для обучения с ID "${step.elementId}" не найден.`);
-            // Fallback to centered modal if element not found
             tutorialModal.style.top = '50%';
             tutorialModal.style.left = '50%';
             tutorialModal.style.transform = 'translate(-50%, -50%)';
         }
     } else {
-        // For steps without an elementId (like the final step), center the modal
         tutorialModal.style.top = '50%';
         tutorialModal.style.left = '50%';
         tutorialModal.style.transform = 'translate(-50%, -50%)';
     }
 
-    // Update button text for the last step
+    // MODIFIED: Update button visibility and text for the last step
     if (currentTutorialStep === tutorialSteps.length - 1) {
         tutorialNextBtn.textContent = "Завершить";
+        if (tutorialSkipBtn) tutorialSkipBtn.style.display = 'none'; // Hide skip button
     } else {
         tutorialNextBtn.textContent = "Далее";
+        if (tutorialSkipBtn) tutorialSkipBtn.style.display = 'inline-block'; // Show skip button
     }
 }
 
@@ -575,14 +586,14 @@ tutorialNextBtn.addEventListener('click', () => {
 });
 
 tutorialSkipBtn.addEventListener('click', () => {
-    completeTutorialProcess(true); // true indicates skipped
+    completeTutorialProcess(true); 
 });
 
 async function completeTutorialProcess(skipped = false) {
     tutorialModalOverlay.style.display = 'none';
     tutorialModal.style.display = 'none';
     document.body.classList.remove('tutorial-active');
-    removeHighlight(); // Ensure any active highlight is removed
+    removeHighlight(); 
     console.log(skipped ? "Обучение пропущено." : "Обучение завершено.");
 
     if (!telegramUser || !telegramUser.id || !supabaseClient) {
@@ -593,7 +604,7 @@ async function completeTutorialProcess(skipped = false) {
         const { data, error } = await supabaseClient
             .from('users')
             .upsert({ telegram_id: telegramUser.id.toString(), tutor: true, updated_at: new Date() }, { onConflict: 'telegram_id' })
-            .select(); // Select to confirm
+            .select(); 
         if (error) {
             console.error("Ошибка сохранения статуса обучения в Supabase:", error);
         } else {
@@ -619,8 +630,6 @@ function handleAsicCostInputFormatting(e) {
 
     if (currentValue !== formattedValue) {
         e.target.value = formattedValue;
-        // Place cursor at the end. This is the simplest, most robust way
-        // to handle cursor after dynamic reformatting.
         e.target.setSelectionRange(formattedValue.length, formattedValue.length);
     }
 }
@@ -686,7 +695,7 @@ async function fetchJsonData() {
         if (jsonData.length === 0) console.warn(`⚠️ Модели не найдены в calc.json`);
     } catch (e) {
         console.error(`❌ Ошибка загрузки или парсинга calc.json:`, e);
-        jsonData = []; // Ensure jsonData is an empty array on error
+        jsonData = []; 
         const manSelect = document.getElementById("manufacturerSelect");
         const modSelect = document.getElementById("asicModel");
         if (manSelect) manSelect.innerHTML = '<option>Ошибка загрузки</option>';
@@ -701,23 +710,23 @@ async function onAlgorithmChange() {
     currentAlgorithm = algorithmSelect.value;
     console.log(`Алгоритм изменен на: ${currentAlgorithm}`);
 
-    if (jsonData.length === 0) { // Fetch only if not already fetched
+    if (jsonData.length === 0) { 
         await fetchJsonData();
     }
 
     const manufacturerSelect = document.getElementById("manufacturerSelect");
-    if (!manufacturerSelect) return; // Should not happen if DOM is correct
+    if (!manufacturerSelect) return; 
 
     const modelsForCurrentAlgorithm = jsonData.filter(item => item["Алгоритм"] === currentAlgorithm);
     const uniqueManufacturers = [...new Set(modelsForCurrentAlgorithm.map(item => item["Производитель"]?.toLowerCase() || 'unknown'))]
-                                .filter(m => m !== 'unknown').sort(); // Filter out 'unknown' and sort
+                                .filter(m => m !== 'unknown').sort(); 
 
-    manufacturerSelect.innerHTML = ""; // Clear previous options
+    manufacturerSelect.innerHTML = ""; 
     if (uniqueManufacturers.length > 0) {
         uniqueManufacturers.forEach(manufacturer => {
             const opt = document.createElement("option");
             opt.value = manufacturer;
-            opt.textContent = manufacturer.charAt(0).toUpperCase() + manufacturer.slice(1); // Capitalize
+            opt.textContent = manufacturer.charAt(0).toUpperCase() + manufacturer.slice(1); 
             manufacturerSelect.appendChild(opt);
         });
         manufacturerSelect.disabled = false;
@@ -727,7 +736,7 @@ async function onAlgorithmChange() {
         manufacturerSelect.disabled = true;
         console.warn(`Производители для ${currentAlgorithm} не найдены.`);
     }
-    updateModelList(); // Update models based on the (newly) selected manufacturer or first one
+    updateModelList(); 
 }
 
 
@@ -736,16 +745,16 @@ function updateModelList() {
     const modelSelect = document.getElementById("asicModel");
     if (!manufacturerSelect || !modelSelect) return;
 
-    const selectedManufacturer = manufacturerSelect.value?.toLowerCase(); // Ensure it's lowercase for comparison
-    modelSelect.innerHTML = ""; // Clear previous model options
+    const selectedManufacturer = manufacturerSelect.value?.toLowerCase(); 
+    modelSelect.innerHTML = ""; 
 
-    // Filter models based on current algorithm AND selected manufacturer
+    
     const modelsFiltered = jsonData.filter(item =>
         item["Алгоритм"] === currentAlgorithm &&
         item["Производитель"]?.toLowerCase() === selectedManufacturer
     );
 
-    const uniqueModels = [...new Set(modelsFiltered.map(item => item["Модель"]))].sort(); // Get unique model names and sort
+    const uniqueModels = [...new Set(modelsFiltered.map(item => item["Модель"]))].sort(); 
 
     if (uniqueModels.length > 0) {
         uniqueModels.forEach(modelName => {
@@ -759,19 +768,19 @@ function updateModelList() {
         modelSelect.innerHTML = '<option>Нет моделей</option>';
         modelSelect.disabled = true;
     }
-    updateAsicSpecs(); // Update specs based on the (newly) selected model or first one
+    updateAsicSpecs(); 
 }
 
 
 function updateAsicSpecs() {
     const modelSelect = document.getElementById("asicModel");
     const asicCostInput = document.getElementById("asicCost");
-    const hashrateContainer = document.getElementById("hashrateContainer"); // The main container for hashrate display/select
+    const hashrateContainer = document.getElementById("hashrateContainer"); 
     const powerEl = document.getElementById("power");
     const powerUnitEl = document.getElementById("power_unit");
 
-    // Clear previous dynamic content and values
-    hashrateContainer.innerHTML = '<span id="hashrate"></span><span id="edprice"></span>'; // Reset to default spans
+    
+    hashrateContainer.innerHTML = '<span id="hashrate"></span><span id="edprice"></span>'; 
     document.getElementById("hashrate").textContent = '';
     document.getElementById("edprice").textContent = '';
     if (powerEl) powerEl.textContent = '';
@@ -780,39 +789,39 @@ function updateAsicSpecs() {
       asicCostInput.value = '';
       asicCostInput.placeholder = 'Выберите модель';
     }
-    currentModelVariants = []; // Reset variants
+    currentModelVariants = []; 
 
     const selectedModelName = modelSelect.value;
 
-    // Check if a valid model is selected
+    
     if (!selectedModelName || modelSelect.selectedOptions.length === 0 || modelSelect.selectedOptions[0].disabled || modelSelect.selectedOptions[0].textContent.startsWith("Нет")) {
-        return; // No valid model selected, so keep fields blank or with placeholders
+        return; 
     }
 
-    // Find all variants of the selected model for the current algorithm
+    
     currentModelVariants = jsonData.filter(item =>
         item["Модель"] === selectedModelName &&
         item["Алгоритм"] === currentAlgorithm
     );
 
-    // Sort variants, e.g., by hashrate (descending is often useful)
+    
     currentModelVariants.sort((a, b) => parseFloat(b["Хешрейт"]) - parseFloat(a["Хешрейт"]));
 
     if (currentModelVariants.length > 0) {
         if (currentModelVariants.length === 1) {
-            // Only one variant, display its specs directly
+            
             const item = currentModelVariants[0];
             document.getElementById("hashrate").textContent = item["Хешрейт"] || '';
             document.getElementById("edprice").textContent = item["Ед. изм."] || '';
             populateSpecsForVariant(item);
         } else {
-            // Multiple variants, create a select element within hashrateContainer
+            
             let selectHTML = '<select id="hashrateSelect" class="bg-[#E2E2E2] w-full h-full border-none text-black text-sm focus:outline-none">';
             currentModelVariants.forEach((variant, index) => {
                 selectHTML += `<option value="${index}">${variant["Хешрейт"]} ${variant["Ед. изм."]}</option>`;
             });
             selectHTML += '</select>';
-            hashrateContainer.innerHTML = selectHTML; // Replace spans with select
+            hashrateContainer.innerHTML = selectHTML; 
 
             const hashrateSelectElement = document.getElementById("hashrateSelect");
             if (hashrateSelectElement) {
@@ -820,7 +829,7 @@ function updateAsicSpecs() {
                     populateSpecsForVariant(currentModelVariants[this.value]);
                 });
             }
-            // Populate specs for the first (default selected) variant
+            
             populateSpecsForVariant(currentModelVariants[0]);
         }
     } else {
@@ -834,7 +843,7 @@ function populateSpecsForVariant(item) {
     const powerUnitEl = document.getElementById("power_unit");
     const asicCostInput = document.getElementById("asicCost");
 
-    if (!item) { // Should not happen if called correctly, but good guard
+    if (!item) { 
         if (powerEl) powerEl.textContent = '';
         if (powerUnitEl) powerUnitEl.textContent = '';
         if (asicCostInput) {
@@ -851,10 +860,10 @@ function populateSpecsForVariant(item) {
     const itemPriceUSD = parseFloat(item["Цена"]);
     if (asicCostInput) {
         if (!isNaN(itemPriceUSD) && usdtPrice > 0) {
-            const costInRub = Math.ceil((itemPriceUSD * usdtPrice) / 100) * 100; // Round to nearest 100 rub
-            asicCostInput.value = formatNumberWithSpaces(costInRub); // Apply formatting
+            const costInRub = Math.ceil((itemPriceUSD * usdtPrice) / 100) * 100; 
+            asicCostInput.value = formatNumberWithSpaces(costInRub); 
         } else {
-            asicCostInput.value = ''; // Clear if no price or USDT rate
+            asicCostInput.value = ''; 
             asicCostInput.placeholder = (usdtPrice <= 0 && !isNaN(itemPriceUSD)) ? 'Курс USDT?' : 'Цена не найдена';
         }
     }
@@ -889,49 +898,45 @@ function calculateProfit() {
     if (Object.values(elements).some(el => !el)) { console.error("❌ Ошибка: Один из элементов для расчета не найден!"); return; }
 
     let actualHashrate, selectedVariantHashrateUnit = '';
-    const hashrateSelect = document.getElementById("hashrateSelect"); // Check if the select exists (for multi-variant models)
+    const hashrateSelect = document.getElementById("hashrateSelect"); 
     if (hashrateSelect && currentModelVariants.length > 0 && hashrateSelect.value !== "") {
         const selectedVariant = currentModelVariants[hashrateSelect.value];
         if (selectedVariant) {
             actualHashrate = parseFloat(selectedVariant["Хешрейт"]);
             selectedVariantHashrateUnit = selectedVariant["Ед. изм."];
         } else { console.error("❌ Ошибка: Выбранный вариант хешрейта не найден."); return; }
-    } else { // Fallback to single variant display if select not present
+    } else { 
         const hs = document.getElementById("hashrate");
         const edp = document.getElementById("edprice");
         if (hs) actualHashrate = parseFloat(hs.textContent); else { console.error("❌ Ошибка: Элемент хешрейта #hashrate не найден."); return; }
         if (edp) selectedVariantHashrateUnit = edp.textContent;
     }
 
-    let calculationHashrate = actualHashrate; // This is the hashrate in the unit specified (TH, GH, MH)
-    // Normalize SHA-256 hashrate to TH/s for calculation with profitPerTH
+    let calculationHashrate = actualHashrate; 
+    
     if (currentAlgorithm === "SHA-256" && selectedVariantHashrateUnit) {
         const unitUpper = selectedVariantHashrateUnit.toUpperCase();
-        if (unitUpper.includes("PH")) calculationHashrate *= 1000;       // PH/s to TH/s
-        else if (unitUpper.includes("GH")) calculationHashrate /= 1000;  // GH/s to TH/s
-        else if (unitUpper.includes("MH")) calculationHashrate /= 1000000; // MH/s to TH/s
-        // Assuming TH/s requires no conversion if "TH" is present or unit is just "T"
+        if (unitUpper.includes("PH")) calculationHashrate *= 1000;       
+        else if (unitUpper.includes("GH")) calculationHashrate /= 1000;  
+        else if (unitUpper.includes("MH")) calculationHashrate /= 1000000; 
+        
     }
-    // For Scrypt, the profitPerLTC/DOGE/BELL is usually per MH/s, so if hashrate is in GH/s, convert
-    // This part depends on how profitPerLTC/DOGE/BELL are defined. Assuming they are per base unit of hashrate provided (e.g. MH/s for L7)
-    // If Scrypt hashrates are consistently in MH/s in JSON, no conversion needed if profit rates are also per MH/s.
-    // If JSON has GH/s for Scrypt, and profit rates are per MH/s, then multiply by 1000.
-    // For now, assume Scrypt hashrate in JSON is the unit profit figures correspond to.
+    
 
     const values = {
         currentUsdtPrice: parseFloat(elements.usdtPriceInput.value), hashrate: calculationHashrate,
         power: parseFloat(elements.powerEl.textContent), electricityCost: parseFloat(elements.electricityCostInput.value.replace(',', '.')),
-        asicCost: parseFloat(elements.asicCostInput.value.replace(/\s+/g, '')) // Remove spaces for parsing
+        asicCost: parseFloat(elements.asicCostInput.value.replace(/\s+/g, '')) 
     };
 
-    if (Object.values(values).slice(0,4).some(isNaN) || values.currentUsdtPrice <= 0 || values.hashrate <= 0) { // Check first 4 essential values
+    if (Object.values(values).slice(0,4).some(isNaN) || values.currentUsdtPrice <= 0 || values.hashrate <= 0) { 
         console.error("❌ Ошибка: Некорректные базовые значения для расчета.", values);
-        // Optionally alert user or display error message in UI
+        
         return;
     }
-     if (isNaN(values.asicCost)) { // Asic cost can be optional for some calculations but not for ROI/Payback
+     if (isNaN(values.asicCost)) { 
         console.warn("⚠️ Стоимость ASIC не указана или некорректна, ROI и окупаемость не будут рассчитаны.");
-        // values.asicCost will be NaN here, calculations below handle it.
+        
     }
 
 
@@ -943,21 +948,21 @@ function calculateProfit() {
         const ltcP = parseFloat(elements.ltcPriceInput.value), dogeP = parseFloat(elements.dogePriceInput.value), bellP = parseFloat(elements.bellPriceInput.value);
         const pPLTC = parseFloat(elements.profitPerLTCInput.value), pPDOGE = parseFloat(elements.profitPerDOGEInput.value), pPBELL = parseFloat(elements.profitPerBELLInput.value);
         if (![ltcP, dogeP, bellP, pPLTC, pPDOGE, pPBELL].some(isNaN)) {
-            // Assuming 'values.hashrate' is in the correct unit for these profit factors (e.g., MH/s)
+            
             dailyIncome = values.hashrate * (pPLTC * ltcP + pPDOGE * dogeP + pPBELL * bellP);
         } else { console.error("❌ Scrypt calc error: one of the prices or profit factors is NaN"); return;}
     }
 
-    dailyElectricityCostValue = (values.power / 1000) * values.electricityCost * 24 / values.currentUsdtPrice; // Cost in USD
-    window.dailyProfitValue = dailyIncome - dailyElectricityCostValue; // Profit in USD
+    dailyElectricityCostValue = (values.power / 1000) * values.electricityCost * 24 / values.currentUsdtPrice; 
+    window.dailyProfitValue = dailyIncome - dailyElectricityCostValue; 
     monthlyProfit = window.dailyProfitValue * 30.5; yearlyProfit = window.dailyProfitValue * 365;
 
-    let roi = 0, payback = Infinity; // Default values
+    let roi = 0, payback = Infinity; 
     if (!isNaN(values.asicCost) && values.asicCost > 0) {
         const asicCostInUSD = values.asicCost / values.currentUsdtPrice;
-        if (asicCostInUSD > 0) { // Ensure no division by zero or negative cost
+        if (asicCostInUSD > 0) { 
             if (yearlyProfit) roi = (yearlyProfit / asicCostInUSD) * 100;
-            if (window.dailyProfitValue > 0) payback = (asicCostInUSD / window.dailyProfitValue) / 30.5; // Payback in months
+            if (window.dailyProfitValue > 0) payback = (asicCostInUSD / window.dailyProfitValue) / 30.5; 
         }
     }
 
@@ -974,7 +979,7 @@ function formatCurrency(value, currency = "$", fractionDigits = 2) {
     return currency + (Math.round(value * Math.pow(10, fractionDigits)) / Math.pow(10, fractionDigits))
         .toLocaleString('ru-RU', { minimumFractionDigits: fractionDigits, maximumFractionDigits: fractionDigits });
 }
-function formatCurrencyRub(value, fractionDigits = 0) { // Rubles typically don't show kopecks in this context
+function formatCurrencyRub(value, fractionDigits = 0) { 
     if (isNaN(value) || !isFinite(value) || isNaN(usdtPrice) || usdtPrice <= 0) return "-- ₽";
     return (Math.round((value * usdtPrice) * Math.pow(10, fractionDigits)) / Math.pow(10, fractionDigits))
         .toLocaleString('ru-RU', { maximumFractionDigits: fractionDigits }) + " ₽";
@@ -1003,7 +1008,7 @@ function updateTableValues() {
 }
 
 function setCurrency(setToUSD) {
-    if (isUSD === setToUSD) return; // No change needed
+    if (isUSD === setToUSD) return; 
     isUSD = setToUSD;
     const usdBtn = document.getElementById('currencyUSD'), rubBtn = document.getElementById('currencyRUB');
     if (usdBtn && rubBtn) {
@@ -1011,7 +1016,7 @@ function setCurrency(setToUSD) {
         usdBtn.classList.toggle('inactive', !isUSD);
         rubBtn.classList.toggle('active', !isUSD);
         rubBtn.classList.toggle('inactive', isUSD);
-        updateTableValues(); // Refresh table with new currency
+        updateTableValues(); 
     }
 }
 
@@ -1020,24 +1025,23 @@ function updateProgressBarAndLabels(elements) {
     let profitPerc = 0, electricityPerc = 0;
 
     if (dailyIncome > 0 && isFinite(dailyIncome) && isFinite(dailyElectricityCostValue)) {
-        // Calculate profit percentage relative to gross income
+        
         profitPerc = (window.dailyProfitValue / dailyIncome) * 100;
-        // Calculate electricity cost percentage relative to gross income
+        
         electricityPerc = (dailyElectricityCostValue / dailyIncome) * 100;
 
-        if (window.dailyProfitValue <= 0) { // If not profitable or losing money
-            profitPerc = 0; // No profit part in the bar
-            // Electricity cost might be > income. Cap at 100% for visualization or show actual.
-            // If income is positive but less than cost, cost bar takes 100%.
-            // If income is zero or negative, visualization is tricky. Let's assume income is > 0 for this bar.
-            electricityPerc = Math.min(100, electricityPerc); // Cap at 100% for bar display
-        } else { // Profitable
-             profitPerc = Math.max(0, Math.min(100, profitPerc)); // Clamp between 0 and 100
-             electricityPerc = Math.max(0, Math.min(100 - profitPerc, electricityPerc)); // Clamp and ensure total <= 100
+        if (window.dailyProfitValue <= 0) { 
+            profitPerc = 0; 
+            
+            
+            electricityPerc = Math.min(100, electricityPerc); 
+        } else { 
+             profitPerc = Math.max(0, Math.min(100, profitPerc)); 
+             electricityPerc = Math.max(0, Math.min(100 - profitPerc, electricityPerc)); 
         }
-    } else if (dailyIncome <= 0 && dailyElectricityCostValue > 0) { // Negative or zero income, but costs exist
+    } else if (dailyIncome <= 0 && dailyElectricityCostValue > 0) { 
         profitPerc = 0;
-        electricityPerc = 100; // Show costs consuming everything
+        electricityPerc = 100; 
     }
 
 
@@ -1057,7 +1061,7 @@ const algSel = document.getElementById("algorithmSelect"),
       calcBtn = document.getElementById("calculateBtn"),
       currUSD = document.getElementById('currencyUSD'),
       currRUB = document.getElementById('currencyRUB');
-      // asicCostInput listener is added in initAppAndTutorial
+      
 
 if (algSel) algSel.addEventListener("change", onAlgorithmChange);
 if (manSel) manSel.addEventListener("change", updateModelList);
