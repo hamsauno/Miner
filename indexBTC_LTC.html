@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -126,9 +125,11 @@
   }
 
   /* Style for white text during tutorial highlight */
-  .tutorial-text-white {
+  .tutorial-text-white,
+  .tutorial-highlight .tutorial-text-white { /* Ensure specificity if needed */
       color: white !important;
   }
+
 
   body.tutorial-active > *:not(.tutorial-modal-overlay):not(.tutorial-modal):not(.tutorial-highlighted-ancestor) {
       pointer-events: none !important;
@@ -239,7 +240,7 @@
            <div class="w-1/2">
              <label for="asicCost" class="block text-sm font-medium mb-1">Стоимость <br> Оборудования</label>
              <div class="relative">
-               <input type="number" id="asicCost" inputmode="numeric"
+               <input type="text" id="asicCost" inputmode="numeric" 
                  class="bg-[#E2E2E2] w-full px-2 py-1 pr-6 border border-gray-400 text-black text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400"
                  placeholder="Авто/Ручной ввод"> <span class="absolute right-2 top-1/2 -translate-y-1/2 text-black text-xs">₽</span>
              </div>
@@ -269,7 +270,7 @@
    </div>
 
    <div id="resultsContainer" class="w-full bg-[#E2E2E2] text-sm space-y-4 shadow-md px-4 pb-4 pt-4 text-black">
-     <div>
+     <div id="dailyMetricsContainer"> 
        <div id="progressBarContainer" class="w-full h-5 relative overflow-hidden border" style="border-color: #2511A8;">
          <div id="dailyProfitBar" class="absolute top-0 left-0 h-full transition-all duration-500" style="background-color: #2511A8;"></div>
          <div id="dailyElectricityCostBar" class="absolute top-0 h-full transition-all duration-500" style="background-color: #CCCCCC;"></div>
@@ -329,7 +330,7 @@
          </tbody>
        </table>
      </div>
-     <div id="paybackRoiContainer" class="mt-4 flex justify-between">
+     <div id="paybackRoiContainer" class="mt-4 flex justify-between"> 
         <div id="paybackLabelContainer">Окупаемость мес.: <span id="payback">—</span></div>
         <div id="roiLabelContainer">Годовой %: <span id="roi">—</span></div>
       </div>
@@ -345,8 +346,8 @@
 
 <script>
 // --- НАЧАЛО БЛОКА ОБУЧЕНИЯ ---
-const SUPABASE_URL = 'https://yiprwrgmyqlkdmhgulmc.supabase.co'; // ВАШ URL
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlpcHJ3cmdteXFsa2RtaGd1bG1jIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ2NTI0NjgsImV4cCI6MjA2MDIyODQ2OH0.lfiTfr5ukGDEVuwq-X9U2kWs3nEZrp3N443HT5AkbfI'; // ВАШ ANON KEY
+const SUPABASE_URL = 'https://yiprwrgmyqlkdmhgulmc.supabase.co'; 
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlpcHJ3cmdteXFsa2RtaGd1bG1jIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ2NTI0NjgsImV4cCI6MjA2MDIyODQ2OH0.lfiTfr5ukGDEVuwq-X9U2kWs3nEZrp3N443HT5AkbfI'; 
 
 let supabaseClient;
 try {
@@ -375,10 +376,16 @@ async function initAppAndTutorial() {
 
     try {
         await fetchData();
-        await onAlgorithmChange();
+        await onAlgorithmChange(); 
     } catch (error) {
         console.error("❌ Ошибка при начальной загрузке данных приложения:", error);
     }
+    
+    const asicCostInput = document.getElementById("asicCost");
+    if (asicCostInput) {
+        asicCostInput.addEventListener('input', handleAsicCostInputFormatting);
+    }
+
 
     if (Telegram.WebApp.initDataUnsafe && Telegram.WebApp.initDataUnsafe.user) {
         telegramUser = Telegram.WebApp.initDataUnsafe.user;
@@ -406,7 +413,7 @@ async function checkTutorialStatus() {
             .eq('telegram_id', telegramUser.id.toString())
             .single();
 
-        if (error && error.code !== 'PGRST116') {
+        if (error && error.code !== 'PGRST116') { 
             console.error("Ошибка получения данных пользователя из Supabase:", error);
             return;
         }
@@ -419,8 +426,8 @@ async function checkTutorialStatus() {
             } else {
                 console.log("Пользователь не прошел обучение (tutor=false), запускаем.");
             }
-            setupTutorialStepsDefinition();
-            startTutorialFlow();
+            setupTutorialStepsDefinition(); 
+            startTutorialFlow(); 
         }
     } catch (e) {
         console.error("Исключение при проверке статуса обучения:", e);
@@ -432,43 +439,55 @@ function setupTutorialStepsDefinition() {
         { text: "Начните с выбора Алгоритма. Доступны SHA-256 (BTC) и Scrypt (LTC+DOGE).", elementId: "algorithmSelect" },
         { text: "Отлично! Теперь выберите Производителя из списка.", elementId: "manufacturerSelect" },
         { text: "Выберите интересующую вас Модель оборудования.", elementId: "asicModel" },
+        { text: "Здесь отображается Хешрейт выбранной модели. Потребление подставится автоматически.", elementId: "hashrateContainer" }, 
         { text: "Укажите Стоимость Электроэнергии </br> за 1 кВт/ч.", elementId: "electricityCost" },
-        { text: "Стоимость оборудования автоматически подтягивается из нашего прайса. Можно указать свою цену.", elementId: "asicCost" },
+        { text: "Стоимость оборудования автоматически подтягивается из нашего прайса. Можно указать свою цену в рублях.", elementId: "asicCost" },
         { text: "Нажмите кнопку Рассчитать, чтобы увидеть результаты.", elementId: "calculateBtn" },
-        { text: "Это прогресс-бар, который визуально отображает соотношение чистой Прибыли и Затрат на электроэнергию в общем дневном Доходе.", elementId: "progressBarContainer" },
-        { text: "Здесь указан процент дневной Прибыли от общего Дохода. Это та часть дохода, которая остается после вычета затрат.", elementId: "profitPercentageLabel" },
-        { text: "А здесь - процент дневных Затрат на электроэнергию от общего Дохода. Это доля дохода, уходящая на оплату электричества.", elementId: "costPercentageLabel" },
+        { text: "Это прогресс-бар и процентные показатели.Здесь вы видите шкалу Прибыль-Затраты в общем Доходе.", elementId: "dailyMetricsContainer" }, 
         { text: "В таблице с Доходом и Прибылью вы можете переключать отображаемую валюту между долларами ($) и рублями (₽).", elementId: "resultsTable" },
-        { text: "Это ваш предполагаемый срок Окупаемости оборудования в месяцах. Показывает, через сколько месяцев ваши инвестиции вернутся.", elementId: "paybackLabelContainer" },
-        { text: "А это Годовой процент возврата инвестиций (ROI). Он показывает, какую прибыль вы получите за год относительно стоимости оборудования.", elementId: "roiLabelContainer" },
-        { title: "Обучение завершено!", text: "Поздравляем! Теперь вы знаете все основные функции калькулятора. Удачных расчетов!", elementId: null }
+        { text: "Здесь отображаются Окупаемость оборудования в месяцах и Годовой процент возврата инвестиций (ROI).", elementId: "paybackRoiContainer" }, 
+        { title: "Обучение завершено!", text: "Удачных расчетов!", elementId: null }
     ];
 }
+
 
 function startTutorialFlow() {
     currentTutorialStep = 0;
     tutorialModalOverlay.style.display = 'block';
     tutorialModal.style.display = 'block';
     document.body.classList.add('tutorial-active');
-    Telegram.WebApp.expand();
+    Telegram.WebApp.expand(); 
     displayCurrentTutorialStep();
 }
 
 function removeHighlight() {
     if (highlightedElement) {
         highlightedElement.classList.remove('tutorial-highlight');
-        highlightedElement.classList.remove('tutorial-text-white'); // Remove the white text class
+        // Explicitly remove text color changes from specific children if they were targeted
+        if (highlightedElement.id === "dailyMetricsContainer") {
+            const profitLabel = document.getElementById("profitPercentageLabel");
+            const costLabel = document.getElementById("costPercentageLabel");
+            if (profitLabel) profitLabel.classList.remove('tutorial-text-white');
+            if (costLabel) costLabel.classList.remove('tutorial-text-white');
+        } else if (highlightedElement.id === "paybackRoiContainer") {
+            const paybackLabel = document.getElementById("paybackLabelContainer");
+            const roiLabel = document.getElementById("roiLabelContainer");
+            if (paybackLabel) paybackLabel.classList.remove('tutorial-text-white');
+            if (roiLabel) roiLabel.classList.remove('tutorial-text-white');
+        }
         highlightedElement = null;
     }
     highlightedAncestors.forEach(ancestor => ancestor.classList.remove('tutorial-highlighted-ancestor'));
     highlightedAncestors = [];
+    
     document.querySelectorAll('.tutorial-highlight').forEach(el => el.classList.remove('tutorial-highlight'));
     document.querySelectorAll('.tutorial-highlighted-ancestor').forEach(el => el.classList.remove('tutorial-highlighted-ancestor'));
-    document.querySelectorAll('.tutorial-text-white').forEach(el => el.classList.remove('tutorial-text-white')); // Ensure any lingering classes are removed
+    document.querySelectorAll('.tutorial-text-white').forEach(el => el.classList.remove('tutorial-text-white')); 
 }
 
+
 function displayCurrentTutorialStep() {
-    removeHighlight();
+    removeHighlight(); 
 
     if (currentTutorialStep >= tutorialSteps.length) {
         completeTutorialProcess();
@@ -476,8 +495,8 @@ function displayCurrentTutorialStep() {
     }
 
     const step = tutorialSteps[currentTutorialStep];
-    tutorialTitle.textContent = step.title;
-    tutorialText.innerHTML = step.text;
+    tutorialTitle.textContent = step.title; 
+    tutorialText.innerHTML = step.text; 
 
     tutorialModal.style.top = '50%';
     tutorialModal.style.left = '50%';
@@ -489,16 +508,17 @@ function displayCurrentTutorialStep() {
             highlightedElement = targetElement;
             highlightedElement.classList.add('tutorial-highlight');
 
-            // IDs of elements that need white text when highlighted
-            const elementsToChangeColor = [
-                "profitPercentageLabel",
-                "costPercentageLabel",
-                "paybackLabelContainer",
-                "roiLabelContainer"
-            ];
-
-            if (elementsToChangeColor.includes(step.elementId)) {
-                highlightedElement.classList.add('tutorial-text-white');
+            // MODIFIED: Add white text to specific children for certain highlighted elements
+            if (step.elementId === "dailyMetricsContainer") {
+                const profitLabel = document.getElementById("profitPercentageLabel");
+                const costLabel = document.getElementById("costPercentageLabel");
+                if (profitLabel) profitLabel.classList.add('tutorial-text-white');
+                if (costLabel) costLabel.classList.add('tutorial-text-white');
+            } else if (step.elementId === "paybackRoiContainer") {
+                const paybackLabel = document.getElementById("paybackLabelContainer");
+                const roiLabel = document.getElementById("roiLabelContainer");
+                if (paybackLabel) paybackLabel.classList.add('tutorial-text-white');
+                if (roiLabel) roiLabel.classList.add('tutorial-text-white');
             }
 
             let parent = targetElement.parentElement;
@@ -507,6 +527,7 @@ function displayCurrentTutorialStep() {
                 highlightedAncestors.push(parent);
                 parent = parent.parentElement;
             }
+            
             targetElement.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' });
 
             setTimeout(() => {
@@ -515,26 +536,26 @@ function displayCurrentTutorialStep() {
                 const viewportWidth = window.innerWidth;
                 const viewportHeight = window.innerHeight;
 
-                let modalTop = targetRect.bottom + 15;
-                let modalLeft = targetRect.left + (targetRect.width / 2) - (modalRect.width / 2);
+                let modalTop = targetRect.bottom + 15; 
+                let modalLeft = targetRect.left + (targetRect.width / 2) - (modalRect.width / 2); 
 
-                if (modalTop + modalRect.height > viewportHeight - 10) {
+                if (modalTop + modalRect.height > viewportHeight - 10) { 
                     modalTop = targetRect.top - modalRect.height - 15;
                 }
-                if (modalTop < 10) {
+                if (modalTop < 10) { 
                     modalTop = 10;
                 }
-                if (modalLeft + modalRect.width > viewportWidth - 10) {
+                if (modalLeft + modalRect.width > viewportWidth - 10) { 
                     modalLeft = viewportWidth - modalRect.width - 10;
                 }
-                if (modalLeft < 10) {
+                if (modalLeft < 10) { 
                     modalLeft = 10;
                 }
 
                 tutorialModal.style.top = `${modalTop}px`;
                 tutorialModal.style.left = `${modalLeft}px`;
-                tutorialModal.style.transform = 'translate(0, 0)';
-            }, 100);
+                tutorialModal.style.transform = 'translate(0, 0)'; 
+            }, 300); 
 
         } else {
             console.warn(`Элемент для обучения с ID "${step.elementId}" не найден.`);
@@ -548,12 +569,16 @@ function displayCurrentTutorialStep() {
         tutorialModal.style.transform = 'translate(-50%, -50%)';
     }
 
+    // MODIFIED: Update button visibility and text for the last step
     if (currentTutorialStep === tutorialSteps.length - 1) {
         tutorialNextBtn.textContent = "Завершить";
+        if (tutorialSkipBtn) tutorialSkipBtn.style.display = 'none'; // Hide skip button
     } else {
         tutorialNextBtn.textContent = "Далее";
+        if (tutorialSkipBtn) tutorialSkipBtn.style.display = 'inline-block'; // Show skip button
     }
 }
+
 
 tutorialNextBtn.addEventListener('click', () => {
     currentTutorialStep++;
@@ -561,14 +586,14 @@ tutorialNextBtn.addEventListener('click', () => {
 });
 
 tutorialSkipBtn.addEventListener('click', () => {
-    completeTutorialProcess(true);
+    completeTutorialProcess(true); 
 });
 
 async function completeTutorialProcess(skipped = false) {
     tutorialModalOverlay.style.display = 'none';
     tutorialModal.style.display = 'none';
     document.body.classList.remove('tutorial-active');
-    removeHighlight();
+    removeHighlight(); 
     console.log(skipped ? "Обучение пропущено." : "Обучение завершено.");
 
     if (!telegramUser || !telegramUser.id || !supabaseClient) {
@@ -578,17 +603,39 @@ async function completeTutorialProcess(skipped = false) {
     try {
         const { data, error } = await supabaseClient
             .from('users')
-            .upsert({ telegram_id: telegramUser.id.toString(), tutor: true, }, { onConflict: 'telegram_id' })
-            .select();
-        if (error) console.error("Ошибка сохранения статуса обучения в Supabase:", error);
-        else console.log("Статус обучения успешно сохранен в Supabase:", data);
+            .upsert({ telegram_id: telegramUser.id.toString(), tutor: true, updated_at: new Date() }, { onConflict: 'telegram_id' })
+            .select(); 
+        if (error) {
+            console.error("Ошибка сохранения статуса обучения в Supabase:", error);
+        } else {
+            console.log("Статус обучения успешно сохранен в Supabase:", data);
+        }
     } catch (e) {
         console.error("Исключение при сохранении статуса обучения:", e);
     }
 }
 // --- КОНЕЦ БЛОКА ОБУЧЕНИЯ ---
 
-// ... (rest of the script remains the same) ...
+// --- НАЧАЛО БЛОКА ФОРМАТИРОВАНИЯ СТОИМОСТИ ОБОРУДОВАНИЯ ---
+function formatNumberWithSpaces(numberOrString) {
+    const cleanedNumberStr = String(numberOrString).replace(/\s+/g, '').replace(/[^\d]/g, '');
+    if (cleanedNumberStr === '') return '';
+    return cleanedNumberStr.replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+}
+
+function handleAsicCostInputFormatting(e) {
+    const currentValue = e.target.value;
+    const numericValue = currentValue.replace(/\s+/g, '').replace(/[^\d]/g, '');
+    const formattedValue = formatNumberWithSpaces(numericValue);
+
+    if (currentValue !== formattedValue) {
+        e.target.value = formattedValue;
+        e.target.setSelectionRange(formattedValue.length, formattedValue.length);
+    }
+}
+// --- КОНЕЦ БЛОКА ФОРМАТИРОВАНИЯ СТОИМОСТИ ОБОРУДОВАНИЯ ---
+
+
 let jsonData = [];
 let currentAlgorithm = "SHA-256";
 let dailyIncome = 0;
@@ -601,6 +648,7 @@ let isUSD = true;
 let currentModelVariants = [];
 
 document.addEventListener("DOMContentLoaded", initAppAndTutorial);
+
 
 async function fetchData() {
     console.log("Загрузка kursBTC.txt...");
@@ -631,7 +679,8 @@ async function fetchData() {
         } else console.warn("❗ Недостаточно строк в kursBTC.txt.");
     } catch (e) {
         console.error("❌ Критическая ошибка загрузки kursBTC.txt:", e);
-        if(document.getElementById('calculateBtn')) document.getElementById('calculateBtn').disabled = true;
+        const calcBtn = document.getElementById('calculateBtn');
+        if(calcBtn) calcBtn.disabled = true;
     }
 }
 
@@ -646,11 +695,14 @@ async function fetchJsonData() {
         if (jsonData.length === 0) console.warn(`⚠️ Модели не найдены в calc.json`);
     } catch (e) {
         console.error(`❌ Ошибка загрузки или парсинга calc.json:`, e);
-        jsonData = [];
-        if (document.getElementById("manufacturerSelect")) document.getElementById("manufacturerSelect").innerHTML = '<option>Ошибка загрузки</option>';
-        if (document.getElementById("asicModel")) document.getElementById("asicModel").innerHTML = '<option>Ошибка загрузки</option>';
+        jsonData = []; 
+        const manSelect = document.getElementById("manufacturerSelect");
+        const modSelect = document.getElementById("asicModel");
+        if (manSelect) manSelect.innerHTML = '<option>Ошибка загрузки</option>';
+        if (modSelect) modSelect.innerHTML = '<option>Ошибка загрузки</option>';
     }
 }
+
 
 async function onAlgorithmChange() {
     const algorithmSelect = document.getElementById("algorithmSelect");
@@ -658,125 +710,171 @@ async function onAlgorithmChange() {
     currentAlgorithm = algorithmSelect.value;
     console.log(`Алгоритм изменен на: ${currentAlgorithm}`);
 
-    if (jsonData.length === 0) await fetchJsonData();
+    if (jsonData.length === 0) { 
+        await fetchJsonData();
+    }
 
     const manufacturerSelect = document.getElementById("manufacturerSelect");
-    if (!manufacturerSelect) return;
+    if (!manufacturerSelect) return; 
 
     const modelsForCurrentAlgorithm = jsonData.filter(item => item["Алгоритм"] === currentAlgorithm);
     const uniqueManufacturers = [...new Set(modelsForCurrentAlgorithm.map(item => item["Производитель"]?.toLowerCase() || 'unknown'))]
-                                .filter(m => m !== 'unknown').sort();
-    manufacturerSelect.innerHTML = "";
+                                .filter(m => m !== 'unknown').sort(); 
+
+    manufacturerSelect.innerHTML = ""; 
     if (uniqueManufacturers.length > 0) {
-        uniqueManufacturers.forEach(m => {
+        uniqueManufacturers.forEach(manufacturer => {
             const opt = document.createElement("option");
-            opt.value = m; opt.textContent = m.charAt(0).toUpperCase() + m.slice(1);
+            opt.value = manufacturer;
+            opt.textContent = manufacturer.charAt(0).toUpperCase() + manufacturer.slice(1); 
             manufacturerSelect.appendChild(opt);
         });
         manufacturerSelect.disabled = false;
         console.log(`Производители для ${currentAlgorithm} обновлены.`);
-        updateModelList();
     } else {
-        manufacturerSelect.innerHTML = '<option>Нет данных</option>'; manufacturerSelect.disabled = true;
-        if (document.getElementById("asicModel")) { document.getElementById("asicModel").innerHTML = '<option>Нет данных</option>'; document.getElementById("asicModel").disabled = true; }
-        updateAsicSpecs();
+        manufacturerSelect.innerHTML = '<option>Нет данных</option>';
+        manufacturerSelect.disabled = true;
         console.warn(`Производители для ${currentAlgorithm} не найдены.`);
     }
+    updateModelList(); 
 }
+
 
 function updateModelList() {
     const manufacturerSelect = document.getElementById("manufacturerSelect");
     const modelSelect = document.getElementById("asicModel");
     if (!manufacturerSelect || !modelSelect) return;
 
-    const selectedManufacturer = manufacturerSelect.value?.toLowerCase();
-    modelSelect.innerHTML = "";
+    const selectedManufacturer = manufacturerSelect.value?.toLowerCase(); 
+    modelSelect.innerHTML = ""; 
 
-    const modelsFiltered = jsonData.filter(item => item["Алгоритм"] === currentAlgorithm && item["Производитель"]?.toLowerCase() === selectedManufacturer);
-    const uniqueModels = [...new Set(modelsFiltered.map(item => item["Модель"]))].sort();
+    
+    const modelsFiltered = jsonData.filter(item =>
+        item["Алгоритм"] === currentAlgorithm &&
+        item["Производитель"]?.toLowerCase() === selectedManufacturer
+    );
+
+    const uniqueModels = [...new Set(modelsFiltered.map(item => item["Модель"]))].sort(); 
 
     if (uniqueModels.length > 0) {
         uniqueModels.forEach(modelName => {
             const opt = document.createElement("option");
-            opt.value = modelName; opt.textContent = modelName; modelSelect.appendChild(opt);
+            opt.value = modelName;
+            opt.textContent = modelName;
+            modelSelect.appendChild(opt);
         });
         modelSelect.disabled = false;
     } else {
-        modelSelect.innerHTML = '<option>Нет моделей</option>'; modelSelect.disabled = true;
+        modelSelect.innerHTML = '<option>Нет моделей</option>';
+        modelSelect.disabled = true;
     }
-    updateAsicSpecs();
+    updateAsicSpecs(); 
 }
+
 
 function updateAsicSpecs() {
     const modelSelect = document.getElementById("asicModel");
     const asicCostInput = document.getElementById("asicCost");
-    const hashrateContainer = document.getElementById("hashrateContainer");
+    const hashrateContainer = document.getElementById("hashrateContainer"); 
     const powerEl = document.getElementById("power");
     const powerUnitEl = document.getElementById("power_unit");
 
-    hashrateContainer.innerHTML = '<span id="hashrate"></span><span id="edprice"></span>';
+    
+    hashrateContainer.innerHTML = '<span id="hashrate"></span><span id="edprice"></span>'; 
     document.getElementById("hashrate").textContent = '';
     document.getElementById("edprice").textContent = '';
-    powerEl.textContent = ''; powerUnitEl.textContent = '';
-    asicCostInput.value = ''; asicCostInput.placeholder = 'Выберите модель';
-    currentModelVariants = [];
+    if (powerEl) powerEl.textContent = '';
+    if (powerUnitEl) powerUnitEl.textContent = '';
+    if (asicCostInput) {
+      asicCostInput.value = '';
+      asicCostInput.placeholder = 'Выберите модель';
+    }
+    currentModelVariants = []; 
 
     const selectedModelName = modelSelect.value;
+
+    
     if (!selectedModelName || modelSelect.selectedOptions.length === 0 || modelSelect.selectedOptions[0].disabled || modelSelect.selectedOptions[0].textContent.startsWith("Нет")) {
-        return;
+        return; 
     }
 
-    currentModelVariants = jsonData.filter(i => i["Модель"] === selectedModelName && i["Алгоритм"] === currentAlgorithm);
+    
+    currentModelVariants = jsonData.filter(item =>
+        item["Модель"] === selectedModelName &&
+        item["Алгоритм"] === currentAlgorithm
+    );
+
+    
     currentModelVariants.sort((a, b) => parseFloat(b["Хешрейт"]) - parseFloat(a["Хешрейт"]));
 
     if (currentModelVariants.length > 0) {
         if (currentModelVariants.length === 1) {
+            
             const item = currentModelVariants[0];
             document.getElementById("hashrate").textContent = item["Хешрейт"] || '';
             document.getElementById("edprice").textContent = item["Ед. изм."] || '';
             populateSpecsForVariant(item);
         } else {
-            let selectHTML = '<select id="hashrateSelect">';
+            
+            let selectHTML = '<select id="hashrateSelect" class="bg-[#E2E2E2] w-full h-full border-none text-black text-sm focus:outline-none">';
             currentModelVariants.forEach((variant, index) => {
                 selectHTML += `<option value="${index}">${variant["Хешрейт"]} ${variant["Ед. изм."]}</option>`;
             });
             selectHTML += '</select>';
-            hashrateContainer.innerHTML = selectHTML;
-            document.getElementById("hashrateSelect").addEventListener('change', function() {
-                populateSpecsForVariant(currentModelVariants[this.value]);
-            });
+            hashrateContainer.innerHTML = selectHTML; 
+
+            const hashrateSelectElement = document.getElementById("hashrateSelect");
+            if (hashrateSelectElement) {
+                 hashrateSelectElement.addEventListener('change', function() {
+                    populateSpecsForVariant(currentModelVariants[this.value]);
+                });
+            }
+            
             populateSpecsForVariant(currentModelVariants[0]);
         }
     } else {
-        asicCostInput.placeholder = 'Данные не найдены';
+        if (asicCostInput) asicCostInput.placeholder = 'Данные не найдены';
     }
 }
+
 
 function populateSpecsForVariant(item) {
     const powerEl = document.getElementById("power");
     const powerUnitEl = document.getElementById("power_unit");
     const asicCostInput = document.getElementById("asicCost");
-    if (!item) {
-        powerEl.textContent = ''; powerUnitEl.textContent = '';
-        asicCostInput.value = ''; asicCostInput.placeholder = 'Данные не найдены';
+
+    if (!item) { 
+        if (powerEl) powerEl.textContent = '';
+        if (powerUnitEl) powerUnitEl.textContent = '';
+        if (asicCostInput) {
+            asicCostInput.value = '';
+            asicCostInput.placeholder = 'Данные не найдены';
+        }
         return;
     }
+
     const powerValue = parseFloat(item["Потребление"]);
-    powerEl.textContent = isNaN(powerValue) ? '' : Math.round(powerValue);
-    powerUnitEl.textContent = isNaN(powerValue) ? '' : ' Вт';
+    if (powerEl) powerEl.textContent = isNaN(powerValue) ? '' : Math.round(powerValue);
+    if (powerUnitEl) powerUnitEl.textContent = isNaN(powerValue) ? '' : ' Вт';
 
     const itemPriceUSD = parseFloat(item["Цена"]);
-    if (!isNaN(itemPriceUSD) && usdtPrice > 0) {
-        asicCostInput.value = Math.ceil((itemPriceUSD * usdtPrice) / 100) * 100;
-    } else {
-        asicCostInput.value = '';
-        asicCostInput.placeholder = (usdtPrice <= 0 && !isNaN(itemPriceUSD)) ? 'Курс USDT?' : 'Цена не найдена';
+    if (asicCostInput) {
+        if (!isNaN(itemPriceUSD) && usdtPrice > 0) {
+            const costInRub = Math.ceil((itemPriceUSD * usdtPrice) / 100) * 100; 
+            asicCostInput.value = formatNumberWithSpaces(costInRub); 
+        } else {
+            asicCostInput.value = ''; 
+            asicCostInput.placeholder = (usdtPrice <= 0 && !isNaN(itemPriceUSD)) ? 'Курс USDT?' : 'Цена не найдена';
+        }
     }
 }
 
 function showNotification() {
     const notification = document.getElementById('notification');
-    if(notification) { notification.classList.remove('hidden'); setTimeout(() => notification.classList.add('hidden'), 1000); }
+    if(notification) {
+        notification.classList.remove('hidden');
+        setTimeout(() => notification.classList.add('hidden'), 1000);
+    }
 }
 
 function calculateProfit() {
@@ -800,66 +898,93 @@ function calculateProfit() {
     if (Object.values(elements).some(el => !el)) { console.error("❌ Ошибка: Один из элементов для расчета не найден!"); return; }
 
     let actualHashrate, selectedVariantHashrateUnit = '';
-    const hashrateSelect = document.getElementById("hashrateSelect");
+    const hashrateSelect = document.getElementById("hashrateSelect"); 
     if (hashrateSelect && currentModelVariants.length > 0 && hashrateSelect.value !== "") {
         const selectedVariant = currentModelVariants[hashrateSelect.value];
-        if (selectedVariant) { actualHashrate = parseFloat(selectedVariant["Хешрейт"]); selectedVariantHashrateUnit = selectedVariant["Ед. изм."]; }
-        else { console.error("❌ Ошибка: Выбранный вариант хешрейта не найден."); return; }
-    } else {
-        const hs = document.getElementById("hashrate"); const edp = document.getElementById("edprice");
+        if (selectedVariant) {
+            actualHashrate = parseFloat(selectedVariant["Хешрейт"]);
+            selectedVariantHashrateUnit = selectedVariant["Ед. изм."];
+        } else { console.error("❌ Ошибка: Выбранный вариант хешрейта не найден."); return; }
+    } else { 
+        const hs = document.getElementById("hashrate");
+        const edp = document.getElementById("edprice");
         if (hs) actualHashrate = parseFloat(hs.textContent); else { console.error("❌ Ошибка: Элемент хешрейта #hashrate не найден."); return; }
         if (edp) selectedVariantHashrateUnit = edp.textContent;
     }
 
-    let calculationHashrate = actualHashrate;
+    let calculationHashrate = actualHashrate; 
+    
     if (currentAlgorithm === "SHA-256" && selectedVariantHashrateUnit) {
-        if (selectedVariantHashrateUnit.toUpperCase().includes("PH")) calculationHashrate *= 1000;
-        else if (selectedVariantHashrateUnit.toUpperCase().includes("GH")) calculationHashrate /= 1000;
-        else if (selectedVariantHashrateUnit.toUpperCase().includes("MH")) calculationHashrate /= 1000000;
+        const unitUpper = selectedVariantHashrateUnit.toUpperCase();
+        if (unitUpper.includes("PH")) calculationHashrate *= 1000;       
+        else if (unitUpper.includes("GH")) calculationHashrate /= 1000;  
+        else if (unitUpper.includes("MH")) calculationHashrate /= 1000000; 
+        
     }
+    
 
     const values = {
         currentUsdtPrice: parseFloat(elements.usdtPriceInput.value), hashrate: calculationHashrate,
         power: parseFloat(elements.powerEl.textContent), electricityCost: parseFloat(elements.electricityCostInput.value.replace(',', '.')),
-        asicCost: parseFloat(elements.asicCostInput.value)
+        asicCost: parseFloat(elements.asicCostInput.value.replace(/\s+/g, '')) 
     };
-    if (Object.values(values).some(isNaN) || values.currentUsdtPrice <= 0 || values.hashrate <= 0) { console.error("❌ Ошибка: Некорректные базовые значения для расчета.", values); return; }
+
+    if (Object.values(values).slice(0,4).some(isNaN) || values.currentUsdtPrice <= 0 || values.hashrate <= 0) { 
+        console.error("❌ Ошибка: Некорректные базовые значения для расчета.", values);
+        
+        return;
+    }
+     if (isNaN(values.asicCost)) { 
+        console.warn("⚠️ Стоимость ASIC не указана или некорректна, ROI и окупаемость не будут рассчитаны.");
+        
+    }
+
 
     dailyIncome = 0;
     if (currentAlgorithm === "SHA-256") {
         const btcP = parseFloat(elements.btcPriceInput.value), pPTH = parseFloat(elements.profitPerTHInput.value);
-        if (!isNaN(btcP) && !isNaN(pPTH)) dailyIncome = values.hashrate * pPTH * btcP; else { console.error("❌ SHA-256 calc error"); return;}
+        if (!isNaN(btcP) && !isNaN(pPTH)) dailyIncome = values.hashrate * pPTH * btcP; else { console.error("❌ SHA-256 calc error: btcPrice or profitPerTH is NaN"); return;}
     } else if (currentAlgorithm === "Scrypt") {
         const ltcP = parseFloat(elements.ltcPriceInput.value), dogeP = parseFloat(elements.dogePriceInput.value), bellP = parseFloat(elements.bellPriceInput.value);
         const pPLTC = parseFloat(elements.profitPerLTCInput.value), pPDOGE = parseFloat(elements.profitPerDOGEInput.value), pPBELL = parseFloat(elements.profitPerBELLInput.value);
         if (![ltcP, dogeP, bellP, pPLTC, pPDOGE, pPBELL].some(isNaN)) {
+            
             dailyIncome = values.hashrate * (pPLTC * ltcP + pPDOGE * dogeP + pPBELL * bellP);
-        } else { console.error("❌ Scrypt calc error"); return;}
+        } else { console.error("❌ Scrypt calc error: one of the prices or profit factors is NaN"); return;}
     }
 
-    dailyElectricityCostValue = (values.power / 1000) * values.electricityCost * 24 / values.currentUsdtPrice;
-    window.dailyProfitValue = dailyIncome - dailyElectricityCostValue;
+    dailyElectricityCostValue = (values.power / 1000) * values.electricityCost * 24 / values.currentUsdtPrice; 
+    window.dailyProfitValue = dailyIncome - dailyElectricityCostValue; 
     monthlyProfit = window.dailyProfitValue * 30.5; yearlyProfit = window.dailyProfitValue * 365;
-    const asicCostInUSD = values.asicCost / values.currentUsdtPrice;
-    const roi = (yearlyProfit && asicCostInUSD > 0) ? (yearlyProfit / asicCostInUSD) * 100 : 0;
-    const payback = (window.dailyProfitValue > 0 && asicCostInUSD > 0) ? (asicCostInUSD / window.dailyProfitValue) / 30.5 : Infinity;
+
+    let roi = 0, payback = Infinity; 
+    if (!isNaN(values.asicCost) && values.asicCost > 0) {
+        const asicCostInUSD = values.asicCost / values.currentUsdtPrice;
+        if (asicCostInUSD > 0) { 
+            if (yearlyProfit) roi = (yearlyProfit / asicCostInUSD) * 100;
+            if (window.dailyProfitValue > 0) payback = (asicCostInUSD / window.dailyProfitValue) / 30.5; 
+        }
+    }
+
 
     updateTableValues(); updateProgressBarAndLabels(elements);
-    elements.roiEl.innerText = isFinite(roi) ? roi.toFixed(1) : "—";
+    elements.roiEl.innerText = isFinite(roi) && roi !== 0 ? roi.toFixed(1) : "—";
     elements.paybackEl.innerText = isFinite(payback) ? payback.toFixed(1) : "—";
     showNotification();
 }
+
 
 function formatCurrency(value, currency = "$", fractionDigits = 2) {
     if (isNaN(value) || !isFinite(value)) return currency === "$" ? "$ --.--" : "--.-- ₽";
     return currency + (Math.round(value * Math.pow(10, fractionDigits)) / Math.pow(10, fractionDigits))
         .toLocaleString('ru-RU', { minimumFractionDigits: fractionDigits, maximumFractionDigits: fractionDigits });
 }
-function formatCurrencyRub(value, fractionDigits = 0) {
+function formatCurrencyRub(value, fractionDigits = 0) { 
     if (isNaN(value) || !isFinite(value) || isNaN(usdtPrice) || usdtPrice <= 0) return "-- ₽";
     return (Math.round((value * usdtPrice) * Math.pow(10, fractionDigits)) / Math.pow(10, fractionDigits))
         .toLocaleString('ru-RU', { maximumFractionDigits: fractionDigits }) + " ₽";
 }
+
 
 function updateTableValues() {
     const ids = ["income", "incomeMonth", "incomeYear", "profit", "profitMonth", "profitYear"];
@@ -873,44 +998,70 @@ function updateTableValues() {
             else if (id.startsWith("profitMonth")) valUSD = monthlyProfit;
             else if (id.startsWith("profitYear")) valUSD = yearlyProfit;
             else if (id.startsWith("profit")) valUSD = window.dailyProfitValue;
-            usdEl.innerText = formatCurrency(valUSD); rubEl.innerText = formatCurrencyRub(valUSD);
-            usdEl.classList.toggle("hidden", !isUSD); rubEl.classList.toggle("hidden", isUSD);
+
+            usdEl.innerText = formatCurrency(valUSD);
+            rubEl.innerText = formatCurrencyRub(valUSD);
+            usdEl.classList.toggle("hidden", !isUSD);
+            rubEl.classList.toggle("hidden", isUSD);
         }
     });
 }
 
 function setCurrency(setToUSD) {
-    if (isUSD === setToUSD) return; isUSD = setToUSD;
+    if (isUSD === setToUSD) return; 
+    isUSD = setToUSD;
     const usdBtn = document.getElementById('currencyUSD'), rubBtn = document.getElementById('currencyRUB');
     if (usdBtn && rubBtn) {
-        usdBtn.classList.toggle('active', isUSD); usdBtn.classList.toggle('inactive', !isUSD);
-        rubBtn.classList.toggle('active', !isUSD); rubBtn.classList.toggle('inactive', isUSD);
-        updateTableValues();
+        usdBtn.classList.toggle('active', isUSD);
+        usdBtn.classList.toggle('inactive', !isUSD);
+        rubBtn.classList.toggle('active', !isUSD);
+        rubBtn.classList.toggle('inactive', isUSD);
+        updateTableValues(); 
     }
 }
 
 function updateProgressBarAndLabels(elements) {
     const { profitBar, electricityBar, profitPercentageLabel, costPercentageLabel } = elements;
     let profitPerc = 0, electricityPerc = 0;
+
     if (dailyIncome > 0 && isFinite(dailyIncome) && isFinite(dailyElectricityCostValue)) {
-        profitPerc = Math.max(0, (window.dailyProfitValue / dailyIncome) * 100);
-        electricityPerc = Math.max(0, (dailyElectricityCostValue / dailyIncome) * 100);
-        if (window.dailyProfitValue <= 0) { profitPerc = 0; electricityPerc = 100; }
-        else if (profitPerc + electricityPerc > 100.1) electricityPerc = 100 - profitPerc; // Adjusted to 100.1 for float precision
-        profitPerc = Math.min(100, Math.max(0, profitPerc));
-        electricityPerc = Math.min(100, Math.max(0, electricityPerc));
+        
+        profitPerc = (window.dailyProfitValue / dailyIncome) * 100;
+        
+        electricityPerc = (dailyElectricityCostValue / dailyIncome) * 100;
+
+        if (window.dailyProfitValue <= 0) { 
+            profitPerc = 0; 
+            
+            
+            electricityPerc = Math.min(100, electricityPerc); 
+        } else { 
+             profitPerc = Math.max(0, Math.min(100, profitPerc)); 
+             electricityPerc = Math.max(0, Math.min(100 - profitPerc, electricityPerc)); 
+        }
+    } else if (dailyIncome <= 0 && dailyElectricityCostValue > 0) { 
+        profitPerc = 0;
+        electricityPerc = 100; 
     }
+
+
     profitBar.style.width = `${profitPerc.toFixed(1)}%`;
     electricityBar.style.width = `${electricityPerc.toFixed(1)}%`;
-    electricityBar.style.left = `${profitPerc.toFixed(1)}%`; // Ensure electricity bar starts after profit bar
+    electricityBar.style.left = `${profitPerc.toFixed(1)}%`;
+
     profitPercentageLabel.textContent = `Прибыль: ${profitPerc.toFixed(1)}%`;
     costPercentageLabel.textContent = `Затраты: ${electricityPerc.toFixed(1)}%`;
 }
 
+
 // Event Listeners
-const algSel = document.getElementById("algorithmSelect"), manSel = document.getElementById("manufacturerSelect"),
-      modSel = document.getElementById("asicModel"), calcBtn = document.getElementById("calculateBtn"),
-      currUSD = document.getElementById('currencyUSD'), currRUB = document.getElementById('currencyRUB');
+const algSel = document.getElementById("algorithmSelect"),
+      manSel = document.getElementById("manufacturerSelect"),
+      modSel = document.getElementById("asicModel"),
+      calcBtn = document.getElementById("calculateBtn"),
+      currUSD = document.getElementById('currencyUSD'),
+      currRUB = document.getElementById('currencyRUB');
+      
 
 if (algSel) algSel.addEventListener("change", onAlgorithmChange);
 if (manSel) manSel.addEventListener("change", updateModelList);
@@ -918,6 +1069,7 @@ if (modSel) modSel.addEventListener("change", updateAsicSpecs);
 if (calcBtn) calcBtn.addEventListener("click", calculateProfit);
 if (currUSD) currUSD.addEventListener('click', () => setCurrency(true));
 if (currRUB) currRUB.addEventListener('click', () => setCurrency(false));
+
 </script>
 </body>
 </html>
