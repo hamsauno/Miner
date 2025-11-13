@@ -754,7 +754,9 @@ function updateModelList() {
         item["Производитель"]?.toLowerCase() === selectedManufacturer
     );
 
-    const uniqueModels = [...new Set(modelsFiltered.map(item => item["Модель"]))].sort(); 
+    const uniqueModels = [...new Set(modelsFiltered.map(item => item["Модель"]))]       
+        .sort()
+        .reverse(); // сортировка в обратном алфавитном порядке 
 
     if (uniqueModels.length > 0) {
         uniqueModels.forEach(modelName => {
@@ -1073,3 +1075,4 @@ if (currRUB) currRUB.addEventListener('click', () => setCurrency(false));
 </script>
 </body>
 </html>
+
