@@ -754,9 +754,18 @@ function updateModelList() {
         item["Производитель"]?.toLowerCase() === selectedManufacturer
     );
 
-    const uniqueModels = [...new Set(modelsFiltered.map(item => item["Модель"]))]       
-        .sort()
-        .reverse(); // сортировка в обратном алфавитном порядке 
+const uniqueModels = [...new Set(modelsFiltered.map(item => item["Модель"]))];
+
+// Фильтруем: отделяем "Т21" от остальных моделей
+const t21Model = "Т21";
+const otherModels = uniqueModels.filter(model => model !== t21Model);
+
+
+// Сортируем остальные модели в обратном алфавитном порядке
+const sortedModels = otherModels.sort().reverse();
+
+// Добавляем "Т21" в самый конец
+const result = [...sortedModels, t21Model];
 
     if (uniqueModels.length > 0) {
         uniqueModels.forEach(modelName => {
@@ -1075,4 +1084,5 @@ if (currRUB) currRUB.addEventListener('click', () => setCurrency(false));
 </script>
 </body>
 </html>
+
 
